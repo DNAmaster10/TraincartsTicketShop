@@ -1,0 +1,4 @@
+name: TraincartsGui
+version: '${project.version}'
+main: com.dnamaster10.tcgui.TraincartsGui
+api-version: '1.20'
