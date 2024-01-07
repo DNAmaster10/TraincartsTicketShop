@@ -67,5 +67,10 @@
           <version>1.20-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
+      <dependency>
+          <groupId>org.mariadb.jdbc</groupId>
+          <artifactId>mariadb-java-client</artifactId>
+          <version>LATEST</version>
+      </dependency>
   </dependencies>
 </project>
