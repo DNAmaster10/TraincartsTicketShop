@@ -18,7 +18,8 @@ public final class TraincartsGui extends JavaPlugin {
         if (!Database.checkConnection()) {
             disable();
         }
-
+        //Create tables in database
+        Database.createTables();
     }
 
     @Override
