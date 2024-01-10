@@ -3,16 +3,16 @@ package com.dnamaster10.tcgui.util;
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
 public class Guis {
     //For methods relating to guis
-    public static void createGui() {
-
+    public static void createGui(String name, String ownerUuid) throws SQLException {
+        //Adds a new gui in the database
+        //Checks for gui with same name must be done before calling this method
+        Database.addGui(name, ownerUuid);
     }
     public static void createGuiCommand(Player p, String name) {
         //Takes in a command, creates a gui
@@ -32,13 +32,39 @@ public class Guis {
             //Gui does not already exist, proceed
             String uuid = String.valueOf(p.getUniqueId());
 
-            //Check if player exists in database. If not, insert player name
+            //Check if player exists in database
             String username = null;
             try {
                 username = Database.getUsernameFromUuid(uuid);
             } catch (SQLException e) {
                 //Database error, cancel creation
                 TraincartsGui.plugin.reportSqlError(p, e.toString());
+                return;
+            }
+            if (username == null) {
+                //If player does not exist, add player to database
+                try {
+                    Database.addPlayer(p.getDisplayName(), uuid);
+                } catch (SQLException e) {
+                   TraincartsGui.plugin.reportSqlError(p, e.toString());
+                   return;
+                }
+            }
+            else if (!username.equals(p.getDisplayName())) {
+                //If player name has changed, update it in the database
+                try {
+                    Database.updatePlayer(p.getDisplayName(), uuid);
+                } catch (SQLException e) {
+                    TraincartsGui.plugin.reportSqlError(p, e.toString());
+                    return;
+                }
+            }
+            //Finally register the gui in the database
+            try {
+                createGui(name, uuid);
+            } catch (SQLException e) {
+                TraincartsGui.plugin.reportSqlError(p, e.toString());
+                return;
             }
         });
     }

@@ -2,3 +2,22 @@ name: TraincartsGui
 version: '${project.version}'
 main: com.dnamaster10.tcgui.TraincartsGui
 api-version: '1.20'
+authors: [ DNAmaster10 ]
+description: A plugin which allows players to create ticket GUIs for traincarts and mywarp plugin
+database: true
+prefix: TraincartsGui
+
+permissions:
+  tcgui.*:
+    description: Grants all tcgui permissions
+    default: op
+    children:
+      tcgui.creategui: false
+  tcgui.creategui:
+    description: Allows the creation of tcgui guis
+    default: false
+commands:
+  tcgui:
+    description: The parent command for all tcgui commands
+    usage: /tcgui <sub-command>
+    aliases: [ traincartsgui ]

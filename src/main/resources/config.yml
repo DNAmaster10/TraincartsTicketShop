@@ -5,4 +5,3 @@ database:
   user: username
   password: password
 
-allowGuiCreate: true
