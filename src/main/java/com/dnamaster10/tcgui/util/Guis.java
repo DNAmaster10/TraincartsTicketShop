@@ -32,33 +32,13 @@ public class Guis {
             //Gui does not already exist, proceed
             String uuid = String.valueOf(p.getUniqueId());
 
-            //Check if player exists in database
-            String username = null;
+            //If the player needs updating in the database, update them
             try {
-                username = Database.getUsernameFromUuid(uuid);
+                Players.updatePlayer(p);
             } catch (SQLException e) {
-                //Database error, cancel creation
-                TraincartsGui.plugin.reportSqlError(p, e.toString());
-                return;
+                throw new RuntimeException(e);
             }
-            if (username == null) {
-                //If player does not exist, add player to database
-                try {
-                    Database.addPlayer(p.getDisplayName(), uuid);
-                } catch (SQLException e) {
-                   TraincartsGui.plugin.reportSqlError(p, e.toString());
-                   return;
-                }
-            }
-            else if (!username.equals(p.getDisplayName())) {
-                //If player name has changed, update it in the database
-                try {
-                    Database.updatePlayer(p.getDisplayName(), uuid);
-                } catch (SQLException e) {
-                    TraincartsGui.plugin.reportSqlError(p, e.toString());
-                    return;
-                }
-            }
+
             //Finally register the gui in the database
             try {
                 createGui(name, uuid);
@@ -66,6 +46,7 @@ public class Guis {
                 TraincartsGui.plugin.reportSqlError(p, e.toString());
                 return;
             }
+            p.sendMessage(ChatColor.GREEN + "A gui with the name \"" + name + "\" was created");
         });
     }
 }

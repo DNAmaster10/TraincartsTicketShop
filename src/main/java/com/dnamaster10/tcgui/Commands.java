@@ -24,7 +24,7 @@ public class Commands {
         //Checks that a string only contains underscores, dashes, numbers and letters
         return STRING_PATTERN.matcher(value).matches();
     }
-    static boolean checkCreateCommand(CommandSender sender, String args[]) {
+    static boolean checkCreateCommand(CommandSender sender, String[] args) {
         //Check config
         if (!TraincartsGui.plugin.getConfig().getBoolean("AllowGuiCreate")) {
             returnError(sender, "Gui creation is disabled on this server");
@@ -38,6 +38,10 @@ public class Commands {
         }
         if (args.length > 2) {
             returnError(sender, "Invalid sub-command \"" + args[2] + "\"");
+            return false;
+        }
+        if (!checkString(args[1])) {
+            returnError (sender, "Gui names can only contain characters a/A - z/Z, numbers, underscores and dashes");
             return false;
         }
 
@@ -65,7 +69,7 @@ public class Commands {
         }
         switch(args[0]) {
             case "create" -> {
-                //Check that a GUI name was entered
+                //Check syntax and permissions before database checks
                 if (checkCreateCommand(sender, args)) {
                     Guis.createGuiCommand((Player) sender, args[1]);
                 }

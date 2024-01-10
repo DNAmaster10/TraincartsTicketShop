@@ -5,3 +5,4 @@ database:
   user: username
   password: password
 
+AllowGuiCreate: true

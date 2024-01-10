@@ -20,4 +20,3 @@ commands:
   tcgui:
     description: The parent command for all tcgui commands
     usage: /tcgui <sub-command>
-    aliases: [ traincartsgui ]

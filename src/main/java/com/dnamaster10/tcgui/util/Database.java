@@ -66,10 +66,11 @@ public class Database {
         //returns true if the gui with the given name exists in database
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?;");
+        statement.setString(1, name);
         ResultSet result = statement.executeQuery();
         int total = 0;
         while (result.next()) {
-            total = result.getInt(0);
+            total = result.getInt(1);
         }
         result.close();
         statement.close();
@@ -85,6 +86,21 @@ public class Database {
         statement.executeUpdate();
         statement.close();
         connection.close();
+    }
+    public static boolean checkPlayerByUuid(String uuid) throws SQLException {
+        //Returns true if player exists in database
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE uuid=?");
+        statement.setString(1, uuid);
+        ResultSet result = statement.executeQuery();
+        int total = 0;
+        while (result.next()) {
+            total = result.getInt(1);
+        }
+        result.close();
+        statement.close();
+        connection.close();
+        return (total > 0);
     }
     public static String getUsernameFromUuid(String uuid) throws SQLException {
         //Returns player name from UUID as string
