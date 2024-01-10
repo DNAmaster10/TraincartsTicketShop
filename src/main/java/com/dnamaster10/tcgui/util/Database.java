@@ -1,6 +1,7 @@
 package com.dnamaster10.tcgui.util;
 
 import com.dnamaster10.tcgui.TraincartsGui;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -105,13 +106,39 @@ public class Database {
         }
         return true;
     }
+    public static boolean checkGuiByName(String name) throws SQLException {
+        //returns true if the gui with the given name exists in database
+        Connection connection = getConnection();
+        assert connection != null;
+        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?;");
+        ResultSet result = statement.executeQuery();
+        int total = 0;
+        while (result.next()) {
+            total = result.getInt(0);
+        }
+        result.close();
+        statement.close();
+        connection.close();
+        return (total > 0);
+    }
     public static HashMap<String, Object> getRow(String statement) {
         //Returns a hashmap linking column names and values
         //Meant to be used for single rows only.
         return null;
     }
-    public static String getUsernameFromUuid(String uuid) {
-        String statement = "SELECT username FROM players WHERE uuid=?";
-        return null;
+    public static String getUsernameFromUuid(String uuid) throws SQLException {
+        //Returns player name from UUID as string
+        Connection connection = getConnection();
+        assert  connection != null;
+        PreparedStatement statement = connection.prepareStatement("SELECT username FROM players WHERE uuid=?");
+        ResultSet result = statement.executeQuery();
+        String name = null;
+        while (result.next()) {
+            name = result.getString("username");
+        }
+        result.close();
+        statement.close();
+        connection.close();
+        return name;
     }
 }

@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui;
 
+import com.dnamaster10.tcgui.util.Guis;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,12 @@ public class Commands {
         return STRING_PATTERN.matcher(value).matches();
     }
     static boolean checkCreateCommand(CommandSender sender, String args[]) {
+        //Check config
+        if (!TraincartsGui.plugin.getConfig().getBoolean("AllowGuiCreate")) {
+            returnError(sender, "Gui creation is disabled on this server");
+            return false;
+        }
+
         //Check syntax
         if (args.length < 2) {
             returnError(sender, "Please enter a valid GUI name");
@@ -34,24 +41,38 @@ public class Commands {
             return false;
         }
 
+        //Check permissions and that sender is a player
+        if (sender instanceof Player p) {
+            if (!p.hasPermission("tcgui.creategui")) {
+                returnError(sender, "You do not have permission to perform that action");
+                return false;
+            }
+        }
+        else {
+            returnError(sender, "Command must be executed by a player");
+            return false;
+        }
+        return true;
     }
-    public static boolean checkCommand(CommandSender sender, Command command, String label, String[] args) {
+    public static void execute(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("tcgui")) {
             //If it isn't a tcgui command return
-            return true;
+            return;
         }
         if (args.length < 1) {
             returnError(sender, "Please enter a valid sub-command");
-            return false;
+            return;
         }
         switch(args[0]) {
             case "create" -> {
                 //Check that a GUI name was entered
-                return checkCreateCommand(sender, args);
+                if (checkCreateCommand(sender, args)) {
+                    Guis.createGuiCommand((Player) sender, args[1]);
+                }
             }
             default -> {
                 returnError(sender, "Unrecognised command \"" + args[0] + "\"");
-                return false;
+                return ;
             }
         }
         //Takes in a command and checks whether it is okay to be sent.

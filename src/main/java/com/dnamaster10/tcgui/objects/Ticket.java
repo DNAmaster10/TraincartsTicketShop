@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui;
+package com.dnamaster10.tcgui.objects;
 
 public class Ticket {
     public static enum Type {
