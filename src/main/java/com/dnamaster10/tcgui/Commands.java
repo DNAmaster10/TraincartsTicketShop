@@ -1,6 +1,8 @@
 package com.dnamaster10.tcgui;
 
+import com.dnamaster10.tcgui.objects.Gui;
 import com.dnamaster10.tcgui.util.Guis;
+import com.dnamaster10.tcgui.util.Tickets;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,7 +26,7 @@ public class Commands {
         //Checks that a string only contains underscores, dashes, numbers and letters
         return STRING_PATTERN.matcher(value).matches();
     }
-    static boolean checkCreateCommand(CommandSender sender, String[] args) {
+    static boolean checkGuiCreateCommand(CommandSender sender, String[] args) {
         //Check config
         if (!TraincartsGui.plugin.getConfig().getBoolean("AllowGuiCreate")) {
             returnError(sender, "Gui creation is disabled on this server");
@@ -32,15 +34,15 @@ public class Commands {
         }
 
         //Check syntax
-        if (args.length < 2) {
+        if (args.length < 3) {
             returnError(sender, "Please enter a valid GUI name");
             return false;
         }
-        if (args.length > 2) {
-            returnError(sender, "Invalid sub-command \"" + args[2] + "\"");
+        if (args.length > 3) {
+            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
-        if (!checkString(args[1])) {
+        if (!checkString(args[2])) {
             returnError (sender, "Gui names can only contain characters a/A - z/Z, numbers, underscores and dashes");
             return false;
         }
@@ -48,6 +50,37 @@ public class Commands {
         //Check permissions and that sender is a player
         if (sender instanceof Player p) {
             if (!p.hasPermission("tcgui.creategui")) {
+                returnError(sender, "You do not have permission to perform that action");
+                return false;
+            }
+        }
+        else {
+            returnError(sender, "Command must be executed by a player");
+            return false;
+        }
+        return true;
+    }
+    static boolean checkTicketCreateCommand(CommandSender sender, String[] args) {
+        //Example: /tcgui ticket create <traincart_name> <display_name>
+        //Check config
+        if (!TraincartsGui.plugin.getConfig().getBoolean("AllowTicketCreate")) {
+            returnError(sender, "Ticket creation is disabled on this server");
+            return false;
+        }
+
+        //Check syntax
+        if (args.length < 4) {
+            returnError(sender, "Missing argument(s): /tcgui ticket create <tc_ticket_name> <display_name>");
+            return false;
+        }
+        if (args.length > 4) {
+            returnError(sender, "Invalid sub-command \"" + args[4] + "\": /tcgui ticket create <tc_ticket_name> <display_name>");
+            return false;
+        }
+
+        //Check permissions and that sender is a player
+        if (sender instanceof Player p) {
+            if (!p.hasPermission("tcgui.createticket")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -68,10 +101,34 @@ public class Commands {
             return;
         }
         switch(args[0]) {
-            case "create" -> {
-                //Check syntax and permissions before database checks
-                if (checkCreateCommand(sender, args)) {
-                    Guis.createGuiCommand((Player) sender, args[1]);
+            case "gui" -> {
+                if (args.length < 2) {
+                    returnError(sender, "Please enter a valid sub-command: create/edit");
+                }
+                switch(args[1]) {
+                    case "create" -> {
+                        if (checkGuiCreateCommand(sender, args)) {
+                            Guis.createGuiCommand((Player) sender, args[2]);
+                        }
+                    }
+                    default -> {
+                        returnError(sender, "Please enter a valid sub-command: create/edit");
+                    }
+                }
+            }
+            case "ticket" -> {
+                if (args.length < 2) {
+                    returnError(sender, "Please enter a valid sub-command: create");
+                }
+                switch (args[1]) {
+                    case "create" -> {
+                        if (checkTicketCreateCommand(sender, args)) {
+                            Tickets.createTicketCommand((Player) sender, args[2], args[3]);
+                        }
+                    }
+                    default -> {
+                        returnError(sender, "Please enter a valid sub-command: create");
+                    }
                 }
             }
             default -> {

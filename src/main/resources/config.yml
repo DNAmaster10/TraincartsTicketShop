@@ -6,3 +6,5 @@ database:
   password: password
 
 AllowGuiCreate: true
+
+AllowTicketCreate: true

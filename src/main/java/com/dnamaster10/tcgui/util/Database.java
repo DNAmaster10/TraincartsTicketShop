@@ -37,12 +37,12 @@ public class Database {
         //Creates tables in database if they do not exist
         Connection connection = getConnection();
         executeStatement(connection, """
-                        CREATE TABLE IF NOT EXISTS players (
-                        id int UNIQUE AUTO_INCREMENT,
-                        username varchar(17),
-                        uuid varchar(50) UNIQUE
-                    );
-                    """);
+                CREATE TABLE IF NOT EXISTS players (
+                    id int UNIQUE AUTO_INCREMENT,
+                    username varchar(17),
+                    uuid varchar(50) UNIQUE
+                );
+                """);
         executeStatement(connection, """
                 CREATE TABLE IF NOT EXISTS guis (
                     id int UNIQUE AUTO_INCREMENT,
@@ -56,7 +56,6 @@ public class Database {
                     id int UNIQUE AUTO_INCREMENT,
                     guiid int,
                     page int,
-                    type varchar(15),
                     name varchar(100)
                 );
                 """);
