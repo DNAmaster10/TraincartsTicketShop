@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui;
 
-import com.dnamaster10.tcgui.objects.Gui;
 import com.dnamaster10.tcgui.util.Guis;
 import com.dnamaster10.tcgui.util.Tickets;
 import org.bukkit.ChatColor;

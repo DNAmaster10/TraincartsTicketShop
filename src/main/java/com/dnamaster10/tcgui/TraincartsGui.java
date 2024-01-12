@@ -1,7 +1,8 @@
 package com.dnamaster10.tcgui;
 
-import com.dnamaster10.tcgui.util.Database;
 import com.dnamaster10.tcgui.util.Players;
+import com.dnamaster10.tcgui.util.database.DatabaseConfig;
+import com.dnamaster10.tcgui.util.database.TableCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,9 +29,16 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         getConfig().options().copyDefaults();
         saveDefaultConfig();
 
+        //Configure database
+        DatabaseConfig.setUrl(plugin.getConfig().getString("database.host"), plugin.getConfig().getString("database.port"), plugin.getConfig().getString("database.database"));
+        DatabaseConfig.setUsername(plugin.getConfig().getString("database.user"));
+        DatabaseConfig.setPassword(plugin.getConfig().getString("database.password"));
+
         //Create tables in database
         try {
-            Database.createTables();
+            TableCreator tableCreator = new TableCreator();
+            tableCreator.createTables();
+            tableCreator.closeConnection();
         }
         catch (SQLException e) {
             //Disable plugin if failed
