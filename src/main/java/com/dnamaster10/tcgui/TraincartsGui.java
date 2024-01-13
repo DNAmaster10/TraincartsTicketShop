@@ -1,6 +1,8 @@
 package com.dnamaster10.tcgui;
 
 import com.dnamaster10.tcgui.commands.CommandDispatcher;
+import com.dnamaster10.tcgui.commands.tabcompleters.GuiTabCompleter;
+import com.dnamaster10.tcgui.commands.tabcompleters.TabCompleter;
 import com.dnamaster10.tcgui.util.Players;
 import com.dnamaster10.tcgui.util.database.DatabaseConfig;
 import com.dnamaster10.tcgui.util.database.TableCreator;
@@ -14,8 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 
 public final class TraincartsGui extends JavaPlugin implements Listener {
@@ -45,6 +50,11 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
             plugin.reportSqlError("Failed to create tables in database: " + String.valueOf(e));
             plugin.disable();
         }
+        //Register the "tcgui" command
+        Objects.requireNonNull(getCommand("tcgui")).setExecutor(new CommandDispatcher());
+
+        //Register tab completers
+        Objects.requireNonNull(getCommand("tcgui")).setTabCompleter(new TabCompleter());
 
         plugin.getLogger().info("TraincartsGui has finished loading!");
     }
@@ -55,11 +65,6 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        CommandDispatcher.dispatchCommand(sender, command, args);
-        return true;
-    }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         //Update player in database

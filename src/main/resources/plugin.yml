@@ -17,6 +17,9 @@ permissions:
   tcgui.creategui:
     description: Allows the creation of tcgui guis
     default: false
+  tcgui.renamegui:
+    description: Allows a gui to be renamed
+    default: false
   tcgui.createticket:
     description: Allows the creation of tcgui tickets
     default: false

@@ -3,11 +3,13 @@ package com.dnamaster10.tcgui.commands;
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class CommandDispatcher {
+public class CommandDispatcher implements CommandExecutor {
     private static void returnError(CommandSender sender, String error) {
         if (sender instanceof Player p) {
             p.sendMessage(ChatColor.RED + error);
@@ -16,15 +18,12 @@ public class CommandDispatcher {
             TraincartsGui.plugin.getLogger().warning(error);
         }
     }
-    public static void dispatchCommand(CommandSender sender, Command command, String[] args) {
-        //Check that command is a tcgui command. If not do nothing
-        if (!command.getName().equalsIgnoreCase("tcgui")) {
-            return;
-        }
-
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Check that a sub-command was provided
         if (args.length < 1) {
             returnError(sender, "Please enter a valid sub-command");
+            return true;
         }
 
         //Decide how to handle command
@@ -55,5 +54,6 @@ public class CommandDispatcher {
                 returnError(sender, "Unrecognised command \"" + args[0] + "\"");
             }
         }
+        return true;
     }
 }
