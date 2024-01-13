@@ -2,7 +2,7 @@ database:
   host: localhost
   port: 3306
   database: dbname
-  user: username
+  user: admin
   password: password
 
 AllowGuiCreate: true

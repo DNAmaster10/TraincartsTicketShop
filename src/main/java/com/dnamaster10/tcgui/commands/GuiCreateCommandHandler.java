@@ -3,12 +3,13 @@ package com.dnamaster10.tcgui.commands;
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiCreateCommandHandler extends CommandHandler {
+public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     boolean checkSync(CommandSender sender, String[] args) {
@@ -32,6 +33,10 @@ public class GuiCreateCommandHandler extends CommandHandler {
         }
         if (args.length > 3) {
             returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+            return false;
+        }
+        if (args[2].length() > 100) {
+            returnError(sender, "Gui names cannot be more than 100 characters in length");
             return false;
         }
         if (!checkStringFormat(args[2])) {
@@ -68,6 +73,8 @@ public class GuiCreateCommandHandler extends CommandHandler {
     void execute(CommandSender sender, String[] args) throws SQLException {
         //Runs the command
         GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor.addGui(args[2], ((Player) sender).getUniqueId().toString());
+        sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
     }
 
     @Override

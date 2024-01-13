@@ -32,7 +32,22 @@ public class CommandDispatcher {
             case "gui" -> {
                 switch (args[1]) {
                     case "create" -> {
-                        if
+                        GuiCreateCommandHandler handler = new GuiCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    default -> {
+                        returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                    }
+                }
+            }
+            case "ticket" -> {
+                switch (args[1]) {
+                    case "create" -> {
+                        TicketCreateCommandHandler handler = new TicketCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    default -> {
+                        returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                     }
                 }
             }

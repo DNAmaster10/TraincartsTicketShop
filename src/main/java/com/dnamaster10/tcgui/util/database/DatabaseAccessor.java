@@ -10,6 +10,7 @@ public class DatabaseAccessor {
     private static final HikariDataSource dataSource;
     static {
         HikariConfig config = new HikariConfig();
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setJdbcUrl(DatabaseConfig.getDbUrl());
         config.setUsername(DatabaseConfig.getDbUsername());
         config.setPassword(DatabaseConfig.getDbPassword());

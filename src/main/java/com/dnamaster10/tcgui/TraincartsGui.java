@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui;
 
+import com.dnamaster10.tcgui.commands.CommandDispatcher;
 import com.dnamaster10.tcgui.util.Players;
 import com.dnamaster10.tcgui.util.database.DatabaseConfig;
 import com.dnamaster10.tcgui.util.database.TableCreator;
@@ -38,7 +39,6 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         try {
             TableCreator tableCreator = new TableCreator();
             tableCreator.createTables();
-            tableCreator.closeConnection();
         }
         catch (SQLException e) {
             //Disable plugin if failed
@@ -57,7 +57,7 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Commands.execute(sender, command, label, args);
+        CommandDispatcher.dispatchCommand(sender, command, args);
         return true;
     }
     @EventHandler

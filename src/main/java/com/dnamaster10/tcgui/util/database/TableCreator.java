@@ -47,8 +47,9 @@ public class TableCreator extends DatabaseAccessor {
                     CREATE TABLE IF NOT EXISTS guieditors (
                         id int UNIQUE AUTO_INCREMENT,
                         guiid int,
-                        player_uuid
-                    );""");
+                        player_uuid varchar(50)
+                    );
+                    """);
             statement4.execute();
         }
     }
