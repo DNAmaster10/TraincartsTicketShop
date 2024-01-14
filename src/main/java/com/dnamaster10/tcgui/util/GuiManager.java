@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.util;
 
+import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;
 import com.dnamaster10.tcgui.objects.ShopGui;
 import org.bukkit.entity.Player;
@@ -24,6 +25,10 @@ public class GuiManager {
         SHOP_GUIS.remove(p);
     }
     public void handleInventoryCloseEvent(Player p) {
+        //If the closed gui was an edit gui, we need to save the contents of the GUI to the database
+        if (EDIT_GUIS.containsKey(p)) {
+            EDIT_GUIS.get(p).save();
+        }
         //If the closed inventory appears in the hashmaps, remove it
         removeGui(p);
     }

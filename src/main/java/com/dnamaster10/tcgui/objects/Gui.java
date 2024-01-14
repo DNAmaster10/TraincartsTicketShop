@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 public abstract class Gui {
     private int currentPage;
     private Inventory inventory;
+    private String guiName;
     public abstract void open(Player p);
     public abstract void nextPage(Player p);
     public abstract void prevPage(Player p);
@@ -20,5 +21,11 @@ public abstract class Gui {
     }
     protected void setPage(int page) {
         this.currentPage = page;
+    }
+    protected String getGuiName() {
+        return this.guiName;
+    }
+    protected void setGuiName (String guiName) {
+        this.guiName = guiName;
     }
 }

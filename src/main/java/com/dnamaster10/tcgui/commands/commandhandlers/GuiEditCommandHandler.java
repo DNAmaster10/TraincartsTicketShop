@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
+import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;
 import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -71,6 +72,9 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
 
         //Open the gui
         gui.open((Player) sender);
+
+        //Register the gui
+        TraincartsGui.plugin.getGuiManager().registerNewEditGui(gui, (Player) sender);
     }
 
     @Override

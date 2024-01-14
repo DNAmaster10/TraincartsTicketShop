@@ -27,8 +27,7 @@ public class TableCreator extends DatabaseAccessor {
                     CREATE TABLE IF NOT EXISTS guis (
                         id int UNIQUE AUTO_INCREMENT,
                         name varchar(100) UNIQUE,
-                        owner_uuid varchar(50),
-                        ticket_count int
+                        owner_uuid varchar(50)
                     );
                     """);
             statement2.execute();
@@ -38,7 +37,10 @@ public class TableCreator extends DatabaseAccessor {
                         id int UNIQUE AUTO_INCREMENT,
                         guiid int,
                         page int,
-                        name varchar(100)
+                        slot int,
+                        tc_name varchar(100),
+                        display_name varchar(100),
+                        price int
                     );
                     """);
             statement3.execute();

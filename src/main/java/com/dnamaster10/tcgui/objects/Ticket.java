@@ -18,19 +18,26 @@ public class Ticket {
     public String getTcTicketName() {
         return tcName;
     }
-    public Ticket(String tcName, String displayName) {
+    public Ticket(String tcName, String displayName, int price) {
         this.tcName = tcName;
         this.displayName = displayName;
 
         //Create item
         item = new ItemStack(Material.PAPER, 1);
 
-        //Store traincart data
+        //Set data
         ItemMeta meta = item.getItemMeta();
-        NamespacedKey key = new NamespacedKey(TraincartsGui.plugin, "ticket_name");
         assert meta != null;
         meta.setDisplayName(displayName);
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, tcName);
+
+        //Set tc ticket data
+        NamespacedKey tcKey = new NamespacedKey(TraincartsGui.plugin, "tc_name");
+        meta.getPersistentDataContainer().set(tcKey, PersistentDataType.STRING, tcName);
+
+        //Set price data
+        NamespacedKey priceKey = new NamespacedKey(TraincartsGui.plugin, "price");
+        meta.getPersistentDataContainer().set(priceKey, PersistentDataType.INTEGER, price);
+
         item.setItemMeta(meta);
     }
 }

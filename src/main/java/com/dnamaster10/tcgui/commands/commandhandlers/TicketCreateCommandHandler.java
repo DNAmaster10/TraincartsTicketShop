@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
-import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.Ticket;
 import com.dnamaster10.tcgui.util.Traincarts;
 import org.bukkit.Bukkit;
@@ -61,7 +60,7 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     void execute(CommandSender sender, String[] args) throws SQLException {
-        Ticket ticket = new Ticket(args[2], args[3]);
+        Ticket ticket = new Ticket(args[2], args[3], 0);
         ticket.giveToPlayer((Player) sender);
     }
 
