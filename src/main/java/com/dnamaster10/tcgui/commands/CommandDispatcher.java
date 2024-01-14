@@ -1,6 +1,10 @@
 package com.dnamaster10.tcgui.commands;
 
 import com.dnamaster10.tcgui.TraincartsGui;
+import com.dnamaster10.tcgui.commands.commandhandlers.GuiCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.GuiEditCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.GuiRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.TicketCreateCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,9 +38,15 @@ public class CommandDispatcher implements CommandExecutor {
                         GuiCreateCommandHandler handler = new GuiCreateCommandHandler();
                         handler.handle(sender, args);
                     }
-                    default -> {
-                        returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                    case "rename" -> {
+                        GuiRenameCommandHandler handler = new GuiRenameCommandHandler();
+                        handler.handle(sender, args);
                     }
+                    case "edit" -> {
+                        GuiEditCommandHandler handler = new GuiEditCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
             case "ticket" -> {
@@ -45,14 +55,10 @@ public class CommandDispatcher implements CommandExecutor {
                         TicketCreateCommandHandler handler = new TicketCreateCommandHandler();
                         handler.handle(sender, args);
                     }
-                    default -> {
-                        returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
-                    }
+                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
-            default -> {
-                returnError(sender, "Unrecognised command \"" + args[0] + "\"");
-            }
+            default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");
         }
         return true;
     }

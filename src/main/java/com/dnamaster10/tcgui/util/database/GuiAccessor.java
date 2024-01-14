@@ -53,6 +53,11 @@ public class GuiAccessor extends DatabaseAccessor {
             return isEditor;
         }
     }
+    public boolean playerCanEdit(String guiName, String ownerUUID) throws SQLException {
+        //Returns true if player is either an owner of a gui or a listed editor
+        int guiId = getGuiIdByName(guiName);
+        return checkGuiOwnershipByUuid(guiName, ownerUUID) || checkGuiEditByUuid(guiName, ownerUUID);
+    }
     public Integer getGuiIdByName(String name) throws SQLException {
         //Returns gui id from name
         try (Connection connection = getConnection()) {
@@ -66,6 +71,15 @@ public class GuiAccessor extends DatabaseAccessor {
             return id;
         }
     }
+    public void updateGuiName(String oldName, String newName) throws SQLException {
+        //Renames a gui in the database
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET name=? WHERE name=?");
+            statement.setString(1, oldName);
+            statement.setString(2, newName);
+            statement.executeUpdate();
+        }
+    }
     public void addGui(String name, String ownerUuid) throws SQLException {
         //Registers a new GUI in the database
         try (Connection connection = getConnection()) {
@@ -73,7 +87,14 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setString(1, name);
             statement.setString(2, ownerUuid);
             statement.executeUpdate();
-            statement.close();
+        }
+    }
+    public void deleteGuiById(int id) throws SQLException {
+        //Deletes a gui by its id
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
+            statement.setInt(1, id);
+            statement.execute();
         }
     }
 }

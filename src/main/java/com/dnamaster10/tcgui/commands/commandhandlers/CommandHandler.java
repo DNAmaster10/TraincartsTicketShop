@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.commands;
+package com.dnamaster10.tcgui.commands.commandhandlers;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.ChatColor;

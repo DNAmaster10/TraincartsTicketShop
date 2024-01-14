@@ -1,6 +1,5 @@
-package com.dnamaster10.tcgui.commands;
+package com.dnamaster10.tcgui.commands.commandhandlers;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,7 +44,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         }
 
         //Check permissions
-        if (!sender.hasPermission("tcgui.creategui")) {
+        if (!sender.hasPermission("tcgui.gui.create")) {
             returnError(sender, "You do not have permission to perform that action");
             return false;
         }
@@ -89,7 +88,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
                 }
                 execute(sender, args);
             } catch (SQLException e) {
-                getPlugin().reportSqlError((Player) sender, e.toString());
+                getPlugin().reportSqlError(sender, e.toString());
             }
         });
     }

@@ -13,14 +13,20 @@ permissions:
     description: Grants all tcgui permissions
     default: op
     children:
-      tcgui.creategui: false
-  tcgui.creategui:
+      tcgui.gui.create: false
+  tcgui.gui.create:
     description: Allows the creation of tcgui guis
     default: false
-  tcgui.renamegui:
+  tcgui.gui.edit:
+    description: Allows editing guis
+    default: false
+  tcgui.gui.rename:
     description: Allows a gui to be renamed
     default: false
-  tcgui.createticket:
+  tcgui.gui.delete:
+    description: Allows deleting of guis
+    default: false
+  tcgui.ticket.create:
     description: Allows the creation of tcgui tickets
     default: false
 commands:

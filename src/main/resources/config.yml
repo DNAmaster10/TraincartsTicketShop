@@ -6,6 +6,8 @@ database:
   password: password
 
 AllowGuiCreate: true
+AllowGuiEdit: true
 AllowGuiRename: true
+AllowGuiDelete: true
 
 AllowTicketCreate: true

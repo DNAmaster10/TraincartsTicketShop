@@ -1,5 +1,6 @@
-package com.dnamaster10.tcgui.commands;
+package com.dnamaster10.tcgui.commands.commandhandlers;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.Ticket;
 import com.dnamaster10.tcgui.util.Traincarts;
 import org.bukkit.Bukkit;
@@ -39,7 +40,7 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
         }
 
         //Check permissions
-        if (!sender.hasPermission("tcgui.createticket")) {
+        if (!sender.hasPermission("tcgui.ticket.create")) {
             returnError(sender, "You do not have permission to perform that action");
             return false;
         }
@@ -76,7 +77,7 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
                 }
                 execute(sender, args);
             } catch (SQLException e) {
-                getPlugin().reportSqlError((Player) sender, e.toString());
+                getPlugin().reportSqlError(sender, e.toString());
             }
         });
     }
