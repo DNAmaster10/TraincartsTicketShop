@@ -34,8 +34,7 @@ public class GuiBuilder {
         //Add tickets to inventory
         for (TicketDatabaseObject dbObject : ticketDatabaseObjects) {
             Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getDisplayName(), dbObject.getPrice());
-            ItemStack stack = new ItemStack(Material.PAPER, 1);
-            inventory.setItem(dbObject.getSlot(), stack);
+            inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
         }
         return inventory;
     }

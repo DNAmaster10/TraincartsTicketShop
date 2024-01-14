@@ -18,6 +18,9 @@ public class Ticket {
     public String getTcTicketName() {
         return tcName;
     }
+    public ItemStack getItemStack() {
+        return item;
+    }
     public Ticket(String tcName, String displayName, int price) {
         this.tcName = tcName;
         this.displayName = displayName;
