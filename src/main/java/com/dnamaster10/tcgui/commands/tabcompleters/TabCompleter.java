@@ -15,6 +15,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         ARGS0 = new ArrayList<>();
         ARGS0.add("gui");
         ARGS0.add("ticket");
+        ARGS0.add("shop");
     }
     @Nullable
     @Override
@@ -39,6 +40,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             }
             case "ticket" -> {
                 return (new TicketTabCompleter().onTabComplete(commandSender, args));
+            }
+            case "shop" -> {
+                return (new ShopTabCompleter().onTabComplete(commandSender, args));
             }
         }
         return null;

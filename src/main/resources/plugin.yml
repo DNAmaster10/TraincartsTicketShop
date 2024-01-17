@@ -39,6 +39,9 @@ permissions:
   tcgui.ticket.create:
     description: Allows the creation of tcgui tickets
     default: false
+  tcgui.shop.open:
+    description: Allows player to open a shop gui from command
+    default: false
 commands:
   tcgui:
     description: The parent command for all tcgui commands

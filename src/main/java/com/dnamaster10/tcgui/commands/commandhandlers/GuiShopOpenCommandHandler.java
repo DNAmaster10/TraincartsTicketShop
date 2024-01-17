@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.objects.EditGui;
+import com.dnamaster10.tcgui.objects.ShopGui;
 import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
@@ -10,31 +10,32 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiEditCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui gui edit <gui_name>
+public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui shop open <gui_name>
     @Override
     boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiEdit")) {
-            returnError(sender, "Gui editing is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowOpenShops")) {
+            returnError(sender, "Opening shops is disabled on this server");
             return false;
         }
 
-        //Check sender is player and permissions
+        //Check sender is player
         if (!(sender instanceof Player p)) {
             returnError(sender, "Command must be executed by a player");
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.edit")) {
-                returnError(sender, "You do not have permission to edit that gui");
+            //Check permissions
+            if (!p.hasPermission("tcgui.shop.open")) {
+                returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
-        if (args.length < 3)  {
-            returnError(sender, "Please enter a gui name to edit");
+        if (args.length < 3) {
+            returnError(sender, "Please enter a gui name");
             return false;
         }
         if (args.length > 3) {
@@ -54,25 +55,19 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "No gui with name \"" + args[2] + "\" exists");
             return false;
         }
-
-        //Check that player is owner or editor of gui
-        if (!guiAccessor.playerCanEdit(args[2], ((Player) sender).getUniqueId().toString())) {
-            returnError(sender, "You do not have permission to edit that gui");
-            return false;
-        }
         return true;
     }
 
     @Override
     void execute(CommandSender sender, String[] args) throws SQLException {
-        //Create a new GUI
-        EditGui gui = new EditGui(args[2]);
+        //Create a new gui
+        ShopGui gui = new ShopGui(args[2]);
 
         //Open the gui
         gui.open((Player) sender);
 
         //Register the gui
-        TraincartsGui.plugin.getGuiManager().registerNewEditGui(gui, (Player) sender);
+        TraincartsGui.plugin.getGuiManager().registerNewShopGui(gui, (Player) sender);
     }
 
     @Override

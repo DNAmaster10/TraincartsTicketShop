@@ -86,6 +86,19 @@ public class GuiAccessor extends DatabaseAccessor {
             return id;
         }
     }
+    public Integer getTotalPages(int guiId) throws SQLException {
+        //Returns the total pages for this giu
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT MAX(page) FROM tickets WHERE guiid=?");
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            Integer maxPage = null;
+            while (result.next()) {
+                maxPage = result.getInt(1);
+            }
+            return maxPage;
+        }
+    }
     public void updateGuiName(String oldName, String newName) throws SQLException {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {

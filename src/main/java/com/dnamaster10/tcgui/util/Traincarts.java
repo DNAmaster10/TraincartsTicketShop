@@ -1,5 +1,10 @@
 package com.dnamaster10.tcgui.util;
 
+import com.bergerkiller.bukkit.tc.tickets.Ticket;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import static com.bergerkiller.bukkit.tc.tickets.TicketStore.getTicket;
 
 public class Traincarts {
@@ -7,5 +12,11 @@ public class Traincarts {
     public static boolean checkTicket(String name) {
         //Returns true if traincarts ticket exists
         return getTicket(name) != null;
+    }
+    public static void giveTicketItem(String tcName, int price, Player p) {
+        Ticket ticket = getTicket(tcName);
+
+        ItemStack item = ticket.createItem(p);
+        p.getInventory().addItem(item);
     }
 }

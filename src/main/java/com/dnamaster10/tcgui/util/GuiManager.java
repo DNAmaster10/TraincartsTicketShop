@@ -24,6 +24,13 @@ public class GuiManager {
 
         EDIT_GUIS.put(p, gui);
     }
+    public void registerNewShopGui(ShopGui gui, Player p) {
+        //If player already has a GUI registered remove their old onw
+        EDIT_GUIS.remove(p);
+        SHOP_GUIS.remove(p);
+
+        SHOP_GUIS.put(p, gui);
+    }
     private void removeGui(Player p) {
         EDIT_GUIS.remove(p);
         SHOP_GUIS.remove(p);
@@ -35,7 +42,7 @@ public class GuiManager {
             EDIT_GUIS.get(p).handleClick(event, items);
         }
         else if (SHOP_GUIS.containsKey(p)) {
-
+            SHOP_GUIS.get(p).handleClick(event, items);
         }
         return;
     }

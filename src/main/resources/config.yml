@@ -14,3 +14,5 @@ AllowListGuiEditorsOtherOwners: true
 
 AllowTicketCreate: true
 
+AllowOpenShops: true
+

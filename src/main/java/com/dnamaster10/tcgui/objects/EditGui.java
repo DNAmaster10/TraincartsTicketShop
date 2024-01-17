@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.objects;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.util.ButtonBuilder;
 import com.dnamaster10.tcgui.util.GuiBuilder;
 import com.dnamaster10.tcgui.util.TicketDatabaseObject;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -10,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -29,7 +27,7 @@ public class EditGui extends Gui {
             return;
         }
         //Else, run synchronous
-        Bukkit.getScheduler().runTask(TraincartsGui.plugin, () -> {
+        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> {
             p.openInventory(getInventory());
         });
     }
@@ -93,9 +91,6 @@ public class EditGui extends Gui {
 
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        //Get all possible items the player may have clicked.
-        //This is necessary in the event the player replaced the button with another item.
-
         //Check if clicked item is a page button
         boolean containsButton = false;
         String buttonType = null;

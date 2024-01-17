@@ -25,7 +25,6 @@ public class InventoryClickEventHandler implements Listener {
         if (event.getWhoClicked().getItemOnCursor().getAmount() > 0) {
             items.add(event.getWhoClicked().getItemOnCursor());
         }
-        TraincartsGui.getPlugin().getLogger().severe("Items length: " + items.size());
         Bukkit.getScheduler().runTaskLater(TraincartsGui.plugin, () -> {
             TraincartsGui.getPlugin().getGuiManager().handleInventoryClickEvent(event, items);
         }, 1L);

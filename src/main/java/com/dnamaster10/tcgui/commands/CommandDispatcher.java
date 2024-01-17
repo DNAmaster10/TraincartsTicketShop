@@ -1,10 +1,7 @@
 package com.dnamaster10.tcgui.commands;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.commands.commandhandlers.GuiCreateCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.GuiEditCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.GuiRenameCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.TicketCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -56,6 +53,14 @@ public class CommandDispatcher implements CommandExecutor {
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                }
+            }
+            case "shop" -> {
+                switch (args[1]) {
+                    case "open" -> {
+                        GuiShopOpenCommandHandler handler = new GuiShopOpenCommandHandler();
+                        handler.handle(sender, args);
+                    }
                 }
             }
             default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");

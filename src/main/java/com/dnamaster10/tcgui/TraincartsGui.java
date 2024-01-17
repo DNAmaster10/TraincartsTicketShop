@@ -3,12 +3,10 @@ package com.dnamaster10.tcgui;
 import com.dnamaster10.tcgui.commands.CommandDispatcher;
 import com.dnamaster10.tcgui.commands.tabcompleters.TabCompleter;
 import com.dnamaster10.tcgui.util.GuiManager;
+import com.dnamaster10.tcgui.util.SignHandler;
 import com.dnamaster10.tcgui.util.database.DatabaseConfig;
 import com.dnamaster10.tcgui.util.database.TableCreator;
-import com.dnamaster10.tcgui.util.eventhandlers.InventoryClickEventHandler;
-import com.dnamaster10.tcgui.util.eventhandlers.InventoryCloseEventHandler;
-import com.dnamaster10.tcgui.util.eventhandlers.PlayerJoinEventHandler;
-import com.dnamaster10.tcgui.util.eventhandlers.PlayerQuitEventHandler;
+import com.dnamaster10.tcgui.util.eventhandlers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -23,6 +21,7 @@ import java.util.Objects;
 public final class TraincartsGui extends JavaPlugin implements Listener {
     public static TraincartsGui plugin;
     private GuiManager guiManager;
+    private SignHandler signHandler;
     public static TraincartsGui getPlugin() {
         return plugin;
     }
@@ -60,11 +59,15 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         //Register gui manager
         guiManager = new GuiManager();
 
+        //Register the sign handler
+        signHandler = new SignHandler();
+
         //Register listeners
         getServer().getPluginManager().registerEvents(new InventoryClickEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new InventoryCloseEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerJoinEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerQuitEventHandler(), plugin);
+        getServer().getPluginManager().registerEvents(new PlayerInteractEventHandler(), plugin);
 
         plugin.getLogger().info("TraincartsGui has finished loading!");
     }
@@ -76,6 +79,9 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
 
     public GuiManager getGuiManager() {
         return guiManager;
+    }
+    public SignHandler getSignHandler() {
+        return this.signHandler;
     }
     public void reportSqlError(String error) {
         plugin.getLogger().severe("A database error occurred: " + error);
