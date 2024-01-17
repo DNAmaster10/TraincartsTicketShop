@@ -3,36 +3,32 @@ package com.dnamaster10.tcgui.commands.tabcompleters;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class GuiTabCompleter extends SubCommandCompleter {
-    private static final List<String> ARGS1;
+public class GuiEditorsTabCompleter extends SubCommandCompleter {
+    private static final List<String> ARGS2;
     static {
-        ARGS1 = new ArrayList<>();
-        ARGS1.add("create");
-        ARGS1.add("edit");
-        ARGS1.add("rename");
-        ARGS1.add("delete");
-        ARGS1.add("editors");
+        ARGS2 = new ArrayList<>();
+        ARGS2.add("add");
+        ARGS2.add("list");
+        ARGS2.add("remove");
+        ARGS2.add("removeall");
     }
-
     @Override
     protected boolean checkPermission(Player p, String command) {
-        //Returns boolean indicating whether player has permission
-        //to run the specific sub-command.
-        return p.hasPermission("tcgui.gui." + command);
+        return p.hasPermission("tcgui.gui.editors." + command);
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args) {
-        //Check that sub-command hasn't already been entered
-        if (args.length > 2) {
+        //Check that the sub-command hasn't already been entered
+        if (args.length > 3) {
             return null;
         }
-        //Return sub-command matches
-        List<String> subCommands = StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
+        //Get sub-command matches
+        List<String> subCommands = StringUtil.copyPartialMatches(args[2], ARGS2, new ArrayList<>());
 
         //If sender isn't player, return
         if (!(sender instanceof Player)) {

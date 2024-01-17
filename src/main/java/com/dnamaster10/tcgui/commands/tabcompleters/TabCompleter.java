@@ -27,7 +27,15 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         //Select an appropriate tab completer for the given sub-command
         switch (args[0]) {
             case "gui" -> {
-                return (new GuiTabCompleter().onTabComplete(commandSender, args));
+                if (args.length < 3) {
+                    return (new GuiTabCompleter().onTabComplete(commandSender, args));
+                }
+                //If entering more sub-commands
+                switch (args[1]) {
+                    case "editors" -> {
+                        return (new GuiEditorsTabCompleter().onTabComplete(commandSender, args));
+                    }
+                }
             }
             case "ticket" -> {
                 return (new TicketTabCompleter().onTabComplete(commandSender, args));

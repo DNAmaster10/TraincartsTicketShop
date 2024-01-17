@@ -10,4 +10,7 @@ AllowGuiEdit: true
 AllowGuiRename: true
 AllowGuiDelete: true
 
+AllowListGuiEditorsOtherOwners: true
+
 AllowTicketCreate: true
+

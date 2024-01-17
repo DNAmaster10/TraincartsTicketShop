@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiAccessor extends DatabaseAccessor {
     public GuiAccessor() throws SQLException {
@@ -57,6 +59,19 @@ public class GuiAccessor extends DatabaseAccessor {
         //Returns true if player is either an owner of a gui or a listed editor
         int guiId = getGuiIdByName(guiName);
         return checkGuiOwnershipByUuid(guiName, ownerUUID) || checkGuiEditByUuid(guiName, ownerUUID);
+    }
+    public List<String> getEditorsUuids(int guiId) throws SQLException {
+        //Returns a list of player UUIDs who have permission to edit a specific gui
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT player_uuid FROM guieditors WHERE guiid=?");
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            List<String> uuids = new ArrayList<>();
+            while (result.next()) {
+                uuids.add(result.getString("player_uuid"));
+            }
+            return uuids;
+        }
     }
     public Integer getGuiIdByName(String name) throws SQLException {
         //Returns gui id from name

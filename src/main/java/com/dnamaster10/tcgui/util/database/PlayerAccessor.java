@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerAccessor extends DatabaseAccessor{
     public PlayerAccessor() throws SQLException {
@@ -34,6 +36,30 @@ public class PlayerAccessor extends DatabaseAccessor{
                 name = result.getString("username");
             }
             return name;
+        }
+    }
+    public List<String> getUsernamesFromUuids(List<String> uuids) throws SQLException {
+        //Takes a list of UUIDs and returns a list of usernames
+        try (Connection connection = getConnection()) {
+            //Build the SQL statement
+            StringBuilder sql = new StringBuilder("SELECT username FROM players WHERE uuid IN (");
+            sql.append("?, ".repeat(uuids.size()));
+            //Delete last comma
+            sql.delete(sql.length()-1, sql.length());
+            sql.append(") ORDER BY username");
+
+            //Assign parameters
+            PreparedStatement s = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < uuids.size(); i++) {
+                s.setString(i + 1, uuids.get(i));
+            }
+
+            ResultSet result = s.executeQuery();
+            List<String> usernames = new ArrayList<>();
+            while (result.next()) {
+                usernames.add(result.getString("username"));
+            }
+            return usernames;
         }
     }
     public void updatePlayer(String name, String uuid) throws SQLException {

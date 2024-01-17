@@ -12,8 +12,6 @@ permissions:
   tcgui.*:
     description: Grants all tcgui permissions
     default: op
-    children:
-      tcgui.gui.create: false
   tcgui.gui.create:
     description: Allows the creation of tcgui guis
     default: false
@@ -25,6 +23,18 @@ permissions:
     default: false
   tcgui.gui.delete:
     description: Allows deleting of guis
+    default: false
+  tcgui.gui.editors.add:
+    description: Allows players to change who can edit their gui
+    default: false
+  tcgui.gui.editors.list:
+    description: Allows players to see who can edit a gui
+    default: false
+  tcgui.gui.editors.remove:
+    description: Allows players to remove editors from their gui
+    default: false
+  tcgui.gui.editors.removeall:
+    description: Allows players to remove all editors from their gui
     default: false
   tcgui.ticket.create:
     description: Allows the creation of tcgui tickets

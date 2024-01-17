@@ -33,6 +33,10 @@ public class Ticket {
         assert meta != null;
         meta.setDisplayName(displayName);
 
+        //Set type data
+        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ticket");
+
         //Set tc ticket data
         NamespacedKey tcKey = new NamespacedKey(TraincartsGui.plugin, "tc_name");
         meta.getPersistentDataContainer().set(tcKey, PersistentDataType.STRING, tcName);

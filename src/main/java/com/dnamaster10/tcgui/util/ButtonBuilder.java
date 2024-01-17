@@ -19,10 +19,32 @@ public class ButtonBuilder {
         meta.setDisplayName("Next Page");
 
         //Set button type
-        NamespacedKey key = new NamespacedKey(TraincartsGui.plugin, "button_type");
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "next_page");
+        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
+        NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
+
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "button");
+        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "next_page");
         nextPageItem.setItemMeta(meta);
 
         return nextPageItem;
+    }
+    public ItemStack getPrevPageButton() {
+        //Create the item
+        ItemStack prevPageItem = new ItemStack(Material.BOOK, 1);
+        ItemMeta meta = prevPageItem.getItemMeta();
+        assert  meta != null;
+
+        //Set display
+        meta.setDisplayName("Prev Page");
+
+        //Set button type
+        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
+        NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
+
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "button");
+        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "prev_page");
+        prevPageItem.setItemMeta(meta);
+
+        return prevPageItem;
     }
 }
