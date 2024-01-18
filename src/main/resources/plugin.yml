@@ -42,6 +42,9 @@ permissions:
   tcgui.shop.open:
     description: Allows player to open a shop gui from command
     default: false
+  tcgui.gui.linker.create:
+    description: Allows player to create gui linker item
+    default: false
 commands:
   tcgui:
     description: The parent command for all tcgui commands

@@ -61,6 +61,7 @@ public class CommandDispatcher implements CommandExecutor {
                         GuiShopOpenCommandHandler handler = new GuiShopOpenCommandHandler();
                         handler.handle(sender, args);
                     }
+                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
             default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");

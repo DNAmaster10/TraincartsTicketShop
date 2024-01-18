@@ -37,7 +37,11 @@ public class GuiBuilder {
     }
     public void addPrevPageButton() {
         ButtonBuilder builder = new ButtonBuilder();
-        this.inventory.setItem(45, builder.getPrevPageButton());
+        this.inventory.setItem(52, builder.getPrevPageButton());
+    }
+    public void addBackButton() {
+        ButtonBuilder builder = new ButtonBuilder();
+        this.inventory.setItem(45, builder.getBackButton());
     }
     public Inventory getInventory() {
         return this.inventory;

@@ -17,6 +17,9 @@ public class GuiManager {
     private static final HashMap<Player, EditGui> EDIT_GUIS = new HashMap<>();
     private static final HashMap<Player, ShopGui> SHOP_GUIS = new HashMap<>();
 
+    //Used to store the last guis that the player was interacting with. Used for the gui back button.
+    private static final HashMap<Player, String> PREVIOUS_GUIS = new HashMap<>();
+
     public void registerNewEditGui(EditGui gui, Player p) {
         //If player already has a GUI registered, remove their old one
         EDIT_GUIS.remove(p);

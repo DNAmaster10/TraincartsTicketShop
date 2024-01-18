@@ -99,6 +99,19 @@ public class GuiAccessor extends DatabaseAccessor {
             return maxPage;
         }
     }
+    public String getGuiDisplayName(String guiName) throws SQLException {
+        //Returns display name of gui from name
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT display_name FROM guis WHERE name=?");
+            statement.setString(1, guiName);
+            ResultSet result = statement.executeQuery();
+            String displayName = null;
+            while (result.next()) {
+                displayName = result.getString("display_name");
+            }
+            return displayName;
+        }
+    }
     public void updateGuiName(String oldName, String newName) throws SQLException {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {

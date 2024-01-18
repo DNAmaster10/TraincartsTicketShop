@@ -1,22 +1,22 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.objects.EditGui;
-import com.dnamaster10.tcgui.util.GuiManager;
+import com.dnamaster10.tcgui.util.ButtonBuilder;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
-public class GuiEditCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui gui edit <gui_name>
+public class GuiLinkerCreateCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui linker create
     @Override
     boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiEdit")) {
-            returnError(sender, "Gui editing is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowLinkerCreate")) {
+            returnError(sender, "Linker creation is disabled on this server");
             return false;
         }
 
@@ -26,19 +26,19 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.edit")) {
+            if (!p.hasPermission("tcgui.gui.linker.create")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
-        if (args.length < 3)  {
-            returnError(sender, "Please enter a gui name to edit");
+        if (args.length < 4) {
+            returnError(sender, "Please enter a gui name");
             return false;
         }
-        if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+        if (args.length > 4) {
+            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
             return false;
         }
 
@@ -50,29 +50,20 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Check that gui exists
-        if (!guiAccessor.checkGuiByName(args[2])) {
-            returnError(sender, "No gui with name \"" + args[2] + "\" exists");
+        if (!guiAccessor.checkGuiByName(args[3])) {
+            returnError(sender, "No gui with name \"" + args[3] + "\" exists");
             return false;
         }
 
-        //Check that player is owner or editor of gui
-        if (!guiAccessor.playerCanEdit(args[2], ((Player) sender).getUniqueId().toString())) {
-            returnError(sender, "You do not have permission to edit that gui");
-            return false;
-        }
         return true;
     }
 
     @Override
     void execute(CommandSender sender, String[] args) throws SQLException {
-        //Create a new GUI
-        EditGui gui = new EditGui(args[2]);
-
-        //Open the gui
-        gui.open((Player) sender);
-
-        //Register the gui
-        TraincartsGui.plugin.getGuiManager().registerNewEditGui(gui, (Player) sender);
+        ButtonBuilder builder = new ButtonBuilder();
+        ItemStack button = builder.getLinkerButton(args[3]);
+        Player p = (Player) sender;
+        p.getInventory().addItem(button);
     }
 
     @Override

@@ -27,6 +27,7 @@ public class TableCreator extends DatabaseAccessor {
                     CREATE TABLE IF NOT EXISTS guis (
                         id int UNIQUE AUTO_INCREMENT,
                         name varchar(100) UNIQUE,
+                        display_name varchar(100),
                         owner_uuid varchar(50)
                     );
                     """);
