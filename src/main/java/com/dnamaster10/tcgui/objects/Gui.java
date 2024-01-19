@@ -14,6 +14,7 @@ public abstract class Gui {
     private int currentPage;
     private Inventory inventory;
     private String guiName;
+    private Player player;
     public abstract void open(Player p);
     public abstract void nextPage(Player p);
     public abstract void prevPage(Player p);
@@ -35,6 +36,15 @@ public abstract class Gui {
     }
     protected void setGuiName (String guiName) {
         this.guiName = guiName;
+    }
+    protected TraincartsGui getPlugin() {
+        return TraincartsGui.getPlugin();
+    }
+    protected Player getPlayer() {
+        return player;
+    }
+    protected void setPlayer(Player p) {
+        player = p;
     }
     protected void updateNewInventory(Inventory newInventory) {
         //Takes in an inventory, and replaces all current items with new items

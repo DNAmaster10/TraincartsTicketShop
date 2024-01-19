@@ -54,6 +54,18 @@ public class TableCreator extends DatabaseAccessor {
                     );
                     """);
             statement4.execute();
+
+            PreparedStatement statement5 = connection.prepareStatement("""
+                    CREATE TABLE IF NOT EXISTS linkers (
+                        id int UNIQUE AUTO_INCREMENT,
+                        guiid int,
+                        page int,
+                        slot int,
+                        linked_guiid int,
+                        display_name varchar(100)
+                    );
+                    """);
+            statement5.execute();
         }
     }
 }

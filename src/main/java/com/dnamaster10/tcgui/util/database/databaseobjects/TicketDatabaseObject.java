@@ -1,10 +1,10 @@
-package com.dnamaster10.tcgui.util;
+package com.dnamaster10.tcgui.util.database.databaseobjects;
 
 public class TicketDatabaseObject {
-    private int slot;
-    private String tcName;
-    private String displayName;
-    private int price;
+    private final int slot;
+    private final String tcName;
+    private final String displayName;
+    private final int price;
     public int getSlot() {
         return slot;
     }

@@ -61,7 +61,7 @@ public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
     @Override
     void execute(CommandSender sender, String[] args) throws SQLException {
         //Create a new gui
-        ShopGui gui = new ShopGui(args[2]);
+        ShopGui gui = new ShopGui(args[2], (Player) sender);
 
         //Open the gui
         gui.open((Player) sender);

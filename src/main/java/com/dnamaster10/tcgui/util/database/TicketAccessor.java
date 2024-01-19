@@ -1,6 +1,6 @@
 package com.dnamaster10.tcgui.util.database;
 
-import com.dnamaster10.tcgui.util.TicketDatabaseObject;
+import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

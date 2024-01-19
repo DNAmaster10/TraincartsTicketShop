@@ -2,7 +2,9 @@ package com.dnamaster10.tcgui.objects;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.util.GuiBuilder;
-import com.dnamaster10.tcgui.util.TicketDatabaseObject;
+import com.dnamaster10.tcgui.util.database.LinkerAccessor;
+import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
@@ -126,10 +128,15 @@ public class EditGui extends Gui {
     public void save() {
         //Method must be run asynchronously
         //Saves the current gui page
-        //Build an arraylist of Ticket database objects to be put in the database
+        //Build an arraylist of ticket and linker database objects to be put in the database
+
         List<TicketDatabaseObject> ticketList = new ArrayList<>();
         NamespacedKey tcKey = new NamespacedKey(TraincartsGui.plugin, "tc_name");
         NamespacedKey priceKey = new NamespacedKey(TraincartsGui.plugin, "price");
+
+        List<LinkerDatabaseObject> linkerList = new ArrayList<>();
+        NamespacedKey guiKey = new NamespacedKey(TraincartsGui.plugin, "gui");
+
         for (int i = 0; i < getInventory().getSize() - 9; i++) {
             //For every possible ticket slot get the item in that slot
             ItemStack item = getInventory().getItem(i);
@@ -137,33 +144,41 @@ public class EditGui extends Gui {
                 //If there isn't an item, continue to the next slot
                 continue;
             }
-            //Check if item is a ticket
+            //Check if item is a ticket or linker
             ItemMeta meta = item.getItemMeta();
             if (meta == null) {
                 continue;
             }
-            if (!meta.getPersistentDataContainer().has(tcKey, PersistentDataType.STRING)) {
-                continue;
-            }
-            int price = 0;
-            //Check if price is set. If not, set it to 0
-            if (meta.getPersistentDataContainer().has(priceKey, PersistentDataType.INTEGER)) {
-                price = meta.getPersistentDataContainer().get(priceKey, PersistentDataType.INTEGER);
-            }
-            //If it is, get data from ticket
-            String tcName = meta.getPersistentDataContainer().get(tcKey, PersistentDataType.STRING);
-            String displayName = meta.getDisplayName();
+            if (meta.getPersistentDataContainer().has(tcKey, PersistentDataType.STRING)) {
+                //Item is a ticket, handle ticket save
+                String tcName = meta.getPersistentDataContainer().get(tcKey, PersistentDataType.STRING);
+                String displayName = meta.getDisplayName();
 
-            TicketDatabaseObject ticket = new TicketDatabaseObject(i, tcName, displayName, price);
-            ticketList.add(ticket);
+                //Check if price is set, if not, set price to 0
+                int price = 0;
+                if (meta.getPersistentDataContainer().has(priceKey, PersistentDataType.INTEGER)) {
+                    price = meta.getPersistentDataContainer().get(priceKey, PersistentDataType.INTEGER);
+                }
+
+                TicketDatabaseObject ticket = new TicketDatabaseObject(i, tcName, displayName, price);
+                ticketList.add(ticket);
+            }
+            else if (meta.getPersistentDataContainer().has(guiKey, PersistentDataType.INTEGER)) {
+                getPlugin().getLogger().severe("SAVING A LINKER!");
+                //Item is a linker, handler linker save
+                int linkedGuiId = meta.getPersistentDataContainer().get(guiKey, PersistentDataType.INTEGER);
+                String displayName = meta.getDisplayName();
+                LinkerDatabaseObject linker = new LinkerDatabaseObject(i, linkedGuiId, displayName);
+                linkerList.add(linker);
+            }
+            //Otherwise, item is not a savable / tcgui item. Ignore it to remove it
         }
-        //With an array list of ticket database objects, we can insert into the database
-        //First delete all tickets which are currently registered
-        TicketAccessor ticketAccessor;
-        GuiAccessor guiAccessor;
+        //With an array list of tickets and linkers, we can save the data to the database
+        //First, delete all existing tickets and linkers for this gui and page
         try {
-            ticketAccessor = new TicketAccessor();
-            guiAccessor = new GuiAccessor();
+            TicketAccessor ticketAccessor = new TicketAccessor();
+            GuiAccessor guiAccessor = new GuiAccessor();
+            LinkerAccessor linkerAccessor = new LinkerAccessor();
 
             int guiId = guiAccessor.getGuiIdByName(getGuiName());
 
@@ -171,6 +186,9 @@ public class EditGui extends Gui {
 
             //Add the tickets to the database
             ticketAccessor.addTickets(guiId, getPage(), ticketList);
+
+            //Add the linkers to the database
+            linkerAccessor.addLinkers(guiId, getPage(), linkerList);
         } catch (SQLException e) {
             TraincartsGui.plugin.reportSqlError(e.toString());
             return;

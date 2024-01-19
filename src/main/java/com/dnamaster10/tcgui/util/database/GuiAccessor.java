@@ -22,7 +22,20 @@ public class GuiAccessor extends DatabaseAccessor {
             while (result.next()) {
                 total = result.getInt(1);
             }
-            return (total > 0);
+            return total > 0;
+        }
+    }
+    public boolean checkGuiById(int id) throws SQLException {
+        //Returns true if the gui with the given name exists in database
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=?");
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            int total = 0;
+            while (result.next()) {
+                total = result.getInt(1);
+            }
+            return total > 0;
         }
     }
     public boolean checkGuiOwnershipByUuid(String guiName, String ownerUuid) throws SQLException {
@@ -84,6 +97,19 @@ public class GuiAccessor extends DatabaseAccessor {
                 id = result.getInt(1);
             }
             return id;
+        }
+    }
+    public String getGuiNameById(int id) throws SQLException {
+        //Returns gui name from id
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT name FROM guis WHERE id=?");
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            String name = null;
+            while (result.next()) {
+                name = result.getString("name");
+            }
+            return name;
         }
     }
     public Integer getTotalPages(int guiId) throws SQLException {

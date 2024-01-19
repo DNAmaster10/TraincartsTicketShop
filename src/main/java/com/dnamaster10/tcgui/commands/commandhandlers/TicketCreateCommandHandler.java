@@ -1,6 +1,6 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
-import com.dnamaster10.tcgui.objects.Ticket;
+import com.dnamaster10.tcgui.objects.buttons.Ticket;
 import com.dnamaster10.tcgui.util.Traincarts;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

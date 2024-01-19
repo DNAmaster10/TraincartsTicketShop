@@ -1,8 +1,11 @@
 package com.dnamaster10.tcgui.util;
 
-import com.dnamaster10.tcgui.objects.Ticket;
+import com.dnamaster10.tcgui.objects.buttons.*;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
+import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
+import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import java.sql.SQLException;
@@ -31,17 +34,33 @@ public class GuiBuilder {
             inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
         }
     }
+    public void addLinkers() throws SQLException {
+        //Must be called from async thread
+        //Get gui ID
+        GuiAccessor guiAccessor = new GuiAccessor();
+        int guiId = guiAccessor.getGuiIdByName(this.guiName);
+
+        //Get the linkers
+        LinkerAccessor linkerAccessor = new LinkerAccessor();
+        LinkerDatabaseObject[] linkers = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
+
+        //Add linkers to inventory
+        for (LinkerDatabaseObject dbObject : linkers) {
+            LinkerButton linker = new LinkerButton(dbObject.getLinkedGuiId(), dbObject.getDisplayName());
+            inventory.setItem(dbObject.getSlot(), linker.getItemStack());
+        }
+    }
     public void addNextPageButton() {
-        ButtonBuilder builder = new ButtonBuilder();
-        this.inventory.setItem(53, builder.getNextPageButton());
+        NextPageButton button = new NextPageButton();
+        this.inventory.setItem(53, button.getItemStack());
     }
     public void addPrevPageButton() {
-        ButtonBuilder builder = new ButtonBuilder();
-        this.inventory.setItem(52, builder.getPrevPageButton());
+        PrevPageButton button = new PrevPageButton();
+        this.inventory.setItem(52, button.getItemStack());
     }
     public void addBackButton() {
-        ButtonBuilder builder = new ButtonBuilder();
-        this.inventory.setItem(45, builder.getBackButton());
+        BackButton button = new BackButton();
+        this.inventory.setItem(45, button.getItemStack());
     }
     public Inventory getInventory() {
         return this.inventory;

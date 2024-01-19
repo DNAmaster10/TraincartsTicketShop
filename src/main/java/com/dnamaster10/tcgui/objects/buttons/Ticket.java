@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.objects;
+package com.dnamaster10.tcgui.objects.buttons;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Material;
@@ -8,18 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class Ticket {
+public class Ticket extends Button {
     String tcName;
     String displayName;
-    ItemStack item;
     public void giveToPlayer(Player p) {
         p.getInventory().addItem(item);
-    }
-    public String getTcTicketName() {
-        return tcName;
-    }
-    public ItemStack getItemStack() {
-        return item;
     }
     public Ticket(String tcName, String displayName, int price) {
         this.tcName = tcName;

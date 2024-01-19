@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 public class GuiManager {
     //Holds all currently opened GUIs in a hashmap linking the player who
@@ -18,7 +19,7 @@ public class GuiManager {
     private static final HashMap<Player, ShopGui> SHOP_GUIS = new HashMap<>();
 
     //Used to store the last guis that the player was interacting with. Used for the gui back button.
-    private static final HashMap<Player, String> PREVIOUS_GUIS = new HashMap<>();
+    private static final HashMap<Player, Stack<String>> PREVIOUS_GUIS = new HashMap<>();
 
     public void registerNewEditGui(EditGui gui, Player p) {
         //If player already has a GUI registered, remove their old one
@@ -37,6 +38,20 @@ public class GuiManager {
     private void removeGui(Player p) {
         EDIT_GUIS.remove(p);
         SHOP_GUIS.remove(p);
+    }
+    public void addPrevGui(String gui, Player p) {
+        if (PREVIOUS_GUIS.containsKey(p)) {
+            PREVIOUS_GUIS.get(p).push(gui);
+            return;
+        }
+        PREVIOUS_GUIS.put(p, new Stack<>());
+        PREVIOUS_GUIS.get(p).push(gui);
+    }
+    public boolean checkPrevGui(Player p) {
+        if (PREVIOUS_GUIS.containsKey(p)) {
+            return !PREVIOUS_GUIS.get(p).isEmpty();
+        }
+        return false;
     }
     public void handleInventoryClickEvent(InventoryClickEvent event, List<ItemStack> items) {
         Player p = (Player) event.getWhoClicked();

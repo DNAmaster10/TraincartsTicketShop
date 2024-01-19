@@ -1,17 +1,15 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
-import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.util.ButtonBuilder;
+import com.dnamaster10.tcgui.objects.buttons.LinkerButton;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
-public class GuiLinkerCreateCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui gui linker create
+public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui linker create <linked_gui_name> <display_name>
     @Override
     boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -26,7 +24,7 @@ public class GuiLinkerCreateCommandHandler extends CommandHandler<SQLException> 
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.linker.create")) {
+            if (!p.hasPermission("tcgui.linker.create")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -34,7 +32,7 @@ public class GuiLinkerCreateCommandHandler extends CommandHandler<SQLException> 
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Please enter a gui name");
+            returnError(sender, "Missing arguments: /tcgui linker create <linked_gui_name> <display_name>");
             return false;
         }
         if (args.length > 4) {
@@ -60,10 +58,12 @@ public class GuiLinkerCreateCommandHandler extends CommandHandler<SQLException> 
 
     @Override
     void execute(CommandSender sender, String[] args) throws SQLException {
-        ButtonBuilder builder = new ButtonBuilder();
-        ItemStack button = builder.getLinkerButton(args[3]);
+        //Get gui ID
+        GuiAccessor accessor = new GuiAccessor();
+        int guiId = accessor.getGuiIdByName(args[2]);
+        LinkerButton button = new LinkerButton(guiId, args[3]);
         Player p = (Player) sender;
-        p.getInventory().addItem(button);
+        p.getInventory().addItem(button.getItemStack());
     }
 
     @Override

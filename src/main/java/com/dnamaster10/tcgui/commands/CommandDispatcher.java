@@ -64,6 +64,15 @@ public class CommandDispatcher implements CommandExecutor {
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
+            case "linker" -> {
+                switch (args[1]) {
+                    case "create" -> {
+                        LinkerCreateCommandHandler handler = new LinkerCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                }
+            }
             default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");
         }
         return true;
