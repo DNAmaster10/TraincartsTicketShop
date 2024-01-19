@@ -1,6 +1,7 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.TraincartsGui;
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.EditGui;
 import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 public class GuiEditCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui edit <gui_name>
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowGuiEdit")) {
             returnError(sender, "Gui editing is disabled on this server");
@@ -46,7 +47,7 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Check that gui exists
@@ -64,7 +65,7 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Create a new GUI
         EditGui gui = new EditGui(args[2]);
 

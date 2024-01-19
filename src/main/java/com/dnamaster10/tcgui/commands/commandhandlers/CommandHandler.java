@@ -13,11 +13,11 @@ public abstract class CommandHandler<E extends Exception> {
     //which may throw an SQL exception if accessing the database.
     private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
     //For synchronous command checks (E.g. syntax checks)
-    abstract boolean checkSync(CommandSender sender, String[] args);
+    protected abstract boolean checkSync(CommandSender sender, String[] args);
     //For asynchronous command checks (E.g. database checks)
-    abstract boolean checkAsync(CommandSender sender, String[] args) throws E;
+    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws E;
     //Runs the command after all checks are completed
-    abstract void execute(CommandSender sender, String[] args) throws E;
+    protected abstract void execute(CommandSender sender, String[] args) throws E;
     //Runs appropriate checks before command is executed
     public abstract void handle(CommandSender sender, String[] args);
     public TraincartsGui getPlugin() {

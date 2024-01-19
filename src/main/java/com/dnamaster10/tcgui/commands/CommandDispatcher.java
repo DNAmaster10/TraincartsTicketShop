@@ -2,6 +2,12 @@ package com.dnamaster10.tcgui.commands;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.*;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiEditCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiShopOpenCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,9 +53,13 @@ public class CommandDispatcher implements CommandExecutor {
                 }
             }
             case "ticket" -> {
-                switch (args[1]) {
+                switch (args[1].toLowerCase()) {
                     case "create" -> {
                         TicketCreateCommandHandler handler = new TicketCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "setdisplayname" -> {
+                        TicketSetDisplayNameCommandHandler handler = new TicketSetDisplayNameCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");

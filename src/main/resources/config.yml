@@ -13,8 +13,8 @@ AllowGuiDelete: true
 AllowListGuiEditorsOtherOwners: true
 
 AllowTicketCreate: true
+AllowTicketRename: true
 
 AllowLinkerCreate: true
 
 AllowOpenShops: true
-

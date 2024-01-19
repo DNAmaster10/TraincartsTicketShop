@@ -1,6 +1,8 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
+import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -11,7 +13,7 @@ import java.sql.SQLException;
 public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     //Command example: /tcgui gui delete <gui_name>
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowGuiDelete")) {
@@ -41,7 +43,7 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check that GUI exists
         GuiAccessor guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -60,16 +62,20 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Delete the gui
         GuiAccessor guiAccessor = new GuiAccessor();
         TicketAccessor ticketAccessor = new TicketAccessor();
+        LinkerAccessor linkerAccessor = new LinkerAccessor();
 
         //Get gui id
         int id = guiAccessor.getGuiIdByName(args[2]);
 
         //Delete tickets
         ticketAccessor.deleteTicketsByGuid(id);
+
+        //Delete linkers
+        linkerAccessor.deleteLinkersByGuiId(id);
 
         //Delete gui
         guiAccessor.deleteGuiById(id);

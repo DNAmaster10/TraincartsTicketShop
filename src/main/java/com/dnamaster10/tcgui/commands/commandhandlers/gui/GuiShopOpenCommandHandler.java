@@ -1,6 +1,7 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.TraincartsGui;
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.ShopGui;
 import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui shop open <gui_name>
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowOpenShops")) {
             returnError(sender, "Opening shops is disabled on this server");
@@ -47,7 +48,7 @@ public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Check that gui exists
@@ -59,7 +60,7 @@ public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Create a new gui
         ShopGui gui = new ShopGui(args[2], (Player) sender);
 

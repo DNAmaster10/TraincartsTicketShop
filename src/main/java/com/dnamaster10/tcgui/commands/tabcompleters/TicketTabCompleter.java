@@ -12,6 +12,7 @@ public class TicketTabCompleter extends SubCommandCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
+        ARGS1.add("setdisplayname");
     }
 
     @Override
@@ -27,7 +28,16 @@ public class TicketTabCompleter extends SubCommandCompleter {
         if (args.length > 2) {
             return null;
         }
+
+        List<String> subCommands = StringUtil.copyPartialMatches(args[1].toLowerCase(), ARGS1, new ArrayList<>());
+
         //Return sub-command matches
-        return StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
+        if (!(sender instanceof Player)) {
+            return subCommands;
+        }
+
+        //Check permissions
+        subCommands.removeIf(s -> !checkPermission((Player) sender, s));
+        return subCommands;
     }
 }

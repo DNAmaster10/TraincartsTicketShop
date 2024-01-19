@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui linker create <linked_gui_name> <display_name>
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowLinkerCreate")) {
             returnError(sender, "Linker creation is disabled on this server");
@@ -29,7 +29,6 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
                 return false;
             }
         }
-
         //Check syntax
         if (args.length < 4) {
             returnError(sender, "Missing arguments: /tcgui linker create <linked_gui_name> <display_name>");
@@ -39,12 +38,15 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
             return false;
         }
+        if (!checkStringFormat(args[3])) {
+            returnError(sender, "Linker names can only contain characters Aa - Zz, numbers, underscores and dashes");
+        }
 
         return true;
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Check that gui exists
@@ -57,7 +59,7 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Get gui ID
         GuiAccessor accessor = new GuiAccessor();
         int guiId = accessor.getGuiIdByName(args[2]);

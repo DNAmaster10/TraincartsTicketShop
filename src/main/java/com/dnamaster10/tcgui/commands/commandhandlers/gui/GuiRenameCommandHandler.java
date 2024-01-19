@@ -1,5 +1,6 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -11,7 +12,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
     //Example command: /tcgui gui rename old_name new_name
 
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //This command can be run by the player as well as other interfaces.
         //We first check things which apply to both
 
@@ -52,7 +53,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //First check that the gui exists
@@ -78,7 +79,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.updateGuiName(args[2], args[3]);
     }

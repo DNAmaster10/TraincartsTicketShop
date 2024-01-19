@@ -39,6 +39,8 @@ permissions:
   tcgui.ticket.create:
     description: Allows the creation of tcgui tickets
     default: false
+  tcgui.ticket.setdisplayname:
+    description: Allows player to rename a held ticket
   tcgui.shop.open:
     description: Allows player to open a shop gui from command
     default: false

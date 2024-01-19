@@ -12,7 +12,7 @@ import java.util.List;
 public class EditorsListCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui editors list <gui_name>
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Check syntax
         if (args.length > 4) {
             returnError(sender, "Unrecognised sub-command \"" + args[4] + "\"");
@@ -35,7 +35,7 @@ public class EditorsListCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check that gui exists
         GuiAccessor guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[3])) {
@@ -64,7 +64,7 @@ public class EditorsListCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
 
     }
 

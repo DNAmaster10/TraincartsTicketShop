@@ -1,5 +1,6 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
-    boolean checkSync(CommandSender sender, String[] args) {
+    protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowGuiCreate")) {
@@ -54,7 +55,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Asynchronous checks (Database etc.)
         //Method must be run from an already asynchronous method in order to be async
         Player p = (Player) sender;
@@ -69,7 +70,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     }
 
     @Override
-    void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Runs the command
         GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.addGui(args[2], ((Player) sender).getUniqueId().toString());
