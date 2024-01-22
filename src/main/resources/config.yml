@@ -10,6 +10,8 @@ AllowGuiEdit: true
 AllowGuiRename: true
 AllowGuiDelete: true
 
+AllowEditorAdd: true
+AllowEditorRemove: true
 AllowListGuiEditorsOtherOwners: true
 
 AllowTicketCreate: true
@@ -18,3 +20,5 @@ AllowTicketRename: true
 AllowLinkerCreate: true
 
 AllowOpenShops: true
+
+SignIdentifier: [tcgui]

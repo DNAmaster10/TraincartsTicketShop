@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 
 public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /ticket create <tc_ticket_name> <display_name>
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
@@ -38,6 +39,9 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Ticket names can only contains characters Aa - Zz, numbers, underscores and dashes");
             return false;
         }
+        if (args[3].length() > 20) {
+            returnError(sender, "Ticket display names cannot be more than 20 characters in length");
+        }
 
         //Check permissions
         if (!sender.hasPermission("tcgui.ticket.create")) {
@@ -53,7 +57,7 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
         //Check that ticket exits in traincarts.
         //Although not required to do async now, async is used in case traincarts switches to storing tickets in a database
         if (!Traincarts.checkTicket(args[2])) {
-            returnError(sender, "No traincarts ticket with name \"" + args[2] + "\" exists");
+            returnError(sender, "No traincarts ticket with the name \"" + args[2] + "\" exists");
             return false;
         }
         return true;

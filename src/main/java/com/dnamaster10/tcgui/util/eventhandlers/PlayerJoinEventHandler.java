@@ -1,6 +1,6 @@
 package com.dnamaster10.tcgui.util.eventhandlers;
 
-import com.dnamaster10.tcgui.util.Players;
+import com.dnamaster10.tcgui.util.database.PlayerAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,8 @@ public class PlayerJoinEventHandler implements Listener {
         //Update player in database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                Players.updatePlayer(event.getPlayer());
+                PlayerAccessor accessor = new PlayerAccessor();
+                accessor.updatePlayer(event.getPlayer().getDisplayName(), event.getPlayer().getUniqueId().toString());
             } catch (SQLException e) {
                 getPlugin().reportSqlError(e.toString());
             }

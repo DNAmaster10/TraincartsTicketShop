@@ -1,11 +1,9 @@
 package com.dnamaster10.tcgui.objects;
 
-import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.util.GuiBuilder;
+import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,8 +14,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-
-import static com.bergerkiller.bukkit.tc.tickets.TicketStore.getTicket;
 
 public class ShopGui extends Gui {
     @Override

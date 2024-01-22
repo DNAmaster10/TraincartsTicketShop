@@ -31,11 +31,15 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
 
         //Check syntax
         if (args.length > 3) {
-            returnError(sender, "Unrecognised sub-command \"" + args[2] + "\"");
+            returnError(sender, "Unrecognised sub-command \"" + args[3] + "\"");
             return false;
         }
         if (args.length < 3) {
             returnError(sender, "Please enter a gui name");
+            return false;
+        }
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
@@ -47,7 +51,7 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
         //Check that GUI exists
         GuiAccessor guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnError(sender, "No gui with name \"" + args[2] + "\" exists");
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 

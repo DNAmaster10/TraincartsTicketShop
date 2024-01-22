@@ -31,8 +31,17 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
             returnError(sender, "Unrecognised sub-command \"" + args[4] + "\"");
             return false;
         }
-        if (args[3].length() > 100) {
-            returnError(sender, "Gui names cannot be more than 100 characters in length");
+        if (args[3].length() > 20) {
+            returnError(sender, "Gui names cannot be more than 20 characters in length");
+            return false;
+        }
+        if (args[3].length() < 3) {
+            returnError(sender, "Gui names cannot be less than 3 characters in length");
+            return false;
+        }
+        //Check syntax of old gui name to save on database calls
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
         if (!checkStringFormat(args[3])) {
@@ -58,7 +67,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
 
         //First check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnError(sender, "No gui with name \"" + args[2] + "\" exists");
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 

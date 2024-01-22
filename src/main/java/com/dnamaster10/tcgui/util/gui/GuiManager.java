@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.util;
+package com.dnamaster10.tcgui.util.gui;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;

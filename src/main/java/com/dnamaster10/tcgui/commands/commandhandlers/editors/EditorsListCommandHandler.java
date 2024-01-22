@@ -1,5 +1,6 @@
-package com.dnamaster10.tcgui.commands.commandhandlers;
+package com.dnamaster10.tcgui.commands.commandhandlers.editors;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -22,6 +23,7 @@ public class EditorsListCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Please enter a gui name");
             return false;
         }
+
 
         //Check permissions
         if (sender instanceof Player p) {
@@ -58,7 +60,6 @@ public class EditorsListCommandHandler extends CommandHandler<SQLException> {
 
         //Get players UUIDs
         List<String> uuids = new ArrayList<>();
-
 
         return true;
     }

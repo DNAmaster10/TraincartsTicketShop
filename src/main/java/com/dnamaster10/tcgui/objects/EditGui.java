@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.objects;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.util.GuiBuilder;
+import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
@@ -154,6 +154,11 @@ public class EditGui extends Gui {
                 String tcName = meta.getPersistentDataContainer().get(tcKey, PersistentDataType.STRING);
                 String displayName = meta.getDisplayName();
 
+                //Check if display name is too long
+                if (displayName.length() > 20) {
+                    continue;
+                }
+
                 //Check if price is set, if not, set price to 0
                 int price = 0;
                 if (meta.getPersistentDataContainer().has(priceKey, PersistentDataType.INTEGER)) {
@@ -168,6 +173,12 @@ public class EditGui extends Gui {
                 //Item is a linker, handler linker save
                 int linkedGuiId = meta.getPersistentDataContainer().get(guiKey, PersistentDataType.INTEGER);
                 String displayName = meta.getDisplayName();
+
+                //Check if display name is too long
+                if (displayName.length() > 20) {
+                    continue;
+                }
+
                 LinkerDatabaseObject linker = new LinkerDatabaseObject(i, linkedGuiId, displayName);
                 linkerList.add(linker);
             }

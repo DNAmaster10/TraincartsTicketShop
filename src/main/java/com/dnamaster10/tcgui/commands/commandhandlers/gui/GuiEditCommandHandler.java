@@ -3,7 +3,6 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.EditGui;
-import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -42,6 +41,9 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
+        }
 
         return true;
     }
@@ -52,7 +54,7 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnError(sender, "No gui with name \"" + args[2] + "\" exists");
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 

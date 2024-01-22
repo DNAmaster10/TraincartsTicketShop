@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.util.database;
 
+import com.dnamaster10.tcgui.util.database.databaseobjects.PlayerDatabaseObject;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -153,6 +155,15 @@ public class GuiAccessor extends DatabaseAccessor {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, owner_uuid) VALUES (?,?)");
             statement.setString(1, name);
             statement.setString(2, ownerUuid);
+            statement.executeUpdate();
+        }
+    }
+    public void addGuiEditor(String uuid, int guiId) throws SQLException {
+        //Adds an editor for a given gui
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO guieditors (guiid, player_uuid) VALUES (?, ?)");
+            statement.setInt(1, guiId);
+            statement.setString(2, uuid);
             statement.executeUpdate();
         }
     }

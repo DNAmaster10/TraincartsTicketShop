@@ -23,7 +23,7 @@ public abstract class CommandHandler<E extends Exception> {
     public TraincartsGui getPlugin() {
         return TraincartsGui.plugin;
     }
-    public void returnError(CommandSender sender, String error) {
+    protected void returnError(CommandSender sender, String error) {
         //Returns an error to sender
         if (sender instanceof Player p) {
             p.sendMessage(ChatColor.RED + error);
@@ -32,8 +32,15 @@ public abstract class CommandHandler<E extends Exception> {
             getPlugin().getLogger().warning(error);
         }
     }
-    public boolean checkStringFormat(String input) {
+    protected void returnGuiNotFoundError(CommandSender sender, String guiName) {
+        //Returns a "No gui with name "x" exists error to the sender
+        returnError(sender, "No gui with the name \"" + guiName + "\" exists");
+    }
+    protected boolean checkStringFormat(String input) {
         //Checks that a string only contains letters, numbers, underscores and dashes
         return STRING_PATTERN.matcher(input).matches();
+    }
+    protected boolean checkGuiNameSyntax(String guiName) {
+        return guiName.length() <= 20 && guiName.length() >= 3 && checkStringFormat(guiName);
     }
 }

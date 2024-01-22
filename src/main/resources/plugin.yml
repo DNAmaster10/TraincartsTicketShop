@@ -24,16 +24,16 @@ permissions:
   tcgui.gui.delete:
     description: Allows deleting of guis
     default: false
-  tcgui.gui.editors.add:
+  tcgui.editors.add:
     description: Allows players to change who can edit their gui
     default: false
-  tcgui.gui.editors.list:
+  tcgui.editors.list:
     description: Allows players to see who can edit a gui
     default: false
-  tcgui.gui.editors.remove:
+  tcgui.editors.remove:
     description: Allows players to remove editors from their gui
     default: false
-  tcgui.gui.editors.removeall:
+  tcgui.editors.removeall:
     description: Allows players to remove all editors from their gui
     default: false
   tcgui.ticket.create:

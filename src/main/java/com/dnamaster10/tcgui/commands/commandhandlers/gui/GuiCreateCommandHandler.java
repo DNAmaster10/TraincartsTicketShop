@@ -35,9 +35,12 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
-        if (args[2].length() > 100) {
-            returnError(sender, "Gui names cannot be more than 100 characters in length");
+        if (args[2].length() > 20) {
+            returnError(sender, "Gui names cannot be more than 20 characters in length");
             return false;
+        }
+        if (args[2].length() < 3) {
+            returnError(sender, "Gui names cannot be less than 3 characters in length");
         }
         if (!checkStringFormat(args[2])) {
             returnError(sender, "Gui names can only contain letters Aa to Zz, numbers, underscores and dashes");

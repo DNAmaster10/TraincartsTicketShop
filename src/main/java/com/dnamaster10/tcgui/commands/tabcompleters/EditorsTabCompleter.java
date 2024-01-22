@@ -7,14 +7,14 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiEditorsTabCompleter extends SubCommandCompleter {
-    private static final List<String> ARGS2;
+public class EditorsTabCompleter extends SubCommandCompleter {
+    private static final List<String> ARGS1;
     static {
-        ARGS2 = new ArrayList<>();
-        ARGS2.add("add");
-        ARGS2.add("list");
-        ARGS2.add("remove");
-        ARGS2.add("removeall");
+        ARGS1 = new ArrayList<>();
+        ARGS1.add("add");
+        ARGS1.add("list");
+        ARGS1.add("remove");
+        ARGS1.add("removeall");
     }
     @Override
     protected boolean checkPermission(Player p, String command) {
@@ -24,11 +24,11 @@ public class GuiEditorsTabCompleter extends SubCommandCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         //Check that the sub-command hasn't already been entered
-        if (args.length > 3) {
+        if (args.length > 2) {
             return null;
         }
         //Get sub-command matches
-        List<String> subCommands = StringUtil.copyPartialMatches(args[2], ARGS2, new ArrayList<>());
+        List<String> subCommands = StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
 
         //If sender isn't player, return
         if (!(sender instanceof Player)) {

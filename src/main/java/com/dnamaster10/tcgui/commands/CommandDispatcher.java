@@ -1,11 +1,13 @@
 package com.dnamaster10.tcgui.commands;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.commands.commandhandlers.*;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiEditCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiRenameCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiShopOpenCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.editors.EditorsAddCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.editors.EditorsListCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
 import org.bukkit.ChatColor;
@@ -34,9 +36,9 @@ public class CommandDispatcher implements CommandExecutor {
         }
 
         //Decide how to handle command
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "gui" -> {
-                switch (args[1]) {
+                switch (args[1].toLowerCase()) {
                     case "create" -> {
                         GuiCreateCommandHandler handler = new GuiCreateCommandHandler();
                         handler.handle(sender, args);
@@ -66,21 +68,33 @@ public class CommandDispatcher implements CommandExecutor {
                 }
             }
             case "shop" -> {
-                switch (args[1]) {
+                switch (args[1].toLowerCase()) {
                     case "open" -> {
-                        GuiShopOpenCommandHandler handler = new GuiShopOpenCommandHandler();
+                        ShopOpenCommandHandler handler = new ShopOpenCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
             case "linker" -> {
-                switch (args[1]) {
+                switch (args[1].toLowerCase()) {
                     case "create" -> {
                         LinkerCreateCommandHandler handler = new LinkerCreateCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                }
+            }
+            case "editors" -> {
+                switch (args[1].toLowerCase()) {
+                    case "list" -> {
+                        EditorsListCommandHandler handler = new EditorsListCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "add" -> {
+                        EditorsAddCommandHandler handler = new EditorsAddCommandHandler();
+                        handler.handle(sender, args);
+                    }
                 }
             }
             default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");

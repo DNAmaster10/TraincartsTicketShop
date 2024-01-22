@@ -36,6 +36,14 @@ public class TicketSetDisplayNameCommandHandler extends CommandHandler<SQLExcept
             returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
+        if (args[2].length() > 20) {
+            returnError(sender, "Ticket display names cannot be more than 20 characters in length");
+            return false;
+        }
+        if (args[2].length() < 3) {
+            returnError(sender, "Ticket display names cannot be less than 3 characters in length");
+            return false;
+        }
         if (!checkStringFormat(args[2])) {
             returnError(sender, "Ticket names can only contain characters Aa - Zz, numbers, underscores and dashes");
             return false;

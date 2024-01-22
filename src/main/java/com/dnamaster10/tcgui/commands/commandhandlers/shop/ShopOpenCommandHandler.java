@@ -1,9 +1,8 @@
-package com.dnamaster10.tcgui.commands.commandhandlers.gui;
+package com.dnamaster10.tcgui.commands.commandhandlers.shop;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.ShopGui;
-import com.dnamaster10.tcgui.util.GuiManager;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -11,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
+public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui shop open <gui_name>
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -43,6 +42,10 @@ public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
+            return false;
+        }
 
         return true;
     }
@@ -53,7 +56,7 @@ public class GuiShopOpenCommandHandler extends CommandHandler<SQLException> {
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnError(sender, "No gui with name \"" + args[2] + "\" exists");
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
         return true;

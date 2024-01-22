@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.util.database;
 
+import com.dnamaster10.tcgui.util.database.databaseobjects.PlayerDatabaseObject;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +24,20 @@ public class PlayerAccessor extends DatabaseAccessor{
             while (result.next()) {
                 total = result.getInt(1);
             }
-            return (total > 0);
+            return total > 0;
+        }
+    }
+    public boolean checkPlayerByUsername(String username) throws SQLException {
+        //Returns true if a player with the given username exists in database. Case-insensitive
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE LOWER(username)=LOWER(?)");
+            statement.setString(1, username);
+            ResultSet result = statement.executeQuery();
+            int total = 0;
+            while (result.next()) {
+                total = result.getInt(1);
+            }
+            return total > 0;
         }
     }
     public String getUsernameFromUuid(String uuid) throws SQLException {
@@ -62,22 +77,62 @@ public class PlayerAccessor extends DatabaseAccessor{
             return usernames;
         }
     }
-    public void updatePlayer(String name, String uuid) throws SQLException {
-        //Updates player information in database
+    public PlayerDatabaseObject getPlayerByUsername(String name) throws SQLException {
+        //Returns player database object from username. Case-insensitive
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("UPDATE players SET username=? WHERE uuid=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players WHERE LOWER(username)=LOWER(?)");
             statement.setString(1, name);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
+            ResultSet result = statement.executeQuery();
+            String username = null;
+            String uuid = null;
+            while (result.next()) {
+                username = result.getString("username");
+                uuid = result.getString("uuid");
+            }
+            if (username == null || uuid == null) {
+                return null;
+            }
+            return new PlayerDatabaseObject(username, uuid);
         }
     }
-    public void addPlayer(String name, String uuid) throws SQLException {
-        //Updates a players username from their UUID
+    public void updatePlayer(String name, String uuid) throws SQLException {
+        //Updates player information in database, or adds them if they do not already exist
+        //This can be made more complex when a player changes their username.
+        //If the UUID is already present, the username should be updated.
+        //Following this, any other entries with the same username but different UUID will be removed.
+        //This record will be added back in the future when the given player connects to the server again
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO players (username, uuid) VALUES (?, ?)");
-            statement.setString(1, name);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
+
+
+            //First check if the current UUID already exists. If it does, update
+            PreparedStatement statement1 = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE uuid=?");
+            statement1.setString(1, uuid);
+            ResultSet result1 = statement1.executeQuery();
+            boolean alreadyExists = false;
+            while (result1.next()) {
+                alreadyExists = result1.getInt(1) > 0;
+            }
+
+            if (alreadyExists) {
+                //Update current UUID player
+                PreparedStatement statement2 = connection.prepareStatement("UPDATE players SET username=? WHERE uuid=?");
+                statement2.setString(1, name);
+                statement2.setString(2, uuid);
+                statement2.executeUpdate();
+            }
+            else {
+                //Add the new player
+                PreparedStatement statement3 = connection.prepareStatement("INSERT INTO players (username, uuid) VALUES (?, ?)");
+                statement3.setString(1, name);
+                statement3.setString(2, uuid);
+                statement3.executeUpdate();
+            }
+
+            //Remove other players with the same name but different UUID
+            PreparedStatement statement4 = connection.prepareStatement("DELETE FROM players WHERE username=? AND uuid <> ?");
+            statement4.setString(1, name);
+            statement4.setString(2, uuid);
+            statement4.executeUpdate();
         }
     }
 }
