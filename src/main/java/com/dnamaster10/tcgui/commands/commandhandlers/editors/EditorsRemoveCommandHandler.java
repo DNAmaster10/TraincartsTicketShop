@@ -1,6 +1,9 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.editors;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import com.dnamaster10.tcgui.util.Players;
+import com.dnamaster10.tcgui.util.database.GuiAccessor;
+import com.dnamaster10.tcgui.util.database.databaseobjects.PlayerDatabaseObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,7 +11,8 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 
 public class EditorsRemoveCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui editors remove <gui_name> <player_name>
+    //Example command: /tcgui editors remove <player_name> <gui_name>
+    PlayerDatabaseObject editorDatabaseObject;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -34,8 +38,8 @@ public class EditorsRemoveCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
             return false;
         }
-        if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+        if (!checkGuiNameSyntax(args[3])) {
+            returnGuiNotFoundError(sender, args[3]);
             return false;
         }
         return true;
@@ -43,12 +47,41 @@ public class EditorsRemoveCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        return false;
+        //Check that gui exists
+        GuiAccessor guiAccessor = new GuiAccessor();
+        if (!guiAccessor.checkGuiByName(args[3])) {
+            returnGuiNotFoundError(sender, args[3]);
+            return false;
+        }
+
+        //If player, check that they own the gui
+        if (sender instanceof Player p) {
+            if (!guiAccessor.checkGuiOwnershipByUuid(args[3], p.getUniqueId().toString())) {
+                returnError(sender, "You do not own that gui");
+                return false;
+            }
+        }
+
+       //Check that editor is a valid username and that they are a registered editor of the gui
+        editorDatabaseObject = Players.getPlayerByUsername(args[2]);
+        if (editorDatabaseObject == null) {
+            returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
+            return false;
+        }
+        //Check that the editor exists in the editors table
+        if (!guiAccessor.checkGuiEditByUuid(args[3], editorDatabaseObject.getUuid())) {
+            returnError(sender, "Player \"" + args[2] + "\" is not a registered editor for gui \"" + args[3] + "\"");
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-
+        //Remove the editor
+        GuiAccessor guiAccessor = new GuiAccessor();
+        int guiId = guiAccessor.getGuiIdByName(args[3]);
+        guiAccessor.removeGuiEditorByUuid(guiId, editorDatabaseObject.getUuid());
     }
 
     @Override

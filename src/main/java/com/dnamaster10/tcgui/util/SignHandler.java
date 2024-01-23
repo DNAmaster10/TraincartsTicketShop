@@ -11,12 +11,13 @@ import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 public class SignHandler {
     boolean isGuiSign(Sign sign) {
         String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
-        SignSide side = sign.
+        //SignSide side = sign.
         return false;
     }
     public boolean handleSignClickEvent(PlayerInteractEvent event) {
         //First check that the sign is a tcgui sign
         //Sign sign = (Sign) block.getState();
         //String bottomText = sign.get
+        return  false;
     }
 }

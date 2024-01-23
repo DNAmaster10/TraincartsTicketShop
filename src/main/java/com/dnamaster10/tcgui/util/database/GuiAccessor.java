@@ -175,4 +175,13 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.execute();
         }
     }
+    public void removeGuiEditorByUuid(int guiId, String uuid) throws SQLException {
+        //Removes a player as editor from gui editors
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=? AND player_uuid=?");
+            statement.setInt(1, guiId);
+            statement.setString(2, uuid);
+            statement.execute();
+        }
+    }
 }
