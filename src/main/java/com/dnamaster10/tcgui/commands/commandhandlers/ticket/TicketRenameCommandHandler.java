@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.ticket;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,8 +10,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 
-public class TicketSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui ticket setDisplayName <new_name>
+public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui ticket rename <new_name>
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -40,8 +39,8 @@ public class TicketSetDisplayNameCommandHandler extends CommandHandler<SQLExcept
             returnError(sender, "Ticket display names cannot be more than 20 characters in length");
             return false;
         }
-        if (args[2].length() < 3) {
-            returnError(sender, "Ticket display names cannot be less than 3 characters in length");
+        if (args[2].isEmpty()) {
+            returnError(sender, "Ticket display names cannot be less than 1 characters in length");
             return false;
         }
         if (!checkStringFormat(args[2])) {
@@ -50,7 +49,7 @@ public class TicketSetDisplayNameCommandHandler extends CommandHandler<SQLExcept
         }
 
         //Check permissions
-        if (!sender.hasPermission("tcgui.ticket.setDisplayName")) {
+        if (!sender.hasPermission("tcgui.ticket.rename")) {
             returnError(sender, "You do not have permission to perform that action");
             return false;
         }

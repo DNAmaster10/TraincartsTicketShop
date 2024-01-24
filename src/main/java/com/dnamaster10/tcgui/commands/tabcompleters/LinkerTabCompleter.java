@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.commands.tabcompleters;
 
+import com.dnamaster10.tcgui.commands.tabcompleters.SubCommandCompleter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -12,8 +13,8 @@ public class LinkerTabCompleter extends SubCommandCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
+        ARGS1.add("rename");
     }
-
 
     @Override
     protected boolean checkPermission(Player p, String command) {
@@ -22,7 +23,7 @@ public class LinkerTabCompleter extends SubCommandCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args) {
-        //Check that sub-command hasn't already been entered
+        //If sub-command has already been entered, return final args
         if (args.length > 2) {
             return null;
         }

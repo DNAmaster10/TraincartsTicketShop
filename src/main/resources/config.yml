@@ -9,6 +9,7 @@ AllowGuiCreate: true
 AllowGuiEdit: true
 AllowGuiRename: true
 AllowGuiDelete: true
+AllowGuiSetDisplayName: true
 
 AllowEditorAdd: true
 AllowEditorRemove: true
@@ -18,6 +19,7 @@ AllowTicketCreate: true
 AllowTicketRename: true
 
 AllowLinkerCreate: true
+AllowLinkerRename: true
 
 AllowOpenShops: true
 

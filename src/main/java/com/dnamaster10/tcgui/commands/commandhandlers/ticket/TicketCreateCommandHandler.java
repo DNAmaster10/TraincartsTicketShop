@@ -42,6 +42,9 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
         if (args[3].length() > 20) {
             returnError(sender, "Ticket display names cannot be more than 20 characters in length");
         }
+        if (args[3].isEmpty()) {
+            returnError(sender, "Ticket display names cannot be less than 1 character in length");
+        }
 
         //Check permissions
         if (!sender.hasPermission("tcgui.ticket.create")) {

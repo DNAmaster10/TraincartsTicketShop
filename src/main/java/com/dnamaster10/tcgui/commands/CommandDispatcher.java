@@ -4,12 +4,13 @@ import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiEditCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiRenameCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.editors.EditorsAddCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.editors.EditorsListCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerRenameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketRenameCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -61,7 +62,7 @@ public class CommandDispatcher implements CommandExecutor {
                         handler.handle(sender, args);
                     }
                     case "setdisplayname" -> {
-                        TicketSetDisplayNameCommandHandler handler = new TicketSetDisplayNameCommandHandler();
+                        TicketRenameCommandHandler handler = new TicketRenameCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
@@ -82,17 +83,21 @@ public class CommandDispatcher implements CommandExecutor {
                         LinkerCreateCommandHandler handler = new LinkerCreateCommandHandler();
                         handler.handle(sender, args);
                     }
+                    case "rename" -> {
+                        LinkerRenameCommandHandler handler = new LinkerRenameCommandHandler();
+                        handler.handle(sender, args);
+                    }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
-            case "editors" -> {
+            case "editor" -> {
                 switch (args[1].toLowerCase()) {
                     case "list" -> {
-                        EditorsListCommandHandler handler = new EditorsListCommandHandler();
+                        EditorListCommandHandler handler = new EditorListCommandHandler();
                         handler.handle(sender, args);
                     }
                     case "add" -> {
-                        EditorsAddCommandHandler handler = new EditorsAddCommandHandler();
+                        EditorAddCommandHandler handler = new EditorAddCommandHandler();
                         handler.handle(sender, args);
                     }
                 }

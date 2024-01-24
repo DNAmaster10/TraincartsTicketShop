@@ -8,23 +8,21 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiRenameCommandHandler extends CommandHandler<Exception> {
-    //Example command: /tcgui gui rename old_name new_name
-
+public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //This command can be run by the player as well as other interfaces.
-        //We first check things which apply to both
+        //This command can be run by the player as well as other interfaces
 
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiRename")) {
-            returnError(sender, "Gui renaming is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowGuiSetDisplayName")) {
+            returnError(sender, "Changing gui display names is disabled on this server");
             return false;
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui gui rename <old_name> <new_name>");
+            returnError(sender, "Missing argument(s): /tcgui setDisplayName <gui name> <gui display name>");
             return false;
         }
         if (args.length > 4) {
@@ -32,40 +30,38 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
             return false;
         }
         if (args[3].length() > 20) {
-            returnError(sender, "Gui names cannot be more than 20 characters in length");
+            returnError(sender, "Gui display names cannot be more than 20 characters in length");
             return false;
         }
-        if (args[3].length() < 3) {
-            returnError(sender, "Gui names cannot be less than 3 characters in length");
-            return false;
-        }
-        //Check syntax of old gui name to save on database calls
-        if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+        if (args[3].isEmpty()) {
+            returnError(sender, "Gui display names cannot be less than 1 character in length");
             return false;
         }
         if (!checkStringFormat(args[3])) {
-            returnError(sender, "Gui names can only contain letters Aa - Zz, numbers, underscores and dashes");
+            returnError(sender, "Gui display names can only contain characters Aa - Zz, numbers, underscores and dashes");
+            return false;
+        }
+        //Check gui name to save on database calls
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
         //Check permissions
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.gui.rename")) {
+            if (!p.hasPermission("tcgui.gui.setdisplayname")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
         }
 
-        //If all checks have passed, return true
         return true;
     }
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+        //Check gui exists
         GuiAccessor guiAccessor = new GuiAccessor();
-
-        //First check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
@@ -79,18 +75,13 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
             }
         }
 
-        //Check that the new gui name doesn't already exist
-        if (guiAccessor.checkGuiByName(args[3])) {
-            returnError(sender, "A gui with name \"" + args[3] + "\" already exists");
-            return false;
-        }
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.updateGuiName(args[2], args[3]);
+        guiAccessor.updateGuiDisplayName(args[2], args[3]);
     }
 
     @Override

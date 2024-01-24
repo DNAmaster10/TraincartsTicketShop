@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.commands.tabcompleters;
 
+import com.dnamaster10.tcgui.commands.tabcompleters.SubCommandCompleter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -12,10 +13,11 @@ public class GuiTabCompleter extends SubCommandCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
-        ARGS1.add("edit");
-        ARGS1.add("rename");
         ARGS1.add("delete");
-        ARGS1.add("editors");
+        ARGS1.add("edit");
+        ARGS1.add("editor");
+        ARGS1.add("rename");
+        ARGS1.add("setDisplayName");
     }
 
     @Override

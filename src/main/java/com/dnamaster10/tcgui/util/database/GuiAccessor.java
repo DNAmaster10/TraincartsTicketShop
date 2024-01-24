@@ -149,6 +149,15 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
+    public void updateGuiDisplayName(String guiName, String guiDisplayName) throws SQLException {
+        //Updates a gui display name
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=? WHERE name=?");
+            statement.setString(1, guiDisplayName);
+            statement.setString(2, guiName);
+            statement.executeUpdate();
+        }
+    }
     public void addGui(String name, String ownerUuid) throws SQLException {
         //Registers a new GUI in the database
         try (Connection connection = getConnection()) {

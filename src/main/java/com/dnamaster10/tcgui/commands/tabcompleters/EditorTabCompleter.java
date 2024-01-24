@@ -7,7 +7,7 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditorsTabCompleter extends SubCommandCompleter {
+public class EditorTabCompleter extends SubCommandCompleter {
     private static final List<String> ARGS1;
     static {
         ARGS1 = new ArrayList<>();
@@ -18,7 +18,7 @@ public class EditorsTabCompleter extends SubCommandCompleter {
     }
     @Override
     protected boolean checkPermission(Player p, String command) {
-        return p.hasPermission("tcgui.gui.editors." + command);
+        return p.hasPermission("tcgui.gui.editor." + command);
     }
 
     @Override

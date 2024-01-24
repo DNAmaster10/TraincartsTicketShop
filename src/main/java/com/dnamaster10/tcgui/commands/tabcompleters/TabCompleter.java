@@ -17,7 +17,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         ARGS0.add("ticket");
         ARGS0.add("shop");
         ARGS0.add("linker");
-        ARGS0.add("editors");
+        ARGS0.add("editor");
     }
     @Nullable
     @Override
@@ -28,7 +28,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         }
 
         //Select an appropriate tab completer for the given sub-command
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "gui" -> {
                 return new GuiTabCompleter().onTabComplete(commandSender, args);
             }
@@ -41,8 +41,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             case "linker" -> {
                 return new LinkerTabCompleter().onTabComplete(commandSender, args);
             }
-            case "editors" -> {
-                return new EditorsTabCompleter().onTabComplete(commandSender, args);
+            case "editor" -> {
+                return new EditorTabCompleter().onTabComplete(commandSender, args);
             }
         }
         return null;

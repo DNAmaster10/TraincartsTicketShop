@@ -25,7 +25,7 @@ public class MojangApiAccessor {
         }
 
         //Result is in json format, so we must extract data from it
-        JSONObject jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject(result.toString());
         String uuid = jsonObject.getString("id");
         uuid = uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
         String name = jsonObject.getString("name");
