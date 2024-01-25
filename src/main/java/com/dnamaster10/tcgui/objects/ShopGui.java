@@ -3,7 +3,10 @@ package com.dnamaster10.tcgui.objects;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
+import com.dnamaster10.tcgui.util.gui.GuiManager;
+import com.dnamaster10.tcgui.util.gui.LastGui;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -42,10 +45,7 @@ public class ShopGui extends Gui {
 
                 //Build new inventory
                 generateGui();
-                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                    p.setItemOnCursor(null);
-                    p.updateInventory();
-                }, 1L);
+                removeCursorItem(p);
             } catch (SQLException e) {
                 p.closeInventory();
                 getPlugin().reportSqlError(p, e.toString());
@@ -66,10 +66,7 @@ public class ShopGui extends Gui {
 
                 //Build the new page
                 generateGui();
-                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                    p.setItemOnCursor(null);
-                    p.updateInventory();
-                }, 1L);
+                removeCursorItem(p);
             } catch (SQLException e) {
                 p.closeInventory();
                 getPlugin().reportSqlError(p, e.toString());
@@ -89,10 +86,7 @@ public class ShopGui extends Gui {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
-                    Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                        p.setItemOnCursor(null);
-                        p.updateInventory();
-                    }, 1L);
+                    removeCursorItem(p);
                     return;
                 }
                 destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
@@ -101,7 +95,7 @@ public class ShopGui extends Gui {
             }
 
             //Add the current gui info to the previous gui stack
-            getPlugin().getGuiManager().addPrevGui(getGuiName(), p);
+            getPlugin().getGuiManager().addPrevGui(getGuiName(), getPage(), p);
 
             //Now change the current gui to the new gui
             setPage(0);
@@ -109,10 +103,39 @@ public class ShopGui extends Gui {
 
             try {
                 generateGui();
-                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                    p.setItemOnCursor(null);
-                    p.updateInventory();
-                }, 1L);
+                removeCursorItem(p);
+            }
+            catch (SQLException e) {
+                getPlugin().reportSqlError(p, e.toString());
+            }
+        });
+    }
+    private void back(Player p) {
+        //Check that there is a previous gui that the player was on
+        if (!getPlugin().getGuiManager().checkPrevGui(p)) {
+            //If not, remove the button from their cursor
+            removeCursorItem(p);
+            return;
+        }
+        //If there is a previous gui, get the name of the last gui
+        LastGui lastGui = getPlugin().getGuiManager().getPrevGui(p);
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                //Check that the gui exists
+                GuiAccessor guiAccessor = new GuiAccessor();
+                if (!guiAccessor.checkGuiByName(lastGui.getLastGuiName())) {
+                    p.sendMessage(ChatColor.RED + "Previous gui does not exist");
+                    removeCursorItem(p);
+                    return;
+                }
+                //Remove the item from cursor
+                removeCursorItem(p);
+
+                //Next, we need to generate the new gui.
+                setGuiName(lastGui.getLastGuiName());
+                setPage(lastGui.getLastPageNum());
+
+                generateGui();
             }
             catch (SQLException e) {
                 getPlugin().reportSqlError(p, e.toString());
@@ -129,6 +152,9 @@ public class ShopGui extends Gui {
             }
             case "linker" -> {
                 handleLink(button, (Player) event.getWhoClicked());
+            }
+            case "back" -> {
+                back((Player) event.getWhoClicked());
             }
         }
     }
@@ -175,7 +201,6 @@ public class ShopGui extends Gui {
     }
     private void generateGui() throws SQLException {
         //Adds tickets, buttons etc based on gui name
-        setPage(0);
 
         //Build tickets
         GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
@@ -207,6 +232,9 @@ public class ShopGui extends Gui {
 
         //Set the owner
         setPlayer(p);
+
+        //Set page
+        setPage(0);
 
         //Set the gui
         setGuiName(guiName);

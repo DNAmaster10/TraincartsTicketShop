@@ -158,12 +158,13 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void addGui(String name, String ownerUuid) throws SQLException {
+    public void addGui(String name, String displayName, String ownerUuid) throws SQLException {
         //Registers a new GUI in the database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, owner_uuid) VALUES (?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, owner_uuid) VALUES (?,?, ?)");
             statement.setString(1, name);
-            statement.setString(2, ownerUuid);
+            statement.setString(2, displayName);
+            statement.setString(3, ownerUuid);
             statement.executeUpdate();
         }
     }

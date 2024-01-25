@@ -7,9 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
+    private String displayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //This command can be run by the player as well as other interfaces
@@ -20,39 +22,36 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
             return false;
         }
 
-        //Check syntax
-        if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui setDisplayName <gui name> <gui display name>");
-            return false;
-        }
-        if (args.length > 4) {
-            returnError(sender, "Unrecognised sub-command \"" + args[4] + "\"");
-            return false;
-        }
-        if (args[3].length() > 20) {
-            returnError(sender, "Gui display names cannot be more than 20 characters in length");
-            return false;
-        }
-        if (args[3].isEmpty()) {
-            returnError(sender, "Gui display names cannot be less than 1 character in length");
-            return false;
-        }
-        if (!checkStringFormat(args[3])) {
-            returnError(sender, "Gui display names can only contain characters Aa - Zz, numbers, underscores and dashes");
-            return false;
-        }
-        //Check gui name to save on database calls
-        if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
-            return false;
-        }
-
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("tcgui.gui.setdisplayname")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
+        }
+
+        //Check syntax
+        if (args.length < 4) {
+            returnError(sender, "Missing argument(s): /tcgui setDisplayName <gui name> <gui display name>");
+            return false;
+        }
+
+        //Check gui name to save on database calls
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
+            return false;
+        }
+
+        //Build display name
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 3; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+
+        if (displayName.length() > 20) {
+            returnError(sender, "Gui display names cannot be more than 20 characters in length");
+            return false;
         }
 
         return true;
@@ -81,7 +80,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.updateGuiDisplayName(args[2], args[3]);
+        guiAccessor.updateGuiDisplayName(args[2], displayName);
     }
 
     @Override

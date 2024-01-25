@@ -56,4 +56,10 @@ public abstract class Gui {
             }
         }
     }
+    protected void removeCursorItem(Player p) {
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            p.setItemOnCursor(null);
+            p.updateInventory();
+        }, 1L);
+    }
 }

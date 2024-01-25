@@ -65,8 +65,12 @@ public class GuiBuilder {
     public Inventory getInventory() {
         return this.inventory;
     }
-    public GuiBuilder(String guiName, int pageNumber) {
-        this.inventory = Bukkit.createInventory(null, 54);
+    public GuiBuilder(String guiName, int pageNumber) throws SQLException {
+        //Should be called async
+        GuiAccessor guiAccessor = new GuiAccessor();
+
+        String guiDisplayName = guiAccessor.getGuiDisplayName(guiName);
+        this.inventory = Bukkit.createInventory(null, 54, guiDisplayName);
         this.guiName = guiName;
         this.pageNumber = pageNumber;
     }

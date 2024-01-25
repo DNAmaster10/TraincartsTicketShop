@@ -19,7 +19,7 @@ public class GuiManager {
     private static final HashMap<Player, ShopGui> SHOP_GUIS = new HashMap<>();
 
     //Used to store the last guis that the player was interacting with. Used for the gui back button.
-    private static final HashMap<Player, Stack<String>> PREVIOUS_GUIS = new HashMap<>();
+    private static final HashMap<Player, Stack<LastGui>> PREVIOUS_GUIS = new HashMap<>();
 
     public void registerNewEditGui(EditGui gui, Player p) {
         //If player already has a GUI registered, remove their old one
@@ -35,23 +35,29 @@ public class GuiManager {
 
         SHOP_GUIS.put(p, gui);
     }
-    private void removeGui(Player p) {
+    private void closeGui(Player p) {
+        //Removes all stored guis and backs
         EDIT_GUIS.remove(p);
         SHOP_GUIS.remove(p);
+        PREVIOUS_GUIS.remove(p);
     }
-    public void addPrevGui(String gui, Player p) {
+    public void addPrevGui(String guiName, int guiPage, Player p) {
         if (PREVIOUS_GUIS.containsKey(p)) {
-            PREVIOUS_GUIS.get(p).push(gui);
+            PREVIOUS_GUIS.get(p).push(new LastGui(guiName, guiPage));
             return;
         }
         PREVIOUS_GUIS.put(p, new Stack<>());
-        PREVIOUS_GUIS.get(p).push(gui);
+        PREVIOUS_GUIS.get(p).push(new LastGui(guiName, guiPage));
     }
     public boolean checkPrevGui(Player p) {
         if (PREVIOUS_GUIS.containsKey(p)) {
             return !PREVIOUS_GUIS.get(p).isEmpty();
         }
         return false;
+    }
+    public LastGui getPrevGui(Player p) {
+        //Returns the last gui the player was on before the current one and also removes it from the queue
+        return PREVIOUS_GUIS.get(p).pop();
     }
     public void handleInventoryClickEvent(InventoryClickEvent event, List<ItemStack> items) {
         Player p = (Player) event.getWhoClicked();
@@ -74,9 +80,9 @@ public class GuiManager {
             Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), gui::save);
         }
         //If the closed inventory appears in the hashmaps, remove it
-        removeGui(p);
+        closeGui(p);
     }
     public void handleLeaveEvent(Player p) {
-        removeGui(p);
+        closeGui(p);
     }
 }

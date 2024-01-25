@@ -8,8 +8,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui create <gui name> <display name>
+
+    //Used to store the display name since spaces can be entered here
+    private String displayName;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -28,11 +33,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
 
         //Check syntax
         if (args.length < 3) {
-            returnError(sender, "Please enter a valid gui name");
-            return false;
-        }
-        if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+            returnError(sender, "Invalid syntax: /tcgui gui create <gui name> <display name>");
             return false;
         }
         if (args[2].length() > 20) {
@@ -43,7 +44,20 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Gui names cannot be less than 3 characters in length");
         }
         if (!checkStringFormat(args[2])) {
-            returnError(sender, "Gui names can only contain letters Aa to Zz, numbers, underscores and dashes");
+            returnError(sender, "Gui names can only contain characters Aa to Zz, numbers, underscores and dashes");
+            return false;
+        }
+
+        //Build display name
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 3; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+
+        //Check display name
+        if (displayName.length() > 20) {
+            returnError(sender, "Gui display names cannot be longer than 20 characters in length");
             return false;
         }
 
@@ -76,7 +90,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Runs the command
         GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.addGui(args[2], ((Player) sender).getUniqueId().toString());
+        guiAccessor.addGui(args[2], displayName, ((Player) sender).getUniqueId().toString());
         sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
     }
 

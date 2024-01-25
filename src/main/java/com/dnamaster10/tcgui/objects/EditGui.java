@@ -42,11 +42,12 @@ public class EditGui extends Gui {
             //Increment the current page
             setPage(getPage() + 1);
             //Get next page
-            GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
             try {
+                GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
                 builder.addTickets();
                 builder.addPrevPageButton();
                 builder.addNextPageButton();
+                builder.addLinkers();
                 updateNewInventory(builder.getInventory());
                 Bukkit.getScheduler().runTaskLater(TraincartsGui.getPlugin(), () -> {
                     p.setItemOnCursor(null);
@@ -72,13 +73,14 @@ public class EditGui extends Gui {
             }
 
             //Create the new page
-            GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
             try {
+                GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
                 builder.addTickets();
                 if (getPage() != 0) {
                     builder.addPrevPageButton();
                 }
                 builder.addNextPageButton();
+                builder.addLinkers();
                 updateNewInventory(builder.getInventory());
                 Bukkit.getScheduler().runTaskLater(TraincartsGui.getPlugin(), () -> {
                     p.setItemOnCursor(null);
@@ -111,7 +113,6 @@ public class EditGui extends Gui {
                 break;
             }
         }
-        TraincartsGui.getPlugin().getLogger().severe(buttonType);
         if (!containsButton) {
             return;
         }
@@ -169,7 +170,6 @@ public class EditGui extends Gui {
                 ticketList.add(ticket);
             }
             else if (meta.getPersistentDataContainer().has(guiKey, PersistentDataType.INTEGER)) {
-                getPlugin().getLogger().severe("SAVING A LINKER!");
                 //Item is a linker, handler linker save
                 int linkedGuiId = meta.getPersistentDataContainer().get(guiKey, PersistentDataType.INTEGER);
                 String displayName = meta.getDisplayName();
@@ -215,6 +215,7 @@ public class EditGui extends Gui {
         GuiBuilder builder = new GuiBuilder(guiName, getPage());
         builder.addTickets();
         builder.addNextPageButton();
+        builder.addLinkers();
         setInventory(builder.getInventory());
     }
 }
