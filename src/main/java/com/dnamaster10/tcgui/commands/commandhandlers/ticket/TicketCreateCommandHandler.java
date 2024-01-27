@@ -4,13 +4,16 @@ import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.buttons.Ticket;
 import com.dnamaster10.tcgui.util.Traincarts;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /ticket create <tc_ticket_name> <display_name>
+    //Example command: /tcgui ticket create <tc_ticket_name> <display_name>
+    private String displayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
@@ -20,35 +23,36 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
 
-        //Check that sender is a player
-        if (!(sender instanceof Player)) {
+        //Check sender is player and permissions
+        if (!(sender instanceof Player p)) {
             returnError(sender, "Command must be executed by a player");
             return false;
+        }
+        else {
+            if (!p.hasPermission("tcgui.ticket.create")) {
+                returnError(sender, "You do not have permission to perform that action");
+                return false;
+            }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui ticket create <tc_ticket_name> <display_name>");
+            returnError(sender, "Missing argument(s): /tcgui ticket create <tc ticket name> <display name>");
             return false;
-        }
-        if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
-            return false;
-        }
-        if (!checkStringFormat(args[3])) {
-            returnError(sender, "Ticket names can only contains characters Aa - Zz, numbers, underscores and dashes");
-            return false;
-        }
-        if (args[3].length() > 20) {
-            returnError(sender, "Ticket display names cannot be more than 20 characters in length");
-        }
-        if (args[3].isEmpty()) {
-            returnError(sender, "Ticket display names cannot be less than 1 character in length");
         }
 
-        //Check permissions
-        if (!sender.hasPermission("tcgui.ticket.create")) {
-            returnError(sender, "You do not have permission to perform that action");
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 3; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+
+        if (displayName.isBlank()) {
+            returnError(sender, "Ticket names cannot be less than 1 character in length");
+            return false;
+        }
+        if (displayName.length() > 20) {
+            returnError(sender, "Ticket names cannot be more than 20 characters in length");
             return false;
         }
 
@@ -68,8 +72,9 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        Ticket ticket = new Ticket(args[2], args[3], 0);
+        Ticket ticket = new Ticket(args[2], displayName, 0);
         ticket.giveToPlayer((Player) sender);
+        sender.sendMessage(ChatColor.GREEN + "Successfully created ticket");
     }
 
     @Override

@@ -4,13 +4,16 @@ import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.buttons.LinkerButton;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui linker create <linked_gui_name> <display_name>
+    private String displayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -35,12 +38,23 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Missing arguments: /tcgui linker create <linked_gui_name> <display_name>");
             return false;
         }
-        if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        if (!checkStringFormat(args[3])) {
-            returnError(sender, "Linker names can only contain characters Aa - Zz, numbers, underscores and dashes");
+
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 3; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+        if (displayName.length() > 20) {
+            returnError(sender, "Linker display names cannot be more than 20 characters in length");
+            return false;
+        }
+        if (displayName.isBlank()) {
+            returnError(sender, "Linker display names cannot be less than 1 character in length");
+            return false;
         }
 
         return true;
@@ -51,8 +65,8 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Check that gui exists
-        if (!guiAccessor.checkGuiByName(args[3])) {
-            returnError(sender, "No gui with name \"" + args[3] + "\" exists");
+        if (!guiAccessor.checkGuiByName(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
@@ -64,9 +78,10 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
         //Get gui ID
         GuiAccessor accessor = new GuiAccessor();
         int guiId = accessor.getGuiIdByName(args[2]);
-        LinkerButton button = new LinkerButton(guiId, args[3]);
+        LinkerButton button = new LinkerButton(guiId, displayName);
         Player p = (Player) sender;
         p.getInventory().addItem(button.getItemStack());
+        p.sendMessage(ChatColor.GREEN + "Linker created");
     }
 
     @Override

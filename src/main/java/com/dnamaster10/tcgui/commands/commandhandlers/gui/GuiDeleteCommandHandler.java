@@ -5,6 +5,7 @@ import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -83,6 +84,8 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
 
         //Delete gui
         guiAccessor.deleteGuiById(id);
+
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was deleted");
     }
 
     @Override

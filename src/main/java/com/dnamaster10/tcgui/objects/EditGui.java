@@ -29,9 +29,7 @@ public class EditGui extends Gui {
             return;
         }
         //Else, run synchronous
-        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> {
-            p.openInventory(getInventory());
-        });
+        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> p.openInventory(getInventory()));
     }
 
     @Override
@@ -49,10 +47,7 @@ public class EditGui extends Gui {
                 builder.addNextPageButton();
                 builder.addLinkers();
                 updateNewInventory(builder.getInventory());
-                Bukkit.getScheduler().runTaskLater(TraincartsGui.getPlugin(), () -> {
-                    p.setItemOnCursor(null);
-                    p.updateInventory();
-                }, 1L);
+
             } catch (SQLException e) {
                 p.closeInventory();
                 TraincartsGui.getPlugin().reportSqlError(p, e.toString());
@@ -82,10 +77,7 @@ public class EditGui extends Gui {
                 builder.addNextPageButton();
                 builder.addLinkers();
                 updateNewInventory(builder.getInventory());
-                Bukkit.getScheduler().runTaskLater(TraincartsGui.getPlugin(), () -> {
-                    p.setItemOnCursor(null);
-                    p.updateInventory();
-                }, 1L);
+                removeCursorItem(p);
             } catch (SQLException e) {
                 p.closeInventory();
                 TraincartsGui.getPlugin().reportSqlError(p, e.toString());
@@ -202,7 +194,6 @@ public class EditGui extends Gui {
             linkerAccessor.addLinkers(guiId, getPage(), linkerList);
         } catch (SQLException e) {
             TraincartsGui.plugin.reportSqlError(e.toString());
-            return;
         }
     }
 

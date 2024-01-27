@@ -1,6 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.ticket;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,9 +10,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui ticket rename <new_name>
+    String displayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -31,20 +34,20 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Please enter a new name for the ticket");
             return false;
         }
-        if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+
+        //Build display name
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 2; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+
+        if (displayName.length() > 20) {
+            returnError(sender, "Ticket names cannot be more than 20 characters in length");
             return false;
         }
-        if (args[2].length() > 20) {
-            returnError(sender, "Ticket display names cannot be more than 20 characters in length");
-            return false;
-        }
-        if (args[2].isEmpty()) {
-            returnError(sender, "Ticket display names cannot be less than 1 characters in length");
-            return false;
-        }
-        if (!checkStringFormat(args[2])) {
-            returnError(sender, "Ticket names can only contain characters Aa - Zz, numbers, underscores and dashes");
+        if (displayName.isEmpty() || displayName.isBlank()) {
+            returnError(sender, "Ticket names cannot be less than 1 character in length");
             return false;
         }
 
@@ -82,8 +85,9 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
         ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(args[2]);
+        meta.setDisplayName(displayName);
         ticket.setItemMeta(meta);
+        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + displayName + "\"");
     }
 
     @Override

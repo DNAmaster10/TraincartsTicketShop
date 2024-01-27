@@ -8,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+
 public class PlayerInteractEventHandler implements Listener {
     //Used for signs
     @EventHandler(ignoreCancelled = true)
@@ -24,6 +26,7 @@ public class PlayerInteractEventHandler implements Listener {
         if (!(block.getState() instanceof Sign)) {
             return;
         }
-        event.setCancelled(TraincartsGui.getPlugin().getSignHandler().handleSignClickEvent(event));
+        getPlugin().getLogger().severe("CLICKED SIGN!");
+        event.setCancelled(getPlugin().getSignHandler().handleSignClickEvent(event));
     }
 }

@@ -3,6 +3,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -81,6 +82,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.updateGuiDisplayName(args[2], displayName);
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + displayName + "\"");
     }
 
     @Override

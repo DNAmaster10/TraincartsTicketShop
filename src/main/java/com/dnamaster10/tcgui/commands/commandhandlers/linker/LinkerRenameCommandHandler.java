@@ -1,6 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.linker;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,9 +10,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
     //tcgui linker rename <display_name>
+    String displayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -31,20 +34,20 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Please enter a new name for the linker");
             return false;
         }
-        if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+
+        //Build display name
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 2; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        displayName = stringJoiner.toString();
+
+        if (displayName.length() > 20) {
+            returnError(sender, "Linker names cannot be more than 20 characters in length");
             return false;
         }
-        if (args[2].length() > 20) {
-            returnError(sender, "Linker display names cannot be more than 20 characters in length");
-            return false;
-        }
-        if (args[2].isEmpty()) {
-            returnError(sender, "Linker display names cannot be less than 1 character in length");
-            return false;
-        }
-        if (!checkStringFormat(args[2])) {
-            returnError(sender, "Linker display names can only contain characters Aa - Zz, numbers, underscores and dashes");
+        if (displayName.isEmpty() || displayName.isBlank()) {
+            returnError(sender, "Linker names cannot be less than 1 character in length");
             return false;
         }
 
@@ -83,6 +86,7 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         assert meta != null;
         meta.setDisplayName(args[2]);
         linker.setItemMeta(meta);
+        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + displayName + "\"");
     }
 
     @Override
