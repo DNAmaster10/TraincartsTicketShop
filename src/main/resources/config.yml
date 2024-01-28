@@ -9,6 +9,7 @@ AllowGuiCreate: true
 AllowGuiEdit: true
 AllowGuiRename: true
 AllowGuiDelete: true
+AllowGuiSearch: true
 AllowGuiSetDisplayName: true
 
 AllowEditorAdd: true

@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.shop;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.ShopGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -68,10 +67,10 @@ public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
         ShopGui gui = new ShopGui(args[2], (Player) sender);
 
         //Open the gui
-        gui.open((Player) sender);
+        gui.open();
 
         //Register the gui
-        TraincartsGui.plugin.getGuiManager().registerNewShopGui(gui, (Player) sender);
+        getPlugin().getGuiManager().registerNewShopGui(gui, (Player) sender);
     }
 
     @Override

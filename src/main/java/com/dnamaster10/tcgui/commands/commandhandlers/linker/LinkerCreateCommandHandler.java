@@ -48,8 +48,8 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
             stringJoiner.add(args[i]);
         }
         displayName = stringJoiner.toString();
-        if (displayName.length() > 20) {
-            returnError(sender, "Linker display names cannot be more than 20 characters in length");
+        if (displayName.length() > 25) {
+            returnError(sender, "Linker display names cannot be more than 25 characters in length");
             return false;
         }
         if (displayName.isBlank()) {
@@ -78,9 +78,9 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
         //Get gui ID
         GuiAccessor accessor = new GuiAccessor();
         int guiId = accessor.getGuiIdByName(args[2]);
-        LinkerButton button = new LinkerButton(guiId, displayName);
+        LinkerButton button = new LinkerButton(guiId, ChatColor.translateAlternateColorCodes('&', displayName));
         Player p = (Player) sender;
-        p.getInventory().addItem(button.getItemStack());
+        button.giveToPlayer(p);
         p.sendMessage(ChatColor.GREEN + "Linker created");
     }
 

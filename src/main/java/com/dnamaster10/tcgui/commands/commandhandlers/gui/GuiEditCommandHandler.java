@@ -21,20 +21,18 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
         }
 
         //Check sender is player and permissions
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnError(sender, "Command must be executed by a player");
             return false;
         }
-        else {
-            if (!p.hasPermission("tcgui.gui.edit")) {
-                returnError(sender, "You do not have permission to perform that action");
-                return false;
-            }
+        if (!sender.hasPermission("tcgui.gui.edit")) {
+            returnError(sender, "You do not have permission to perform that action");
+            return false;
         }
 
         //Check syntax
         if (args.length < 3)  {
-            returnError(sender, "Please enter a gui name to edit");
+            returnError(sender, "Missing argument(s): /tcgui gui edit <gui name>");
             return false;
         }
         if (args.length > 3) {
@@ -69,10 +67,10 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Create a new GUI
-        EditGui gui = new EditGui(args[2]);
+        EditGui gui = new EditGui(args[2], (Player) sender);
 
         //Open the gui
-        gui.open((Player) sender);
+        gui.open();
 
         //Register the gui
         TraincartsGui.plugin.getGuiManager().registerNewEditGui(gui, (Player) sender);

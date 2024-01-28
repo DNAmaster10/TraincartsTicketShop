@@ -42,8 +42,8 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
         }
         displayName = stringJoiner.toString();
 
-        if (displayName.length() > 20) {
-            returnError(sender, "Ticket names cannot be more than 20 characters in length");
+        if (displayName.length() > 25) {
+            returnError(sender, "Ticket names cannot be more than 25 characters in length");
             return false;
         }
         if (displayName.isEmpty() || displayName.isBlank()) {
@@ -87,7 +87,7 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
         assert meta != null;
         meta.setDisplayName(displayName);
         ticket.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + displayName + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + ChatColor.translateAlternateColorCodes('&', displayName) + "\"");
     }
 
     @Override

@@ -7,15 +7,22 @@ import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import java.sql.SQLException;
 
 public class GuiBuilder {
     //For fetching gui info from the database and building it into an Inventory object
-    private String guiName;
-    private int pageNumber;
-    private Inventory inventory;
+    private final String guiName;
+    private final int pageNumber;
+    private final Inventory inventory;
     //Used to decide whether a new page button should be created
+    private void addTicketsToInventory(TicketDatabaseObject[] ticketList) {
+        for (TicketDatabaseObject dbObject : ticketList) {
+            Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getDisplayName(), dbObject.getPrice());
+            inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
+        }
+    }
     public void addTickets() throws SQLException {
         //Fetches tickets and builds an inventory with them.
         //Only does the top rows excluding the bottom row since the bottom row contains UI elements
@@ -29,10 +36,10 @@ public class GuiBuilder {
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
 
         //Add tickets to inventory
-        for (TicketDatabaseObject dbObject : ticketDatabaseObjects) {
-            Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getDisplayName(), dbObject.getPrice());
-            inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
-        }
+        addTicketsToInventory(ticketDatabaseObjects);
+    }
+    public void addTickets(TicketDatabaseObject[] ticketList) {
+        addTicketsToInventory(ticketList);
     }
     public void addLinkers() throws SQLException {
         //Must be called from async thread
@@ -62,6 +69,10 @@ public class GuiBuilder {
         BackButton button = new BackButton();
         this.inventory.setItem(45, button.getItemStack());
     }
+    public void addSearchButton() {
+        SearchButton searchButton = new SearchButton();
+        this.inventory.setItem(49, searchButton.getItemStack());
+    }
     public Inventory getInventory() {
         return this.inventory;
     }
@@ -70,8 +81,12 @@ public class GuiBuilder {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         String guiDisplayName = guiAccessor.getGuiDisplayName(guiName);
-        this.inventory = Bukkit.createInventory(null, 54, guiDisplayName);
+        this.inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', guiDisplayName));
         this.guiName = guiName;
         this.pageNumber = pageNumber;
+    }
+    public GuiBuilder(String guiName) throws SQLException {
+        //Used when we don't need to fetch tickets from the database within this method (Such as with the search gui)
+       this(guiName, 0);
     }
 }

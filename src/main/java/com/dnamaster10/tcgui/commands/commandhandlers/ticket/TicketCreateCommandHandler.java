@@ -51,8 +51,8 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Ticket names cannot be less than 1 character in length");
             return false;
         }
-        if (displayName.length() > 20) {
-            returnError(sender, "Ticket names cannot be more than 20 characters in length");
+        if (displayName.length() > 25) {
+            returnError(sender, "Ticket names cannot be more than 25 characters in length");
             return false;
         }
 

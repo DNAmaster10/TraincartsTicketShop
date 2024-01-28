@@ -18,22 +18,21 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class EditGui extends Gui {
     @Override
-    public void open(Player p) {
+    public void open() {
         //Method must be run synchronous
         if (Bukkit.isPrimaryThread()) {
-            p.openInventory(getInventory());
+            getPlayer().openInventory(getInventory());
             return;
         }
         //Else, run synchronous
-        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> p.openInventory(getInventory()));
+        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> getPlayer().openInventory(getInventory()));
     }
 
     @Override
-    public void nextPage(Player p) {
+    public void nextPage() {
         Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), () -> {
             //Save the current page
             save();
@@ -47,16 +46,16 @@ public class EditGui extends Gui {
                 builder.addNextPageButton();
                 builder.addLinkers();
                 updateNewInventory(builder.getInventory());
-
+                removeCursorItem();
             } catch (SQLException e) {
-                p.closeInventory();
-                TraincartsGui.getPlugin().reportSqlError(p, e.toString());
+                getPlayer().closeInventory();
+                TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
 
     @Override
-    public void prevPage(Player p) {
+    public void prevPage() {
         Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), () -> {
             //Save the current page
             save();
@@ -65,6 +64,8 @@ public class EditGui extends Gui {
             setPage(getPage() - 1);
             if (getPage() < 0) {
                 setPage(0);
+                removeCursorItem();
+                return;
             }
 
             //Create the new page
@@ -77,10 +78,10 @@ public class EditGui extends Gui {
                 builder.addNextPageButton();
                 builder.addLinkers();
                 updateNewInventory(builder.getInventory());
-                removeCursorItem(p);
+                removeCursorItem();
             } catch (SQLException e) {
-                p.closeInventory();
-                TraincartsGui.getPlugin().reportSqlError(p, e.toString());
+                getPlayer().closeInventory();
+                TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
@@ -88,32 +89,20 @@ public class EditGui extends Gui {
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
         //Check if clicked item is a page button
-        boolean containsButton = false;
-        String buttonType = null;
         for (ItemStack item : items) {
-            if (!item.hasItemMeta()) {
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
                 continue;
             }
-            NamespacedKey key = new NamespacedKey(TraincartsGui.getPlugin(), "type");
-            if (!Objects.requireNonNull(item.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-                continue;
-            }
-            if (Objects.equals(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING), "button")) {
-                containsButton = true;
-                NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(),"button_type");
-                buttonType = item.getItemMeta().getPersistentDataContainer().get(typeKey, PersistentDataType.STRING);
-                break;
-            }
-        }
-        if (!containsButton) {
-            return;
-        }
-        switch (Objects.requireNonNull(buttonType)) {
-            case "next_page" -> {
-                nextPage((Player) event.getWhoClicked());
-            }
-            case "prev_page" -> {
-                prevPage((Player) event.getWhoClicked());
+            switch (buttonType) {
+                case "next_page" -> {
+                    nextPage();
+                    return;
+                }
+                case "prev_page" -> {
+                    prevPage();
+                    return;
+                }
             }
         }
     }
@@ -185,7 +174,7 @@ public class EditGui extends Gui {
 
             int guiId = guiAccessor.getGuiIdByName(getGuiName());
 
-            ticketAccessor.deleteTicketsBYGuiIdPageId(guiId, getPage());
+            ticketAccessor.deleteTicketsByGuiIdPageId(guiId, getPage());
 
             //Add the tickets to the database
             ticketAccessor.addTickets(guiId, getPage(), ticketList);
@@ -197,10 +186,11 @@ public class EditGui extends Gui {
         }
     }
 
-    public EditGui(String guiName) throws SQLException {
+    public EditGui(String guiName, Player p) throws SQLException {
         //Should be called from an asynchronous thread
         setPage(0);
         setGuiName(guiName);
+        setPlayer(p);
 
         //Build tickets
         GuiBuilder builder = new GuiBuilder(guiName, getPage());

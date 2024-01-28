@@ -18,10 +18,8 @@ public class BackButton extends Button {
         meta.setDisplayName("Back");
 
         //Set button data
-        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
         NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
 
-        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "button");
         meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "back");
         item.setItemMeta(meta);
     }

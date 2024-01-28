@@ -2,22 +2,25 @@ package com.dnamaster10.tcgui.objects;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Gui {
     private int currentPage;
     private Inventory inventory;
     private String guiName;
     private Player player;
-    public abstract void open(Player p);
-    public abstract void nextPage(Player p);
-    public abstract void prevPage(Player p);
+    public abstract void open();
+    public abstract void nextPage();
+    public abstract void prevPage();
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
     protected Inventory getInventory() {
         return this.inventory;
@@ -56,10 +59,23 @@ public abstract class Gui {
             }
         }
     }
-    protected void removeCursorItem(Player p) {
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            p.setItemOnCursor(null);
-            p.updateInventory();
-        }, 1L);
+    protected void removeCursorItem() {
+        player.setItemOnCursor(null);
+    }
+    protected void removeCursorItemAndClose() {
+        //Removes item on cursor and closes inventory at the same time
+        player.setItemOnCursor(null);
+        player.closeInventory();
+    }
+    protected String getButtonType(ItemStack button) {
+        //First check if item is a button
+        NamespacedKey key = new NamespacedKey(getPlugin(), "button_type");
+        if (!button.hasItemMeta()) {
+            return null;
+        }
+        if (!Objects.requireNonNull(button.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+            return null;
+        }
+        return button.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
     }
 }

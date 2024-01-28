@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.util.gui;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;
+import com.dnamaster10.tcgui.objects.SearchGui;
 import com.dnamaster10.tcgui.objects.ShopGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,28 +18,34 @@ public class GuiManager {
     //currently has the GUi open, and the GUI object.
     private static final HashMap<Player, EditGui> EDIT_GUIS = new HashMap<>();
     private static final HashMap<Player, ShopGui> SHOP_GUIS = new HashMap<>();
+    private static final HashMap<Player, SearchGui> SEARCH_GUIS = new HashMap<>();
 
     //Used to store the last guis that the player was interacting with. Used for the gui back button.
     private static final HashMap<Player, Stack<LastGui>> PREVIOUS_GUIS = new HashMap<>();
 
     public void registerNewEditGui(EditGui gui, Player p) {
         //If player already has a GUI registered, remove their old one
-        EDIT_GUIS.remove(p);
-        SHOP_GUIS.remove(p);
+        closeGui(p);
 
         EDIT_GUIS.put(p, gui);
     }
     public void registerNewShopGui(ShopGui gui, Player p) {
         //If player already has a GUI registered remove their old onw
-        EDIT_GUIS.remove(p);
-        SHOP_GUIS.remove(p);
+        closeGui(p);
 
         SHOP_GUIS.put(p, gui);
+    }
+    public void registerNewSearchGui(SearchGui gui, Player p) {
+        //If player already has a GUI registered, remove their old one
+        closeGui(p);
+
+        SEARCH_GUIS.put(p, gui);
     }
     private void closeGui(Player p) {
         //Removes all stored guis and backs
         EDIT_GUIS.remove(p);
         SHOP_GUIS.remove(p);
+        SEARCH_GUIS.remove(p);
         PREVIOUS_GUIS.remove(p);
     }
     public void addPrevGui(String guiName, int guiPage, Player p) {
@@ -68,7 +75,9 @@ public class GuiManager {
         else if (SHOP_GUIS.containsKey(p)) {
             SHOP_GUIS.get(p).handleClick(event, items);
         }
-        return;
+        else if (SEARCH_GUIS.containsKey(p)) {
+            SEARCH_GUIS.get(p).handleClick(event, items);
+        }
     }
     public void handleInventoryCloseEvent(Player p) {
         //If the closed gui was an edit gui, we need to save the contents of the GUI to the database

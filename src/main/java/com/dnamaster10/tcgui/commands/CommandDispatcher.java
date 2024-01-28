@@ -1,12 +1,9 @@
 package com.dnamaster10.tcgui.commands;
 
 import com.dnamaster10.tcgui.TraincartsGui;
-import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiCreateCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiEditCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiSetDisplayNameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerRenameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
@@ -55,6 +52,10 @@ public class CommandDispatcher implements CommandExecutor {
                     }
                     case "setdisplayname" -> {
                         GuiSetDisplayNameCommandHandler handler = new GuiSetDisplayNameCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "search" -> {
+                        GuiSearchCommandHandler handler = new GuiSearchCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");

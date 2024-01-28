@@ -42,8 +42,8 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         }
         displayName = stringJoiner.toString();
 
-        if (displayName.length() > 20) {
-            returnError(sender, "Linker names cannot be more than 20 characters in length");
+        if (displayName.length() > 25) {
+            returnError(sender, "Linker names cannot be more than 25 characters in length");
             return false;
         }
         if (displayName.isEmpty() || displayName.isBlank()) {
@@ -86,7 +86,7 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         assert meta != null;
         meta.setDisplayName(args[2]);
         linker.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + displayName + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + ChatColor.translateAlternateColorCodes('&', displayName) + "\"");
     }
 
     @Override

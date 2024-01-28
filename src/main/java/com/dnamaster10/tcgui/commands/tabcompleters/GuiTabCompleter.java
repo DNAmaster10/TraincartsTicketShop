@@ -17,6 +17,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
         ARGS1.add("edit");
         ARGS1.add("editor");
         ARGS1.add("rename");
+        ARGS1.add("search");
         ARGS1.add("setDisplayName");
     }
 

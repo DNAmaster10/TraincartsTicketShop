@@ -5,6 +5,8 @@ import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.gui.GuiManager;
 import com.dnamaster10.tcgui.util.gui.LastGui;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -14,23 +16,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
 public class ShopGui extends Gui {
     @Override
-    public void open(Player p) {
+    public void open() {
         //Method should be run synchronous
         if (Bukkit.isPrimaryThread()) {
-            p.openInventory(getInventory());
+            getPlayer().openInventory(getInventory());
             return;
         }
-        Bukkit.getScheduler().runTask(getPlugin(), () -> p.openInventory(getInventory()));
+        Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
     }
 
     @Override
-    public void nextPage(Player p) {
+    public void nextPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
                 //Check if any other pages exist above this one
@@ -38,6 +41,7 @@ public class ShopGui extends Gui {
                 int guiId = guiAccessor.getGuiIdByName(getGuiName());
                 int maxPage = guiAccessor.getTotalPages(guiId);
                 if (getPage() + 1 > maxPage) {
+                    removeCursorItem();
                     return;
                 }
                 //Increment page
@@ -45,35 +49,35 @@ public class ShopGui extends Gui {
 
                 //Build new inventory
                 generateGui();
-                removeCursorItem(p);
+                removeCursorItem();
             } catch (SQLException e) {
-                p.closeInventory();
-                getPlugin().reportSqlError(p, e.toString());
+                getPlayer().closeInventory();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
 
     @Override
-    public void prevPage(Player p) {
+    public void prevPage() {
+        //Check that any pages exist before this oen
+        if (getPage() - 1 < 0) {
+            setPage(0);
+            removeCursorItem();
+            return;
+        }
+        setPage(getPage() - 1);
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                //Check that any pages exist before the current page
-                if (getPage() - 1 < 0) {
-                    setPage(0);
-                    return;
-                }
-                setPage(getPage() - 1);
-
                 //Build the new page
                 generateGui();
-                removeCursorItem(p);
+                removeCursorItem();
             } catch (SQLException e) {
-                p.closeInventory();
-                getPlugin().reportSqlError(p, e.toString());
+                getPlayer().closeInventory();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
-    public void handleLink(ItemStack button, Player p) {
+    public void handleLink(ItemStack button) {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //First get the destination page
             ItemMeta meta = button.getItemMeta();
@@ -86,16 +90,16 @@ public class ShopGui extends Gui {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
-                    removeCursorItem(p);
+                    removeCursorItem();
                     return;
                 }
                 destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
             } catch (SQLException e) {
-                getPlugin().reportSqlError(p, e.toString());
+                getPlugin().reportSqlError(getPlayer(), e.toString());
             }
 
             //Add the current gui info to the previous gui stack
-            getPlugin().getGuiManager().addPrevGui(getGuiName(), getPage(), p);
+            getPlugin().getGuiManager().addPrevGui(getGuiName(), getPage(), getPlayer());
 
             //Now change the current gui to the new gui
             setPage(0);
@@ -103,33 +107,33 @@ public class ShopGui extends Gui {
 
             try {
                 generateGui();
-                removeCursorItem(p);
+                removeCursorItem();
             }
             catch (SQLException e) {
-                getPlugin().reportSqlError(p, e.toString());
+                getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
-    private void back(Player p) {
+    private void back() {
         //Check that there is a previous gui that the player was on
-        if (!getPlugin().getGuiManager().checkPrevGui(p)) {
+        if (!getPlugin().getGuiManager().checkPrevGui(getPlayer())) {
             //If not, remove the button from their cursor
-            removeCursorItem(p);
+            removeCursorItem();
             return;
         }
         //If there is a previous gui, get the name of the last gui
-        LastGui lastGui = getPlugin().getGuiManager().getPrevGui(p);
+        LastGui lastGui = getPlugin().getGuiManager().getPrevGui(getPlayer());
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
                 //Check that the gui exists
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiByName(lastGui.getLastGuiName())) {
-                    p.sendMessage(ChatColor.RED + "Previous gui does not exist");
-                    removeCursorItem(p);
+                    getPlayer().sendMessage(ChatColor.RED + "Previous gui does not exist");
+                    removeCursorItem();
                     return;
                 }
                 //Remove the item from cursor
-                removeCursorItem(p);
+                removeCursorItem();
 
                 //Next, we need to generate the new gui.
                 setGuiName(lastGui.getLastGuiName());
@@ -138,64 +142,70 @@ public class ShopGui extends Gui {
                 generateGui();
             }
             catch (SQLException e) {
-                getPlugin().reportSqlError(p, e.toString());
+                getPlayer().closeInventory();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
     }
-    private void handleButtonClick(InventoryClickEvent event, String buttonType, ItemStack button) {
-        switch (buttonType) {
-            case "next_page" -> {
-                nextPage((Player) event.getWhoClicked());
-            }
-            case "prev_page" -> {
-                prevPage((Player) event.getWhoClicked());
-            }
-            case "linker" -> {
-                handleLink(button, (Player) event.getWhoClicked());
-            }
-            case "back" -> {
-                back((Player) event.getWhoClicked());
-            }
-        }
+    private void search() {
+        getPlayer().sendMessage(ChatColor.AQUA + "|");
+        TextComponent message = new TextComponent(ChatColor.AQUA + "| >>>Click me to search!<<<");
+        message.setBold(true);
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tcgui gui search " + getGuiName() + " "));
+        getPlayer().spigot().sendMessage(message);
+        getPlayer().sendMessage(ChatColor.AQUA + "|");
+        removeCursorItemAndClose();
     }
-    private void handleTicketClick(InventoryClickEvent event, ItemStack ticket) {
+    private void handleTicketClick(ItemStack ticket) {
         //Get ticket tc name
         NamespacedKey key = new NamespacedKey(getPlugin(), "tc_name");
         String tcName = Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().get(key, PersistentDataType.STRING);
 
         //Check that the tc ticket exists
         if (!Traincarts.checkTicket(tcName)) {
+            removeCursorItem();
             return;
         }
         //Give the ticket to the player
-        Player p = (Player) event.getWhoClicked();
-        Traincarts.giveTicketItem(tcName, 0, p);
-        p.setItemOnCursor(null);
-        p.closeInventory();
+        removeCursorItem();
+        Traincarts.giveTicketItem(tcName, 0, getPlayer());
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {}, 1L);
+        getPlayer().closeInventory();
     }
 
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
         //Check if player interacted with a button
         for (ItemStack item : items) {
-            if (!item.hasItemMeta()) {
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
                 continue;
             }
-            NamespacedKey key = new NamespacedKey(getPlugin(), "type");
-            if (!Objects.requireNonNull(item.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-                continue;
-            }
-            if (Objects.equals(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING), "button")) {
-                //This is a button, handle button click
-                NamespacedKey buttonKey = new NamespacedKey(getPlugin(), "button_type");
-                String buttonType = item.getItemMeta().getPersistentDataContainer().get(buttonKey, PersistentDataType.STRING);
-                handleButtonClick(event, buttonType, item);
-                break;
-            }
-            else if (Objects.equals(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING), "ticket")) {
-                //This is a ticket, handle ticket click
-                handleTicketClick(event, item);
-                break;
+            switch (buttonType) {
+                case "ticket" -> {
+                    handleTicketClick(item);
+                    return;
+                }
+                case "prev_page" -> {
+                    prevPage();
+                    return;
+                }
+                case "next_page" -> {
+                    nextPage();
+                    return;
+                }
+                case "linker" -> {
+                    handleLink(item);
+                    return;
+                }
+                case "back" -> {
+                    back();
+                    return;
+                }
+                case "search" -> {
+                    search();
+                    return;
+                }
             }
         }
     }
@@ -222,22 +232,29 @@ public class ShopGui extends Gui {
         if (getPlugin().getGuiManager().checkPrevGui(getPlayer())) {
             builder.addBackButton();
         }
+
+        builder.addSearchButton();
         updateNewInventory(builder.getInventory());
     }
 
-    public ShopGui(String guiName, Player p) throws SQLException {
+    public ShopGui(String guiName, Player p, int page) throws SQLException {
         //Should be called from async thread
         //Instantiate gui
-        setInventory(Bukkit.getServer().createInventory(p, 54));
+        GuiAccessor guiAccessor = new GuiAccessor();
+        String displayName = guiAccessor.getGuiDisplayName(guiName);
+        setInventory(Bukkit.getServer().createInventory(p, 54, ChatColor.translateAlternateColorCodes('&', displayName)));
 
         //Set the owner
         setPlayer(p);
 
         //Set page
-        setPage(0);
+        setPage(page);
 
         //Set the gui
         setGuiName(guiName);
         generateGui();
+    }
+    public ShopGui(String guiName, Player p) throws SQLException {
+        this(guiName, p, 0);
     }
 }

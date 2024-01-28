@@ -25,14 +25,19 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
 
-        //Check sender is player
+        //Check sender is player and permissions
         if (!(sender instanceof Player)) {
             returnError(sender, "Command must be executed by a player");
             return false;
         }
+        if (!sender.hasPermission("tcgui.gui.create")) {
+            returnError(sender, "You do not have permission to perform that action");
+            return false;
+        }
+
 
         //Check syntax
-        if (args.length < 3) {
+        if (args.length < 4) {
             returnError(sender, "Invalid syntax: /tcgui gui create <gui name> <display name>");
             return false;
         }
@@ -56,14 +61,12 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         displayName = stringJoiner.toString();
 
         //Check display name
-        if (displayName.length() > 20) {
-            returnError(sender, "Gui display names cannot be longer than 20 characters in length");
+        if (displayName.length() > 25) {
+            returnError(sender, "Gui display names cannot be longer than 25 characters in length");
             return false;
         }
-
-        //Check permissions
-        if (!sender.hasPermission("tcgui.gui.create")) {
-            returnError(sender, "You do not have permission to perform that action");
+        if (displayName.isBlank()) {
+            returnError(sender, "Gui display names cannot be less than 1 character in length");
             return false;
         }
 
@@ -78,6 +81,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         Player p = (Player) sender;
         String guiName = args[2];
         GuiAccessor guiAccessor = new GuiAccessor();
+
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {
             returnError(p, "A gui with the name \"" + guiName + "\" already exists");

@@ -21,6 +21,9 @@ permissions:
   tcgui.gui.rename:
     description: Allows a gui to be renamed
     default: false
+  tcgui.gui.search:
+    description: Allows a player to search a gui
+    default: false
   tcgui.gui.setdisplayname:
     description: Allows a gui display name to be changed
     default: false

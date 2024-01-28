@@ -36,7 +36,7 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
         if (args.length < 3) {
-            returnError(sender, "Please enter a gui name");
+            returnError(sender, "Missing argument(s): /tcgui gui delete <gui name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

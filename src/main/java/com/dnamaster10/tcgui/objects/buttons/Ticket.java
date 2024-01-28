@@ -27,7 +27,7 @@ public class Ticket extends Button {
         meta.setDisplayName(displayName);
 
         //Set type data
-        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
+        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ticket");
 
         //Set tc ticket data

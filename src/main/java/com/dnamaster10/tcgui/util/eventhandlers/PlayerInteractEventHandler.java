@@ -26,7 +26,6 @@ public class PlayerInteractEventHandler implements Listener {
         if (!(block.getState() instanceof Sign)) {
             return;
         }
-        getPlugin().getLogger().severe("CLICKED SIGN!");
         event.setCancelled(getPlugin().getSignHandler().handleSignClickEvent(event));
     }
 }

@@ -1,31 +1,32 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import com.dnamaster10.tcgui.objects.SearchGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
-    private String displayName;
+public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui search <gui name> <search term>
+    private String searchTerm;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //This command can be run by the player as well as other interfaces
-
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiSetDisplayName")) {
-            returnError(sender, "Changing gui display names is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowGuiSearch")) {
+            returnError(sender, "Searching guis is disabled on this server");
             return false;
         }
-
-        //Check permissions
-        if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.gui.setdisplayname")) {
+        //Check permission and that sender is player
+        if (!(sender instanceof Player p)) {
+            returnError(sender, "Command must be executed by a player");
+            return false;
+        }
+        else {
+            if (!p.hasPermission("tcgui.gui.search")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -33,29 +34,25 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui setDisplayName <gui name> <gui display name>");
+            returnError(sender, "Missing argument(s): /tcgui gui search <gui name> <search term>");
             return false;
         }
-
-        //Check gui name to save on database calls
         if (!checkGuiNameSyntax(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
-        //Build display name
-        StringJoiner stringJoiner = new StringJoiner(" ");
+        StringJoiner joiner = new StringJoiner(" ");
         for (int i = 3; i < args.length; i++) {
-            stringJoiner.add(args[i]);
+            joiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
-
-        if (displayName.length() > 25) {
-            returnError(sender, "Gui display names cannot be more than 20 characters in length");
+        searchTerm = joiner.toString();
+        if (searchTerm.length() > 25) {
+            returnError(sender, "Search term cannot be longer than 25 characters in length");
             return false;
         }
-        if (displayName.isBlank()) {
-            returnError(sender, "Gui display names cannot be less than 1 character in length");
+        if (searchTerm.isBlank()) {
+            returnError(sender, "Search term cannot be less than 1 character in length");
             return false;
         }
         return true;
@@ -69,23 +66,19 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-
-        //If sender is player, check that player is an editor of that gui
-        if (sender instanceof Player p) {
-            if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
-                returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
-                return false;
-            }
-        }
-
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.updateGuiDisplayName(args[2], displayName);
-        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + displayName + "\"");
+        //Create new gui
+        SearchGui gui = new SearchGui(args[2], searchTerm, (Player) sender);
+
+        //Open the gui
+        gui.open();
+
+        //Register the gui
+        getPlugin().getGuiManager().registerNewSearchGui(gui, (Player) sender);
     }
 
     @Override

@@ -15,21 +15,18 @@ public class LinkerButton extends Button {
         p.getInventory().addItem(item);
     }
     public LinkerButton (int linkedGuiId, String displayName) {
-        //Should be run async!
         //Create item
         item = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta meta = item.getItemMeta();
 
         //Set display
-        assert meta!= null;
+        assert meta != null;
         meta.setDisplayName(displayName);
 
         //Set button data
-        NamespacedKey typeKey = new NamespacedKey(TraincartsGui.getPlugin(), "type");
         NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
         NamespacedKey guiKey = new NamespacedKey(TraincartsGui.getPlugin(), "gui");
 
-        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "button");
         meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "linker");
         meta.getPersistentDataContainer().set(guiKey, PersistentDataType.INTEGER, linkedGuiId);
 
