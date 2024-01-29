@@ -18,26 +18,27 @@ public class LinkerAccessor extends DatabaseAccessor {
     public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws SQLException {
         //Returns an array of linkers for a given gui ID and page number
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_guiid, display_name FROM linkers WHERE guiid=? AND page=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_guiid, display_name, raw_display_name FROM linkers WHERE guiid=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             ResultSet result = statement.executeQuery();
             List<LinkerDatabaseObject> linkersList = new ArrayList<>();
             while (result.next()) {
-                linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_guiid"), result.getString("display_name")));
+                linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_guiid"), result.getString("display_name"), result.getString("raw_display_name")));
             }
             return linkersList.toArray(LinkerDatabaseObject[]::new);
         }
     }
     public void addLinkers(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO linkers (guiid, page, slot, linked_guiid, display_name) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO linkers (guiid, page, slot, linked_guiid, display_name, raw_display_name) VALUES (?, ?, ?, ?, ?, ?)");
             for (LinkerDatabaseObject linker : linkers) {
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
                 statement.setInt(3, linker.getSlot());
                 statement.setInt(4, linker.getLinkedGuiId());
-                statement.setString(5, linker.getDisplayName());
+                statement.setString(5, linker.getColouredDisplayName());
+                statement.setString(6, linker.getRawDisplayName());
                 statement.addBatch();
             }
             statement.executeBatch();

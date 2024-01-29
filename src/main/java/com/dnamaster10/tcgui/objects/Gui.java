@@ -60,12 +60,13 @@ public abstract class Gui {
         }
     }
     protected void removeCursorItem() {
-        player.setItemOnCursor(null);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setItemOnCursor(null), 1L);
     }
     protected void removeCursorItemAndClose() {
         //Removes item on cursor and closes inventory at the same time
-        player.setItemOnCursor(null);
-        player.closeInventory();
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            player.setItemOnCursor(null);
+            player.closeInventory();}, 1L);
     }
     protected String getButtonType(ItemStack button) {
         //First check if item is a button

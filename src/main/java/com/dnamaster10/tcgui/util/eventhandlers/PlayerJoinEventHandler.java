@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.util.eventhandlers;
 
 import com.dnamaster10.tcgui.util.database.PlayerAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,7 +18,8 @@ public class PlayerJoinEventHandler implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
                 PlayerAccessor accessor = new PlayerAccessor();
-                accessor.updatePlayer(event.getPlayer().getDisplayName(), event.getPlayer().getUniqueId().toString());
+                Player p = event.getPlayer();
+                accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
             } catch (SQLException e) {
                 getPlugin().reportSqlError(e.toString());
             }

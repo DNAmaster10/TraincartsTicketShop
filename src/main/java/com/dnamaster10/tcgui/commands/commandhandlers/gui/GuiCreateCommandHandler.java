@@ -14,7 +14,8 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui create <gui name> <display name>
 
     //Used to store the display name since spaces can be entered here
-    private String displayName;
+    private String rawDisplayName;
+    private String colouredDisplayName;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -58,14 +59,15 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         for (int i = 3; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         //Check display name
-        if (displayName.length() > 25) {
+        if (rawDisplayName.length() > 25) {
             returnError(sender, "Gui display names cannot be longer than 25 characters in length");
             return false;
         }
-        if (displayName.isBlank()) {
+        if (rawDisplayName.isBlank()) {
             returnError(sender, "Gui display names cannot be less than 1 character in length");
             return false;
         }
@@ -94,7 +96,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Runs the command
         GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.addGui(args[2], displayName, ((Player) sender).getUniqueId().toString());
+        guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, ((Player) sender).getUniqueId().toString());
         sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
     }
 

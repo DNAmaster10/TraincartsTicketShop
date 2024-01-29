@@ -28,6 +28,7 @@ public class TableCreator extends DatabaseAccessor {
                         id int UNIQUE AUTO_INCREMENT,
                         name varchar(100) UNIQUE,
                         display_name varchar(100),
+                        raw_display_name varchar(100),
                         owner_uuid varchar(50)
                     );
                     """);
@@ -41,6 +42,7 @@ public class TableCreator extends DatabaseAccessor {
                         slot int,
                         tc_name varchar(100),
                         display_name varchar(100),
+                        raw_display_name varchar(100),
                         price int
                     );
                     """);
@@ -62,7 +64,8 @@ public class TableCreator extends DatabaseAccessor {
                         page int,
                         slot int,
                         linked_guiid int,
-                        display_name varchar(100)
+                        display_name varchar(100),
+                        raw_display_name varchar(100)
                     );
                     """);
             statement5.execute();

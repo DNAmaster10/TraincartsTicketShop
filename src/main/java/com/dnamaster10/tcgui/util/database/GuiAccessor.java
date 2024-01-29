@@ -1,7 +1,5 @@
 package com.dnamaster10.tcgui.util.database;
 
-import com.dnamaster10.tcgui.util.database.databaseobjects.PlayerDatabaseObject;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -127,7 +125,7 @@ public class GuiAccessor extends DatabaseAccessor {
             return maxPage;
         }
     }
-    public String getGuiDisplayName(String guiName) throws SQLException {
+    public String getColouredGuiDisplayName(String guiName) throws SQLException {
         //Returns display name of gui from name
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT display_name FROM guis WHERE name=?");
@@ -149,22 +147,33 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void updateGuiDisplayName(String guiName, String guiDisplayName) throws SQLException {
+    public void updateGuiDisplayName(String guiName, String colouredDisplayName, String rawDisplayName) throws SQLException {
         //Updates a gui display name
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=? WHERE name=?");
-            statement.setString(1, guiDisplayName);
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=?, raw_display_name=? WHERE name=?");
+            statement.setString(1, colouredDisplayName);
+            statement.setString(2, rawDisplayName);
+            statement.setString(3, guiName);
+            statement.executeUpdate();
+        }
+    }
+    public void updateGuiOwner(String guiName, String uuid) throws SQLException {
+        //Changes the owner of the gui to another player
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET owner_uuid=? WHERE name=?");
+            statement.setString(1, uuid);
             statement.setString(2, guiName);
             statement.executeUpdate();
         }
     }
-    public void addGui(String name, String displayName, String ownerUuid) throws SQLException {
+    public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws SQLException {
         //Registers a new GUI in the database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, owner_uuid) VALUES (?,?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)");
             statement.setString(1, name);
-            statement.setString(2, displayName);
-            statement.setString(3, ownerUuid);
+            statement.setString(2, colouredDisplayName);
+            statement.setString(3, rawDisplayName);
+            statement.setString(4, ownerUuid);
             statement.executeUpdate();
         }
     }

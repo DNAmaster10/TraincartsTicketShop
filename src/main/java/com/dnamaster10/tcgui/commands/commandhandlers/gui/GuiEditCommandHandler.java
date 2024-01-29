@@ -58,7 +58,7 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
 
         //Check that player is owner or editor of gui
         if (!guiAccessor.playerCanEdit(args[2], ((Player) sender).getUniqueId().toString())) {
-            returnError(sender, "You do not have permission to edit that gui");
+            returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
             return false;
         }
         return true;

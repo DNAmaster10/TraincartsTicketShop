@@ -8,6 +8,7 @@ import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -48,7 +49,7 @@ public class EditGui extends Gui {
                 updateNewInventory(builder.getInventory());
                 removeCursorItem();
             } catch (SQLException e) {
-                getPlayer().closeInventory();
+                removeCursorItemAndClose();
                 TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
@@ -80,7 +81,7 @@ public class EditGui extends Gui {
                 updateNewInventory(builder.getInventory());
                 removeCursorItem();
             } catch (SQLException e) {
-                getPlayer().closeInventory();
+                removeCursorItemAndClose();
                 TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
             }
         });
@@ -113,11 +114,11 @@ public class EditGui extends Gui {
         //Build an arraylist of ticket and linker database objects to be put in the database
 
         List<TicketDatabaseObject> ticketList = new ArrayList<>();
-        NamespacedKey tcKey = new NamespacedKey(TraincartsGui.plugin, "tc_name");
-        NamespacedKey priceKey = new NamespacedKey(TraincartsGui.plugin, "price");
+        NamespacedKey tcKey = new NamespacedKey(getPlugin(), "tc_name");
+        NamespacedKey priceKey = new NamespacedKey(getPlugin(), "price");
 
         List<LinkerDatabaseObject> linkerList = new ArrayList<>();
-        NamespacedKey guiKey = new NamespacedKey(TraincartsGui.plugin, "gui");
+        NamespacedKey guiKey = new NamespacedKey(getPlugin(), "gui");
 
         for (int i = 0; i < getInventory().getSize() - 9; i++) {
             //For every possible ticket slot get the item in that slot
@@ -137,7 +138,7 @@ public class EditGui extends Gui {
                 String displayName = meta.getDisplayName();
 
                 //Check if display name is too long
-                if (displayName.length() > 20) {
+                if (displayName.length() > 25) {
                     continue;
                 }
 
@@ -147,7 +148,7 @@ public class EditGui extends Gui {
                     price = meta.getPersistentDataContainer().get(priceKey, PersistentDataType.INTEGER);
                 }
 
-                TicketDatabaseObject ticket = new TicketDatabaseObject(i, tcName, displayName, price);
+                TicketDatabaseObject ticket = new TicketDatabaseObject(i, tcName, displayName, ChatColor.stripColor(displayName), price);
                 ticketList.add(ticket);
             }
             else if (meta.getPersistentDataContainer().has(guiKey, PersistentDataType.INTEGER)) {
@@ -156,11 +157,11 @@ public class EditGui extends Gui {
                 String displayName = meta.getDisplayName();
 
                 //Check if display name is too long
-                if (displayName.length() > 20) {
+                if (displayName.length() > 25) {
                     continue;
                 }
 
-                LinkerDatabaseObject linker = new LinkerDatabaseObject(i, linkedGuiId, displayName);
+                LinkerDatabaseObject linker = new LinkerDatabaseObject(i, linkedGuiId, displayName, ChatColor.stripColor(displayName));
                 linkerList.add(linker);
             }
             //Otherwise, item is not a savable / tcgui item. Ignore it to remove it

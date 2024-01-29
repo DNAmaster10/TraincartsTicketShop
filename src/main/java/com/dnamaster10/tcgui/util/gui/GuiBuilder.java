@@ -19,7 +19,7 @@ public class GuiBuilder {
     //Used to decide whether a new page button should be created
     private void addTicketsToInventory(TicketDatabaseObject[] ticketList) {
         for (TicketDatabaseObject dbObject : ticketList) {
-            Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getDisplayName(), dbObject.getPrice());
+            Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getColouredDisplayName(), dbObject.getPrice());
             inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
         }
     }
@@ -53,7 +53,7 @@ public class GuiBuilder {
 
         //Add linkers to inventory
         for (LinkerDatabaseObject dbObject : linkers) {
-            LinkerButton linker = new LinkerButton(dbObject.getLinkedGuiId(), dbObject.getDisplayName());
+            LinkerButton linker = new LinkerButton(dbObject.getLinkedGuiId(), dbObject.getColouredDisplayName());
             inventory.setItem(dbObject.getSlot(), linker.getItemStack());
         }
     }
@@ -80,7 +80,7 @@ public class GuiBuilder {
         //Should be called async
         GuiAccessor guiAccessor = new GuiAccessor();
 
-        String guiDisplayName = guiAccessor.getGuiDisplayName(guiName);
+        String guiDisplayName = guiAccessor.getColouredGuiDisplayName(guiName);
         this.inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', guiDisplayName));
         this.guiName = guiName;
         this.pageNumber = pageNumber;

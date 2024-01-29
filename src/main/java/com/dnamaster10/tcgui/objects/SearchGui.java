@@ -37,7 +37,7 @@ public class SearchGui extends Gui {
             try {
                 //Check if any other pages exist beyond this one
                 TicketAccessor ticketAccessor = new TicketAccessor();
-                if (!(ticketAccessor.getTotalSearchResults(guiId, searchTerm) > (getPage() + 1) * 45)) {
+                if (!(ticketAccessor.getTotalTicketSearchResults(guiId, searchTerm) > (getPage() + 1) * 45)) {
                     removeCursorItem();
                     return;
                 }
@@ -129,7 +129,7 @@ public class SearchGui extends Gui {
         guiBuilder.addTickets(ticketArray);
 
         //Check whether another page is needed
-        if (ticketAccessor.getTotalSearchResults(guiId, searchTerm) > (getPage() + 1) * 45) {
+        if (ticketAccessor.getTotalTicketSearchResults(guiId, searchTerm) > (getPage() + 1) * 45) {
             guiBuilder.addNextPageButton();
         }
         if (getPage() > 0) {

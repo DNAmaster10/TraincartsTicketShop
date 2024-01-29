@@ -12,7 +12,8 @@ import java.util.StringJoiner;
 
 public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
-    private String displayName;
+    private String rawDisplayName;
+    private String colouredDisplayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //This command can be run by the player as well as other interfaces
@@ -25,7 +26,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
 
         //Check permissions
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.gui.setdisplayname")) {
+            if (!p.hasPermission("tcgui.gui.setdisplayname") && !p.hasPermission("tcgui.admin.gui.setdisplayname")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -48,13 +49,14 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
         for (int i = 3; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
-        if (displayName.length() > 25) {
+        if (rawDisplayName.length() > 25) {
             returnError(sender, "Gui display names cannot be more than 20 characters in length");
             return false;
         }
-        if (displayName.isBlank()) {
+        if (rawDisplayName.isBlank()) {
             returnError(sender, "Gui display names cannot be less than 1 character in length");
             return false;
         }
@@ -72,9 +74,11 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
 
         //If sender is player, check that player is an editor of that gui
         if (sender instanceof Player p) {
-            if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
-                returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
-                return false;
+            if (!p.hasPermission("tcgui.admin.gui.setdisplayname")) {
+                if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
+                    returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
+                    return false;
+                }
             }
         }
 
@@ -84,8 +88,8 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
-        guiAccessor.updateGuiDisplayName(args[2], displayName);
-        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + displayName + "\"");
+        guiAccessor.updateGuiDisplayName(args[2], colouredDisplayName, rawDisplayName);
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + colouredDisplayName + "\"");
     }
 
     @Override

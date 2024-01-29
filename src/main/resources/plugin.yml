@@ -30,6 +30,16 @@ permissions:
   tcgui.gui.delete:
     description: Allows deleting of guis
     default: false
+  tcgui.gui.transfer:
+    description: Allows player to transfer guis they own to other players
+    default: false
+
+  tcgui.admin.gui.setdisplayname:
+    description: Allows player to rename a gui even if they do not have edit perms
+    default: false
+  tcgui.admin.gui.transfer:
+    description: Allows player to transfer gui even if they are not the owner
+    default: false
 
   tcgui.editor.add:
     description: Allows players to change who can edit their gui

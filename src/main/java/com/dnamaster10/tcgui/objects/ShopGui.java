@@ -3,7 +3,6 @@ package com.dnamaster10.tcgui.objects;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
-import com.dnamaster10.tcgui.util.gui.GuiManager;
 import com.dnamaster10.tcgui.util.gui.LastGui;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -241,7 +239,7 @@ public class ShopGui extends Gui {
         //Should be called from async thread
         //Instantiate gui
         GuiAccessor guiAccessor = new GuiAccessor();
-        String displayName = guiAccessor.getGuiDisplayName(guiName);
+        String displayName = guiAccessor.getColouredGuiDisplayName(guiName);
         setInventory(Bukkit.getServer().createInventory(p, 54, ChatColor.translateAlternateColorCodes('&', displayName)));
 
         //Set the owner

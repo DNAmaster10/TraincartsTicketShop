@@ -14,7 +14,8 @@ import java.util.StringJoiner;
 
 public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
     //tcgui linker rename <display_name>
-    String displayName;
+    private String rawDisplayName;
+    private String colouredDisplayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -40,13 +41,14 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         for (int i = 2; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
+        colouredDisplayName = stringJoiner.toString();
+        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
-        if (displayName.length() > 25) {
+        if (rawDisplayName.length() > 25) {
             returnError(sender, "Linker names cannot be more than 25 characters in length");
             return false;
         }
-        if (displayName.isEmpty() || displayName.isBlank()) {
+        if (rawDisplayName.isBlank()) {
             returnError(sender, "Linker names cannot be less than 1 character in length");
             return false;
         }
@@ -84,9 +86,9 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         ItemStack linker = ((Player) sender).getInventory().getItemInMainHand();
         ItemMeta meta = linker.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(args[2]);
+        meta.setDisplayName(colouredDisplayName);
         linker.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + ChatColor.translateAlternateColorCodes('&', displayName) + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
     }
 
     @Override

@@ -11,6 +11,7 @@ AllowGuiRename: true
 AllowGuiDelete: true
 AllowGuiSearch: true
 AllowGuiSetDisplayName: true
+AllowGuiTransfer: true
 
 AllowEditorAdd: true
 AllowEditorRemove: true

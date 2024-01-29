@@ -72,7 +72,7 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        Ticket ticket = new Ticket(args[2], displayName, 0);
+        Ticket ticket = new Ticket(args[2], ChatColor.translateAlternateColorCodes('&', displayName), 0);
         ticket.giveToPlayer((Player) sender);
         sender.sendMessage(ChatColor.GREEN + "Successfully created ticket");
     }
