@@ -69,8 +69,11 @@ public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
         //Open the gui
         gui.open();
 
+        //Remove the old guis attached to this player
+        getPlugin().getGuiManager().clearGuis((Player) sender);
+
         //Register the gui
-        getPlugin().getGuiManager().registerNewShopGui(gui, (Player) sender);
+        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 
     @Override

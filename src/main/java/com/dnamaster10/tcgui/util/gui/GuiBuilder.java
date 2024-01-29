@@ -81,12 +81,12 @@ public class GuiBuilder {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         String guiDisplayName = guiAccessor.getColouredGuiDisplayName(guiName);
-        this.inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', guiDisplayName));
+        this.inventory = Bukkit.createInventory(null, 54, guiDisplayName);
         this.guiName = guiName;
         this.pageNumber = pageNumber;
     }
     public GuiBuilder(String guiName) throws SQLException {
         //Used when we don't need to fetch tickets from the database within this method (Such as with the search gui)
-       this(guiName, 0);
+        this(guiName, 0);
     }
 }

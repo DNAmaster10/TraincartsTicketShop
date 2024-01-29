@@ -22,12 +22,46 @@ import java.util.Objects;
 public class ShopGui extends Gui {
     @Override
     public void open() {
-        //Method should be run synchronous
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Generate the gui
+            try {
+                generateGui();
+            } catch (SQLException e) {
+                getPlugin().reportSqlError(getPlayer(), e.toString());
+            }
+        });
         if (Bukkit.isPrimaryThread()) {
             getPlayer().openInventory(getInventory());
             return;
         }
         Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
+    }
+    private void generateGui() throws SQLException {
+        //Adds tickets, buttons etc based on gui name
+
+        //Build tickets
+        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
+        builder.addTickets();
+        builder.addLinkers();
+
+        //Check if there are any more pages
+        GuiAccessor accessor = new GuiAccessor();
+        int guiId = accessor.getGuiIdByName(getGuiName());
+
+        if (accessor.getTotalPages(guiId) > getPage()) {
+            builder.addNextPageButton();
+        }
+        if (getPage() > 0) {
+            builder.addPrevPageButton();
+        }
+
+        //Check if back button is needed
+        if (getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+            builder.addBackButton();
+        }
+
+        builder.addSearchButton();
+        setInventory(builder.getInventory());
     }
 
     @Override
@@ -83,67 +117,41 @@ public class ShopGui extends Gui {
             NamespacedKey key = new NamespacedKey(getPlugin(), "gui");
             int linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
 
-            String destGuiName = null;
-            //Check the destination gui exists and get the gui name
             try {
+                //Get dest gui name
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
                     removeCursorItem();
                     return;
                 }
-                destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
+                String destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
+                ShopGui newGui = new ShopGui(destGuiName, getPlayer());
+
+                //Add gui to gui manager
+                getPlugin().getGuiManager().addGui(getPlayer(), newGui);
+
+                //Remove cursor item
+                removeCursorItem();
+
+                //Open new gui
+                newGui.open();
+
             } catch (SQLException e) {
                 getPlugin().reportSqlError(getPlayer(), e.toString());
             }
 
-            //Add the current gui info to the previous gui stack
-            getPlugin().getGuiManager().addPrevGui(getGuiName(), getPage(), getPlayer());
-
-            //Now change the current gui to the new gui
-            setPage(0);
-            setGuiName(destGuiName);
-
-            try {
-                generateGui();
-                removeCursorItem();
-            }
-            catch (SQLException e) {
-                getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
         });
     }
     private void back() {
         //Check that there is a previous gui that the player was on
-        if (!getPlugin().getGuiManager().checkPrevGui(getPlayer())) {
+        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
             //If not, remove the button from their cursor
             removeCursorItem();
             return;
         }
-        //If there is a previous gui, get the name of the last gui
-        LastGui lastGui = getPlugin().getGuiManager().getPrevGui(getPlayer());
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                //Check that the gui exists
-                GuiAccessor guiAccessor = new GuiAccessor();
-                if (!guiAccessor.checkGuiByName(lastGui.getLastGuiName())) {
-                    getPlayer().sendMessage(ChatColor.RED + "Previous gui does not exist");
-                    removeCursorItem();
-                    return;
-                }
-                //Remove the item from cursor
-                removeCursorItem();
-
-                //Next, we need to generate the new gui.
-                setGuiName(lastGui.getLastGuiName());
-                setPage(lastGui.getLastPageNum());
-
-                generateGui();
-            }
-            catch (SQLException e) {
-                getPlayer().closeInventory();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
-        });
+        //If there is, go back
+        removeCursorItem();
+        getPlugin().getGuiManager().back(getPlayer());
     }
     private void search() {
         getPlayer().sendMessage(ChatColor.AQUA + "|");
@@ -179,6 +187,7 @@ public class ShopGui extends Gui {
             if (buttonType == null) {
                 continue;
             }
+            getPlugin().getLogger().severe("Handling button click!");
             switch (buttonType) {
                 case "ticket" -> {
                     handleTicketClick(item);
@@ -207,50 +216,17 @@ public class ShopGui extends Gui {
             }
         }
     }
-    private void generateGui() throws SQLException {
-        //Adds tickets, buttons etc based on gui name
-
-        //Build tickets
-        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
-        builder.addTickets();
-        builder.addLinkers();
-
-        //Check if there are any more pages
-        GuiAccessor accessor = new GuiAccessor();
-        int guiId = accessor.getGuiIdByName(getGuiName());
-
-        if (accessor.getTotalPages(guiId) > getPage()) {
-            builder.addNextPageButton();
-        }
-        if (getPage() > 0) {
-            builder.addPrevPageButton();
-        }
-
-        //Check if back button is needed
-        if (getPlugin().getGuiManager().checkPrevGui(getPlayer())) {
-            builder.addBackButton();
-        }
-
-        builder.addSearchButton();
-        updateNewInventory(builder.getInventory());
-    }
 
     public ShopGui(String guiName, Player p, int page) throws SQLException {
         //Should be called from async thread
         //Instantiate gui
         GuiAccessor guiAccessor = new GuiAccessor();
         String displayName = guiAccessor.getColouredGuiDisplayName(guiName);
-        setInventory(Bukkit.getServer().createInventory(p, 54, ChatColor.translateAlternateColorCodes('&', displayName)));
 
-        //Set the owner
+        setDisplayName(displayName);
         setPlayer(p);
-
-        //Set page
         setPage(page);
-
-        //Set the gui
         setGuiName(guiName);
-        generateGui();
     }
     public ShopGui(String guiName, Player p) throws SQLException {
         this(guiName, p, 0);

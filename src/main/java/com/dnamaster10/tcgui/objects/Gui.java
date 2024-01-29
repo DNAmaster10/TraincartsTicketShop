@@ -18,6 +18,7 @@ public abstract class Gui {
     private Inventory inventory;
     private String guiName;
     private Player player;
+    private String displayName;
     public abstract void open();
     public abstract void nextPage();
     public abstract void prevPage();
@@ -40,6 +41,12 @@ public abstract class Gui {
     protected void setGuiName (String guiName) {
         this.guiName = guiName;
     }
+    protected String getDisplayName() {
+        return this.displayName;
+    }
+    protected void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
     protected TraincartsGui getPlugin() {
         return TraincartsGui.getPlugin();
     }
@@ -60,12 +67,12 @@ public abstract class Gui {
         }
     }
     protected void removeCursorItem() {
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setItemOnCursor(null), 1L);
+        player.setItemOnCursor(null);
     }
     protected void removeCursorItemAndClose() {
         //Removes item on cursor and closes inventory at the same time
+        player.setItemOnCursor(null);
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            player.setItemOnCursor(null);
             player.closeInventory();}, 1L);
     }
     protected String getButtonType(ItemStack button) {

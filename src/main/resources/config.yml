@@ -26,3 +26,5 @@ AllowLinkerRename: true
 AllowOpenShops: true
 
 SignIdentifier: [tcgui]
+
+MaxStoredGuisPerPlayer: 50

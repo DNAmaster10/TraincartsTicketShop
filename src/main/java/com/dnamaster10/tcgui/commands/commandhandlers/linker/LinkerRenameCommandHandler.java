@@ -25,7 +25,7 @@ public class LinkerRenameCommandHandler extends CommandHandler<SQLException> {
         }
 
         //Check that sender is a player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnError(sender, "Command must be executed by a player ");
             return false;
         }

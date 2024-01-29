@@ -72,8 +72,11 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
         //Open the gui
         gui.open();
 
+        //Remove all previous guis registered to player as this is a new session
+        getPlugin().getGuiManager().clearGuis((Player) sender);
+
         //Register the gui
-        TraincartsGui.plugin.getGuiManager().registerNewEditGui(gui, (Player) sender);
+        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 
     @Override

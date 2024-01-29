@@ -9,6 +9,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 public class InventoryCloseEventHandler implements Listener {
     @EventHandler
     void onCloseInventory(InventoryCloseEvent event) {
-        TraincartsGui.getPlugin().getGuiManager().handleInventoryCloseEvent((Player) event.getPlayer());
+        //TraincartsGui.getPlugin().getGuiManager().handleInventoryCloseEvent((Player) event.getPlayer());
     }
 }

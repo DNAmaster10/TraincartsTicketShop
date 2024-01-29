@@ -77,8 +77,11 @@ public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
         //Open the gui
         gui.open();
 
+        //Clear previous guis opened by the player
+        getPlugin().getGuiManager().clearGuis((Player) sender);
+
         //Register the gui
-        getPlugin().getGuiManager().registerNewSearchGui(gui, (Player) sender);
+        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 
     @Override
