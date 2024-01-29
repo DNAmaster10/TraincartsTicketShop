@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.util.gui;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;
+import com.dnamaster10.tcgui.objects.Gui;
 import com.dnamaster10.tcgui.objects.SearchGui;
 import com.dnamaster10.tcgui.objects.ShopGui;
 import org.bukkit.Bukkit;
@@ -16,6 +17,18 @@ import java.util.Stack;
 public class GuiManager {
     //Holds all currently opened GUIs in a hashmap linking the player who
     //currently has the GUi open, and the GUI object.
+    private final HashMap<Player, Stack<Gui>> GUIS = new HashMap<>();
+    public void addGui(Player p, Gui gui) {
+        if (GUIS.containsKey(p)) {
+            GUIS.get(p).push(gui);
+            return;
+        }
+        GUIS.put(p, new Stack<>());
+        GUIS.get(p).push(gui);
+    }
+    public void back(Player p) {
+
+    }
     private static final HashMap<Player, EditGui> EDIT_GUIS = new HashMap<>();
     private static final HashMap<Player, ShopGui> SHOP_GUIS = new HashMap<>();
     private static final HashMap<Player, SearchGui> SEARCH_GUIS = new HashMap<>();
