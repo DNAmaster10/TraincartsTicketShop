@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.commands;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
@@ -17,13 +16,15 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+
 public class CommandDispatcher implements CommandExecutor {
     private static void returnError(CommandSender sender, String error) {
         if (sender instanceof Player p) {
             p.sendMessage(ChatColor.RED + error);
         }
         else if (sender instanceof ConsoleCommandSender) {
-            TraincartsGui.plugin.getLogger().warning(error);
+            getPlugin().getLogger().warning(error);
         }
     }
     @Override

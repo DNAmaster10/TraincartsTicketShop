@@ -51,4 +51,13 @@ public class LinkerAccessor extends DatabaseAccessor {
             statement.execute();
         }
     }
+    public void deleteLinkersByGuiIdPageId(int guiId, int page) throws SQLException {
+        //Deletes linkers based on page id and gui id
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=? AND page=?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            statement.execute();
+        }
+    }
 }

@@ -1,8 +1,6 @@
 package com.dnamaster10.tcgui.util.eventhandlers;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class InventoryClickEventHandler implements Listener {
     @EventHandler
@@ -25,8 +25,8 @@ public class InventoryClickEventHandler implements Listener {
         if (event.getWhoClicked().getItemOnCursor().getAmount() > 0) {
             items.add(event.getWhoClicked().getItemOnCursor());
         }
-        Bukkit.getScheduler().runTaskLater(TraincartsGui.plugin, () -> {
-            TraincartsGui.getPlugin().getGuiManager().handleInventoryClick(event, items);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            getPlugin().getGuiManager().handleInventoryClick(event, items);
         }, 1L);
     }
 }

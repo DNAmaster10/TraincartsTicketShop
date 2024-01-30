@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.objects;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
@@ -49,7 +48,7 @@ public class EditGui extends Gui {
 
     @Override
     public void nextPage() {
-        Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Save the current page
             save();
 
@@ -62,7 +61,7 @@ public class EditGui extends Gui {
 
     @Override
     public void prevPage() {
-        Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Save the current page
             save();
 
@@ -161,17 +160,17 @@ public class EditGui extends Gui {
             GuiAccessor guiAccessor = new GuiAccessor();
             LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-            int guiId = guiAccessor.getGuiIdByName(getGuiName());
-
-            ticketAccessor.deleteTicketsByGuiIdPageId(guiId, getPage());
+            ticketAccessor.deleteTicketsByGuiIdPageId(getGuiId(), getPage());
+            linkerAccessor.deleteLinkersByGuiIdPageId(getGuiId(), getPage());
 
             //Add the tickets to the database
-            ticketAccessor.addTickets(guiId, getPage(), ticketList);
+            ticketAccessor.addTickets(getGuiId(), getPage(), ticketList);
 
             //Add the linkers to the database
-            linkerAccessor.addLinkers(guiId, getPage(), linkerList);
+            linkerAccessor.addLinkers(getGuiId(), getPage(), linkerList);
         } catch (SQLException e) {
-            TraincartsGui.plugin.reportSqlError(e.toString());
+            removeCursorItemAndClose();
+            getPlugin().reportSqlError(e.toString());
         }
     }
 
@@ -184,7 +183,7 @@ public class EditGui extends Gui {
         setGuiName(guiName);
         setDisplayName(displayName);
         setGuiId(guiId);
-        setPage(0);
+        setPage(page);
         setPlayer(p);
     }
     public EditGui(String guiName, Player p) throws SQLException {

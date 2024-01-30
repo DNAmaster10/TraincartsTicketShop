@@ -21,7 +21,7 @@ public abstract class CommandHandler<E extends Exception> {
     //Runs appropriate checks before command is executed
     public abstract void handle(CommandSender sender, String[] args);
     public TraincartsGui getPlugin() {
-        return TraincartsGui.plugin;
+        return TraincartsGui.getPlugin();
     }
     protected void returnError(CommandSender sender, String error) {
         //Returns an error to sender

@@ -1,10 +1,7 @@
 package com.dnamaster10.tcgui.util.gui;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import com.dnamaster10.tcgui.objects.EditGui;
 import com.dnamaster10.tcgui.objects.Gui;
-import com.dnamaster10.tcgui.objects.SearchGui;
-import com.dnamaster10.tcgui.objects.ShopGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +12,6 @@ import java.util.List;
 import java.util.Stack;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
-import static com.dnamaster10.tcgui.TraincartsGui.plugin;
 
 public class GuiManager {
     //Determines the maximum amount of guis a player can have open until they start to be removed. Used for the back button.
