@@ -29,7 +29,6 @@ public class GuiManager {
             if (guiStack.size() > maxGuis) {
                 guiStack.remove(0);
             }
-            getPlugin().getLogger().severe("Total registered guis: " + guiStack.size());
             return;
         }
         GUIS.put(p, new Stack<>());
@@ -43,11 +42,11 @@ public class GuiManager {
         Stack<Gui> guiStack = GUIS.get(p);
         if (guiStack.size() == 1) {
             //The only gui present is the current open gui so we cant go back
-            getPlugin().getLogger().severe("Sorry, only 1!");
             return;
         }
-        //If there is a previous gui, open it
-        Gui gui = guiStack.pop();
+        //Remove the current gui
+        guiStack.pop();
+        Gui gui = guiStack.peek();
         gui.open();
     }
     public boolean checkLastGui(Player p) {

@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -18,17 +19,41 @@ import java.util.Objects;
 
 public class SearchGui extends Gui {
     String searchTerm;
-    int guiId;
     @Override
     public void open() {
         //Opens the gui to the player
-        if (Bukkit.isPrimaryThread()) {
-            getPlayer().openInventory(getInventory());
-            return;
-        }
-        Bukkit.getScheduler().runTask(getPlugin(), () -> {
-            getPlayer().openInventory(getInventory());
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Generate new gui
+            try {
+                generate();
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
+            }
+            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
+    }
+    @Override
+    protected void generate() throws SQLException {
+        //Builds a new inventory based on current class values
+        GuiBuilder builder = new GuiBuilder(getGuiName(), getDisplayName());
+
+        //Get tickets from database
+        TicketAccessor ticketAccessor = new TicketAccessor();
+        TicketDatabaseObject[] ticketArray = ticketAccessor.searchTickets(getGuiId(), getPage() * 45, this.searchTerm);
+
+        //Add tickets to the inventory
+        builder.addTickets(ticketArray);
+
+        //Check whether another page is needed
+        if (ticketAccessor.getTotalTicketSearchResults(getGuiId(), searchTerm) > (getPage() + 1) * 45) {
+            builder.addNextPageButton();
+        }
+        if (getPage() > 0) {
+            builder.addPrevPageButton();
+        }
+
+        setInventory(builder.getInventory());
     }
 
     @Override
@@ -37,19 +62,20 @@ public class SearchGui extends Gui {
             try {
                 //Check if any other pages exist beyond this one
                 TicketAccessor ticketAccessor = new TicketAccessor();
-                if (!(ticketAccessor.getTotalTicketSearchResults(guiId, searchTerm) > (getPage() + 1) * 45)) {
+                if (!(ticketAccessor.getTotalTicketSearchResults(getGuiId(), searchTerm) > (getPage() + 1) * 45)) {
                     removeCursorItem();
                     return;
                 }
-                //Increment page
-                setPage(getPage() + 1);
-
-                //Build new inventory
-                generateGui();
-                removeCursorItem();
             } catch (SQLException e) {
+                removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e.toString());
+                return;
             }
+            //Increment page
+            setPage(getPage() + 1);
+
+            removeCursorItem();
+            open();
         });
     }
 
@@ -61,15 +87,8 @@ public class SearchGui extends Gui {
             return;
         }
         setPage(getPage() - 1);
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                generateGui();
-                removeCursorItem();
-            } catch (SQLException e) {
-                getPlayer().closeInventory();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
-        });
+        removeCursorItem();
+        open();
     }
 
     public void handleTicketClick(ItemStack ticket) {
@@ -114,40 +133,21 @@ public class SearchGui extends Gui {
             }
         }
     }
-    public void generateGui() throws SQLException {
-        //Should be run async
-        //Build tickets
-        TicketAccessor ticketAccessor = new TicketAccessor();
-
-        //Init gui builder
-        GuiBuilder guiBuilder = new GuiBuilder(getGuiName());
-
-        //Get tickets from database
-        TicketDatabaseObject[] ticketArray = ticketAccessor.searchTickets(guiId, getPage() * 45 , this.searchTerm);
-
-        //Add these tickets to the inventory
-        guiBuilder.addTickets(ticketArray);
-
-        //Check whether another page is needed
-        if (ticketAccessor.getTotalTicketSearchResults(guiId, searchTerm) > (getPage() + 1) * 45) {
-            guiBuilder.addNextPageButton();
-        }
-        if (getPage() > 0) {
-            guiBuilder.addPrevPageButton();
-        }
-
-        updateNewInventory(guiBuilder.getInventory());
-    }
-    public SearchGui(String guiName, String searchTerm, Player p) throws SQLException {
+    public SearchGui(String guiName, String searchTerm, int page, Player p) throws SQLException {
+        //Must be run async
         setGuiName(guiName);
         this.searchTerm = searchTerm;
         setPlayer(p);
-        setPage(0);
-        GuiAccessor guiAccessor = new GuiAccessor();
-        this.guiId = guiAccessor.getGuiIdByName(guiName);
+        setPage(page);
 
-        GuiBuilder builder = new GuiBuilder(guiName);
-        setInventory(builder.getInventory());
-        generateGui();
+        //Get gui id
+        GuiAccessor guiAccessor = new GuiAccessor();
+        setGuiId(guiAccessor.getGuiIdByName(guiName));
+
+        //Get gui display name
+        setDisplayName(guiAccessor.getColouredGuiDisplayName(guiName));
+    }
+    public SearchGui(String guiName, String searchTerm, Player p) throws SQLException {
+        this(guiName, searchTerm, 0, p);
     }
 }

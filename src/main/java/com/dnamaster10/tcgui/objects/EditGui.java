@@ -24,12 +24,27 @@ public class EditGui extends Gui {
     @Override
     public void open() {
         //Method must be run synchronous
-        if (Bukkit.isPrimaryThread()) {
-            getPlayer().openInventory(getInventory());
-            return;
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                generate();
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
+            }
+            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
+        });
+    }
+
+    @Override
+    protected void generate() throws SQLException {
+        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage(), getDisplayName());
+        builder.addTickets();
+        builder.addLinkers();
+        if (getPage() > 0) {
+            builder.addPrevPageButton();
         }
-        //Else, run synchronous
-        Bukkit.getScheduler().runTask(TraincartsGui.getPlugin(), () -> getPlayer().openInventory(getInventory()));
+        builder.addNextPageButton();
+        setInventory(builder.getInventory());
     }
 
     @Override
@@ -37,21 +52,11 @@ public class EditGui extends Gui {
         Bukkit.getScheduler().runTaskAsynchronously(TraincartsGui.getPlugin(), () -> {
             //Save the current page
             save();
+
             //Increment the current page
             setPage(getPage() + 1);
-            //Get next page
-            try {
-                GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
-                builder.addTickets();
-                builder.addPrevPageButton();
-                builder.addNextPageButton();
-                builder.addLinkers();
-                updateNewInventory(builder.getInventory());
-                removeCursorItem();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
+            removeCursorItem();
+            open();
         });
     }
 
@@ -62,28 +67,11 @@ public class EditGui extends Gui {
             save();
 
             //Set the new page
-            setPage(getPage() - 1);
-            if (getPage() < 0) {
-                setPage(0);
-                removeCursorItem();
-                return;
+            if (getPage() > 0) {
+                setPage(getPage() - 1);
             }
-
-            //Create the new page
-            try {
-                GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
-                builder.addTickets();
-                if (getPage() != 0) {
-                    builder.addPrevPageButton();
-                }
-                builder.addNextPageButton();
-                builder.addLinkers();
-                updateNewInventory(builder.getInventory());
-                removeCursorItem();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                TraincartsGui.getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
+            removeCursorItem();
+            open();
         });
     }
 
@@ -187,17 +175,19 @@ public class EditGui extends Gui {
         }
     }
 
-    public EditGui(String guiName, Player p) throws SQLException {
+    public EditGui(String guiName, int page, Player p) throws SQLException {
         //Should be called from an asynchronous thread
-        setPage(0);
-        setGuiName(guiName);
-        setPlayer(p);
+        GuiAccessor guiAccessor = new GuiAccessor();
+        String displayName = "Editing: " + guiAccessor.getColouredGuiDisplayName(guiName);
+        int guiId = guiAccessor.getGuiIdByName(guiName);
 
-        //Build tickets
-        GuiBuilder builder = new GuiBuilder(guiName, getPage());
-        builder.addTickets();
-        builder.addNextPageButton();
-        builder.addLinkers();
-        setInventory(builder.getInventory());
+        setGuiName(guiName);
+        setDisplayName(displayName);
+        setGuiId(guiId);
+        setPage(0);
+        setPlayer(p);
+    }
+    public EditGui(String guiName, Player p) throws SQLException {
+        this(guiName, 0, p);
     }
 }

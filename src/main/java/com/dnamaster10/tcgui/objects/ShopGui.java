@@ -25,30 +25,24 @@ public class ShopGui extends Gui {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Generate the gui
             try {
-                generateGui();
+                generate();
             } catch (SQLException e) {
+                removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e.toString());
             }
+            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
-        if (Bukkit.isPrimaryThread()) {
-            getPlayer().openInventory(getInventory());
-            return;
-        }
-        Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
     }
-    private void generateGui() throws SQLException {
-        //Adds tickets, buttons etc based on gui name
-
+    protected void generate() throws SQLException {
         //Build tickets
-        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage());
+        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage(), getDisplayName());
         builder.addTickets();
         builder.addLinkers();
 
         //Check if there are any more pages
         GuiAccessor accessor = new GuiAccessor();
-        int guiId = accessor.getGuiIdByName(getGuiName());
 
-        if (accessor.getTotalPages(guiId) > getPage()) {
+        if (accessor.getTotalPages(getGuiId()) > getPage()) {
             builder.addNextPageButton();
         }
         if (getPage() > 0) {
@@ -67,25 +61,26 @@ public class ShopGui extends Gui {
     @Override
     public void nextPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            int maxPage;
             try {
                 //Check if any other pages exist above this one
                 GuiAccessor guiAccessor = new GuiAccessor();
-                int guiId = guiAccessor.getGuiIdByName(getGuiName());
-                int maxPage = guiAccessor.getTotalPages(guiId);
-                if (getPage() + 1 > maxPage) {
-                    removeCursorItem();
-                    return;
-                }
-                //Increment page
-                setPage(getPage() + 1);
-
-                //Build new inventory
-                generateGui();
-                removeCursorItem();
+                maxPage = guiAccessor.getTotalPages(getGuiId());
             } catch (SQLException e) {
                 getPlayer().closeInventory();
                 getPlugin().reportSqlError(getPlayer(), e.toString());
+                return;
             }
+            if (getPage() + 1 > maxPage) {
+                removeCursorItem();
+                return;
+            }
+            //Increment page
+            setPage(getPage() + 1);
+
+            //Build new inventory
+            removeCursorItem();
+            open();
         });
     }
 
@@ -98,16 +93,8 @@ public class ShopGui extends Gui {
             return;
         }
         setPage(getPage() - 1);
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                //Build the new page
-                generateGui();
-                removeCursorItem();
-            } catch (SQLException e) {
-                getPlayer().closeInventory();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
-            }
-        });
+        removeCursorItem();
+        open();
     }
     public void handleLink(ItemStack button) {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -117,6 +104,8 @@ public class ShopGui extends Gui {
             NamespacedKey key = new NamespacedKey(getPlugin(), "gui");
             int linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
 
+            String destGuiName;
+            ShopGui newGui;
             try {
                 //Get dest gui name
                 GuiAccessor guiAccessor = new GuiAccessor();
@@ -124,22 +113,18 @@ public class ShopGui extends Gui {
                     removeCursorItem();
                     return;
                 }
-                String destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
-                ShopGui newGui = new ShopGui(destGuiName, getPlayer());
-
-                //Add gui to gui manager
-                getPlugin().getGuiManager().addGui(getPlayer(), newGui);
-
-                //Remove cursor item
-                removeCursorItem();
-
-                //Open new gui
-                newGui.open();
+                destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
+                newGui = new ShopGui(destGuiName, getPlayer());
 
             } catch (SQLException e) {
+                removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e.toString());
+                return;
             }
-
+            //Add gui to gui manager
+            getPlugin().getGuiManager().addGui(getPlayer(), newGui);
+            removeCursorItem();
+            newGui.open();
         });
     }
     private void back() {
@@ -187,7 +172,6 @@ public class ShopGui extends Gui {
             if (buttonType == null) {
                 continue;
             }
-            getPlugin().getLogger().severe("Handling button click!");
             switch (buttonType) {
                 case "ticket" -> {
                     handleTicketClick(item);
@@ -217,18 +201,20 @@ public class ShopGui extends Gui {
         }
     }
 
-    public ShopGui(String guiName, Player p, int page) throws SQLException {
+    public ShopGui(String guiName, int page, Player p) throws SQLException {
         //Should be called from async thread
         //Instantiate gui
         GuiAccessor guiAccessor = new GuiAccessor();
         String displayName = guiAccessor.getColouredGuiDisplayName(guiName);
+        int guiId = guiAccessor.getGuiIdByName(guiName);
 
+        setGuiName(guiName);
         setDisplayName(displayName);
         setPlayer(p);
         setPage(page);
-        setGuiName(guiName);
+        setGuiId(guiId);
     }
     public ShopGui(String guiName, Player p) throws SQLException {
-        this(guiName, p, 0);
+        this(guiName, 0, p);
     }
 }

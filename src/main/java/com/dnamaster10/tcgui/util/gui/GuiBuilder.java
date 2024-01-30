@@ -76,7 +76,7 @@ public class GuiBuilder {
     public Inventory getInventory() {
         return this.inventory;
     }
-    public GuiBuilder(String guiName, int pageNumber) throws SQLException {
+    public GuiBuilder(String guiName, int pageNumber, String displayName) throws SQLException {
         //Should be called async
         GuiAccessor guiAccessor = new GuiAccessor();
 
@@ -85,8 +85,8 @@ public class GuiBuilder {
         this.guiName = guiName;
         this.pageNumber = pageNumber;
     }
-    public GuiBuilder(String guiName) throws SQLException {
+    public GuiBuilder(String guiName, String displayName) throws SQLException {
         //Used when we don't need to fetch tickets from the database within this method (Such as with the search gui)
-        this(guiName, 0);
+        this(guiName, 0, displayName);
     }
 }

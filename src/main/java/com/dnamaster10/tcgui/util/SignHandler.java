@@ -108,7 +108,7 @@ public class SignHandler {
 
                 //Create new gui
                 Player p = event.getPlayer();
-                ShopGui gui = new ShopGui(guiName, p, page);
+                ShopGui gui = new ShopGui(guiName, page, p);
 
                 //Open the gui
                 gui.open();
