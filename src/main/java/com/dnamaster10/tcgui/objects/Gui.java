@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,10 +18,13 @@ public abstract class Gui {
     private int currentPage;
     private Inventory inventory;
     private String guiName;
+    private int guiId;
     private Player player;
+    private String displayName;
     public abstract void open();
-    public abstract void nextPage();
-    public abstract void prevPage();
+    protected abstract void generate() throws SQLException;
+    protected abstract void nextPage();
+    protected abstract void prevPage();
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
     protected Inventory getInventory() {
         return this.inventory;
@@ -40,14 +44,26 @@ public abstract class Gui {
     protected void setGuiName (String guiName) {
         this.guiName = guiName;
     }
-    protected TraincartsGui getPlugin() {
-        return TraincartsGui.getPlugin();
+    protected int getGuiId() {
+        return this.guiId;
+    }
+    protected void setGuiId(int id) {
+        this.guiId = id;
+    }
+    protected String getDisplayName() {
+        return this.displayName;
+    }
+    protected void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
     protected Player getPlayer() {
         return player;
     }
     protected void setPlayer(Player p) {
         player = p;
+    }
+    protected TraincartsGui getPlugin() {
+        return TraincartsGui.getPlugin();
     }
     protected void updateNewInventory(Inventory newInventory) {
         //Takes in an inventory, and replaces all current items with new items
@@ -60,12 +76,12 @@ public abstract class Gui {
         }
     }
     protected void removeCursorItem() {
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setItemOnCursor(null), 1L);
+        player.setItemOnCursor(null);
     }
     protected void removeCursorItemAndClose() {
         //Removes item on cursor and closes inventory at the same time
+        player.setItemOnCursor(null);
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            player.setItemOnCursor(null);
             player.closeInventory();}, 1L);
     }
     protected String getButtonType(ItemStack button) {

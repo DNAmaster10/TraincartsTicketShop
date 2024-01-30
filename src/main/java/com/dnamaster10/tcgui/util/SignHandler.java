@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.sql.SQLException;
@@ -106,13 +107,17 @@ public class SignHandler {
                 }
 
                 //Create new gui
-                ShopGui gui = new ShopGui(guiName, event.getPlayer(), page);
+                Player p = event.getPlayer();
+                ShopGui gui = new ShopGui(guiName, page, p);
 
                 //Open the gui
                 gui.open();
 
+                //Clear old player guis
+                getPlugin().getGuiManager().clearGuis(p);
+
                 //Register the gui
-                getPlugin().getGuiManager().registerNewShopGui(gui, event.getPlayer());
+                getPlugin().getGuiManager().addGui(p, gui);
             } catch (SQLException e) {
                 getPlugin().reportSqlError(event.getPlayer(), e.toString());
             }
