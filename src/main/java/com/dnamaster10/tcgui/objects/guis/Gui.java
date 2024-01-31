@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.objects;
+package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.util.gui;
 
-import com.dnamaster10.tcgui.objects.EditGui;
-import com.dnamaster10.tcgui.objects.Gui;
+import com.dnamaster10.tcgui.objects.guis.EditGui;
+import com.dnamaster10.tcgui.objects.guis.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -70,9 +70,12 @@ public class GuiManager {
         }
         Gui gui = GUIS.get(p).peek();
         if (gui instanceof EditGui g) {
-            Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), g::save);
+            getPlugin().getLogger().severe("Checking save...");
+            if (g.shouldSave()) {
+                getPlugin().getLogger().severe("Saving!");
+                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), g::save);
+            }
         }
-        closeGuis(p);
     }
     public void clearGuis(Player p) {
         //Removes all gui data currently linked to that player. Should be called before starting a new session.

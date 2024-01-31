@@ -63,6 +63,7 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         signHandler = new SignHandler();
 
         //Register listeners
+        getServer().getPluginManager().registerEvents(new InventoryCloseEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new InventoryClickEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerJoinEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerQuitEventHandler(), plugin);

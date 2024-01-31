@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.objects;
+package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 

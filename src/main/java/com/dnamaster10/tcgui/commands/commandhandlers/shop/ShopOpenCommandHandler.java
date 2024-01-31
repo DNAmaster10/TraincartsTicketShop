@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.shop;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.tcgui.objects.ShopGui;
+import com.dnamaster10.tcgui.objects.guis.ShopGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
