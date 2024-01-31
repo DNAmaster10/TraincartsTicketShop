@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class Gui {
-    private int currentPage;
     private Inventory inventory;
     private String guiName;
     private int guiId;
@@ -23,20 +22,12 @@ public abstract class Gui {
     private String displayName;
     public abstract void open();
     protected abstract void generate() throws SQLException;
-    protected abstract void nextPage();
-    protected abstract void prevPage();
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
     protected Inventory getInventory() {
         return this.inventory;
     }
     protected void setInventory(Inventory inventory) {
         this.inventory = inventory;
-    }
-    protected int getPage() {
-        return this.currentPage;
-    }
-    protected void setPage(int page) {
-        this.currentPage = page;
     }
     protected String getGuiName() {
         return this.guiName;

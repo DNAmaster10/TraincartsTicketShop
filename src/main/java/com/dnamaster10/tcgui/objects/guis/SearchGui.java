@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public class SearchGui extends Gui {
+public class SearchGui extends MultipageGui {
     String searchTerm;
     @Override
     public void open() {
@@ -35,7 +35,7 @@ public class SearchGui extends Gui {
     @Override
     protected void generate() throws SQLException {
         //Builds a new inventory based on current class values
-        GuiBuilder builder = new GuiBuilder(getGuiName(), getDisplayName());
+        GuiBuilder builder = new GuiBuilder(getDisplayName());
 
         //Get tickets from database
         TicketAccessor ticketAccessor = new TicketAccessor();

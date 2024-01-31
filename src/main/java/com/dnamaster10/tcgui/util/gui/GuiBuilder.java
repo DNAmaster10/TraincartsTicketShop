@@ -9,21 +9,26 @@ import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import java.sql.SQLException;
 
 public class GuiBuilder {
     //For fetching gui info from the database and building it into an Inventory object
-    private final String guiName;
-    private final int pageNumber;
     private final Inventory inventory;
-    //Used to decide whether a new page button should be created
-    private void addTicketsToInventory(TicketDatabaseObject[] ticketList) {
-        for (TicketDatabaseObject dbObject : ticketList) {
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+    public void addItem(int slot, ItemStack item) {
+        inventory.setItem(slot, item);
+    }
+    public void addTickets(TicketDatabaseObject[] tickets) {
+        for (TicketDatabaseObject dbObject : tickets) {
             Ticket ticket = new Ticket(dbObject.getTcName(), dbObject.getColouredDisplayName(), dbObject.getPrice());
             inventory.setItem(dbObject.getSlot(), ticket.getItemStack());
         }
     }
-    public void addTickets() throws SQLException {
+    public void addTicketsFromDatabase(String guiName, int pageNumber) throws SQLException {
         //Fetches tickets and builds an inventory with them.
         //Only does the top rows excluding the bottom row since the bottom row contains UI elements
         //Must be executed asynchronously or server will freeze with database calls
@@ -31,31 +36,31 @@ public class GuiBuilder {
         //Add tickets
         //Get gui ID
         GuiAccessor guiAccessor = new GuiAccessor();
-        int guiId = guiAccessor.getGuiIdByName(this.guiName);
+        int guiId = guiAccessor.getGuiIdByName(guiName);
         TicketAccessor ticketAccessor = new TicketAccessor();
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
 
         //Add tickets to inventory
-        addTicketsToInventory(ticketDatabaseObjects);
+        addTickets(ticketDatabaseObjects);
     }
-    public void addTickets(TicketDatabaseObject[] ticketList) {
-        addTicketsToInventory(ticketList);
+    public void addLinkers(LinkerDatabaseObject[] linkers) {
+        for (LinkerDatabaseObject linker : linkers) {
+            LinkerButton linkerButton = new LinkerButton(linker.getLinkedGuiId(), linker.getColouredDisplayName());
+            inventory.setItem(linker.getSlot(), linkerButton.getItemStack());
+        }
     }
-    public void addLinkers() throws SQLException {
+    public void addLinkersFromDatabase(String guiName, int pageNumber) throws SQLException {
         //Must be called from async thread
         //Get gui ID
         GuiAccessor guiAccessor = new GuiAccessor();
-        int guiId = guiAccessor.getGuiIdByName(this.guiName);
+        int guiId = guiAccessor.getGuiIdByName(guiName);
 
         //Get the linkers
         LinkerAccessor linkerAccessor = new LinkerAccessor();
         LinkerDatabaseObject[] linkers = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
 
         //Add linkers to inventory
-        for (LinkerDatabaseObject dbObject : linkers) {
-            LinkerButton linker = new LinkerButton(dbObject.getLinkedGuiId(), dbObject.getColouredDisplayName());
-            inventory.setItem(dbObject.getSlot(), linker.getItemStack());
-        }
+        addLinkers(linkers);
     }
     public void addNextPageButton() {
         NextPageButton button = new NextPageButton();
@@ -73,20 +78,8 @@ public class GuiBuilder {
         SearchButton searchButton = new SearchButton();
         this.inventory.setItem(49, searchButton.getItemStack());
     }
-    public Inventory getInventory() {
-        return this.inventory;
-    }
-    public GuiBuilder(String guiName, int pageNumber, String displayName) throws SQLException {
-        //Should be called async
-        GuiAccessor guiAccessor = new GuiAccessor();
 
-        String guiDisplayName = guiAccessor.getColouredGuiDisplayName(guiName);
-        this.inventory = Bukkit.createInventory(null, 54, guiDisplayName);
-        this.guiName = guiName;
-        this.pageNumber = pageNumber;
-    }
-    public GuiBuilder(String guiName, String displayName) throws SQLException {
-        //Used when we don't need to fetch tickets from the database within this method (Such as with the search gui)
-        this(guiName, 0, displayName);
+    public GuiBuilder(String displayName) {
+        this.inventory = Bukkit.createInventory(null, 54, displayName);
     }
 }

@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public class ShopGui extends Gui {
+public class ShopGui extends MultipageGui {
     @Override
     public void open() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -34,9 +34,9 @@ public class ShopGui extends Gui {
     }
     protected void generate() throws SQLException {
         //Build tickets
-        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage(), getDisplayName());
-        builder.addTickets();
-        builder.addLinkers();
+        GuiBuilder builder = new GuiBuilder(getDisplayName());
+        builder.addTicketsFromDatabase(getGuiName(), getPage());
+        builder.addLinkersFromDatabase(getGuiName(), getPage());
 
         //Check if there are any more pages
         GuiAccessor accessor = new GuiAccessor();
@@ -138,13 +138,11 @@ public class ShopGui extends Gui {
         getPlugin().getGuiManager().back(getPlayer());
     }
     private void search() {
-        getPlayer().sendMessage(ChatColor.AQUA + "|");
-        TextComponent message = new TextComponent(ChatColor.AQUA + "| >>>Click me to search!<<<");
-        message.setBold(true);
-        message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tcgui gui search " + getGuiName() + " "));
-        getPlayer().spigot().sendMessage(message);
-        getPlayer().sendMessage(ChatColor.AQUA + "|");
-        removeCursorItemAndClose();
+        SearchSelectGui gui = new SearchSelectGui(getGuiName(), getPlayer());
+
+        getPlugin().getGuiManager().addGui(getPlayer(), gui);
+        removeCursorItem();
+        gui.open();
     }
     private void handleTicketClick(ItemStack ticket) {
         //Get ticket tc name

@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditGui extends Gui {
+public class EditGui extends MultipageGui {
     //Used when the next page button is clicked to decide whether to save the gui.
     //This is because the inventory close event is called when opening a new gui.
     //This value helps the gui manager to know whether a next page button was clicked, in which case it doesn't need to save
@@ -53,9 +53,9 @@ public class EditGui extends Gui {
 
     @Override
     protected void generate() throws SQLException {
-        GuiBuilder builder = new GuiBuilder(getGuiName(), getPage(), getDisplayName());
-        builder.addTickets();
-        builder.addLinkers();
+        GuiBuilder builder = new GuiBuilder(getDisplayName());
+        builder.addTicketsFromDatabase(getGuiName(), getPage());
+        builder.addLinkersFromDatabase(getGuiName(), getPage());
         if (getPage() > 0) {
             builder.addPrevPageButton();
         }
