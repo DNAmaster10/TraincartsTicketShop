@@ -55,8 +55,12 @@ public class CommandDispatcher implements CommandExecutor {
                         GuiSetDisplayNameCommandHandler handler = new GuiSetDisplayNameCommandHandler();
                         handler.handle(sender, args);
                     }
-                    case "search" -> {
-                        GuiSearchCommandHandler handler = new GuiSearchCommandHandler();
+                    case "searchlinkers" -> {
+                        GuiSearchLinkersCommandHandler handler = new GuiSearchLinkersCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "searchtickets" -> {
+                        GuiSearchTicketsCommandHandler handler = new GuiSearchTicketsCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");

@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.tcgui.objects.guis.SearchGui;
+import com.dnamaster10.tcgui.objects.guis.LinkerSearchGui;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -10,14 +10,14 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui gui search <gui name> <search term>
-    private String searchTerm;
+public class GuiSearchLinkersCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui searchLinkers <gui name> <search term>
+    String searchTerm;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiSearch")) {
-            returnError(sender, "Searching guis is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowGuiSearchLinkers")) {
+            returnError(sender, "Searching linkers is disabled on this server");
             return false;
         }
         //Check permission and that sender is player
@@ -26,7 +26,7 @@ public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.search")) {
+            if (!p.hasPermission("tcgui.gui.search.searchlinkers")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -34,11 +34,7 @@ public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui gui search <gui name> <search term>");
-            return false;
-        }
-        if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnError(sender, "Missing argument(s): /tcgui gui searchLinkers <gui name> <search term>");
             return false;
         }
 
@@ -52,7 +48,7 @@ public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
         if (searchTerm.isBlank()) {
-            returnError(sender, "Search term cannot be less than 1 character in length");
+            returnError(sender, "Search terms cannot be less than 1 character in length");
             return false;
         }
         return true;
@@ -71,16 +67,9 @@ public class GuiSearchCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        //Create new gui
-        SearchGui gui = new SearchGui(args[2], searchTerm, (Player) sender);
-
-        //Open the gui
+        LinkerSearchGui gui = new LinkerSearchGui(args[2], searchTerm, (Player) sender);
         gui.open();
-
-        //Clear previous guis opened by the player
         getPlugin().getGuiManager().clearGuis((Player) sender);
-
-        //Register the gui
         getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 

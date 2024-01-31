@@ -9,7 +9,8 @@ AllowGuiCreate: true
 AllowGuiEdit: true
 AllowGuiRename: true
 AllowGuiDelete: true
-AllowGuiSearch: true
+AllowGuiSearchTickets: true
+AllowGuiSearchLinkers: true
 AllowGuiSetDisplayName: true
 AllowGuiTransfer: true
 

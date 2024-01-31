@@ -101,7 +101,11 @@ public class ShopGui extends MultipageGui {
             ItemMeta meta = button.getItemMeta();
             assert meta!= null;
             NamespacedKey key = new NamespacedKey(getPlugin(), "gui");
-            int linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+            Integer linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+            if (linkedGuiId == null) {
+                removeCursorItem();
+                return;
+            }
 
             String destGuiName;
             ShopGui newGui;

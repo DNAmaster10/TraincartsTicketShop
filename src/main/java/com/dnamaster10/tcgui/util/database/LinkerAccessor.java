@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.util.database;
 
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +28,34 @@ public class LinkerAccessor extends DatabaseAccessor {
                 linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_guiid"), result.getString("display_name"), result.getString("raw_display_name")));
             }
             return linkersList.toArray(LinkerDatabaseObject[]::new);
+        }
+    }
+    public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT linked_guiid, display_name FROM linkers WHERE guiid=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
+            statement.setInt(1, guiId);
+            statement.setString(2, searchTerm + "%");
+            statement.setInt(3, offset);
+            ResultSet result = statement.executeQuery();
+            List<LinkerDatabaseObject> linkerList = new ArrayList<>();
+            int i = 0;
+            while (result.next()) {
+                linkerList.add(new LinkerDatabaseObject(i, result.getInt("linked_guiid"), result.getString("display_name"), null));
+                i++;
+            }
+            return linkerList.toArray(LinkerDatabaseObject[]::new);
+        }
+    }
+    public int getTotalLinkerSearchResults(int guiId, String searchTerm) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE guiid=? AND raw_display_name LIKE ?");
+            statement.setInt(1, guiId);
+            statement.setString(2, searchTerm + "%");
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return result.getInt(1);
+            }
+            return 0;
         }
     }
     public void addLinkers(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
