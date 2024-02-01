@@ -12,6 +12,7 @@ import java.util.List;
 
 public class EditorListCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui editor list <gui_name>
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check syntax
@@ -39,7 +40,7 @@ public class EditorListCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check that gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[3])) {
             returnError(sender, "No gui with name \"" + args[3] + "\" exists");
             return false;

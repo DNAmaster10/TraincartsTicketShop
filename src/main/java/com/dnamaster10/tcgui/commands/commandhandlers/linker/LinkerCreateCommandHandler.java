@@ -14,6 +14,7 @@ import java.util.StringJoiner;
 public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui linker create <linked_gui_name> <display_name>
     private String displayName;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -62,7 +63,7 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -76,8 +77,7 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Get gui ID
-        GuiAccessor accessor = new GuiAccessor();
-        int guiId = accessor.getGuiIdByName(args[2]);
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
         LinkerButton button = new LinkerButton(guiId, ChatColor.translateAlternateColorCodes('&', displayName));
         Player p = (Player) sender;
         button.giveToPlayer(p);

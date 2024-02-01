@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 public class GuiRenameCommandHandler extends CommandHandler<Exception> {
     //Example command: /tcgui gui rename old_name new_name
+    private GuiAccessor guiAccessor;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -64,7 +65,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
 
         //First check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -92,7 +93,6 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.updateGuiName(args[2], args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was successfully renamed to \"" + args[3] + "\"");
     }

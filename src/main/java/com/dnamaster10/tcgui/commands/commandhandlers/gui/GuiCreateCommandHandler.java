@@ -16,7 +16,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     //Used to store the display name since spaces can be entered here
     private String rawDisplayName;
     private String colouredDisplayName;
-
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
@@ -82,7 +82,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         //Method must be run from an already asynchronous method in order to be async
         Player p = (Player) sender;
         String guiName = args[2];
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
 
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {
@@ -95,7 +95,6 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Runs the command
-        GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, ((Player) sender).getUniqueId().toString());
         sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
     }

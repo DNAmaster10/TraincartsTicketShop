@@ -14,6 +14,7 @@ import java.sql.SQLException;
 public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         if (!getPlugin().getConfig().getBoolean("AllowGuiTransfer")) {
@@ -49,7 +50,7 @@ public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check that the gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
@@ -77,7 +78,6 @@ public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Transfer the gui
-        GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.updateGuiOwner(args[2], otherPlayer.getUuid());
 
         //If the new owner is registered as an editor, remove them

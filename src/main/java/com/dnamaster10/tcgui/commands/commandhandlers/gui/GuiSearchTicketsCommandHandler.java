@@ -13,6 +13,7 @@ import java.util.StringJoiner;
 public class GuiSearchTicketsCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui gui searchTickets <gui name> <search term>
     private String searchTerm;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -61,7 +62,7 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler<SQLException>
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;

@@ -13,6 +13,9 @@ import java.sql.SQLException;
 
 public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     //Command example: /tcgui gui delete <gui_name>
+    private GuiAccessor guiAccessor;
+    private TicketAccessor ticketAccessor;
+    private LinkerAccessor linkerAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks
@@ -50,7 +53,7 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check that GUI exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
@@ -69,9 +72,8 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Delete the gui
-        GuiAccessor guiAccessor = new GuiAccessor();
-        TicketAccessor ticketAccessor = new TicketAccessor();
-        LinkerAccessor linkerAccessor = new LinkerAccessor();
+        ticketAccessor = new TicketAccessor();
+        linkerAccessor = new LinkerAccessor();
 
         //Get gui id
         int id = guiAccessor.getGuiIdByName(args[2]);

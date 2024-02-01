@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui shop open <gui_name>
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -51,7 +52,7 @@ public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {

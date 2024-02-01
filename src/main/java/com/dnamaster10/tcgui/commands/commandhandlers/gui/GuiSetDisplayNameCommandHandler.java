@@ -14,6 +14,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
     private String rawDisplayName;
     private String colouredDisplayName;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //This command can be run by the player as well as other interfaces
@@ -66,7 +67,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
@@ -87,7 +88,6 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
         guiAccessor.updateGuiDisplayName(args[2], colouredDisplayName, rawDisplayName);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + colouredDisplayName + "\"");
     }

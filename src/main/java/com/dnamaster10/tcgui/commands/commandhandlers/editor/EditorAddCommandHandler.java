@@ -14,6 +14,7 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
     //Command example: /tcgui editor add <player_name> <gui_name>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -50,7 +51,7 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[3])) {
             returnGuiNotFoundError(sender, args[3]);
             return false;
@@ -77,9 +78,8 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor accessor = new GuiAccessor();
-        int guiId = accessor.getGuiIdByName(args[3]);
-        accessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
+        int guiId = guiAccessor.getGuiIdByName(args[3]);
+        guiAccessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
     }
 
     @Override

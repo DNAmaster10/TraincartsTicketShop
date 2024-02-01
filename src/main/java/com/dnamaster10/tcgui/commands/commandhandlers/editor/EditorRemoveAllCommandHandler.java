@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> {
     //Example command: /tcgui editor removeAll <gui name>
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -47,7 +48,7 @@ public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check gui exists
-        GuiAccessor guiAccessor = new GuiAccessor();
+        guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
@@ -67,7 +68,6 @@ public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> 
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
         int guiId = guiAccessor.getGuiIdByName(args[2]);
         guiAccessor.removeAllGuiEditors(guiId);
     }
