@@ -52,7 +52,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
 
         //Check permissions
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.gui.rename")) {
+            if (!p.hasPermission("tcgui.gui.rename") && !p.hasPermission("tcgui.admin.gui.rename")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -72,11 +72,13 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
             return false;
         }
 
-        //If sender is player, check that player is an editor of that gui
+        //If sender is player, check that player is an editor of that gui if they don't have admin perms
         if (sender instanceof Player p) {
-            if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
-                returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
-                return false;
+            if (!p.hasPermission("tcgui.admin.gui.rename")) {
+                if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
+                    returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
+                    return false;
+                }
             }
         }
 

@@ -37,8 +37,10 @@ permissions:
     description: Allows player to transfer guis they own to other players
     default: false
 
-  tcgui.admin.gui.setdisplayname:
+  tcgui.admin.gui.rename:
     description: Allows player to rename a gui even if they do not have edit perms
+  tcgui.admin.gui.setdisplayname:
+    description: Allows player to set display name for a gui even if they do not have edit perms
     default: false
   tcgui.admin.gui.transfer:
     description: Allows player to transfer gui even if they are not the owner

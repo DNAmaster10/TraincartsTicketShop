@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.util.eventhandlers;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;

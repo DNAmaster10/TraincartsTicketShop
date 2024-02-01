@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.util.database;
 
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
-import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;

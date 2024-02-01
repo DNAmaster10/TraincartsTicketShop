@@ -168,7 +168,10 @@ public class EditGui extends MultipageGui {
                     }
                     //Get data
                     String tcName = dataContainer.get(tcNameKey, PersistentDataType.STRING);
-                    int price = dataContainer.get(priceKey, PersistentDataType.INTEGER);
+                    Integer price = dataContainer.get(priceKey, PersistentDataType.INTEGER);
+                    if (price == null) {
+                        continue;
+                    }
                     String colouredDisplayName = meta.getDisplayName();
                     String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
@@ -189,7 +192,10 @@ public class EditGui extends MultipageGui {
                         continue;
                     }
                     //Get data
-                    int destGuiId = dataContainer.get(guiIdKey, PersistentDataType.INTEGER);
+                    Integer destGuiId = dataContainer.get(guiIdKey, PersistentDataType.INTEGER);
+                    if (destGuiId == null) {
+                        continue;
+                    }
                     String colouredDisplayName = meta.getDisplayName();
                     String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 

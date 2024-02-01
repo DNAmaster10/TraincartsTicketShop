@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
-
 public class TicketAccessor extends DatabaseAccessor {
     public TicketAccessor() throws SQLException {
         super();

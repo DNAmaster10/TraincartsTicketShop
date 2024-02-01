@@ -47,7 +47,7 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         }
         catch (SQLException e) {
             //Disable plugin if failed
-            plugin.reportSqlError("Failed to create tables in database: " + String.valueOf(e));
+            plugin.reportSqlError("Failed to create tables in database: " + e);
             plugin.disable();
         }
         //Register the "tcgui" command

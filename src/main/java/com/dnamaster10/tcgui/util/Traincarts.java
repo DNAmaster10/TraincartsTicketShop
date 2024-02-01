@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.util;
 
 import com.bergerkiller.bukkit.tc.tickets.Ticket;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
