@@ -9,12 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
 public class LinkerSearchGui extends SearchGui {
     @Override
@@ -74,10 +76,15 @@ public class LinkerSearchGui extends SearchGui {
             //Get dest page
             ItemMeta meta = linker.getItemMeta();
             assert meta != null;
-            Integer linkedGuiId = meta.getPersistentDataContainer().get(DEST_GUI_ID, PersistentDataType.INTEGER);
+            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+            Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+            Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
             if (linkedGuiId == null) {
                 removeCursorItem();
                 return;
+            }
+            if (linkedGuiPage == null) {
+                linkedGuiPage = 0;
             }
 
             String destGuiName;
@@ -89,7 +96,7 @@ public class LinkerSearchGui extends SearchGui {
                     return;
                 }
                 destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
-                newGui = new ShopGui(destGuiName, getPlayer());
+                newGui = new ShopGui(destGuiName, linkedGuiPage, getPlayer());
             } catch (SQLException e) {
                 removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e.toString());

@@ -182,10 +182,17 @@ public class EditGui extends MultipageGui {
                     if (!dataContainer.has(DEST_GUI_ID, PersistentDataType.INTEGER)) {
                         continue;
                     }
+                    if (!dataContainer.has(DEST_GUI_PAGE, PersistentDataType.INTEGER)) {
+                        continue;
+                    }
                     //Get data
                     Integer destGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+                    Integer destGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
                     if (destGuiId == null) {
                         continue;
+                    }
+                    if (destGuiPage == null) {
+                        destGuiPage = 0;
                     }
                     String colouredDisplayName = meta.getDisplayName();
                     String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
@@ -198,7 +205,7 @@ public class EditGui extends MultipageGui {
                         continue;
                     }
 
-                    LinkerDatabaseObject linker = new LinkerDatabaseObject(i, destGuiId, colouredDisplayName, rawDisplayName);
+                    LinkerDatabaseObject linker = new LinkerDatabaseObject(i, destGuiId, destGuiPage, colouredDisplayName, rawDisplayName);
                     linkerList.add(linker);
                 }
                 //Otherwise, item is not a savable / tcgui item. Ignore it to remove it

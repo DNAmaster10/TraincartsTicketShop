@@ -7,6 +7,7 @@ import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHan
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerSetDestinationPageCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketRenameCommandHandler;
@@ -102,6 +103,10 @@ public class CommandDispatcher implements CommandExecutor {
                     }
                     case "rename" -> {
                         LinkerRenameCommandHandler handler = new LinkerRenameCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "setdestinationpage" -> {
+                        LinkerSetDestinationPageCommandHandler handler = new LinkerSetDestinationPageCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");

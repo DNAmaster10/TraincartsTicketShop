@@ -18,7 +18,7 @@ public class ShopTabCompleter extends SubCommandCompleter {
 
     @Override
     protected boolean checkPermission(Player p, String command) {
-        return p.hasPermission("tcgui.shop." + command);
+        return p.hasPermission("tcgui.shop." + command.toLowerCase());
     }
 
     @Override

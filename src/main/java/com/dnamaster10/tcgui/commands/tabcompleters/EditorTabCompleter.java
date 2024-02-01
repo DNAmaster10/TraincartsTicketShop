@@ -18,7 +18,7 @@ public class EditorTabCompleter extends SubCommandCompleter {
     }
     @Override
     protected boolean checkPermission(Player p, String command) {
-        return p.hasPermission("tcgui.gui.editor." + command) || p.hasPermission("tcgui.admin.gui.editor." + command);
+        return p.hasPermission("tcgui.gui.editor." + command.toLowerCase()) || p.hasPermission("tcgui.admin.gui.editor." + command.toLowerCase());
     }
 
     @Override

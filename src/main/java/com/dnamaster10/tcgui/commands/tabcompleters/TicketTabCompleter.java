@@ -13,14 +13,14 @@ public class TicketTabCompleter extends SubCommandCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
-        ARGS1.add("setdisplayname");
+        ARGS1.add("setDisplayName");
     }
 
     @Override
     protected boolean checkPermission(Player p, String command) {
         //Returns boolean indicating whether a player has permission
         //to run the specific sub-command
-        return p.hasPermission("tcgui.ticket." + command);
+        return p.hasPermission("tcgui.ticket." + command.toLowerCase());
     }
 
     @Override

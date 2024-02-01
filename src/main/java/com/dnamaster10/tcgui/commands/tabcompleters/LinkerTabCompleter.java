@@ -14,11 +14,12 @@ public class LinkerTabCompleter extends SubCommandCompleter {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
         ARGS1.add("rename");
+        ARGS1.add("setDestinationPage");
     }
 
     @Override
     protected boolean checkPermission(Player p, String command) {
-        return p.hasPermission("tcgui.linker." + command);
+        return p.hasPermission("tcgui.linker." + command.toLowerCase());
     }
 
     @Override

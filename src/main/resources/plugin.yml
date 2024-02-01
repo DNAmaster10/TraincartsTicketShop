@@ -89,6 +89,9 @@ permissions:
   tcgui.linker.rename:
     description: Allows player to rename a linker item
     default: false
+  tcgui.linker.setdestinationpage:
+    description: Allows a player to set a destination page for a linker
+    default: false
 commands:
   tcgui:
     description: The parent command for all tcgui commands

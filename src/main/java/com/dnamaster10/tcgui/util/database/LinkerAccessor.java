@@ -18,20 +18,20 @@ public class LinkerAccessor extends DatabaseAccessor {
     public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws SQLException {
         //Returns an array of linkers for a given gui ID and page number
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_guiid, display_name, raw_display_name FROM linkers WHERE guiid=? AND page=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_guiid, linked_gui_page, display_name, raw_display_name FROM linkers WHERE guiid=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             ResultSet result = statement.executeQuery();
             List<LinkerDatabaseObject> linkersList = new ArrayList<>();
             while (result.next()) {
-                linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_guiid"), result.getString("display_name"), result.getString("raw_display_name")));
+                linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_guiid"), result.getInt("linked_gui_page"), result.getString("display_name"), result.getString("raw_display_name")));
             }
             return linkersList.toArray(LinkerDatabaseObject[]::new);
         }
     }
     public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws SQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT linked_guiid, display_name FROM linkers WHERE guiid=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT linked_guiid, linked_gui_page, display_name FROM linkers WHERE guiid=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             statement.setInt(3, offset);
@@ -39,7 +39,7 @@ public class LinkerAccessor extends DatabaseAccessor {
             List<LinkerDatabaseObject> linkerList = new ArrayList<>();
             int i = 0;
             while (result.next()) {
-                linkerList.add(new LinkerDatabaseObject(i, result.getInt("linked_guiid"), result.getString("display_name"), null));
+                linkerList.add(new LinkerDatabaseObject(i, result.getInt("linked_guiid"), result.getInt("linked_gui_page"), result.getString("display_name"), null));
                 i++;
             }
             return linkerList.toArray(LinkerDatabaseObject[]::new);
@@ -59,14 +59,15 @@ public class LinkerAccessor extends DatabaseAccessor {
     }
     public void addLinkers(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO linkers (guiid, page, slot, linked_guiid, display_name, raw_display_name) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO linkers (guiid, page, slot, linked_guiid, linked_gui_page, display_name, raw_display_name) VALUES (?, ?, ?, ?, ?, ?, ?)");
             for (LinkerDatabaseObject linker : linkers) {
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
                 statement.setInt(3, linker.getSlot());
                 statement.setInt(4, linker.getLinkedGuiId());
-                statement.setString(5, linker.getColouredDisplayName());
-                statement.setString(6, linker.getRawDisplayName());
+                statement.setInt(5, linker.getLinkedGuiPage());
+                statement.setString(6, linker.getColouredDisplayName());
+                statement.setString(7, linker.getRawDisplayName());
                 statement.addBatch();
             }
             statement.executeBatch();

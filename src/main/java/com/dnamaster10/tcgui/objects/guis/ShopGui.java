@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
-import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class ShopGui extends MultipageGui {
     @Override
@@ -32,15 +32,21 @@ public class ShopGui extends MultipageGui {
         });
     }
     protected void generate() throws SQLException {
+        GuiAccessor accessor = new GuiAccessor();
+        int totalPages = accessor.getTotalPages(getGuiId());
+        if (getPage() > totalPages) {
+            setPage(totalPages);
+        }
+        if (getPage() < 0) {
+            setPage(0);
+        }
         //Build tickets
         GuiBuilder builder = new GuiBuilder(getDisplayName());
         builder.addTicketsFromDatabase(getGuiName(), getPage());
         builder.addLinkersFromDatabase(getGuiName(), getPage());
 
         //Check if there are any more pages
-        GuiAccessor accessor = new GuiAccessor();
-
-        if (accessor.getTotalPages(getGuiId()) > getPage()) {
+        if (totalPages > getPage()) {
             builder.addNextPageButton();
         }
         if (getPage() > 0) {
@@ -99,10 +105,15 @@ public class ShopGui extends MultipageGui {
             //First get the destination page
             ItemMeta meta = button.getItemMeta();
             assert meta!= null;
-            Integer linkedGuiId = meta.getPersistentDataContainer().get(DEST_GUI_ID, PersistentDataType.INTEGER);
+            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+            Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+            Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
             if (linkedGuiId == null) {
                 removeCursorItem();
                 return;
+            }
+            if (linkedGuiPage == null) {
+                linkedGuiPage = 0;
             }
 
             String destGuiName;
@@ -115,7 +126,7 @@ public class ShopGui extends MultipageGui {
                     return;
                 }
                 destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
-                newGui = new ShopGui(destGuiName, getPlayer());
+                newGui = new ShopGui(destGuiName, linkedGuiPage, getPlayer());
 
             } catch (SQLException e) {
                 removeCursorItemAndClose();

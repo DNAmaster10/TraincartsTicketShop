@@ -44,7 +44,7 @@ public class GuiBuilder {
     }
     public void addLinkers(LinkerDatabaseObject[] linkers) {
         for (LinkerDatabaseObject linker : linkers) {
-            Linker linkerButton = new Linker(linker.getLinkedGuiId(), linker.getColouredDisplayName());
+            Linker linkerButton = new Linker(linker.getLinkedGuiId(), linker.getLinkedGuiPage(), linker.getColouredDisplayName());
             inventory.setItem(linker.getSlot(), linkerButton.getItemStack());
         }
     }
