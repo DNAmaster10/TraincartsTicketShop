@@ -37,8 +37,12 @@ permissions:
     description: Allows player to transfer guis they own to other players
     default: false
 
+  tcgui.admin.gui.edit:
+    description: Allows player to edit a gui even if they do not have edit perms
+    default: false
   tcgui.admin.gui.rename:
     description: Allows player to rename a gui even if they do not have edit perms
+    default: false
   tcgui.admin.gui.setdisplayname:
     description: Allows player to set display name for a gui even if they do not have edit perms
     default: false
@@ -57,6 +61,16 @@ permissions:
     default: false
   tcgui.editor.removeall:
     description: Allows players to remove all editors from their gui
+    default: false
+
+  tcgui.admin.editor.add:
+    description: Allows player to add an editor to a gui even if they do not own the gui
+    default: false
+  tcgui.admin.editor.remove:
+    description: Allows player to remove an editor for a gui they don't own
+    default: false
+  tcgui.admin.editor.removeall:
+    description: Allows players to remove all editors from a gui they don't own
     default: false
 
   tcgui.ticket.create:

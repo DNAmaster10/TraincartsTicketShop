@@ -23,7 +23,7 @@ public class EditorRemoveCommandHandler extends CommandHandler<SQLException> {
 
         //If player check perms
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.editor.remove")) {
+            if (!p.hasPermission("tcgui.editor.remove") && !p.hasPermission("tcgui.admin.editor.remove")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -56,9 +56,11 @@ public class EditorRemoveCommandHandler extends CommandHandler<SQLException> {
 
         //If player, check that they own the gui
         if (sender instanceof Player p) {
-            if (!guiAccessor.checkGuiOwnershipByUuid(args[3], p.getUniqueId().toString())) {
-                returnError(sender, "You do not own that gui");
-                return false;
+            if (!p.hasPermission("tcgui.admin.editor.remove")) {
+                if (!guiAccessor.checkGuiOwnershipByUuid(args[3], p.getUniqueId().toString())) {
+                    returnError(sender, "You do not own that gui");
+                    return false;
+                }
             }
         }
 

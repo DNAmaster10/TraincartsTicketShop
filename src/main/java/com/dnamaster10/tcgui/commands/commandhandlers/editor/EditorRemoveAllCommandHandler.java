@@ -10,40 +10,37 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class EditorAddCommandHandler extends CommandHandler<SQLException> {
-    //Command example: /tcgui editor add <player_name> <gui_name>
-    //This is computed during the async check, so is stored here to be used later in the execute method.
-    private PlayerDatabaseObject playerDatabaseObject;
+public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui editor removeAll <gui name>
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowEditorAdd")) {
-            returnError(sender, "Adding editor is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowEditorRemoveAll")) {
+            returnError(sender, "Removing all editors is disabled on this server");
             return false;
         }
 
         //If player check perms
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.editor.add") && !p.hasPermission("tcgui.admin.editor.add")) {
+            if (!p.hasPermission("tcgui.editor.removeall") && !p.hasPermission("tcgui.admin.editor.removeall")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
-        if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui editor add <gui_name> <username>");
+        if (args.length < 3) {
+            returnError(sender, "Missing argument(s): /tcgui editor removeAll <gui name>");
             return false;
         }
-        if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
+        if (args.length > 3) {
+            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
-        if (!checkGuiNameSyntax(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-
         return true;
     }
 
@@ -51,35 +48,28 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         //Check gui exists
         GuiAccessor guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!guiAccessor.checkGuiByName(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
-        //Check player is owner
+        //Check player is owner or isn't admin
         if (sender instanceof Player p) {
-            if (!p.hasPermission("tcgui.admin.editor.add")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(args[3], p.getUniqueId().toString())) {
+            if (!p.hasPermission("tcgui.admin.editor.removeall")) {
+                if (!guiAccessor.checkGuiOwnershipByUuid(args[2], p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
             }
-        }
-
-        //Check the editor username is a valid username
-        playerDatabaseObject = Players.getPlayerByUsername(args[2]);
-        if (playerDatabaseObject == null) {
-            returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
-            return false;
         }
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        GuiAccessor accessor = new GuiAccessor();
-        int guiId = accessor.getGuiIdByName(args[3]);
-        accessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
+        GuiAccessor guiAccessor = new GuiAccessor();
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
+        guiAccessor.removeAllGuiEditors(guiId);
     }
 
     @Override
@@ -89,12 +79,11 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                if (!checkAsync(sender, args)) {
+                if (!checkSync(sender, args)) {
                     return;
                 }
                 execute(sender, args);
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 getPlugin().reportSqlError(sender, e.toString());
             }
         });

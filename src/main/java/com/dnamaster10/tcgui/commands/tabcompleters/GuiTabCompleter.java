@@ -26,7 +26,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
     protected boolean checkPermission(Player p, String command) {
         //Returns boolean indicating whether player has permission
         //to run the specific sub-command.
-        return p.hasPermission("tcgui.gui." + command);
+        return p.hasPermission("tcgui.gui." + command) || p.hasPermission("tcgui.admin.gui." + command);
     }
 
     @Override

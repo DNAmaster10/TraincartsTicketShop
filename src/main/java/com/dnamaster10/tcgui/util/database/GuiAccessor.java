@@ -203,4 +203,12 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.execute();
         }
     }
+    public void removeAllGuiEditors(int guiId) throws SQLException {
+        //Removes all editors from a given gui
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=?");
+            statement.setInt(1, guiId);
+            statement.execute();
+        }
+    }
 }

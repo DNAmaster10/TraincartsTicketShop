@@ -24,7 +24,7 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
             returnError(sender, "Command must be executed by a player");
             return false;
         }
-        if (!sender.hasPermission("tcgui.gui.edit")) {
+        if (!sender.hasPermission("tcgui.gui.edit") && !sender.hasPermission("tcgui.admin.gui.edit")) {
             returnError(sender, "You do not have permission to perform that action");
             return false;
         }
@@ -56,9 +56,12 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
         }
 
         //Check that player is owner or editor of gui
-        if (!guiAccessor.playerCanEdit(args[2], ((Player) sender).getUniqueId().toString())) {
-            returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
-            return false;
+        Player p = (Player) sender;
+        if (!p.hasPermission("tcgui.admin.gui.edit")) {
+            if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
+                returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
+                return false;
+            }
         }
         return true;
     }
