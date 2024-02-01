@@ -76,8 +76,12 @@ permissions:
   tcgui.ticket.create:
     description: Allows the creation of tcgui tickets
     default: false
-  tcgui.ticket.rename:
+  tcgui.ticket.setdisplayname:
     description: Allows player to rename a held ticket
+    default: false
+  tcgui.ticket.settraincartsticket:
+    description: Allows a player to set the traincarts ticket for a ticket
+    default: false
 
   tcgui.shop.open:
     description: Allows player to open a shop gui from command
@@ -86,7 +90,7 @@ permissions:
   tcgui.linker.create:
     description: Allows player to create gui linker item
     default: false
-  tcgui.linker.rename:
+  tcgui.linker.setdisplayname:
     description: Allows player to rename a linker item
     default: false
   tcgui.linker.setdestinationpage:

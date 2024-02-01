@@ -23,7 +23,7 @@ public abstract class Gui {
     public abstract void open();
     protected abstract void generate() throws SQLException;
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
-    protected Inventory getInventory() {
+    public Inventory getInventory() {
         return this.inventory;
     }
     protected void setInventory(Inventory inventory) {

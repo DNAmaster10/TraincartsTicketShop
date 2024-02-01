@@ -8,6 +8,7 @@ import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;

@@ -6,11 +6,12 @@ import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerSetDisplayNameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerSetDestinationPageCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketRenameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -80,7 +81,11 @@ public class CommandDispatcher implements CommandExecutor {
                         handler.handle(sender, args);
                     }
                     case "setdisplayname" -> {
-                        TicketRenameCommandHandler handler = new TicketRenameCommandHandler();
+                        TicketSetDisplayNameCommandHandler handler = new TicketSetDisplayNameCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "settraincartsticket" -> {
+                        TicketSetTraincartsTicket handler = new TicketSetTraincartsTicket();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
@@ -101,8 +106,8 @@ public class CommandDispatcher implements CommandExecutor {
                         LinkerCreateCommandHandler handler = new LinkerCreateCommandHandler();
                         handler.handle(sender, args);
                     }
-                    case "rename" -> {
-                        LinkerRenameCommandHandler handler = new LinkerRenameCommandHandler();
+                    case "setdisplayname" -> {
+                        LinkerSetDisplayNameCommandHandler handler = new LinkerSetDisplayNameCommandHandler();
                         handler.handle(sender, args);
                     }
                     case "setdestinationpage" -> {

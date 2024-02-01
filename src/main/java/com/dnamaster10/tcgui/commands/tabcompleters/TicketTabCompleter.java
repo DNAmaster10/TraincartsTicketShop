@@ -14,6 +14,7 @@ public class TicketTabCompleter extends SubCommandCompleter {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
         ARGS1.add("setDisplayName");
+        ARGS1.add("setTraincartsTicket");
     }
 
     @Override

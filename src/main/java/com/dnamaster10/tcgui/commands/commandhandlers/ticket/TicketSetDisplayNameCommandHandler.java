@@ -1,6 +1,6 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.ticket;
 
-import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.ItemCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -9,24 +9,29 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
+public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
     //Example command: /tcgui ticket rename <new_name>
-    String displayName;
+    String colouredDisplayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowTicketRename")) {
+        if (!getPlugin().getConfig().getBoolean("AllowTicketSetDisplayName")) {
             returnError(sender, "Ticket renaming is disabled on this server");
             return false;
         }
 
         //Check that sender is a player
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player p)) {
             returnError(sender, "Command must be executed by a player");
             return false;
+        }
+        else {
+            if (!p.hasPermission("tcgui.ticket.setdisplayname")) {
+                returnError(sender, "You do not have permission to perform that action");
+                return false;
+            }
         }
 
         //Check syntax
@@ -40,34 +45,26 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
         for (int i = 2; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
-        if (displayName.length() > 25) {
+        if (rawDisplayName.length() > 25) {
             returnError(sender, "Ticket names cannot be more than 25 characters in length");
             return false;
         }
-        if (displayName.isEmpty() || displayName.isBlank()) {
+        if (rawDisplayName.isBlank()) {
             returnError(sender, "Ticket names cannot be less than 1 character in length");
             return false;
         }
-
-        //Check permissions
-        if (!sender.hasPermission("tcgui.ticket.rename")) {
-            returnError(sender, "You do not have permission to perform that action");
-            return false;
+        if (colouredDisplayName.length() > 100) {
+            returnError(sender, "Too many colours!");
         }
 
         //Now check that the player is holding a ticket
         ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
-        if (!ticket.hasItemMeta()) {
-            returnError(sender, "You must be holding a ticket item in your main hand");
-            return false;
-        }
-        ItemMeta meta = ticket.getItemMeta();
-        NamespacedKey key = new NamespacedKey(getPlugin(), "type");
-        assert meta != null;
-        if (!meta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-            returnError(sender, "You must be holding a ticket item in your main hand");
+        String buttonType = getButtonType(ticket);
+        if (buttonType == null) {
+            returnWrongItemError(sender, "ticket");
             return false;
         }
 
@@ -85,9 +82,9 @@ public class TicketRenameCommandHandler extends CommandHandler<SQLException> {
         ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(displayName);
+        meta.setDisplayName(colouredDisplayName);
         ticket.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + ChatColor.translateAlternateColorCodes('&', displayName) + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + colouredDisplayName + "\"");
     }
 
     @Override

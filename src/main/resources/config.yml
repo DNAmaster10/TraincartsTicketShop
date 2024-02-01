@@ -20,10 +20,11 @@ AllowEditorRemoveAll: true
 AllowListGuiEditorsOtherOwners: true
 
 AllowTicketCreate: true
-AllowTicketRename: true
+AllowTicketSetDisplayName: true
+AllowTicketSetTraincartsTicket: true
 
 AllowLinkerCreate: true
-AllowLinkerRename: true
+AllowLinkerSetDisplayName: true
 AllowLinkerSetDestinationPage: true
 
 AllowOpenShops: true

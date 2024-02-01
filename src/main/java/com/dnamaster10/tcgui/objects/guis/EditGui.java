@@ -63,6 +63,26 @@ public class EditGui extends MultipageGui {
         builder.addNextPageButton();
         setInventory(builder.getInventory());
     }
+    @Override
+    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
+        //Check if clicked item is a page button
+        for (ItemStack item : items) {
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
+                continue;
+            }
+            switch (buttonType) {
+                case "next_page" -> {
+                    nextPage();
+                    return;
+                }
+                case "prev_page" -> {
+                    prevPage();
+                    return;
+                }
+            }
+        }
+    }
 
     //Note that we don't need to save the gui from the following methods, as the save method is called by the gui
     //manager whenever an inventory is closed. Instead, we should copy the current inventory to a temporary variable
@@ -98,27 +118,6 @@ public class EditGui extends MultipageGui {
             removeCursorItem();
             open();
         });
-    }
-
-    @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        //Check if clicked item is a page button
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            switch (buttonType) {
-                case "next_page" -> {
-                    nextPage();
-                    return;
-                }
-                case "prev_page" -> {
-                    prevPage();
-                    return;
-                }
-            }
-        }
     }
     public void save() {
         //Saves items in inventory to the database

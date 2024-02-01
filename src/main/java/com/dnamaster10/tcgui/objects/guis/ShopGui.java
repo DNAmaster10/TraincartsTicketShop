@@ -61,7 +61,42 @@ public class ShopGui extends MultipageGui {
         builder.addSearchButton();
         setInventory(builder.getInventory());
     }
-
+    @Override
+    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
+        //Check if player interacted with a button
+        for (ItemStack item : items) {
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
+                continue;
+            }
+            switch (buttonType) {
+                case "ticket" -> {
+                    handleTicketClick(item);
+                    return;
+                }
+                case "prev_page" -> {
+                    prevPage();
+                    return;
+                }
+                case "next_page" -> {
+                    nextPage();
+                    return;
+                }
+                case "linker" -> {
+                    handleLink(item);
+                    return;
+                }
+                case "back" -> {
+                    back();
+                    return;
+                }
+                case "search" -> {
+                    search();
+                    return;
+                }
+            }
+        }
+    }
     @Override
     public void nextPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -172,44 +207,6 @@ public class ShopGui extends MultipageGui {
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {}, 1L);
         getPlayer().closeInventory();
     }
-
-    @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        //Check if player interacted with a button
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            switch (buttonType) {
-                case "ticket" -> {
-                    handleTicketClick(item);
-                    return;
-                }
-                case "prev_page" -> {
-                    prevPage();
-                    return;
-                }
-                case "next_page" -> {
-                    nextPage();
-                    return;
-                }
-                case "linker" -> {
-                    handleLink(item);
-                    return;
-                }
-                case "back" -> {
-                    back();
-                    return;
-                }
-                case "search" -> {
-                    search();
-                    return;
-                }
-            }
-        }
-    }
-
     public ShopGui(String guiName, int page, Player p) throws SQLException {
         //Should be called from async thread
         //Instantiate gui

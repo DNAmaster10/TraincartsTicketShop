@@ -1,24 +1,17 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.linker;
 
-import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ItemCommandHandler;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
-
-public class LinkerRenameCommandHandler extends ItemCommandHandler {
-    //tcgui linker rename <display_name>
-    private String rawDisplayName;
+public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
     private String colouredDisplayName;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -29,9 +22,15 @@ public class LinkerRenameCommandHandler extends ItemCommandHandler {
         }
 
         //Check that sender is a player
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player p)) {
             returnError(sender, "Command must be executed by a player ");
             return false;
+        }
+        else {
+            if (!p.hasPermission("tcgui.linker.rename")) {
+                returnError(sender, "You do not have permission to perform that action");
+                return false;
+            }
         }
 
         //Check syntax
@@ -45,8 +44,9 @@ public class LinkerRenameCommandHandler extends ItemCommandHandler {
         for (int i = 2; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        colouredDisplayName = stringJoiner.toString();
-        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        //tcgui linker rename <display_name>
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
             returnError(sender, "Linker names cannot be more than 25 characters in length");
@@ -56,10 +56,8 @@ public class LinkerRenameCommandHandler extends ItemCommandHandler {
             returnError(sender, "Linker names cannot be less than 1 character in length");
             return false;
         }
-
-        //Check permissions
-        if (!sender.hasPermission("tcgui.linker.rename")) {
-            returnError(sender, "You do not have permission to perform that action");
+        if (colouredDisplayName.length() > 100) {
+            returnError(sender, "Too many colours!");
             return false;
         }
 
