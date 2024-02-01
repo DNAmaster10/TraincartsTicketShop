@@ -1,11 +1,13 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
 public class NextPageButton extends Button {
     public NextPageButton() {
@@ -17,10 +19,7 @@ public class NextPageButton extends Button {
         //Set display text
         meta.setDisplayName("Next Page");
 
-        //Set button type
-        NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
-
-        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "next_page");
+        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "next_page");
         item.setItemMeta(meta);
     }
 }

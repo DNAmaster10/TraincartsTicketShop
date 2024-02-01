@@ -6,7 +6,6 @@ import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +14,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class TicketSearchGui extends SearchGui {
     @Override
@@ -77,12 +78,11 @@ public class TicketSearchGui extends SearchGui {
         }
     }
     public void handleTicketClick(ItemStack ticket) {
-        NamespacedKey key = new NamespacedKey(getPlugin(), "tc_name");
-        if (!Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+        if (!Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().has(TC_TICKET_NAME, PersistentDataType.STRING)) {
             removeCursorItem();
             return;
         }
-        String tcName = Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().get(key, PersistentDataType.STRING);
+        String tcName = Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().get(TC_TICKET_NAME, PersistentDataType.STRING);
 
         //Check that the tc ticket exists
         if (!Traincarts.checkTicket(tcName)) {

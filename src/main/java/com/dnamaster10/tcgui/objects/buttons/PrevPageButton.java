@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
 public class PrevPageButton extends Button {
     public PrevPageButton() {
@@ -18,10 +19,7 @@ public class PrevPageButton extends Button {
         //Set display
         meta.setDisplayName("Prev Page");
 
-        //Set button type
-        NamespacedKey buttonKey = new NamespacedKey(getPlugin(), "button_type");
-
-        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "prev_page");
+        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "prev_page");
         item.setItemMeta(meta);
     }
 }

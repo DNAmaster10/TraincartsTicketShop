@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.linker;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.tcgui.objects.buttons.LinkerButton;
+import com.dnamaster10.tcgui.objects.buttons.Linker;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -78,7 +78,7 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Get gui ID
         int guiId = guiAccessor.getGuiIdByName(args[2]);
-        LinkerButton button = new LinkerButton(guiId, ChatColor.translateAlternateColorCodes('&', displayName));
+        Linker button = new Linker(guiId, ChatColor.translateAlternateColorCodes('&', displayName));
         Player p = (Player) sender;
         button.giveToPlayer(p);
         p.sendMessage(ChatColor.GREEN + "Linker created");

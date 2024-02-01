@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
 public class SearchButton extends Button {
     public SearchButton() {
@@ -18,10 +19,7 @@ public class SearchButton extends Button {
         assert meta != null;
         meta.setDisplayName("Search this gui");
 
-        //Set button data
-        NamespacedKey buttonKey = new NamespacedKey(getPlugin(), "button_type");
-
-        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "search");
+        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "search");
 
         item.setItemMeta(meta);
     }

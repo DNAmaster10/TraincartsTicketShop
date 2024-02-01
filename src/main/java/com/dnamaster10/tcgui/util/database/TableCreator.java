@@ -63,6 +63,7 @@ public class TableCreator extends DatabaseAccessor {
                         page int,
                         slot int,
                         linked_guiid int,
+                        linked_gui_page int,
                         display_name varchar(100),
                         raw_display_name varchar(100)
                     );

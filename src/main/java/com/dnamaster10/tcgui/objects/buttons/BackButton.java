@@ -1,11 +1,11 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
 public class BackButton extends Button {
     public BackButton() {
@@ -18,9 +18,8 @@ public class BackButton extends Button {
         meta.setDisplayName("Back");
 
         //Set button data
-        NamespacedKey buttonKey = new NamespacedKey(TraincartsGui.getPlugin(), "button_type");
 
-        meta.getPersistentDataContainer().set(buttonKey, PersistentDataType.STRING, "back");
+        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "back");
         item.setItemMeta(meta);
     }
 }

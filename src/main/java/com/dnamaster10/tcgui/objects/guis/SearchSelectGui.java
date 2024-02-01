@@ -11,12 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class SearchSelectGui extends Gui {
     //The gui which will be searched
-    private String searchGuiName;
     @Override
     public void open() {
         generate();
@@ -99,7 +97,6 @@ public class SearchSelectGui extends Gui {
     }
 
     public SearchSelectGui(String searchGuiName, Player p) {
-        this.searchGuiName = searchGuiName;
         setPlayer(p);
         setGuiName(searchGuiName);
         setDisplayName("Select a search type");

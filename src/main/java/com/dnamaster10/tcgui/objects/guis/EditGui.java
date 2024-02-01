@@ -8,7 +8,6 @@ import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -20,6 +19,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class EditGui extends MultipageGui {
     //Used when the next page button is clicked to decide whether to save the gui.
@@ -124,16 +125,6 @@ public class EditGui extends MultipageGui {
         List<TicketDatabaseObject> ticketList = new ArrayList<>();
         List<LinkerDatabaseObject> linkerList = new ArrayList<>();
 
-        //Create item meta keys
-        NamespacedKey buttonTypeKey = new NamespacedKey(getPlugin(), "button_type");
-
-        //Tickets
-        NamespacedKey tcNameKey = new NamespacedKey(getPlugin(), "tc_name");
-        NamespacedKey priceKey = new NamespacedKey(getPlugin(), "price");
-
-        //Linkers
-        NamespacedKey guiIdKey = new NamespacedKey(getPlugin(), "gui");
-
         //For every item in inventory
         Inventory inventory = getInventory();
         for (int i = 0; i < inventory.getSize() - 9; i++) {
@@ -148,27 +139,27 @@ public class EditGui extends MultipageGui {
                 continue;
             }
             PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-            if (!dataContainer.has(buttonTypeKey, PersistentDataType.STRING)) {
+            if (!dataContainer.has(BUTTON_TYPE, PersistentDataType.STRING)) {
                 continue;
             }
 
             //Get button type
-            String buttonType = dataContainer.get(buttonTypeKey, PersistentDataType.STRING);
+            String buttonType = dataContainer.get(BUTTON_TYPE, PersistentDataType.STRING);
             if (buttonType == null) {
                 continue;
             }
             switch (buttonType) {
                 case "ticket" -> {
                     //Item is a ticket. Check ticket data.
-                    if (!dataContainer.has(tcNameKey, PersistentDataType.STRING)) {
+                    if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
                         continue;
                     }
-                    if (!dataContainer.has(priceKey, PersistentDataType.INTEGER)) {
+                    if (!dataContainer.has(TICKET_PRICE, PersistentDataType.INTEGER)) {
                         continue;
                     }
                     //Get data
-                    String tcName = dataContainer.get(tcNameKey, PersistentDataType.STRING);
-                    Integer price = dataContainer.get(priceKey, PersistentDataType.INTEGER);
+                    String tcName = dataContainer.get(TC_TICKET_NAME, PersistentDataType.STRING);
+                    Integer price = dataContainer.get(TICKET_PRICE, PersistentDataType.INTEGER);
                     if (price == null) {
                         continue;
                     }
@@ -188,11 +179,11 @@ public class EditGui extends MultipageGui {
                 }
                 case "linker" -> {
                     //Item is a linker. Check linker data
-                    if (!dataContainer.has(guiIdKey, PersistentDataType.INTEGER)) {
+                    if (!dataContainer.has(DEST_GUI_ID, PersistentDataType.INTEGER)) {
                         continue;
                     }
                     //Get data
-                    Integer destGuiId = dataContainer.get(guiIdKey, PersistentDataType.INTEGER);
+                    Integer destGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
                     if (destGuiId == null) {
                         continue;
                     }

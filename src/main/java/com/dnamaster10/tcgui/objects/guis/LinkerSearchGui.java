@@ -5,7 +5,6 @@ import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +13,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
 
 public class LinkerSearchGui extends SearchGui {
     @Override
@@ -73,8 +74,7 @@ public class LinkerSearchGui extends SearchGui {
             //Get dest page
             ItemMeta meta = linker.getItemMeta();
             assert meta != null;
-            NamespacedKey key = new NamespacedKey(getPlugin(), "gui");
-            Integer linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+            Integer linkedGuiId = meta.getPersistentDataContainer().get(DEST_GUI_ID, PersistentDataType.INTEGER);
             if (linkedGuiId == null) {
                 removeCursorItem();
                 return;

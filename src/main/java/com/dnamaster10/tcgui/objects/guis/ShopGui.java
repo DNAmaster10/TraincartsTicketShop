@@ -3,11 +3,7 @@ package com.dnamaster10.tcgui.objects.guis;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +13,9 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
+import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class ShopGui extends MultipageGui {
     @Override
@@ -100,8 +99,7 @@ public class ShopGui extends MultipageGui {
             //First get the destination page
             ItemMeta meta = button.getItemMeta();
             assert meta!= null;
-            NamespacedKey key = new NamespacedKey(getPlugin(), "gui");
-            Integer linkedGuiId = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+            Integer linkedGuiId = meta.getPersistentDataContainer().get(DEST_GUI_ID, PersistentDataType.INTEGER);
             if (linkedGuiId == null) {
                 removeCursorItem();
                 return;
@@ -149,9 +147,8 @@ public class ShopGui extends MultipageGui {
         gui.open();
     }
     private void handleTicketClick(ItemStack ticket) {
-        //Get ticket tc name
-        NamespacedKey key = new NamespacedKey(getPlugin(), "tc_name");
-        String tcName = Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().get(key, PersistentDataType.STRING);
+        //Get ticket tc name;
+        String tcName = Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().get(TC_TICKET_NAME, PersistentDataType.STRING);
 
         //Check that the tc ticket exists
         if (!Traincarts.checkTicket(tcName)) {
