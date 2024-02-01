@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.commands;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveAllCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorAddCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHandler;
@@ -63,6 +65,10 @@ public class CommandDispatcher implements CommandExecutor {
                         GuiSearchTicketsCommandHandler handler = new GuiSearchTicketsCommandHandler();
                         handler.handle(sender, args);
                     }
+                    case "transfer" -> {
+                        GuiTransferCommandHandler handler = new GuiTransferCommandHandler();
+                        handler.handle(sender, args);
+                    }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
                 }
             }
@@ -109,6 +115,14 @@ public class CommandDispatcher implements CommandExecutor {
                     }
                     case "add" -> {
                         EditorAddCommandHandler handler = new EditorAddCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "remove" -> {
+                        EditorRemoveCommandHandler handler = new EditorRemoveCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "removeall" -> {
+                        EditorRemoveAllCommandHandler handler = new EditorRemoveAllCommandHandler();
                         handler.handle(sender, args);
                     }
                 }

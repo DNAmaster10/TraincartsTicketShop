@@ -20,6 +20,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
         ARGS1.add("searchLinkers");
         ARGS1.add("searchTickets");
         ARGS1.add("setDisplayName");
+        ARGS1.add("transfer");
     }
 
     @Override
