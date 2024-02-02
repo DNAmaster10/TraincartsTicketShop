@@ -31,6 +31,7 @@ public class ShopGui extends MultipageGui {
             Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
     }
+    @Override
     protected void generate() throws SQLException {
         GuiAccessor accessor = new GuiAccessor();
         int totalPages = accessor.getMaxPage(getGuiId());
@@ -139,7 +140,11 @@ public class ShopGui extends MultipageGui {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //First get the destination page
             ItemMeta meta = button.getItemMeta();
-            assert meta!= null;
+            if (meta == null) {
+                removeCursorItem();
+                return;
+            }
+
             PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
             Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
             Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);

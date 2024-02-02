@@ -75,7 +75,11 @@ public class LinkerSearchGui extends SearchGui {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Get dest page
             ItemMeta meta = linker.getItemMeta();
-            assert meta != null;
+            if (meta == null) {
+                removeCursorItem();
+                return;
+            }
+
             PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
             Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
             Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);

@@ -205,9 +205,13 @@ public class EditGui extends MultipageGui {
                     //Get data
                     String tcName = dataContainer.get(TC_TICKET_NAME, PersistentDataType.STRING);
                     Integer price = dataContainer.get(TICKET_PRICE, PersistentDataType.INTEGER);
+                    if (tcName == null) {
+                        continue;
+                    }
                     if (price == null) {
                         continue;
                     }
+
                     String colouredDisplayName = meta.getDisplayName();
                     String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
