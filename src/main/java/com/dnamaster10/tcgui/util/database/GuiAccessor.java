@@ -194,6 +194,34 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.execute();
         }
     }
+    public void deletePage(int guiId, int page) throws SQLException {
+        //Deletes the given page from a gui. Deletes tickets and linkers too.
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement;
+            
+            statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=? AND page=?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            statement.addBatch();
+
+            statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=? AND page=?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            statement.addBatch();
+
+            statement = connection.prepareStatement("UPDATE tickets SET page=page - 1 WHERE guiid=? AND page > ?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            statement.addBatch();
+
+            statement = connection.prepareStatement("UPDATE linkers SET page=page - 1 WHERE guiid=? AND page > ?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            statement.addBatch();
+
+            statement.addBatch();
+        }
+    }
     public void removeGuiEditorByUuid(int guiId, String uuid) throws SQLException {
         //Removes a player as editor from gui editors
         try (Connection connection = getConnection()) {

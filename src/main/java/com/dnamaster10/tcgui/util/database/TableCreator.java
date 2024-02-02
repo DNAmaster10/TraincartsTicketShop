@@ -24,7 +24,7 @@ public class TableCreator extends DatabaseAccessor {
 
             PreparedStatement statement2 = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS guis (
-                        id int UNIQUE AUTO_INCREMENT,
+                        id int AUTO_INCREMENT PRIMARY KEY,
                         name varchar(100) UNIQUE,
                         display_name varchar(100),
                         raw_display_name varchar(100),
@@ -35,14 +35,15 @@ public class TableCreator extends DatabaseAccessor {
 
             PreparedStatement statement3 = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS tickets (
-                        id int UNIQUE AUTO_INCREMENT,
+                        id int AUTO_INCREMENT PRIMARY KEY,
                         guiid int,
                         page int,
                         slot int,
                         tc_name varchar(100),
                         display_name varchar(100),
                         raw_display_name varchar(100),
-                        price int
+                        price int,
+                        UNIQUE KEY gui_page_slot_unique (guiid, page, slot)
                     );
                     """);
             statement3.execute();
@@ -58,14 +59,15 @@ public class TableCreator extends DatabaseAccessor {
 
             PreparedStatement statement5 = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS linkers (
-                        id int UNIQUE AUTO_INCREMENT,
+                        id int AUTO_INCREMENT PRIMARY KEY,
                         guiid int,
                         page int,
                         slot int,
                         linked_guiid int,
                         linked_gui_page int,
                         display_name varchar(100),
-                        raw_display_name varchar(100)
+                        raw_display_name varchar(100),
+                        UNIQUE KEY gui_page_slot (guiid, page, slot)
                     );
                     """);
             statement5.execute();

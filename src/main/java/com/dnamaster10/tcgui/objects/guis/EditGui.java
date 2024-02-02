@@ -61,6 +61,7 @@ public class EditGui extends MultipageGui {
             builder.addPrevPageButton();
         }
         builder.addNextPageButton();
+        builder.addDeletePageButton();
         setInventory(builder.getInventory());
     }
     @Override
@@ -80,14 +81,18 @@ public class EditGui extends MultipageGui {
                     prevPage();
                     return;
                 }
+                case "delete_page" -> {
+                    deletePage();
+                    return;
+                }
             }
         }
     }
 
-    //Note that we don't need to save the gui from the following methods, as the save method is called by the gui
-    //manager whenever an inventory is closed. Instead, we should copy the current inventory to a temporary variable
+    //Note that in the following methods, was Closed is set to false. This lets the gui manager know that it doesn't need
+    //to save the gui to the database because it either doesn't need to save, or has already been saved.
     @Override
-    public void nextPage() {
+    protected void nextPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Save the current gui
             save();
@@ -101,7 +106,7 @@ public class EditGui extends MultipageGui {
     }
 
     @Override
-    public void prevPage() {
+    protected void prevPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Check there is a prev page
             if (getPage() <= 0) {
@@ -115,6 +120,21 @@ public class EditGui extends MultipageGui {
             wasClosed = false;
 
             setPage(getPage() - 1);
+            removeCursorItem();
+            open();
+        });
+    }
+    private void deletePage() {
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                GuiAccessor guiAccessor = new GuiAccessor();
+                guiAccessor.deletePage(getGuiId(), getPage());
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e.toString());
+                return;
+            }
+            wasClosed = false;
             removeCursorItem();
             open();
         });
@@ -215,12 +235,8 @@ public class EditGui extends MultipageGui {
                 TicketAccessor ticketAccessor = new TicketAccessor();
                 LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-                ticketAccessor.deleteTicketsByGuiIdPageId(getGuiId(), getPage());
-                linkerAccessor.deleteLinkersByGuiIdPageId(getGuiId(), getPage());
-
-                //Add items to database
-                ticketAccessor.addTickets(getGuiId(), getPage(), ticketList);
-                linkerAccessor.addLinkers(getGuiId(), getPage(), linkerList);
+                ticketAccessor.saveTicketPage(getGuiId(), getPage(), ticketList);
+                linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
             } catch (SQLException e) {
                 removeCursorItemAndClose();
                 getPlugin().reportSqlError(e.toString());

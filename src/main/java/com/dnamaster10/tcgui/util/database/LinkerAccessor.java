@@ -57,9 +57,37 @@ public class LinkerAccessor extends DatabaseAccessor {
             return 0;
         }
     }
-    public void addLinkers(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
+    public void saveLinkerPage(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO linkers (guiid, page, slot, linked_guiid, linked_gui_page, display_name, raw_display_name) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            //Delete non-existent slots
+            String sql = "DELETE FROM linkers WHERE guiid=? AND page=? AND slot NOT IN (";
+            StringBuilder placeholders = new StringBuilder();
+            for (int i = 0; i < linkers.size(); i++) {
+                placeholders.append("?");
+                if (i < linkers.size() - 1) {
+                    placeholders.append(", ");
+                }
+            }
+            sql += placeholders + ")";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            //Set values for placeholders
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            for (int i = 3; i < linkers.size() + 3; i++) {
+                statement.setInt(i, linkers.get(i).getSlot());
+            }
+            statement.addBatch();
+
+            //Prepare update query
+            statement = connection.prepareStatement("""
+                    INSERT INTO linkers (guiid, page, slot, linked_guiid, linked_gui_page, display_name, raw_display_name) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?) 
+                    ON DUPLICATE KEY UPDATE 
+                        linked_guiid=VALUES(linked_guiid),
+                        linked_gui_page=VALUES(linked_gui_page),
+                        display_name=VALUES(display_name),
+                        raw_display_name=VALUES(raw_display_name)
+                    """);
             for (LinkerDatabaseObject linker : linkers) {
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
@@ -68,6 +96,7 @@ public class LinkerAccessor extends DatabaseAccessor {
                 statement.setInt(5, linker.getLinkedGuiPage());
                 statement.setString(6, linker.getColouredDisplayName());
                 statement.setString(7, linker.getRawDisplayName());
+
                 statement.addBatch();
             }
             statement.executeBatch();

@@ -84,7 +84,7 @@ public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
         guiAccessor.removeGuiEditorByUuid(guiId, otherPlayer.getUuid());
 
-        sender.sendMessage(ChatColor.GREEN + "Successfully transferred gui");
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.getUsername());
     }
 
     @Override

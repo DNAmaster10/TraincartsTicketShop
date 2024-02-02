@@ -60,13 +60,36 @@ public class TicketAccessor extends DatabaseAccessor {
             return 0;
         }
     }
-    public void addTickets(int guiId, int page, List<TicketDatabaseObject> tickets) throws SQLException {
-        //Batch inserts a list of tickets. This more performant than multiple inset statements.
+    public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws SQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO tickets (guiid, page, slot, tc_name, display_name, raw_display_name, price) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            String sql = "DELETE FROM tickets WHERE guiid=? AND page=? AND slot NOT IN (";
+            StringBuilder placeholders = new StringBuilder();
+            for (int i = 0; i < tickets.size(); i++) {
+                placeholders.append("?");
+                if (i < tickets.size() - 1) {
+                    placeholders.append(", ");
+                }
+            }
+            sql += placeholders + ")";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, guiId);
+            statement.setInt(2, page);
+            for (int i = 3; i < tickets.size() + 3; i++) {
+                statement.setInt(i, tickets.get(i).getSlot());
+            }
+            statement.addBatch();
+
+            //Prepare update query
+            statement = connection.prepareStatement("""
+                    INSERT INTO tickets (guiid, page, slot, tc_name, display_name, raw_display_name, price) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        tc_name=VALUES(tc_name)
+                        display_name=VALUES(display_name)
+                        raw_display_name=VALUES(raw_display_name)
+                        price=VALUES(price)
+                    """);
             for (TicketDatabaseObject ticket : tickets) {
-                //Normally for a large batch you would execute every 1000 items or so, but since here there won't (or shouldn't) ever be more than 45 tickets, this isn't
-                //needed
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
                 statement.setInt(3, ticket.getSlot());
@@ -74,6 +97,7 @@ public class TicketAccessor extends DatabaseAccessor {
                 statement.setString(5, ticket.getColouredDisplayName());
                 statement.setString(6, ticket.getRawDisplayName());
                 statement.setInt(7, ticket.getPrice());
+
                 statement.addBatch();
             }
             statement.executeBatch();

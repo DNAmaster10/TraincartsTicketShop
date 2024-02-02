@@ -7,18 +7,18 @@ import org.bukkit.persistence.PersistentDataType;
 
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
-public class BackButton extends Button {
-    public BackButton() {
+public class DeletePageButton extends Button {
+    public DeletePageButton() {
         //Create the item
-        item = new ItemStack(Material.COMPASS, 1);
+        item = new ItemStack(Material.BARRIER, 1);
         ItemMeta meta = item.getItemMeta();
 
         //Set display
         assert meta != null;
-        meta.setDisplayName("Back");
+        meta.setDisplayName("Delete page");
 
         //Set button data
-        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "back");
+        meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, "delete_page");
         item.setItemMeta(meta);
     }
 }

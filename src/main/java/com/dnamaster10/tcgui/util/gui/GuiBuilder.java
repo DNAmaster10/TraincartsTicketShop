@@ -78,6 +78,10 @@ public class GuiBuilder {
         SearchButton searchButton = new SearchButton();
         this.inventory.setItem(49, searchButton.getItemStack());
     }
+    public void addDeletePageButton() {
+        DeletePageButton deletePageButton = new DeletePageButton();
+        this.inventory.setItem(47, deletePageButton.getItemStack());
+    }
 
     public GuiBuilder(String displayName) {
         this.inventory = Bukkit.createInventory(null, 54, displayName);
