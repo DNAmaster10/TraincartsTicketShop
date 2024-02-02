@@ -71,22 +71,22 @@ public class TicketAccessor extends DatabaseAccessor {
                 }
             }
             sql += placeholders + ")";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, guiId);
-            statement.setInt(2, page);
-            for (int i = 3; i < tickets.size() + 3; i++) {
-                statement.setInt(i, tickets.get(i).getSlot());
+            PreparedStatement deleteStatement = connection.prepareStatement(sql);
+            deleteStatement.setInt(1, guiId);
+            deleteStatement.setInt(2, page);
+            for (int i = 0; i < tickets.size(); i++) {
+                deleteStatement.setInt(i + 3, tickets.get(i).getSlot());
             }
-            statement.addBatch();
+            deleteStatement.executeUpdate();
 
             //Prepare update query
-            statement = connection.prepareStatement("""
+            PreparedStatement statement = connection.prepareStatement("""
                     INSERT INTO tickets (guiid, page, slot, tc_name, display_name, raw_display_name, price) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE
-                        tc_name=VALUES(tc_name)
-                        display_name=VALUES(display_name)
-                        raw_display_name=VALUES(raw_display_name)
+                    ON DUPLICATE KEY UPDATE 
+                        tc_name=VALUES(tc_name),
+                        display_name=VALUES(display_name),
+                        raw_display_name=VALUES(raw_display_name),
                         price=VALUES(price)
                     """);
             for (TicketDatabaseObject ticket : tickets) {

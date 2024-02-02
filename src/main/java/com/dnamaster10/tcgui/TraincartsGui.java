@@ -47,7 +47,7 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         }
         catch (SQLException e) {
             //Disable plugin if failed
-            plugin.reportSqlError("Failed to create tables in database: " + e);
+            plugin.reportSqlError(e);
             plugin.disable();
         }
         //Register the "tcgui" command
@@ -83,21 +83,24 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
     public SignHandler getSignHandler() {
         return this.signHandler;
     }
-    public void reportSqlError(String error) {
-        plugin.getLogger().severe("A database error occurred: " + error);
+    public void reportSqlError(SQLException e) {
+        plugin.getLogger().severe("A database error occurred: " + e);
+        e.printStackTrace();
     }
-    public void reportSqlError(Player p, String error) {
+    public void reportSqlError(Player p, SQLException e) {
         p.sendMessage(ChatColor.RED + "An error occurred. Check server logs for more info");
-        plugin.getLogger().severe("A database error occurred: " + error);
+        plugin.getLogger().severe("A database error occurred: " + e);
+        e.printStackTrace();
         //Disable the plugin in case of database damage
         plugin.disable();
     }
-    public void reportSqlError(CommandSender sender, String error) {
+    public void reportSqlError(CommandSender sender, SQLException e) {
         if (sender instanceof Player p) {
-            reportSqlError(p, error);
+            reportSqlError(p, e);
         }
         else if (sender instanceof ConsoleCommandSender) {
-            plugin.getLogger().severe("A database error occurred: " + error);
+            plugin.getLogger().severe("A database error occurred: " + e.toString());
+            e.printStackTrace();
             //Disable the plugin in case of database damage
             plugin.disable();
         }

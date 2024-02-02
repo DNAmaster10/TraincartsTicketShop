@@ -109,7 +109,7 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
                 }
                 execute(sender, args);
             } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e.toString());
+                getPlugin().reportSqlError(sender, e);
             }
         });
     }

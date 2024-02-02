@@ -26,7 +26,7 @@ public class LinkerSearchGui extends SearchGui {
                 generate();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
             }
             Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
@@ -99,7 +99,7 @@ public class LinkerSearchGui extends SearchGui {
                 newGui = new ShopGui(destGuiName, linkedGuiPage, getPlayer());
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
 
@@ -120,7 +120,7 @@ public class LinkerSearchGui extends SearchGui {
                 }
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
             setPage(getPage() + 1);

@@ -104,7 +104,7 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
                 }
                 execute(sender, args);
             } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e.toString());
+                getPlugin().reportSqlError(sender, e);
             }
         });
     }

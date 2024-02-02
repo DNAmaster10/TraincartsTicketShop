@@ -26,7 +26,7 @@ public class ShopGui extends MultipageGui {
                 generate();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
             }
             Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
@@ -107,7 +107,7 @@ public class ShopGui extends MultipageGui {
                 maxPage = guiAccessor.getTotalPages(getGuiId());
             } catch (SQLException e) {
                 getPlayer().closeInventory();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
             if (getPage() + 1 > maxPage) {
@@ -165,7 +165,7 @@ public class ShopGui extends MultipageGui {
 
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
             //Add gui to gui manager

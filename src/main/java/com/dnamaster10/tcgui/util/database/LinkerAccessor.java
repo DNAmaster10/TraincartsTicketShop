@@ -69,17 +69,17 @@ public class LinkerAccessor extends DatabaseAccessor {
                 }
             }
             sql += placeholders + ")";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement deleteStatement = connection.prepareStatement(sql);
             //Set values for placeholders
-            statement.setInt(1, guiId);
-            statement.setInt(2, page);
-            for (int i = 3; i < linkers.size() + 3; i++) {
-                statement.setInt(i, linkers.get(i).getSlot());
+            deleteStatement.setInt(1, guiId);
+            deleteStatement.setInt(2, page);
+            for (int i = 0; i < linkers.size(); i++) {
+                deleteStatement.setInt(i + 3, linkers.get(i).getSlot());
             }
-            statement.addBatch();
+            deleteStatement.execute();
 
             //Prepare update query
-            statement = connection.prepareStatement("""
+            PreparedStatement statement = connection.prepareStatement("""
                     INSERT INTO linkers (guiid, page, slot, linked_guiid, linked_gui_page, display_name, raw_display_name) 
                     VALUES (?, ?, ?, ?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE 

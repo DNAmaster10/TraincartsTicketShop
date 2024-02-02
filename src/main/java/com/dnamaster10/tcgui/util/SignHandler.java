@@ -119,7 +119,7 @@ public class SignHandler {
                 //Register the gui
                 getPlugin().getGuiManager().addGui(p, gui);
             } catch (SQLException e) {
-                getPlugin().reportSqlError(event.getPlayer(), e.toString());
+                getPlugin().reportSqlError(event.getPlayer(), e);
             }
         });
         return  true;

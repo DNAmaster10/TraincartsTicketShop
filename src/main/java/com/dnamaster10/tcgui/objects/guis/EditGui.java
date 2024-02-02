@@ -46,7 +46,7 @@ public class EditGui extends MultipageGui {
                 generate();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
             }
             Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
@@ -131,7 +131,7 @@ public class EditGui extends MultipageGui {
                 guiAccessor.deletePage(getGuiId(), getPage());
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
             wasClosed = false;
@@ -229,18 +229,16 @@ public class EditGui extends MultipageGui {
                 }
                 //Otherwise, item is not a savable / tcgui item. Ignore it to remove it
             }
-            //Now we can save.
-            //Remove existing tickets and linkers
-            try {
-                TicketAccessor ticketAccessor = new TicketAccessor();
-                LinkerAccessor linkerAccessor = new LinkerAccessor();
+        }
+        try {
+            TicketAccessor ticketAccessor = new TicketAccessor();
+            LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-                ticketAccessor.saveTicketPage(getGuiId(), getPage(), ticketList);
-                linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(e.toString());
-            }
+            ticketAccessor.saveTicketPage(getGuiId(), getPage(), ticketList);
+            //linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
+        } catch (SQLException e) {
+            removeCursorItemAndClose();
+            getPlugin().reportSqlError(e);
         }
     }
 

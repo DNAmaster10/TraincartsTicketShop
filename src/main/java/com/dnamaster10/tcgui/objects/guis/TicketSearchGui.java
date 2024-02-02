@@ -27,7 +27,7 @@ public class TicketSearchGui extends SearchGui {
                 generate();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
             }
             Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
         });
@@ -106,7 +106,7 @@ public class TicketSearchGui extends SearchGui {
                 }
             } catch (SQLException e) {
                 removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e.toString());
+                getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
             //Increment page
