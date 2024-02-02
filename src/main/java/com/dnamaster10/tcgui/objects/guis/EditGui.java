@@ -231,11 +231,12 @@ public class EditGui extends MultipageGui {
             }
         }
         try {
+            //Save to database
             TicketAccessor ticketAccessor = new TicketAccessor();
             LinkerAccessor linkerAccessor = new LinkerAccessor();
 
             ticketAccessor.saveTicketPage(getGuiId(), getPage(), ticketList);
-            //linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
+            linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
         } catch (SQLException e) {
             removeCursorItemAndClose();
             getPlugin().reportSqlError(e);

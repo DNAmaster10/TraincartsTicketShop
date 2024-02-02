@@ -219,7 +219,7 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(2, page);
             statement.addBatch();
 
-            statement.addBatch();
+            statement.executeBatch();
         }
     }
     public void removeGuiEditorByUuid(int guiId, String uuid) throws SQLException {

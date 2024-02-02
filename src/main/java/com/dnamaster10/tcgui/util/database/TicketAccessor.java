@@ -62,6 +62,13 @@ public class TicketAccessor extends DatabaseAccessor {
     }
     public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws SQLException {
         try (Connection connection = getConnection()) {
+            if (tickets.isEmpty()) {
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=? AND page=?");
+                deleteStatement.setInt(1, guiId);
+                deleteStatement.setInt(2, page);
+                deleteStatement.executeUpdate();
+                return;
+            }
             String sql = "DELETE FROM tickets WHERE guiid=? AND page=? AND slot NOT IN (";
             StringBuilder placeholders = new StringBuilder();
             for (int i = 0; i < tickets.size(); i++) {

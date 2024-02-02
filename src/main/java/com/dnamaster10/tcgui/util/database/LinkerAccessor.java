@@ -60,6 +60,13 @@ public class LinkerAccessor extends DatabaseAccessor {
     public void saveLinkerPage(int guiId, int page, List<LinkerDatabaseObject> linkers) throws SQLException {
         try (Connection connection = getConnection()) {
             //Delete non-existent slots
+            if (linkers.isEmpty()) {
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=? AND page=?");
+                deleteStatement.setInt(1, guiId);
+                deleteStatement.setInt(2, page);
+                deleteStatement.executeUpdate();
+                return;
+            }
             String sql = "DELETE FROM linkers WHERE guiid=? AND page=? AND slot NOT IN (";
             StringBuilder placeholders = new StringBuilder();
             for (int i = 0; i < linkers.size(); i++) {
