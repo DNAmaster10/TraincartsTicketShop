@@ -80,7 +80,11 @@ public class GuiBuilder {
     }
     public void addDeletePageButton() {
         DeletePageButton deletePageButton = new DeletePageButton();
-        this.inventory.setItem(47, deletePageButton.getItemStack());
+        this.inventory.setItem(48, deletePageButton.getItemStack());
+    }
+    public void addInsertPageButton() {
+        InsertPageButton insertPageButton = new InsertPageButton();
+        this.inventory.setItem(47, insertPageButton.getItemStack());
     }
 
     public GuiBuilder(String displayName) {

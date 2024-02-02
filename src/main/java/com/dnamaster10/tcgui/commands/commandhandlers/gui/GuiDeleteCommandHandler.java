@@ -14,8 +14,6 @@ import java.sql.SQLException;
 public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     //Command example: /tcgui gui delete <gui_name>
     private GuiAccessor guiAccessor;
-    private TicketAccessor ticketAccessor;
-    private LinkerAccessor linkerAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks
@@ -71,20 +69,9 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        //Delete the gui
-        ticketAccessor = new TicketAccessor();
-        linkerAccessor = new LinkerAccessor();
-
         //Get gui id
         int id = guiAccessor.getGuiIdByName(args[2]);
 
-        //Delete tickets
-        ticketAccessor.deleteTicketsByGuid(id);
-
-        //Delete linkers
-        linkerAccessor.deleteLinkersByGuiId(id);
-
-        //Delete gui
         guiAccessor.deleteGuiById(id);
 
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was deleted");

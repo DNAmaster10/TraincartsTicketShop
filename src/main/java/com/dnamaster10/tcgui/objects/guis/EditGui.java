@@ -29,7 +29,6 @@ public class EditGui extends MultipageGui {
     //or whether the gui was actually closed.
     private boolean wasClosed = true;
     public boolean shouldSave() {
-        getPlugin().getLogger().severe("Value: " + wasClosed);
         if (wasClosed) {
             return true;
         }
@@ -62,6 +61,7 @@ public class EditGui extends MultipageGui {
         }
         builder.addNextPageButton();
         builder.addDeletePageButton();
+        builder.addInsertPageButton();
         setInventory(builder.getInventory());
     }
     @Override
@@ -83,6 +83,10 @@ public class EditGui extends MultipageGui {
                 }
                 case "delete_page" -> {
                     deletePage();
+                    return;
+                }
+                case "insert_page" -> {
+                    insertPage();
                     return;
                 }
             }
@@ -124,15 +128,37 @@ public class EditGui extends MultipageGui {
             open();
         });
     }
-    private void deletePage() {
+    protected void insertPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
+                guiAccessor.insertPage(getGuiId(), getPage());
+            } catch (SQLException e) {
+                getPlugin().reportSqlError(getPlayer(), e);
+            }
+            //Save the current page before going to the new one
+            save();
+            wasClosed = false;
+            //Set current page to the new page
+            setPage(getPage() + 1);
+            removeCursorItem();
+            open();
+        });
+    }
+    private void deletePage() {
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            int maxPage;
+            try {
+                GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.deletePage(getGuiId(), getPage());
+                maxPage = guiAccessor.getMaxPage(getGuiId());
             } catch (SQLException e) {
                 removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e);
                 return;
+            }
+            if (getPage() > maxPage) {
+                setPage(getPage() - 1);
             }
             wasClosed = false;
             removeCursorItem();

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+
 public class GuiAccessor extends DatabaseAccessor {
     public GuiAccessor() throws SQLException {
         super();
@@ -112,7 +114,7 @@ public class GuiAccessor extends DatabaseAccessor {
             return name;
         }
     }
-    public Integer getTotalPages(int guiId) throws SQLException {
+    public Integer getMaxPage(int guiId) throws SQLException {
         //Returns the total pages for this giu
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT MAX(page) FROM tickets WHERE guiid=?");
@@ -186,12 +188,44 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
+    public void insertPage(int guiId, int currentPage) throws SQLException {
+        //Inserts a page above the current page
+        try(Connection connection = getConnection()) {
+            PreparedStatement statement;
+
+            //Increment tickets page
+            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE guiid=? AND page > ?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, currentPage);
+            statement.executeUpdate();
+
+            //Increment linkers page
+            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE guiid=? AND page > ?");
+            statement.setInt(1, guiId);
+            statement.setInt(2, currentPage);
+            statement.executeUpdate();
+        }
+    }
     public void deleteGuiById(int id) throws SQLException {
         //Deletes a gui by its id
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
+            PreparedStatement statement;
+
+            statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
             statement.setInt(1, id);
-            statement.execute();
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
         }
     }
     public void deletePage(int guiId, int page) throws SQLException {
@@ -203,23 +237,25 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
+            statement.executeUpdate();
 
             statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
+            statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE tickets SET page=page - 1 WHERE guiid=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE guiid=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
+            statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE linkers SET page=page - 1 WHERE guiid=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE guiid=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
-
-            statement.executeBatch();
+            statement.executeUpdate();
         }
     }
     public void removeGuiEditorByUuid(int guiId, String uuid) throws SQLException {

@@ -33,7 +33,7 @@ public class ShopGui extends MultipageGui {
     }
     protected void generate() throws SQLException {
         GuiAccessor accessor = new GuiAccessor();
-        int totalPages = accessor.getTotalPages(getGuiId());
+        int totalPages = accessor.getMaxPage(getGuiId());
         if (getPage() > totalPages) {
             setPage(totalPages);
         }
@@ -104,7 +104,7 @@ public class ShopGui extends MultipageGui {
             try {
                 //Check if any other pages exist above this one
                 GuiAccessor guiAccessor = new GuiAccessor();
-                maxPage = guiAccessor.getTotalPages(getGuiId());
+                maxPage = guiAccessor.getMaxPage(getGuiId());
             } catch (SQLException e) {
                 getPlayer().closeInventory();
                 getPlugin().reportSqlError(getPlayer(), e);
