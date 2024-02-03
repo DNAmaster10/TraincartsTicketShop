@@ -22,12 +22,15 @@ jobs:
         with:
           name: Plugin
           path: target/tcgui*.jar
+      - name: Tomfoolery to find file name
+        run: |
+          filename = $(ls -d target/tcgui-*)
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/tcgui-*.jar
+          file: target/$filename
           asset_name: tcgui.jar
           tag: snapshot
           overwrite: true
