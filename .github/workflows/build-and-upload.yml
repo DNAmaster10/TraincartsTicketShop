@@ -27,7 +27,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/TraincartsGui-*.jar
+          file: target/tcgui-*.jar
           asset_name: tcgui.jar
           tag: snapshot
           overwrite: true
