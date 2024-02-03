@@ -29,6 +29,8 @@ jobs:
           echo filename=$filename >> "$GITHUB_ENV"
       - name: Delete Previous Release              
         uses: liudonghua123/delete-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_name: "Latest Development Build"
       - name: Publish Snapshot Release
