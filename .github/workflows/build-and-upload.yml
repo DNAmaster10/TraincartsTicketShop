@@ -26,12 +26,13 @@ jobs:
       - name: Tomfoolery to find file name
         run: |
           filename=$(ls -d target/tcgui-*)
+          echo filename=$filename >> "$GITHUB_ENV"
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/${{ filename }}
+          file: target/${{ env.filename }}
           asset_name: tcgui.jar
           tag: snapshot
           overwrite: true
