@@ -23,10 +23,11 @@ jobs:
         with:
           name: Plugin
           path: target/tcgui*.jar
-      - name: Tomfoolery to find file name
+      - name: Find file and tag release
         run: |
           filename=$(ls -d target/tcgui-*)
           echo filename=$filename >> "$GITHUB_ENV"
+          git tag -a snapshot
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
