@@ -140,7 +140,6 @@ public class EditGui extends MultipageGui {
             save();
             wasClosed = false;
             //Set current page to the new page
-            setPage(getPage() + 1);
             removeCursorItem();
             open();
         });

@@ -16,7 +16,7 @@ public class TicketAccessor extends DatabaseAccessor {
     public TicketDatabaseObject[] getTickets(int guiId, int page) throws SQLException {
         //Returns an array of ticket database objects from the database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT slot, tc_name, display_name, raw_display_name, price FROM tickets WHERE guiid=? AND page=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT slot, tc_name, display_name, raw_display_name, price FROM tickets WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             ResultSet result = statement.executeQuery();
@@ -33,7 +33,7 @@ public class TicketAccessor extends DatabaseAccessor {
         //This value indicates the amount of database results which will be skipped over before returning any results.
         //This can be used to have multi-page search guis.
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT tc_name, display_name, raw_display_name, price FROM tickets WHERE guiid=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT tc_name, display_name, raw_display_name, price FROM tickets WHERE gui_id=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             statement.setInt(3, offset);
@@ -50,7 +50,7 @@ public class TicketAccessor extends DatabaseAccessor {
     public int getTotalTicketSearchResults(int guiId, String searchTerm) throws SQLException {
         //Returns total search results which were found
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM tickets WHERE guiid=? AND raw_display_name LIKE ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM tickets WHERE gui_id=? AND raw_display_name LIKE ?");
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             ResultSet result = statement.executeQuery();
@@ -63,13 +63,13 @@ public class TicketAccessor extends DatabaseAccessor {
     public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws SQLException {
         try (Connection connection = getConnection()) {
             if (tickets.isEmpty()) {
-                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=? AND page=?");
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
                 deleteStatement.setInt(1, guiId);
                 deleteStatement.setInt(2, page);
                 deleteStatement.executeUpdate();
                 return;
             }
-            String sql = "DELETE FROM tickets WHERE guiid=? AND page=? AND slot NOT IN (";
+            String sql = "DELETE FROM tickets WHERE gui_id=? AND page=? AND slot NOT IN (";
             StringBuilder placeholders = new StringBuilder();
             for (int i = 0; i < tickets.size(); i++) {
                 placeholders.append("?");
@@ -88,7 +88,7 @@ public class TicketAccessor extends DatabaseAccessor {
 
             //Prepare update query
             PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO tickets (guiid, page, slot, tc_name, display_name, raw_display_name, price) 
+                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name, price) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE 
                         tc_name=VALUES(tc_name),
@@ -108,23 +108,6 @@ public class TicketAccessor extends DatabaseAccessor {
                 statement.addBatch();
             }
             statement.executeBatch();
-        }
-    }
-    public void deleteTicketsByGuid (int guiId) throws SQLException {
-        //Deletes tickets registered under a specific gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=?");
-            statement.setInt(1, guiId);
-            statement.execute();
-        }
-    }
-    public void deleteTicketsByGuiIdPageId(int guiId, int pageId) throws SQLException {
-        //Deleted tickets based on gui id and page id
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=? AND page=?");
-            statement.setInt(1, guiId);
-            statement.setInt(2, pageId);
-            statement.execute();
         }
     }
 }

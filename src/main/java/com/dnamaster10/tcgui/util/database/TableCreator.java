@@ -16,9 +16,9 @@ public class TableCreator extends DatabaseAccessor {
             PreparedStatement statement;
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS players (
-                        id int AUTO_INCREMENT PRIMARY KEY,
+                        uuid varchar(50) PRIMARY KEY NOT NULL,
                         username varchar(17),
-                        uuid varchar(50) UNIQUE NOT NULL
+                        last_join int
                     ) ENGINE=INNODB;
                     """);
             statement.execute();
@@ -26,11 +26,11 @@ public class TableCreator extends DatabaseAccessor {
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS guis (
                         id int AUTO_INCREMENT PRIMARY KEY,
-                        owner_id int,
+                        owner_uuid varchar(50),
                         name varchar(100) UNIQUE,
                         display_name varchar(100),
                         raw_display_name varchar(100),
-                        FOREIGN KEY (owner_id) REFERENCES players(id)
+                        FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
                             ON DELETE SET NULL
                     ) ENGINE=INNODB;
                     """);
@@ -74,8 +74,8 @@ public class TableCreator extends DatabaseAccessor {
                     CREATE TABLE IF NOT EXISTS guieditors (
                         id int AUTO_INCREMENT PRIMARY KEY,
                         gui_id int NOT NULL,
-                        player_id int NOT NULL,
-                        FOREIGN KEY (player_id) REFERENCES players(id)
+                        editor_uuid varchar(50) NOT NULL,
+                        FOREIGN KEY (editor_uuid) REFERENCES players(uuid)
                             ON DELETE CASCADE,
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
@@ -86,9 +86,9 @@ public class TableCreator extends DatabaseAccessor {
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS companies (
                         id int AUTO_INCREMENT PRIMARY KEY,
-                        owner_id int,
+                        owner_uuid varchar(50),
                         company_name varchar(100) UNIQUE,
-                        FOREIGN KEY (owner_id) REFERENCES players(id)
+                        FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
                             ON DELETE SET NULL
                     ) ENGINE=INNODB;
                     """);
@@ -98,10 +98,10 @@ public class TableCreator extends DatabaseAccessor {
                     CREATE TABLE IF NOT EXISTS companymembers (
                         id int AUTO_INCREMENT PRIMARY KEY,
                         company_id int NOT NULL,
-                        member_id int NOT NULL,
+                        member_uuid varchar(100) NOT NULL,
                         FOREIGN KEY (company_id) REFERENCES companies(id)
                             ON DELETE CASCADE,
-                        FOREIGN KEY (member_id) REFERENCES players(id)
+                        FOREIGN KEY (member_uuid) REFERENCES players(uuid)
                             ON DELETE CASCADE
                     ) ENGINE=INNODB;
                     """);

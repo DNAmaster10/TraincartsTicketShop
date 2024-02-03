@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
@@ -17,7 +15,7 @@ public class GuiAccessor extends DatabaseAccessor {
     public boolean checkGuiByName(String name) throws SQLException {
         //returns true if the gui with the given name exists in database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?;");
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?");
             statement.setString(1, name);
             ResultSet result = statement.executeQuery();
             int total = 0;
@@ -46,20 +44,33 @@ public class GuiAccessor extends DatabaseAccessor {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=? AND owner_uuid=?");
             statement.setString(1, guiName);
             statement.setString(2, ownerUuid);
-            ResultSet result = statement.executeQuery();
+            ResultSet guiResult = statement.executeQuery();
             boolean isOwner = false;
-            while (result.next()) {
-                isOwner = result.getInt(1) > 0;
+            if (guiResult.next()) {
+                isOwner = guiResult.getInt(1) > 0;
             }
             return isOwner;
         }
     }
-    public boolean checkGuiEditByUuid(String guiName, String uuid) throws SQLException {
-        //Get gui ID
-        int guiId = getGuiIdByName(guiName);
-        //Returns true if player appears in edit table for gui
+    public boolean checkGuiEditorByUuid(String guiName, String uuid) throws SQLException {
+        //Returns true if player appears in the editor list for the given gui
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guieditors WHERE guiid=? AND player_uuid=?");
+            PreparedStatement statement;
+
+            //Get gui id
+            statement = connection.prepareStatement("SELECT id FROM guis WHERE name=?");
+            statement.setString(1, guiName);
+            ResultSet guiIdResult = statement.executeQuery();
+            Integer guiId = null;
+            if (guiIdResult.next()) {
+                guiId = guiIdResult.getInt(1);
+            }
+            if (guiId == null) {
+                return false;
+            }
+
+            //Check if player is an editor of the gui
+            statement = connection.prepareStatement("SELECT COUNT(*) FROM guieditors WHERE gui_id=? AND player_uuid=?");
             statement.setInt(1, guiId);
             statement.setString(2, uuid);
             ResultSet result = statement.executeQuery();
@@ -72,22 +83,9 @@ public class GuiAccessor extends DatabaseAccessor {
     }
     public boolean playerCanEdit(String guiName, String ownerUUID) throws SQLException {
         //Returns true if player is either an owner of a gui or a listed editor
-        int guiId = getGuiIdByName(guiName);
-        return checkGuiOwnershipByUuid(guiName, ownerUUID) || checkGuiEditByUuid(guiName, ownerUUID);
+        return checkGuiOwnershipByUuid(guiName, ownerUUID) || checkGuiEditorByUuid(guiName, ownerUUID);
     }
-    public List<String> getEditorsUuids(int guiId) throws SQLException {
-        //Returns a list of player UUIDs who have permission to edit a specific gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT player_uuid FROM guieditors WHERE guiid=?");
-            statement.setInt(1, guiId);
-            ResultSet result = statement.executeQuery();
-            List<String> uuids = new ArrayList<>();
-            while (result.next()) {
-                uuids.add(result.getString("player_uuid"));
-            }
-            return uuids;
-        }
-    }
+
     public Integer getGuiIdByName(String name) throws SQLException {
         //Returns gui id from name
         try (Connection connection = getConnection()) {
@@ -117,13 +115,29 @@ public class GuiAccessor extends DatabaseAccessor {
     public Integer getMaxPage(int guiId) throws SQLException {
         //Returns the total pages for this giu
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT MAX(page) FROM tickets WHERE guiid=?");
+            PreparedStatement statement;
+            int maxPage = 0;
+
+            //Check tickets
+            statement = connection.prepareStatement("SELECT MAX(page) FROM tickets WHERE gui_id=?");
             statement.setInt(1, guiId);
-            ResultSet result = statement.executeQuery();
-            Integer maxPage = null;
-            while (result.next()) {
-                maxPage = result.getInt(1);
+            ResultSet ticketsResult = statement.executeQuery();
+            if (ticketsResult.next()) {
+                maxPage = ticketsResult.getInt(1);
             }
+
+            //Check linkers
+            statement = connection.prepareStatement("SELECT MAX(page) FROM linkers WHERE gui_id=?");
+            statement.setInt(1, guiId);
+            ResultSet linkersResult = statement.executeQuery();
+            int linkersPages = 0;
+            if (linkersResult.next()) {
+                linkersPages = linkersResult.getInt(1);
+            }
+            if (linkersPages > maxPage) {
+                maxPage = linkersPages;
+            }
+
             return maxPage;
         }
     }
@@ -182,7 +196,7 @@ public class GuiAccessor extends DatabaseAccessor {
     public void addGuiEditor(String uuid, int guiId) throws SQLException {
         //Adds an editor for a given gui
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO guieditors (guiid, player_uuid) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO guieditors (gui_id, player_uuid) VALUES (?, ?)");
             statement.setInt(1, guiId);
             statement.setString(2, uuid);
             statement.executeUpdate();
@@ -194,13 +208,13 @@ public class GuiAccessor extends DatabaseAccessor {
             PreparedStatement statement;
 
             //Increment tickets page
-            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE guiid=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE gui_id=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
 
             //Increment linkers page
-            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE guiid=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE gui_id=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
@@ -209,21 +223,7 @@ public class GuiAccessor extends DatabaseAccessor {
     public void deleteGuiById(int id) throws SQLException {
         //Deletes a gui by its id
         try (Connection connection = getConnection()) {
-            PreparedStatement statement;
-
-            statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
-            statement.setInt(1, id);
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=?");
-            statement.setInt(1, id);
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=?");
-            statement.setInt(1, id);
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -232,26 +232,28 @@ public class GuiAccessor extends DatabaseAccessor {
         //Deletes the given page from a gui. Deletes tickets and linkers too.
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
-            
-            statement = connection.prepareStatement("DELETE FROM tickets WHERE guiid=? AND page=?");
+
+            //Remove page items
+            statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("DELETE FROM linkers WHERE guiid=? AND page=?");
+            statement = connection.prepareStatement("DELETE FROM linkers WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE guiid=? AND page > ?");
+            //Decrement item pages for items above this page
+            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE gui_id=? AND page >= ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE guiid=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE gui_id=? AND page >= ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.addBatch();
@@ -261,7 +263,7 @@ public class GuiAccessor extends DatabaseAccessor {
     public void removeGuiEditorByUuid(int guiId, String uuid) throws SQLException {
         //Removes a player as editor from gui editors
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=? AND player_uuid=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE gui_id=? AND player_uuid=?");
             statement.setInt(1, guiId);
             statement.setString(2, uuid);
             statement.execute();
@@ -270,7 +272,7 @@ public class GuiAccessor extends DatabaseAccessor {
     public void removeAllGuiEditors(int guiId) throws SQLException {
         //Removes all editors from a given gui
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE guiid=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE gui_id=?");
             statement.setInt(1, guiId);
             statement.execute();
         }

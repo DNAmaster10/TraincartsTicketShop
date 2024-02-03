@@ -72,7 +72,7 @@ public class EditorRemoveCommandHandler extends CommandHandler<SQLException> {
             return false;
         }
         //Check that the editor exists in the editors table
-        if (!guiAccessor.checkGuiEditByUuid(args[3], editorDatabaseObject.getUuid())) {
+        if (!guiAccessor.checkGuiEditorByUuid(args[3], editorDatabaseObject.getUuid())) {
             returnError(sender, "Player \"" + args[2] + "\" is not a registered editor for gui \"" + args[3] + "\"");
             return false;
         }

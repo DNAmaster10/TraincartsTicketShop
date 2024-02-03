@@ -21,7 +21,4 @@ public class DatabaseAccessor {
         //Returns a new connection to the database
         return dataSource.getConnection();
     }
-    public DatabaseAccessor() throws SQLException {
-        //Constructor here in case anything needs to be added in future
-    }
 }
