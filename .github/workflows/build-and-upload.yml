@@ -23,7 +23,7 @@ jobs:
         with:
           name: Plugin
           path: target/tcgui*.jar
-      - name: Find file
+      - name: Find file name
         run: |
           filename=$(ls -d target/tcgui-*)
           echo filename=$filename >> "$GITHUB_ENV"
