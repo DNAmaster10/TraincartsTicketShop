@@ -23,11 +23,10 @@ jobs:
         with:
           name: Plugin
           path: target/tcgui*.jar
-      - name: Find file and tag release
+      - name: Find file
         run: |
           filename=$(ls -d target/tcgui-*)
           echo filename=$filename >> "$GITHUB_ENV"
-          git tag -a snapshot
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
@@ -35,7 +34,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.filename }}
           asset_name: tcgui.jar
-          tag: snapshot
           overwrite: true
           prerelease: true
           body: "Latest commit: ${{ github.event.head_commit.id}} ${{ github.event.head_commit.message }}"
