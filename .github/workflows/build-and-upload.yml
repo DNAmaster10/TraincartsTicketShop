@@ -1,0 +1,40 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Set up JDK 16
+        uses: actions/setup-java@v1
+        with:
+          java-version: 16
+      - name: cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build with Maven.
+        run: mvn clean package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Plugin
+          path: target/tcgui*.jar
+      - name: Find file name
+        run: |
+          filename=$(ls -d target/tcgui-*)
+          echo filename=$filename >> "$GITHUB_ENV"
+      - name: Publish Snapshot Release
+        id: upload_assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.filename }}
+          asset_name: tcgui.jar
+          overwrite: true
+          prerelease: true
+          body: "Latest commit: ${{ github.event.head_commit.id}} ${{ github.event.head_commit.message }}"
+          release_name: Latest Development Build
