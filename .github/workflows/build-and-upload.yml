@@ -37,5 +37,5 @@ jobs:
           tag: snapshot
           overwrite: true
           make_latest: false
-          body: "Latest development build"
+          body: "Latest commit: ${{ github.event.head_commit.id}} - ${{ github.event.head_commit.message }}"
           release_name: Latest Development Build
