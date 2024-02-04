@@ -130,6 +130,8 @@ public class EditGui extends MultipageGui {
     }
     protected void insertPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Save the current page first
+            save();
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.insertPage(getGuiId(), getPage());
@@ -137,7 +139,6 @@ public class EditGui extends MultipageGui {
                 getPlugin().reportSqlError(getPlayer(), e);
             }
             //Save the current page before going to the new one
-            save();
             wasClosed = false;
             //Set current page to the new page
             removeCursorItem();

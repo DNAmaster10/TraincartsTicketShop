@@ -207,14 +207,17 @@ public class GuiAccessor extends DatabaseAccessor {
         try(Connection connection = getConnection()) {
             PreparedStatement statement;
 
+            //Note that order by is required here to avoid duplicate composite key errors as the query works up the page number
+            //as opposed to down.
+
             //Increment tickets page
-            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE gui_id=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
 
             //Increment linkers page
-            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE gui_id=? AND page > ?");
+            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
