@@ -36,5 +36,8 @@ jobs:
           asset_name: tcgui.jar
           overwrite: true
           prerelease: true
-          body: "Latest commit: ${{ github.event.head_commit.id}} ${{ github.event.head_commit.message }}"
+          body: |
+            Latest commit: ${{ github.event.head_commit.id}} ${{ github.event.head_commit.message }}
+
+            *Note: the release time might be outdated*
           release_name: Latest Development Build
