@@ -60,11 +60,10 @@ public class SearchSelectGui extends Gui {
         }
     }
     private void back() {
+        removeCursorItem();
         if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
-            removeCursorItem();
             return;
         }
-        removeCursorItem();
         getPlugin().getGuiManager().back(getPlayer());
     }
     private void searchTickets() {

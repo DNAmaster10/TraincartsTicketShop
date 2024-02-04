@@ -146,22 +146,11 @@ public class EditGui extends MultipageGui {
     }
     private void deletePage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            int maxPage;
-            try {
-                GuiAccessor guiAccessor = new GuiAccessor();
-                guiAccessor.deletePage(getGuiId(), getPage());
-                maxPage = guiAccessor.getMaxPage(getGuiId());
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-                return;
-            }
-            if (getPage() > maxPage) {
-                setPage(getPage() - 1);
-            }
-            wasClosed = false;
             removeCursorItem();
-            open();
+            ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPage(), getPlayer());
+            getPlugin().getGuiManager().addGui(getPlayer(), newGui);
+            wasClosed = false;
+            newGui.open();
         });
     }
     public void save() {
