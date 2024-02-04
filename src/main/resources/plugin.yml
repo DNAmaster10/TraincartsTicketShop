@@ -96,6 +96,11 @@ permissions:
   tcgui.linker.setdestinationpage:
     description: Allows a player to set a destination page for a linker
     default: false
+
+  tcgui.company.create:
+    description: Allows player to create a company
+    default: false
+
 commands:
   tcgui:
     description: The parent command for all tcgui commands

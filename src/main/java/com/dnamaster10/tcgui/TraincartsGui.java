@@ -1,7 +1,7 @@
 package com.dnamaster10.tcgui;
 
 import com.dnamaster10.tcgui.commands.CommandDispatcher;
-import com.dnamaster10.tcgui.commands.tabcompleters.TabCompleter;
+import com.dnamaster10.tcgui.commands.TabCompleter;
 import com.dnamaster10.tcgui.util.gui.GuiManager;
 import com.dnamaster10.tcgui.util.SignHandler;
 import com.dnamaster10.tcgui.util.database.DatabaseConfig;

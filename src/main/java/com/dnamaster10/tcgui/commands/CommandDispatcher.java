@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.commands;
 
+import com.dnamaster10.tcgui.commands.commandhandlers.company.CompanyCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveAllCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
@@ -41,10 +42,22 @@ public class CommandDispatcher implements CommandExecutor {
 
         //Decide how to handle command
         switch (args[0].toLowerCase()) {
+            case "company" -> {
+                switch (args[1].toLowerCase()) {
+                    case "create" -> {
+                        CompanyCreateCommandHandler handler = new CompanyCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                }
+            }
             case "gui" -> {
                 switch (args[1].toLowerCase()) {
                     case "create" -> {
                         GuiCreateCommandHandler handler = new GuiCreateCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "delete" -> {
+                        GuiDeleteCommandHandler handler = new GuiDeleteCommandHandler();
                         handler.handle(sender, args);
                     }
                     case "rename" -> {
@@ -119,12 +132,12 @@ public class CommandDispatcher implements CommandExecutor {
             }
             case "editor" -> {
                 switch (args[1].toLowerCase()) {
-                    case "list" -> {
-                        EditorListCommandHandler handler = new EditorListCommandHandler();
-                        handler.handle(sender, args);
-                    }
                     case "add" -> {
                         EditorAddCommandHandler handler = new EditorAddCommandHandler();
+                        handler.handle(sender, args);
+                    }
+                    case "list" -> {
+                        EditorListCommandHandler handler = new EditorListCommandHandler();
                         handler.handle(sender, args);
                     }
                     case "remove" -> {

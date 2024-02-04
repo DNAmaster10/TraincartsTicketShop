@@ -1,5 +1,6 @@
-package com.dnamaster10.tcgui.commands.tabcompleters;
+package com.dnamaster10.tcgui.commands;
 
+import com.dnamaster10.tcgui.commands.tabcompleters.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -29,6 +30,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
         //Select an appropriate tab completer for the given sub-command
         switch (args[0].toLowerCase()) {
+            case "company" -> {
+                return new CompanyTabCompleter().onTabComplete(commandSender, args);
+            }
             case "gui" -> {
                 return new GuiTabCompleter().onTabComplete(commandSender, args);
             }

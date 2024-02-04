@@ -48,6 +48,7 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         }
         if (args[2].length() < 3) {
             returnError(sender, "Gui names cannot be less than 3 characters in length");
+            return false;
         }
         if (!checkStringFormat(args[2])) {
             returnError(sender, "Gui names can only contain characters Aa to Zz, numbers, underscores and dashes");

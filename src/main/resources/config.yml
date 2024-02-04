@@ -5,6 +5,10 @@ database:
   user: admin
   password: password
 
+SignIdentifier: [tcgui]
+
+MaxStoredGuisPerPlayer: 50
+
 AllowGuiCreate: true
 AllowGuiEdit: true
 AllowGuiRename: true
@@ -27,8 +31,6 @@ AllowLinkerCreate: true
 AllowLinkerSetDisplayName: true
 AllowLinkerSetDestinationPage: true
 
+AllowCompanyCreate: true
+
 AllowOpenShops: true
-
-SignIdentifier: [tcgui]
-
-MaxStoredGuisPerPlayer: 50
