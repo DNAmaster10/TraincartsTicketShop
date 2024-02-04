@@ -1,0 +1,65 @@
+name: Do release stuff
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Set up JDK 16
+        uses: actions/setup-java@v1
+        with:
+          java-version: 16
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set pom version to release
+        id: pom
+        run: |
+          mvn -B versions:set -DnewVersion=${{github.event.pull_request.title}}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub"
+          git commit -m "Release ${{github.event.pull_request.title}}" -a
+      - name: Push to master
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: refs/heads/master
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify
+      - name: Publish Release
+        id: upload_assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/tcgui-${{github.event.pull_request.title}}.jar
+          asset_name: tcgui-${{github.event.pull_request.title}}.jar
+          tag: v${{ github.event.pull_request.title }}
+          overwrite: true
+          make_latest: true
+          body: ${{github.event.pull_request.body}}
+          release_name: Version ${{github.event.pull_request.title}}
+      - name: Bump dev version
+        run: | # some of this copied from somewhere
+          currentversion=${{github.event.pull_request.title}}
+          versionsplit=( ${currentversion//./ } )
+          ((versionsplit[2]++))
+          nextpatchversion="${versionsplit[0]}.${versionsplit[1]}.${versionsplit[2]}"
+          suffix=-SNAPSHOT
+          mvn -B versions:set -DnewVersion=$nextpatchversion$suffix
+          git commit -am "Version to $nextpatchversion$suffix"
+      - name: Push to dev
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: refs/heads/dev
