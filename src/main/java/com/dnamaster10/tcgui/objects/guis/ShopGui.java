@@ -1,9 +1,11 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,22 +17,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class ShopGui extends MultipageGui {
-    @Override
-    public void open() {
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Generate the gui
-            try {
-                generate();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-            }
-            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-        });
-    }
     @Override
     protected void generate() throws SQLException {
         GuiAccessor accessor = new GuiAccessor();
@@ -59,7 +49,8 @@ public class ShopGui extends MultipageGui {
             builder.addBackButton();
         }
 
-        builder.addSearchButton();
+        SimpleButton searchButton = new SimpleButton("search", Material.SPYGLASS, "Search This Gui");
+        builder.addSimpleButton(searchButton, 49);
         setInventory(builder.getInventory());
     }
     @Override
@@ -178,17 +169,6 @@ public class ShopGui extends MultipageGui {
             removeCursorItem();
             newGui.open();
         });
-    }
-    private void back() {
-        //Check that there is a previous gui that the player was on
-        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
-            //If not, remove the button from their cursor
-            removeCursorItem();
-            return;
-        }
-        //If there is, go back
-        removeCursorItem();
-        getPlugin().getGuiManager().back(getPlayer());
     }
     private void search() {
         SearchSelectGui gui = new SearchSelectGui(getGuiName(), getPlayer());

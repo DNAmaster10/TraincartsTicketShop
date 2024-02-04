@@ -15,23 +15,11 @@ import org.bukkit.persistence.PersistentDataType;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
 public class LinkerSearchGui extends SearchGui {
-    @Override
-    public void open() {
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                generate();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-            }
-            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-        });
-    }
-
     @Override
     protected void generate() throws SQLException {
         GuiBuilder builder = new GuiBuilder(getDisplayName());

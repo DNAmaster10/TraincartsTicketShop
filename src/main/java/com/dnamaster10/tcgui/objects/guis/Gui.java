@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.TraincartsGui;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -10,9 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public abstract class Gui {
     private Inventory inventory;
@@ -20,9 +20,31 @@ public abstract class Gui {
     private int guiId;
     private Player player;
     private String displayName;
-    public abstract void open();
+    public void open() {
+        //Defaults to opening async so that even if someone forgets to run async the server won't lag.
+        //Can always be overwritten to make synchronous if no database calls are needed.
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                generate();
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e);
+                return;
+            }
+            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
+        });
+    }
     protected abstract void generate() throws SQLException;
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
+    protected void back() {
+        removeCursorItem();
+        //Check there is a previous gui
+        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+            return;
+        }
+        //If there is, go back
+        getPlugin().getGuiManager().back(getPlayer());
+    }
     public Inventory getInventory() {
         return this.inventory;
     }
@@ -52,9 +74,6 @@ public abstract class Gui {
     }
     protected void setPlayer(Player p) {
         player = p;
-    }
-    protected TraincartsGui getPlugin() {
-        return TraincartsGui.getPlugin();
     }
     protected void updateNewInventory(Inventory newInventory) {
         //Takes in an inventory, and replaces all current items with new items

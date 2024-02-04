@@ -36,11 +36,17 @@ public abstract class CommandHandler<E extends Exception> {
         //Returns a "No gui with name "x" exists error to the sender
         returnError(sender, "No gui with the name \"" + guiName + "\" exists");
     }
+    protected void returnCompanyNotFoundError(CommandSender sender, String companyName) {
+        returnError(sender, "No gui with the name \"" + companyName + "\" exists");
+    }
     protected boolean checkStringFormat(String input) {
         //Checks that a string only contains letters, numbers, underscores and dashes
         return STRING_PATTERN.matcher(input).matches();
     }
     protected boolean checkGuiNameSyntax(String guiName) {
-        return guiName.length() <= 20 && guiName.length() >= 3 && checkStringFormat(guiName);
+        return guiName.length() <= 25 && guiName.length() >= 3 && checkStringFormat(guiName);
+    }
+    protected boolean checkCompanyNameSyntax(String companyName) {
+        return companyName.length() <= 25 && companyName.length() >= 3 && checkStringFormat(companyName);
     }
 }

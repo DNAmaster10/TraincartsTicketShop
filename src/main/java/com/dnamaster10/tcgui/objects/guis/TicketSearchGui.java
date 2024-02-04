@@ -15,23 +15,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class TicketSearchGui extends SearchGui {
-    @Override
-    public void open() {
-        //Opens the gui to the player
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Generate new gui
-            try {
-                generate();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-            }
-            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-        });
-    }
     @Override
     protected void generate() throws SQLException {
         //Builds a new inventory based on current class values

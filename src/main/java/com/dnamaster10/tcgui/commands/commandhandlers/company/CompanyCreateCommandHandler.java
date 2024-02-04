@@ -3,6 +3,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.company;
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.util.database.CompanyAccessor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,6 +67,7 @@ public class CompanyCreateCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         companyAccessor.addCompany(args[2], ((Player) sender).getUniqueId().toString());
+        sender.sendMessage(ChatColor.GREEN + "Created company with name \"" + args[2] + "\"");
     }
     @Override
     public void handle(CommandSender sender, String[] args) {

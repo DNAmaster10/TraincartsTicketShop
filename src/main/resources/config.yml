@@ -32,5 +32,6 @@ AllowLinkerSetDisplayName: true
 AllowLinkerSetDestinationPage: true
 
 AllowCompanyCreate: true
+AllowCompanyDelete: true
 
 AllowOpenShops: true

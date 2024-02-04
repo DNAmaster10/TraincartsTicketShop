@@ -1,17 +1,19 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.SearchLinkersButton;
-import com.dnamaster10.tcgui.objects.buttons.SearchTicketsButton;
+import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class SearchSelectGui extends Gui {
     //The gui which will be searched
@@ -23,15 +25,18 @@ public class SearchSelectGui extends Gui {
 
     @Override
     protected void generate() {
-        SearchTicketsButton ticketSearchButton = new SearchTicketsButton();
-        SearchLinkersButton linkerSearchButton = new SearchLinkersButton();
-
         //Build gui and add to inventory
         GuiBuilder builder = new GuiBuilder(getDisplayName());
 
-        builder.addItem(12, ticketSearchButton.getItemStack());
-        builder.addItem(14, linkerSearchButton.getItemStack());
-        builder.addBackButton();
+        if (getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+            builder.addBackButton();
+        }
+
+        SimpleButton ticketSearchButton = new SimpleButton("search_tickets", Material.PAPER, "Search Tickets");
+        builder.addSimpleButton(ticketSearchButton, 12);
+
+        SimpleButton linkerSearchButton = new SimpleButton("search_linkers", Material.ENCHANTED_BOOK, "Search Linkers");
+        builder.addSimpleButton(linkerSearchButton, 14);
 
         setInventory(builder.getInventory());
     }
@@ -58,13 +63,6 @@ public class SearchSelectGui extends Gui {
                 }
             }
         }
-    }
-    private void back() {
-        removeCursorItem();
-        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
-            return;
-        }
-        getPlugin().getGuiManager().back(getPlayer());
     }
     private void searchTickets() {
         TextComponent message1;

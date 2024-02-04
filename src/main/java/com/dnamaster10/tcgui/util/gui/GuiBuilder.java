@@ -7,8 +7,8 @@ import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -62,29 +62,20 @@ public class GuiBuilder {
         //Add linkers to inventory
         addLinkers(linkers);
     }
+    public void addSimpleButton(SimpleButton button, int slot) {
+        this.inventory.setItem(slot, button.getItemStack());
+    }
     public void addNextPageButton() {
-        NextPageButton button = new NextPageButton();
+        SimpleButton button = new SimpleButton("next_page", Material.BOOK, "Next Page");
         this.inventory.setItem(53, button.getItemStack());
     }
     public void addPrevPageButton() {
-        PrevPageButton button = new PrevPageButton();
+        SimpleButton button = new SimpleButton("prev_page", Material.BOOK, "Prev Page");
         this.inventory.setItem(52, button.getItemStack());
     }
     public void addBackButton() {
-        BackButton button = new BackButton();
+        SimpleButton button = new SimpleButton("back", Material.COMPASS, "back");
         this.inventory.setItem(45, button.getItemStack());
-    }
-    public void addSearchButton() {
-        SearchButton searchButton = new SearchButton();
-        this.inventory.setItem(49, searchButton.getItemStack());
-    }
-    public void addDeletePageButton() {
-        DeletePageButton deletePageButton = new DeletePageButton();
-        this.inventory.setItem(48, deletePageButton.getItemStack());
-    }
-    public void addInsertPageButton() {
-        InsertPageButton insertPageButton = new InsertPageButton();
-        this.inventory.setItem(47, insertPageButton.getItemStack());
     }
 
     public GuiBuilder(String displayName) {

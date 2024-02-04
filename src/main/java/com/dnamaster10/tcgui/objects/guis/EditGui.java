@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
@@ -8,6 +9,7 @@ import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -20,6 +22,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class EditGui extends MultipageGui {
@@ -38,20 +41,6 @@ public class EditGui extends MultipageGui {
         }
     }
     @Override
-    public void open() {
-        //Method must be run synchronous
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                generate();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-            }
-            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-        });
-    }
-
-    @Override
     protected void generate() throws SQLException {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
         builder.addTicketsFromDatabase(getGuiName(), getPage());
@@ -60,8 +49,13 @@ public class EditGui extends MultipageGui {
             builder.addPrevPageButton();
         }
         builder.addNextPageButton();
-        builder.addDeletePageButton();
-        builder.addInsertPageButton();
+
+        SimpleButton deletePageButton = new SimpleButton("delete_page", Material.BARRIER, "Delete Page");
+        builder.addSimpleButton(deletePageButton, 48);
+
+        SimpleButton insertPageButton = new SimpleButton("insert_page", Material.KNOWLEDGE_BOOK, "Inset Page");
+        builder.addSimpleButton(insertPageButton, 47);
+
         setInventory(builder.getInventory());
     }
     @Override
@@ -112,15 +106,15 @@ public class EditGui extends MultipageGui {
     @Override
     protected void prevPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Save the current page
+            save();
+
             //Check there is a prev page
             if (getPage() <= 0) {
                 setPage(0);
                 removeCursorItemAndClose();
                 return;
             }
-
-            //Save the current gui
-            save();
             wasClosed = false;
 
             setPage(getPage() - 1);

@@ -1,67 +1,36 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.DeletePageButton;
+import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
-import java.util.List;
 
-public class ConfirmPageDeleteGui extends Gui {
-    private int deleteGuiPage;
-    @Override
-    public void open() {
-        try {
-            generate();
-        } catch (SQLException e) {
-            removeCursorItemAndClose();
-            getPlugin().reportSqlError(getPlayer(), e);
-            return;
-        }
-        Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-    }
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
+public class ConfirmPageDeleteGui extends ConfirmActionGui {
+    private final int deleteGuiPage;
     @Override
-    protected void generate() throws SQLException {
+    protected void generate() {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
-        builder.addBackButton();
-        DeletePageButton button = new DeletePageButton();
-        builder.addItem(13, button.getItemStack());
+
+        //Check if a back button is needed
+        if (getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+            builder.addBackButton();
+        }
+
+        //Add buttons specific to this gui type
+        SimpleButton deletePageButton = new SimpleButton("confirm_action", Material.BARRIER, "Delete Page");
+        builder.addSimpleButton(deletePageButton, 13);
 
         setInventory(builder.getInventory());
     }
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            switch (buttonType) {
-                case "back" -> {
-                    back();
-                    return;
-                }
-                case "delete_page" -> {
-                    deletePage();
-                    return;
-                }
-            }
-        }
-    }
-    private void back() {
-        removeCursorItem();
-        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
-            return;
-        }
-        getPlugin().getGuiManager().back(getPlayer());
-    }
-    private void deletePage() {
+    protected void confirmAction() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();

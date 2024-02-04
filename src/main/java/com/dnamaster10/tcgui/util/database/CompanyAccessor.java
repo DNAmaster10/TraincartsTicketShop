@@ -23,12 +23,32 @@ public class CompanyAccessor extends DatabaseAccessor {
             return total > 0;
         }
     }
-
+    public boolean checkIfOwner(String companyName, String uuid) throws SQLException {
+        //Checks if a player owns a company
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM companies WHERE company_name=? AND owner_uuid=?");
+            statement.setString(1, companyName);
+            statement.setString(2, uuid);
+            ResultSet result = statement.executeQuery();
+            int total = 0;
+            if (result.next()) {
+                total = result.getInt(1);
+            }
+            return total > 0;
+        }
+    }
     public void addCompany(String name, String ownerUuid) throws SQLException {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO companies (company_name, owner_uuid) VALUES (?, ?)");
             statement.setString(1, name);
             statement.setString(2, ownerUuid);
+            statement.executeUpdate();
+        }
+    }
+    public void deleteCompany(String companyName) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM companies WHERE company_name=?");
+            statement.setString(1, companyName);
             statement.executeUpdate();
         }
     }

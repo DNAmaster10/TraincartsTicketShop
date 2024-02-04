@@ -98,7 +98,14 @@ permissions:
     default: false
 
   tcgui.company.create:
-    description: Allows player to create a company
+    description: Allows a player to create a company
+    default: false
+  tcgui.company.delete:
+    description: Allows a player to delete a company
+    default: false
+
+  tcgui.admin.company.delete:
+    description: Allows a player to delete a company even if they are not the owner
     default: false
 
 commands:
