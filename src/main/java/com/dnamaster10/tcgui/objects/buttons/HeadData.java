@@ -18,12 +18,13 @@ public class HeadData {
         GREEN_CHECK
     }
     private static String getUrlFromType(HeadType type) {
-        String urlPrefix = "https://textures.minecraft.net/texture/"
+        String urlPrefix = "https://textures.minecraft.net/texture/";
         switch (type) {
             case GREEN_CHECK -> {
                 return urlPrefix + "4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4";
             }
         }
+        return null;
     }
     private static final UUID RANDOM_UUID = UUID.fromString("68f92a5b-8980-4e0c-a479-89e41ce1ada6");
 
@@ -39,6 +40,7 @@ public class HeadData {
         }
         textures.setSkin(urlObject);
         profile.setTextures(textures);
+        return profile;
     }
     public static ItemStack getPlayerHeadItem(HeadType type) {
         PlayerProfile headProfile = getProfile(type);
