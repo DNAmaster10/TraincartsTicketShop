@@ -27,13 +27,18 @@ jobs:
         run: |
           filename=$(ls -d target/tcgui-*)
           echo filename=$filename >> "$GITHUB_ENV"
+      - name: Delete old Release
+        uses: liudonghua123/delete-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_name: "Latest Development Build"
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.filename }}
-          asset_name: tcgui.jar
           overwrite: true
           prerelease: true
           body: |
