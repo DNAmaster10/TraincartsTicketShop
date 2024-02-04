@@ -1,7 +1,8 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.objects.buttons.HeadData;
 import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
-import com.dnamaster10.tcgui.util.gui.GuiBuilder;
+import com.dnamaster10.tcgui.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
@@ -9,7 +10,6 @@ import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -50,10 +50,10 @@ public class EditGui extends MultipageGui {
         }
         builder.addNextPageButton();
 
-        SimpleButton deletePageButton = new SimpleButton("delete_page", Material.BARRIER, "Delete Page");
+        SimpleButton deletePageButton = new SimpleButton("delete_page", HeadData.HeadType.RED_CROSS, "Delete Page");
         builder.addSimpleButton(deletePageButton, 48);
 
-        SimpleButton insertPageButton = new SimpleButton("insert_page", Material.KNOWLEDGE_BOOK, "Inset Page");
+        SimpleButton insertPageButton = new SimpleButton("insert_page", HeadData.HeadType.GREEN_PLUS, "Inset Page");
         builder.addSimpleButton(insertPageButton, 47);
 
         setInventory(builder.getInventory());

@@ -1,11 +1,11 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.confirmguis;
 
+import com.dnamaster10.tcgui.objects.buttons.HeadData;
 import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
-import com.dnamaster10.tcgui.util.gui.GuiBuilder;
+import com.dnamaster10.tcgui.objects.guis.GuiBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -24,8 +24,8 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
         }
 
         //Add buttons specific to this gui type
-        SimpleButton deletePageButton = new SimpleButton("confirm_action", Material.BARRIER, "Delete Page");
-        builder.addSimpleButton(deletePageButton, 13);
+        SimpleButton deletePageButton = new SimpleButton("confirm_action", HeadData.HeadType.RED_CROSS, "Delete Page");
+        builder.addSimpleButton(deletePageButton, 22);
 
         setInventory(builder.getInventory());
     }

@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.util.gui;
+package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.*;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
@@ -66,15 +66,15 @@ public class GuiBuilder {
         this.inventory.setItem(slot, button.getItemStack());
     }
     public void addNextPageButton() {
-        SimpleButton button = new SimpleButton("next_page", Material.BOOK, "Next Page");
+        SimpleButton button = new SimpleButton("next_page", HeadData.HeadType.CHAT_ARROW_RIGHT, "Next Page");
         this.inventory.setItem(53, button.getItemStack());
     }
     public void addPrevPageButton() {
-        SimpleButton button = new SimpleButton("prev_page", Material.BOOK, "Prev Page");
+        SimpleButton button = new SimpleButton("prev_page", HeadData.HeadType.CHAT_ARROW_LEFT, "Prev Page");
         this.inventory.setItem(52, button.getItemStack());
     }
     public void addBackButton() {
-        SimpleButton button = new SimpleButton("back", Material.COMPASS, "back");
+        SimpleButton button = new SimpleButton("back", HeadData.HeadType.GRAY_BACK_ARROW, "back");
         this.inventory.setItem(45, button.getItemStack());
     }
 

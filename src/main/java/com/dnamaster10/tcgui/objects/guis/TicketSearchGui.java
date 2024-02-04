@@ -4,7 +4,6 @@ import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
-import com.dnamaster10.tcgui.util.gui.GuiBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

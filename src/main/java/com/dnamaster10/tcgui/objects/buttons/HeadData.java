@@ -9,19 +9,40 @@ import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class HeadData {
     public enum HeadType {
-        GREEN_CHECK
+        GREEN_CHECK,
+        RED_CROSS,
+        GRAY_BACK_ARROW,
+        GREEN_PLUS,
+        CHAT_ARROW_RIGHT,
+        CHAT_ARROW_LEFT
     }
     private static String getUrlFromType(HeadType type) {
         String urlPrefix = "https://textures.minecraft.net/texture/";
         switch (type) {
             case GREEN_CHECK -> {
                 return urlPrefix + "4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4";
+            }
+            case RED_CROSS -> {
+                return urlPrefix + "beb588b21a6f98ad1ff4e085c552dcb050efc9cab427f46048f18fc803475f7";
+            }
+            case GRAY_BACK_ARROW -> {
+                return urlPrefix + "1b701c1f05e319d6b28f61b28b66a7e2a846a510de322bdc96e94a2388b78469";
+            }
+            case GREEN_PLUS -> {
+                return urlPrefix + "5ff31431d64587ff6ef98c0675810681f8c13bf96f51d9cb07ed7852b2ffd1";
+            }
+            case CHAT_ARROW_RIGHT -> {
+                return urlPrefix + "8399e5da82ef7765fd5e472f3147ed118d981887730ea7bb80d7a1bed98d5ba";
+            }
+            case CHAT_ARROW_LEFT -> {
+                return urlPrefix + "76ebaa41d1d405eb6b60845bb9ac724af70e85eac8a96a5544b9e23ad6c96c62";
             }
         }
         return null;
@@ -33,7 +54,8 @@ public class HeadData {
         PlayerTextures textures = profile.getTextures();
         URL urlObject;
         try {
-            urlObject = new URL(getUrlFromType(type));
+            String url = getUrlFromType(type);
+            urlObject = new URL(Objects.requireNonNull(url));
         } catch (MalformedURLException e) {
             getPlugin().getLogger().warning("An error occurred creating a player head within a GUI: " + e);
             return null;
