@@ -231,6 +231,7 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
+    public void deleteGuiByName(String name, )
     public void deletePage(int guiId, int page) throws SQLException {
         //Deletes the given page from a gui. Deletes tickets and linkers too.
         try (Connection connection = getConnection()) {
