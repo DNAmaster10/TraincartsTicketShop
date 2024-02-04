@@ -1,4 +1,9 @@
-on: [push]
+name: Build and release snapshots
+
+on: 
+  push:
+    branches:
+      - dev
 
 jobs:
   build:
