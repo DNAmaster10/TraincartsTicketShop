@@ -33,7 +33,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.filename }}
-          asset_name: tcgui.jar
           overwrite: true
           prerelease: true
           body: |
