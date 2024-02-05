@@ -1,4 +1,9 @@
-on: [push]
+name: Build and release snapshots
+
+on:
+  push:
+    branches:
+      - dev
 
 jobs:
   build:
@@ -27,12 +32,15 @@ jobs:
         run: |
           filename=$(ls -d target/tcgui-*)
           echo filename=$filename >> "$GITHUB_ENV"
-      - name: Delete old Release
-        uses: liudonghua123/delete-release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete old prerelease
+        uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
-          release_name: "Latest Development Build"
+          tag_name: dev
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Workaround Hack
+        run: |
+          sleep 60
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
@@ -43,6 +51,4 @@ jobs:
           prerelease: true
           body: |
             Latest commit: ${{ github.event.head_commit.id}} ${{ github.event.head_commit.message }}
-
-            *Note: the release time might be outdated*
           release_name: Latest Development Build
