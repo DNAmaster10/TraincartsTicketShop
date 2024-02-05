@@ -49,6 +49,12 @@ jobs:
           make_latest: true
           body: ${{github.event.pull_request.body}}
           release_name: Version ${{github.event.pull_request.title}}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.RELEASE_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '**<@&1204119775425597642> Version ${{github.event.pull_request.title}}**```​${{github.event.pull_request.body}}```Direct download: ${{steps.upload_assets.outputs.browser_download_url}}'
       - name: Bump dev version
         run: | # some of this copied from somewhere
           currentversion=${{github.event.pull_request.title}}
