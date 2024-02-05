@@ -37,6 +37,18 @@ public class CompanyAccessor extends DatabaseAccessor {
             return total > 0;
         }
     }
+    public Integer getCompanyIdByName(String companyName) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT id FROM companies WHERE company_name=?");
+            statement.setString(1, companyName);
+            ResultSet resultSet = statement.executeQuery();
+            Integer companyId = null;
+            if (resultSet.next()) {
+                companyId = resultSet.getInt("id");
+            }
+            return companyId;
+        }
+    }
     public void addCompany(String name, String ownerUuid) throws SQLException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO companies (company_name, owner_uuid) VALUES (?, ?)");
@@ -45,10 +57,17 @@ public class CompanyAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void deleteCompany(String companyName) throws SQLException {
+    public void deleteCompanyByName(String companyName) throws SQLException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM companies WHERE company_name=?");
             statement.setString(1, companyName);
+            statement.executeUpdate();
+        }
+    }
+    public void deleteCompanyById(int id) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM companies WHERE id=?");
+            statement.setInt(1, id);
             statement.executeUpdate();
         }
     }

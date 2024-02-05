@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.util.database;
 
+import com.dnamaster10.tcgui.util.exceptions.NotInDatabaseException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -231,7 +233,14 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void deleteGuiByName(String name, )
+    public void deleteGuiByName(String name) throws SQLException {
+        //Deletes a gui by its name
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE name?");
+            statement.setString(1, name);
+            statement.executeUpdate();
+        }
+    }
     public void deletePage(int guiId, int page) throws SQLException {
         //Deletes the given page from a gui. Deletes tickets and linkers too.
         try (Connection connection = getConnection()) {

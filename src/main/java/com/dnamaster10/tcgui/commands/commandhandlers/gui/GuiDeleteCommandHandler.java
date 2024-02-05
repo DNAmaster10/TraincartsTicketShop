@@ -69,12 +69,8 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        //Get gui id
-        int id = guiAccessor.getGuiIdByName(args[2]);
-
-        guiAccessor.deleteGuiById(id);
-
-        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was deleted");
+        //Create and open a delete confirm gui
+        d
     }
 
     @Override

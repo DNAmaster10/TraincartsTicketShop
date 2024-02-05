@@ -3,17 +3,18 @@ package com.dnamaster10.tcgui.objects.guis.confirmguis;
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
 import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.objects.guis.GuiBuilder;
-import com.dnamaster10.tcgui.util.database.GuiAccessor;
+import com.dnamaster10.tcgui.util.database.CompanyAccessor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class ConfirmDeleteCompanyGui extends ConfirmActionGui {
-    private final String deleteCompany;
-
+    private String deleteCompany;
+    private int companyId;
     @Override
     protected void generate() {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
@@ -39,16 +40,27 @@ public class ConfirmDeleteCompanyGui extends ConfirmActionGui {
     protected void confirmAction() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                GuiAccessor guiAccessor = new GuiAccessor();
-
-
+                CompanyAccessor companyAccessor = new CompanyAccessor();
+                companyAccessor.deleteCompanyById(companyId);
             } catch (SQLException e) {
-
+                getPlugin().reportSqlError(getPlayer(), e);
             }
+            //Close this gui and return message
+            getPlayer().sendMessage(ChatColor.GREEN + "Company \"" + getGuiName() + "\" was deleted");
+            getPlayer().closeInventory();
         });
     }
 
-    public ConfirmDeleteCompanyGui(String deleteCompany) {
+    public ConfirmDeleteCompanyGui(String deleteCompany, Player p) {
         this.deleteCompany = deleteCompany;
+        setPlayer(p);
+
+        //Use ID in case someone renames the company while player is deleting it
+        try {
+            CompanyAccessor companyAccessor = new CompanyAccessor();
+            companyId = companyAccessor.getCompanyIdByName(deleteCompany);
+        } catch (SQLException e) {
+            getPlugin().reportSqlError(p, e);
+        }
     }
 }
