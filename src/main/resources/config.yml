@@ -32,5 +32,6 @@ AllowLinkerCreate: true
 AllowLinkerSetDisplayName: true
 AllowLinkerSetDestinationPage: true
 
+AllowCompanyAddMember: true
 AllowCompanyCreate: true
 AllowCompanyDelete: true

@@ -96,6 +96,9 @@ permissions:
     description: Allows a player to set a destination page for a linker
     default: false
 
+  tcgui.company.addmember:
+    description: Allows a player to add a member to a company they own
+    default: false
   tcgui.company.create:
     description: Allows a player to create a company
     default: false
@@ -103,6 +106,9 @@ permissions:
     description: Allows a player to delete a company
     default: false
 
+  tcgui.admin.company.addmember:
+    description: Allows player to add a member to a gui they do not own
+    default: false
   tcgui.admin.company.delete:
     description: Allows a player to delete a company even if they are not the owner
     default: false

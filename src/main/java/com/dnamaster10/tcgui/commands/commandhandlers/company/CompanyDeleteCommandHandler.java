@@ -1,15 +1,15 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.company;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
+import com.dnamaster10.tcgui.objects.guis.confirmguis.ConfirmDeleteCompanyGui;
 import com.dnamaster10.tcgui.util.database.CompanyAccessor;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class CompanyDeleteCommandHandler extends CommandHandler<SQLException> {
+public class CompanyDeleteCommandHandler extends CommandHandler {
     //Example command: /tcgui company delete <company name>
     private CompanyAccessor companyAccessor;
     @Override
@@ -68,23 +68,13 @@ public class CompanyDeleteCommandHandler extends CommandHandler<SQLException> {
     }
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        companyAccessor.deleteCompany(args[2]);
-        sender.sendMessage(ChatColor.GREEN + "Successfully deleted company \"" + args[2] + "\"");
-    }
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
+        if (sender instanceof Player p) {
+            ConfirmDeleteCompanyGui gui = new ConfirmDeleteCompanyGui(args[2], p);
+            getPlugin().getGuiManager().addGui(p, gui);
+            gui.open();
             return;
         }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
+        companyAccessor.deleteCompanyByName(args[2]);
+        sender.sendMessage(ChatColor.GREEN + "Company \"" + args[2] + "\" was deleted");
     }
 }

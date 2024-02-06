@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.util.database;
 
+import com.dnamaster10.tcgui.util.database.databaseobjects.PlayerDatabaseObject;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,6 +39,20 @@ public class CompanyAccessor extends DatabaseAccessor {
             return total > 0;
         }
     }
+    public boolean checkIfMember(int companyId, String uuid) throws SQLException {
+        //Returns true if the given player is a member of the given company
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM companymembers WHERE company_id=? AND member_uuid=?");
+            statement.setInt(1, companyId);
+            statement.setString(2, uuid);
+            ResultSet result = statement.executeQuery();
+            int total = 0;
+            if (result.next()) {
+                total = result.getInt(1);
+            }
+            return total > 0;
+        }
+    }
     public Integer getCompanyIdByName(String companyName) throws SQLException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT id FROM companies WHERE company_name=?");
@@ -55,6 +71,12 @@ public class CompanyAccessor extends DatabaseAccessor {
             statement.setString(1, name);
             statement.setString(2, ownerUuid);
             statement.executeUpdate();
+        }
+    }
+    public void addMember(PlayerDatabaseObject player, String companyName) throws SQLException {
+        //Adds a new member to the given company
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO companymembers (company_id, member_uuid) VALUES (?, ?)");
         }
     }
     public void deleteCompanyByName(String companyName) throws SQLException {
