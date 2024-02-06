@@ -70,7 +70,7 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Create and open a delete confirm gui
-        d
+
     }
 
     @Override

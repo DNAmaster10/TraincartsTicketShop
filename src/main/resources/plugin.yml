@@ -2,7 +2,7 @@ name: TraincartsGui
 version: '${project.version}'
 main: com.dnamaster10.tcgui.TraincartsGui
 api-version: '1.20'
-authors: [ DNAmaster10 ]
+authors: [ DNAmaster10, Dinty1 ]
 description: A plugin which allows players to create ticket GUIs for the traincarts plugin
 database: true
 prefix: TraincartsGui
@@ -17,6 +17,9 @@ permissions:
     default: false
   tcgui.gui.edit:
     description: Allows editing guis
+    default: false
+  tcgui.gui.open:
+    description: Allows a player to open a gui
     default: false
   tcgui.gui.rename:
     description: Allows a gui to be renamed
@@ -81,10 +84,6 @@ permissions:
     default: false
   tcgui.ticket.settraincartsticket:
     description: Allows a player to set the traincarts ticket for a ticket
-    default: false
-
-  tcgui.shop.open:
-    description: Allows player to open a shop gui from command
     default: false
 
   tcgui.linker.create:

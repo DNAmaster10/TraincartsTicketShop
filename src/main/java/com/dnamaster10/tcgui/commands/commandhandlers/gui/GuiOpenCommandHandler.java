@@ -1,4 +1,4 @@
-package com.dnamaster10.tcgui.commands.commandhandlers.shop;
+package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.guis.ShopGui;
@@ -9,14 +9,14 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
-    //Example command: /tcgui shop open <gui_name>
+public class GuiOpenCommandHandler extends CommandHandler<SQLException> {
+    //Example command: /tcgui gui open <gui_name>
     private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowOpenShops")) {
-            returnError(sender, "Opening shops is disabled on this server");
+        if (!getPlugin().getConfig().getBoolean("AllowGuiOpen")) {
+            returnError(sender, "Opening guis is disabled on this server");
             return false;
         }
 
@@ -27,7 +27,7 @@ public class ShopOpenCommandHandler extends CommandHandler<SQLException> {
         }
         else {
             //Check permissions
-            if (!p.hasPermission("tcgui.shop.open")) {
+            if (!p.hasPermission("tcgui.gui.open")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }

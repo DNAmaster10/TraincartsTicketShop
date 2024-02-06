@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class ConfirmDeleteCompanyGui extends ConfirmActionGui {
-    private String deleteCompany;
-    private int companyId;
+    private final String deleteCompany;
+    private Integer companyId;
     @Override
     protected void generate() {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
@@ -46,7 +46,7 @@ public class ConfirmDeleteCompanyGui extends ConfirmActionGui {
                 getPlugin().reportSqlError(getPlayer(), e);
             }
             //Close this gui and return message
-            getPlayer().sendMessage(ChatColor.GREEN + "Company \"" + getGuiName() + "\" was deleted");
+            getPlayer().sendMessage(ChatColor.GREEN + "Company \"" + deleteCompany + "\" was deleted");
             getPlayer().closeInventory();
         });
     }
@@ -61,6 +61,9 @@ public class ConfirmDeleteCompanyGui extends ConfirmActionGui {
             companyId = companyAccessor.getCompanyIdByName(deleteCompany);
         } catch (SQLException e) {
             getPlugin().reportSqlError(p, e);
+        }
+        if (companyId == null) {
+            openErrorGui("Gui \"" + deleteCompany + "\" does not exist or was deleted");
         }
     }
 }

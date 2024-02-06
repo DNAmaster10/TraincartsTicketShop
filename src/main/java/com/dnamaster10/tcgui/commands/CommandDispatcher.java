@@ -9,7 +9,7 @@ import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorListCommandHa
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerSetDisplayNameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.linker.LinkerSetDestinationPageCommandHandler;
-import com.dnamaster10.tcgui.commands.commandhandlers.shop.ShopOpenCommandHandler;
+import com.dnamaster10.tcgui.commands.commandhandlers.gui.GuiOpenCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
@@ -60,6 +60,10 @@ public class CommandDispatcher implements CommandExecutor {
                         GuiDeleteCommandHandler handler = new GuiDeleteCommandHandler();
                         handler.handle(sender, args);
                     }
+                    case "open" -> {
+                        GuiOpenCommandHandler handler = new GuiOpenCommandHandler();
+                        handler.handle(sender, args);
+                    }
                     case "rename" -> {
                         GuiRenameCommandHandler handler = new GuiRenameCommandHandler();
                         handler.handle(sender, args);
@@ -99,15 +103,6 @@ public class CommandDispatcher implements CommandExecutor {
                     }
                     case "settraincartsticket" -> {
                         TicketSetTraincartsTicket handler = new TicketSetTraincartsTicket();
-                        handler.handle(sender, args);
-                    }
-                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
-                }
-            }
-            case "shop" -> {
-                switch (args[1].toLowerCase()) {
-                    case "open" -> {
-                        ShopOpenCommandHandler handler = new ShopOpenCommandHandler();
                         handler.handle(sender, args);
                     }
                     default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");

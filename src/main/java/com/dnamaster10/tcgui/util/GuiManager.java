@@ -21,6 +21,8 @@ public class GuiManager {
     private final int maxGuis;
     //Holds all currently opened GUIs in a hashmap linking the player who has the gui open and all guis they have opened in current gui "session"
     private final HashMap<Player, Stack<Gui>> GUIS = new HashMap<>();
+    //Holds the name of a gui which a player is editing. Is used to make sure there aren't more than 1 person editing a gui
+    private final HashMap<String, Player> GUI_EDITORS = new HashMap<>();
     private boolean checkIfTcguiInventory(Inventory inventory, Player p) {
         if (!GUIS.containsKey(p)) {
             return false;

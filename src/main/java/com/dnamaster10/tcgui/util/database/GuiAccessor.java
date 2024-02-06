@@ -1,7 +1,5 @@
 package com.dnamaster10.tcgui.util.database;
 
-import com.dnamaster10.tcgui.util.exceptions.NotInDatabaseException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -105,4 +105,9 @@ public abstract class Gui {
         }
         return button.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
     }
+    protected void openErrorGui(String errorMessage) {
+        ErrorGui errorGui = new ErrorGui(errorMessage, player);
+        player.setItemOnCursor(null);
+        errorGui.open();
+    }
 }

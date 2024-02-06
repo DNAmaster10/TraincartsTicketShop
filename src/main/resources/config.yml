@@ -11,6 +11,7 @@ MaxStoredGuisPerPlayer: 50
 
 AllowGuiCreate: true
 AllowGuiEdit: true
+AllowGuiOpen: true
 AllowGuiRename: true
 AllowGuiDelete: true
 AllowGuiSearchTickets: true
@@ -33,5 +34,3 @@ AllowLinkerSetDestinationPage: true
 
 AllowCompanyCreate: true
 AllowCompanyDelete: true
-
-AllowOpenShops: true
