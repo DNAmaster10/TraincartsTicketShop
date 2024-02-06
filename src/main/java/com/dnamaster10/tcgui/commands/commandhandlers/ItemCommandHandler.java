@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.BUTTON_TYPE;
 
-public abstract class ItemCommandHandler extends CommandHandler<Exception> {
+public abstract class ItemCommandHandler extends CommandHandler {
     //For commands which alter the players inventory
     protected void returnWrongItemError(CommandSender sender, String correctItem) {
         returnError(sender, "You must be holding a " + correctItem + " in your main hand");
