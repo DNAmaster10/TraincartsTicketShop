@@ -64,7 +64,7 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws Exception {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         return true;
     }
 

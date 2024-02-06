@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class CompanyCreateCommandHandler extends CommandHandler<SQLException> {
+public class CompanyCreateCommandHandler extends CommandHandler {
     //Example command: /tcgui company create <company name>
     CompanyAccessor companyAccessor;
     @Override
@@ -68,21 +68,5 @@ public class CompanyCreateCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         companyAccessor.addCompany(args[2], ((Player) sender).getUniqueId().toString());
         sender.sendMessage(ChatColor.GREEN + "Created company with name \"" + args[2] + "\"");
-    }
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

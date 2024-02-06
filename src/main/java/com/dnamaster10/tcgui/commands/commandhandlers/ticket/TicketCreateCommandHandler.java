@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
+public class TicketCreateCommandHandler extends CommandHandler {
     //Example command: /tcgui ticket create <tc_ticket_name> <display_name>
     private String displayName;
     @Override
@@ -75,22 +75,5 @@ public class TicketCreateCommandHandler extends CommandHandler<SQLException> {
         Ticket ticket = new Ticket(args[2], ChatColor.translateAlternateColorCodes('&', displayName), 0);
         ticket.giveToPlayer((Player) sender);
         sender.sendMessage(ChatColor.GREEN + "Successfully created ticket");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

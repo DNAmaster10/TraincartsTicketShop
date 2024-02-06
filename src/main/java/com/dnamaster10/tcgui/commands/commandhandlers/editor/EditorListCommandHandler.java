@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditorListCommandHandler extends CommandHandler<SQLException> {
+public class EditorListCommandHandler extends CommandHandler {
     //Example command: /tcgui gui editor list <gui_name>
     private GuiAccessor guiAccessor;
     @Override
@@ -68,22 +68,5 @@ public class EditorListCommandHandler extends CommandHandler<SQLException> {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
 
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch(SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

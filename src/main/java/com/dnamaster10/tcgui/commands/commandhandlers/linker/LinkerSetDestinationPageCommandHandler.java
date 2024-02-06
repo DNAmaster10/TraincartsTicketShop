@@ -66,7 +66,7 @@ public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        return true;
+        return false;
     }
 
     @Override

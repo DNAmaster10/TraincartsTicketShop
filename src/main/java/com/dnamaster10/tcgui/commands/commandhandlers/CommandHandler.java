@@ -1,25 +1,41 @@
 package com.dnamaster10.tcgui.commands.commandhandlers;
 
 import com.dnamaster10.tcgui.TraincartsGui;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-public abstract class CommandHandler<E extends Exception> {
+public abstract class CommandHandler {
     //Extends exception is used for the checkAsync method and execute method
     //which may throw an SQL exception if accessing the database.
     private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
     //For synchronous command checks (E.g. syntax checks)
     protected abstract boolean checkSync(CommandSender sender, String[] args);
     //For asynchronous command checks (E.g. database checks)
-    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws E;
+    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws SQLException;
     //Runs the command after all checks are completed
-    protected abstract void execute(CommandSender sender, String[] args) throws E;
+    protected abstract void execute(CommandSender sender, String[] args) throws SQLException;
     //Runs appropriate checks before command is executed
-    public abstract void handle(CommandSender sender, String[] args);
+    public void handle(CommandSender sender, String[] args) {
+        if (!checkSync(sender, args)) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                if (!checkAsync(sender, args)) {
+                    return;
+                }
+                execute(sender, args);
+            } catch (SQLException e) {
+                getPlugin().reportSqlError(sender, e);
+            }
+        });
+    }
     public TraincartsGui getPlugin() {
         return TraincartsGui.getPlugin();
     }

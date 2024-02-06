@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
+public class GuiCreateCommandHandler extends CommandHandler {
     //Example command: /tcgui gui create <gui name> <display name>
 
     //Used to store the display name since spaces can be entered here
@@ -98,22 +98,5 @@ public class GuiCreateCommandHandler extends CommandHandler<SQLException> {
         //Runs the command
         guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, ((Player) sender).getUniqueId().toString());
         sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

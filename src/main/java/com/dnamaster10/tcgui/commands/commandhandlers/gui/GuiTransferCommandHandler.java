@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
+public class GuiTransferCommandHandler extends CommandHandler {
     //Example command: /tcgui gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiAccessor guiAccessor;
@@ -85,22 +85,5 @@ public class GuiTransferCommandHandler extends CommandHandler<SQLException> {
         guiAccessor.removeGuiEditorByUuid(guiId, otherPlayer.getUuid());
 
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.getUsername());
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

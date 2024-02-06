@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiEditCommandHandler extends CommandHandler<SQLException> {
+public class GuiEditCommandHandler extends CommandHandler {
     //Example command: /tcgui gui edit <gui_name>
     private GuiAccessor guiAccessor;
     @Override
@@ -82,20 +82,4 @@ public class GuiEditCommandHandler extends CommandHandler<SQLException> {
         getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
-    }
 }

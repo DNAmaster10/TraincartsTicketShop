@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException> {
+public class GuiSetDisplayNameCommandHandler extends CommandHandler {
     //Example command: /tcgui gui setdisplayname <gui name> <gui display name>
     private String rawDisplayName;
     private String colouredDisplayName;
@@ -90,22 +90,5 @@ public class GuiSetDisplayNameCommandHandler extends CommandHandler<SQLException
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         guiAccessor.updateGuiDisplayName(args[2], colouredDisplayName, rawDisplayName);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + colouredDisplayName + "\"");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

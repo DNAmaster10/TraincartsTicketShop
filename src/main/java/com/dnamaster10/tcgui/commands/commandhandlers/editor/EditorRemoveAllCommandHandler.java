@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> {
+public class EditorRemoveAllCommandHandler extends CommandHandler {
     //Example command: /tcgui editor removeAll <gui name>
     private GuiAccessor guiAccessor;
     @Override
@@ -70,22 +70,5 @@ public class EditorRemoveAllCommandHandler extends CommandHandler<SQLException> 
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
         guiAccessor.removeAllGuiEditors(guiId);
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkSync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

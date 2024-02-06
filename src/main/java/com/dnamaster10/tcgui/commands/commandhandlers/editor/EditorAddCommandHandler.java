@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class EditorAddCommandHandler extends CommandHandler<SQLException> {
+public class EditorAddCommandHandler extends CommandHandler {
     //Command example: /tcgui editor add <player_name> <gui_name>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
@@ -80,23 +80,5 @@ public class EditorAddCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         int guiId = guiAccessor.getGuiIdByName(args[3]);
         guiAccessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            }
-            catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

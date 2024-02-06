@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
+public class GuiDeleteCommandHandler extends CommandHandler {
     //Command example: /tcgui gui delete <gui_name>
     private GuiAccessor guiAccessor;
     @Override
@@ -71,22 +71,5 @@ public class GuiDeleteCommandHandler extends CommandHandler<SQLException> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Create and open a delete confirm gui
 
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

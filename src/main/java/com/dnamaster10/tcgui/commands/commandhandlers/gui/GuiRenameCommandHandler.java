@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiRenameCommandHandler extends CommandHandler<Exception> {
+public class GuiRenameCommandHandler extends CommandHandler {
     //Example command: /tcgui gui rename old_name new_name
     private GuiAccessor guiAccessor;
 
@@ -95,22 +95,5 @@ public class GuiRenameCommandHandler extends CommandHandler<Exception> {
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         guiAccessor.updateGuiName(args[2], args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was successfully renamed to \"" + args[3] + "\"");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
+public class LinkerCreateCommandHandler extends CommandHandler {
     //Example command: /tcgui linker create <linked_gui_name> <display_name>
     private String displayName;
     private GuiAccessor guiAccessor;
@@ -82,22 +82,5 @@ public class LinkerCreateCommandHandler extends CommandHandler<SQLException> {
         Player p = (Player) sender;
         button.giveToPlayer(p);
         p.sendMessage(ChatColor.GREEN + "Linker created");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }

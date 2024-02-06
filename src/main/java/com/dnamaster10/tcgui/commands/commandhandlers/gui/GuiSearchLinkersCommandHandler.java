@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiSearchLinkersCommandHandler extends CommandHandler<SQLException> {
+public class GuiSearchLinkersCommandHandler extends CommandHandler {
     //Example command: /tcgui gui searchLinkers <gui name> <search term>
     String searchTerm;
     private GuiAccessor guiAccessor;
@@ -72,22 +72,5 @@ public class GuiSearchLinkersCommandHandler extends CommandHandler<SQLException>
         gui.open();
         getPlugin().getGuiManager().clearGuis((Player) sender);
         getPlugin().getGuiManager().addGui((Player) sender, gui);
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
     }
 }
