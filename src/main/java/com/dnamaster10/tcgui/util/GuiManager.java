@@ -3,6 +3,7 @@ package com.dnamaster10.tcgui.util;
 import com.dnamaster10.tcgui.objects.guis.EditGui;
 import com.dnamaster10.tcgui.objects.guis.Gui;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -87,6 +88,7 @@ public class GuiManager {
         if (gui instanceof EditGui g) {
             if (g.shouldSave()) {
                 Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), g::save);
+                p.sendMessage(ChatColor.GREEN + "Gui was saved successfully");
             }
         }
     }

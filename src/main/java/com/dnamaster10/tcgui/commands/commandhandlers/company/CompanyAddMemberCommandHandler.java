@@ -87,7 +87,7 @@ public class CompanyAddMemberCommandHandler extends CommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
         //Add the member to the company
-        companyAccessor.addMember(newMember, args[3]);
+        companyAccessor.addMember(newMember, companyId);
         sender.sendMessage(ChatColor.GREEN + "Player \"" + newMember.getUsername() + "\" is now a member of company \"" + args[3] + "\"");
     }
 }

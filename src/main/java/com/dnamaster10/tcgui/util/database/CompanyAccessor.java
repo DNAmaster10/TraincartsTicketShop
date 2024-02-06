@@ -73,10 +73,13 @@ public class CompanyAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void addMember(PlayerDatabaseObject player, String companyName) throws SQLException {
+    public void addMember(PlayerDatabaseObject player, int companyId) throws SQLException {
         //Adds a new member to the given company
         try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("INSERT INTO companymembers (company_id, member_uuid) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO companymembers (company_id, member_uuid) VALUES (?, ?)");
+            statement.setInt(1, companyId);
+            statement.setString(2, player.getUuid());
+            statement.executeUpdate();
         }
     }
     public void deleteCompanyByName(String companyName) throws SQLException {
