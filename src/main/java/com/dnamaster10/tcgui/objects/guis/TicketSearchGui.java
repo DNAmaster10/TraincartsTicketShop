@@ -25,16 +25,16 @@ public class TicketSearchGui extends SearchGui {
 
         //Get tickets from database
         TicketAccessor ticketAccessor = new TicketAccessor();
-        TicketDatabaseObject[] ticketArray = ticketAccessor.searchTickets(getSearchGuiId(), getPage() * 45, getSearchTerm());
+        TicketDatabaseObject[] ticketArray = ticketAccessor.searchTickets(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
 
         //Add tickets to the inventory
         builder.addTickets(ticketArray);
 
         //Check whether another page is needed
-        if (ticketAccessor.getTotalTicketSearchResults(getSearchGuiId(), getSearchTerm()) > (getPage() + 1) * 45) {
+        if (ticketAccessor.getTotalTicketSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45) {
             builder.addNextPageButton();
         }
-        if (getPage() > 0) {
+        if (getPageNumber() > 0) {
             builder.addPrevPageButton();
         }
 
@@ -86,7 +86,7 @@ public class TicketSearchGui extends SearchGui {
             try {
                 //Check if any other pages exist beyond this one
                 TicketAccessor ticketAccessor = new TicketAccessor();
-                if (!(ticketAccessor.getTotalTicketSearchResults(getSearchGuiId(), getSearchTerm()) > (getPage() + 1) * 45)) {
+                if (!(ticketAccessor.getTotalTicketSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45)) {
                     removeCursorItem();
                     return;
                 }
@@ -96,7 +96,7 @@ public class TicketSearchGui extends SearchGui {
                 return;
             }
             //Increment page
-            setPage(getPage() + 1);
+            setPageNumber(getPageNumber() + 1);
 
             removeCursorItem();
             open();
@@ -105,12 +105,12 @@ public class TicketSearchGui extends SearchGui {
 
     @Override
     public void prevPage() {
-        if (getPage() - 1 < 0) {
-            setPage(0);
+        if (getPageNumber() - 1 < 0) {
+            setPageNumber(0);
             removeCursorItem();
             return;
         }
-        setPage(getPage() - 1);
+        setPageNumber(getPageNumber() - 1);
         removeCursorItem();
         open();
     }
@@ -119,7 +119,7 @@ public class TicketSearchGui extends SearchGui {
         //Must be run async
         setSearchGuiName(searchGuiName);
         setSearchTerm(searchTerm);
-        setPage(page);
+        setPageNumber(page);
         setPlayer(p);
 
         //Get gui id

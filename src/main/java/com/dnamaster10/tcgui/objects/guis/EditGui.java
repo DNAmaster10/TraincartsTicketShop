@@ -35,17 +35,15 @@ public class EditGui extends MultipageGui {
         if (wasClosed) {
             return true;
         }
-        else {
-            wasClosed = true;
-            return false;
-        }
+        wasClosed = true;
+        return true;
     }
     @Override
     protected void generate() throws SQLException {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
-        builder.addTicketsFromDatabase(getGuiName(), getPage());
-        builder.addLinkersFromDatabase(getGuiName(), getPage());
-        if (getPage() > 0) {
+        builder.addTicketsFromDatabase(getGuiName(), getPageNumber());
+        builder.addLinkersFromDatabase(getGuiName(), getPageNumber());
+        if (getPageNumber() > 0) {
             builder.addPrevPageButton();
         }
         builder.addNextPageButton();
@@ -97,7 +95,7 @@ public class EditGui extends MultipageGui {
             wasClosed = false;
 
             //Increment the current page
-            setPage(getPage() + 1);
+            setPageNumber(getPageNumber() + 1);
             removeCursorItem();
             open();
         });
@@ -110,14 +108,14 @@ public class EditGui extends MultipageGui {
             save();
 
             //Check there is a prev page
-            if (getPage() <= 0) {
-                setPage(0);
+            if (getPageNumber() <= 0) {
+                setPageNumber(0);
                 removeCursorItemAndClose();
                 return;
             }
             wasClosed = false;
 
-            setPage(getPage() - 1);
+            setPageNumber(getPageNumber() - 1);
             removeCursorItem();
             open();
         });
@@ -128,7 +126,7 @@ public class EditGui extends MultipageGui {
             save();
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
-                guiAccessor.insertPage(getGuiId(), getPage());
+                guiAccessor.insertPage(getGuiId(), getPageNumber());
             } catch (SQLException e) {
                 getPlugin().reportSqlError(getPlayer(), e);
             }
@@ -142,7 +140,7 @@ public class EditGui extends MultipageGui {
     private void deletePage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             removeCursorItem();
-            ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPage(), getPlayer());
+            ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());
             getPlugin().getGuiManager().addGui(getPlayer(), newGui);
             wasClosed = false;
             newGui.open();
@@ -248,8 +246,8 @@ public class EditGui extends MultipageGui {
             TicketAccessor ticketAccessor = new TicketAccessor();
             LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-            ticketAccessor.saveTicketPage(getGuiId(), getPage(), ticketList);
-            linkerAccessor.saveLinkerPage(getGuiId(), getPage(), linkerList);
+            ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), ticketList);
+            linkerAccessor.saveLinkerPage(getGuiId(), getPageNumber(), linkerList);
         } catch (SQLException e) {
             removeCursorItemAndClose();
             getPlugin().reportSqlError(e);
@@ -265,7 +263,7 @@ public class EditGui extends MultipageGui {
         setGuiName(guiName);
         setDisplayName(displayName);
         setGuiId(guiId);
-        setPage(page);
+        setPageNumber(page);
         setPlayer(p);
     }
     public EditGui(String guiName, Player p) throws SQLException {

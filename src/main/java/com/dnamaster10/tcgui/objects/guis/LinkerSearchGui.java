@@ -24,11 +24,11 @@ public class LinkerSearchGui extends SearchGui {
         GuiBuilder builder = new GuiBuilder(getDisplayName());
 
         LinkerAccessor linkerAccessor = new LinkerAccessor();
-        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(getSearchGuiId(), getPage() * 45, getSearchTerm());
+        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
 
         builder.addLinkers(linkerDatabaseObjects);
 
-        if (linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPage() + 1) * 45) {
+        if (linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45) {
             builder.addPrevPageButton();
         }
 
@@ -105,7 +105,7 @@ public class LinkerSearchGui extends SearchGui {
             try {
                 //Check that other pages exist beyond this one
                 LinkerAccessor linkerAccessor = new LinkerAccessor();
-                if (!(linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPage() + 1) * 45)) {
+                if (!(linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45)) {
                     removeCursorItem();
                     return;
                 }
@@ -114,7 +114,7 @@ public class LinkerSearchGui extends SearchGui {
                 getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
-            setPage(getPage() + 1);
+            setPageNumber(getPageNumber() + 1);
             removeCursorItem();
             open();
         });
@@ -122,19 +122,19 @@ public class LinkerSearchGui extends SearchGui {
 
     @Override
     protected void prevPage() {
-        if (getPage() - 1 < 0) {
-            setPage(0);
+        if (getPageNumber() - 1 < 0) {
+            setPageNumber(0);
             removeCursorItem();
             return;
         }
-        setPage(getPage() - 1);
+        setPageNumber(getPageNumber() - 1);
         removeCursorItem();
         open();
     }
     public LinkerSearchGui(String searchGuiName, String searchTerm, int page, Player p) throws SQLException{
         setSearchGuiName(searchGuiName);
         setSearchTerm(searchTerm);
-        setPage(page);
+        setPageNumber(page);
         setPlayer(p);
 
         //Get gui id and display name

@@ -57,7 +57,7 @@ public abstract class Gui {
     protected void setGuiName (String guiName) {
         this.guiName = guiName;
     }
-    protected int getGuiId() {
+    public int getGuiId() {
         return this.guiId;
     }
     protected void setGuiId(int id) {

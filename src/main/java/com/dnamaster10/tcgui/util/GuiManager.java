@@ -1,9 +1,5 @@
 package com.dnamaster10.tcgui.util;
 
-import com.dnamaster10.tcgui.objects.guis.EditGui;
-import com.dnamaster10.tcgui.objects.guis.Gui;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -12,94 +8,45 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
-
-import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public class GuiManager {
-    //Determines the maximum amount of guis a player can have open until they start to be removed. Used for the back button.
-    private final int maxGuis;
-    //Holds all currently opened GUIs in a hashmap linking the player who has the gui open and all guis they have opened in current gui "session"
-    private final HashMap<Player, Stack<Gui>> GUIS = new HashMap<>();
-    //Holds the name of a gui which a player is editing. Is used to make sure there aren't more than 1 person editing a gui
-    private final HashMap<String, Player> GUI_EDITORS = new HashMap<>();
-    private boolean checkIfTcguiInventory(Inventory inventory, Player p) {
-        if (!GUIS.containsKey(p)) {
+    //Holds all current sessions bound to a specific player
+    private final HashMap<Player, Session> SESSIONS = new HashMap<>();
+    private boolean isGuiInventory(Inventory inventory, Player p) {
+        //Returns true if the given inventory is within a session
+        Session session = getSession(p);
+        if (session == null) {
             return false;
         }
-        return Objects.equals(GUIS.get(p).peek().getInventory(), inventory);
-
+        return (session.isGuiInventory(inventory));
     }
-    public void addGui(Player p, Gui gui) {
-        if (GUIS.containsKey(p)) {
-            Stack<Gui> guiStack = GUIS.get(p);
-            guiStack.push(gui);
-            if (guiStack.size() > maxGuis) {
-                guiStack.remove(0);
-            }
-            return;
+    public Session getSession(Player p) {
+        if (!SESSIONS.containsKey(p)) {
+            return null;
         }
-        GUIS.put(p, new Stack<>());
-        GUIS.get(p).push(gui);
+        return SESSIONS.get(p);
     }
-    public void back(Player p) {
-        //Check there is a previous gui
-        if (!GUIS.containsKey(p)) {
-            return;
-        }
-        Stack<Gui> guiStack = GUIS.get(p);
-        if (guiStack.size() == 1) {
-            //The only gui present is the current open gui so we cant go back
-            return;
-        }
-        //Remove the current gui
-        guiStack.pop();
-        Gui gui = guiStack.peek();
-        gui.open();
-    }
-    public boolean checkLastGui(Player p) {
-        //Returns true if there is more than 1 gui registered to a player already
-        if (!GUIS.containsKey(p)) {
-            return false;
-        }
-        return !GUIS.get(p).isEmpty();
-    }
-    public void closeGuis(Player p) {
-        //Removes all guis for the given player
-        GUIS.remove(p);
+    public void createNewSession(Player p) {
+        //Removes a player's old session and replaced it with a new one
+        Session newSession = new Session();
+        SESSIONS.put(p, newSession);
     }
     public void handleInventoryClick(InventoryClickEvent event, List<ItemStack> items) {
-        Player p = (Player) event.getWhoClicked();
-        //If gui is a tcgui
-        if (!checkIfTcguiInventory(event.getClickedInventory(), p)) {
+        if (!(event.getWhoClicked() instanceof Player p)) {
             return;
         }
-        GUIS.get(p).peek().handleClick(event, items);
-    }
-    public void handleInventoryCloseEvent(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player p)) {
+        Session session = getSession(p);
+        if (session == null) {
             return;
         }
-        if (!checkIfTcguiInventory(event.getInventory(), p)) {
+        if (!isGuiInventory(event.getClickedInventory(), p)) {
             return;
         }
-        Gui gui = GUIS.get(p).peek();
-        if (gui instanceof EditGui g) {
-            if (g.shouldSave()) {
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), g::save);
-                p.sendMessage(ChatColor.GREEN + "Gui was saved successfully");
-            }
-        }
+
+        //Clicked inventory is a gui - handle click
+        session.handleInventoryClick(event, items);
     }
-    public void clearGuis(Player p) {
-        //Removes all gui data currently linked to that player. Should be called before starting a new session.
-        closeGuis(p);
-    }
-    public void handleLeaveEvent(Player p) {
-        closeGuis(p);
-    }
-    public GuiManager() {
-        this.maxGuis = getPlugin().getConfig().getInt("MaxStoredGuisPerPlayer");
+    public void handleInventoryClose(InventoryCloseEvent event) {
+
     }
 }

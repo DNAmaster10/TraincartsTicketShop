@@ -24,22 +24,22 @@ public class ShopGui extends MultipageGui {
     protected void generate() throws SQLException {
         GuiAccessor accessor = new GuiAccessor();
         int totalPages = accessor.getMaxPage(getGuiId());
-        if (getPage() > totalPages) {
-            setPage(totalPages);
+        if (getPageNumber() > totalPages) {
+            setPageNumber(totalPages);
         }
-        if (getPage() < 0) {
-            setPage(0);
+        if (getPageNumber() < 0) {
+            setPageNumber(0);
         }
         //Build tickets
         GuiBuilder builder = new GuiBuilder(getDisplayName());
-        builder.addTicketsFromDatabase(getGuiName(), getPage());
-        builder.addLinkersFromDatabase(getGuiName(), getPage());
+        builder.addTicketsFromDatabase(getGuiName(), getPageNumber());
+        builder.addLinkersFromDatabase(getGuiName(), getPageNumber());
 
         //Check if there are any more pages
-        if (totalPages > getPage()) {
+        if (totalPages > getPageNumber()) {
             builder.addNextPageButton();
         }
-        if (getPage() > 0) {
+        if (getPageNumber() > 0) {
             builder.addPrevPageButton();
         }
 
@@ -101,12 +101,12 @@ public class ShopGui extends MultipageGui {
                 getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
-            if (getPage() + 1 > maxPage) {
+            if (getPageNumber() + 1 > maxPage) {
                 removeCursorItem();
                 return;
             }
             //Increment page
-            setPage(getPage() + 1);
+            setPageNumber(getPageNumber() + 1);
 
             //Build new inventory
             removeCursorItem();
@@ -117,12 +117,12 @@ public class ShopGui extends MultipageGui {
     @Override
     public void prevPage() {
         //Check that any pages exist before this oen
-        if (getPage() - 1 < 0) {
-            setPage(0);
+        if (getPageNumber() - 1 < 0) {
+            setPageNumber(0);
             removeCursorItem();
             return;
         }
-        setPage(getPage() - 1);
+        setPageNumber(getPageNumber() - 1);
         removeCursorItem();
         open();
     }
@@ -201,7 +201,7 @@ public class ShopGui extends MultipageGui {
         setGuiName(guiName);
         setDisplayName(displayName);
         setPlayer(p);
-        setPage(page);
+        setPageNumber(page);
         setGuiId(guiId);
     }
     public ShopGui(String guiName, Player p) throws SQLException {
