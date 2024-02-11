@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;

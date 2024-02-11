@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.HeadData;
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
+import com.dnamaster10.tcgui.objects.buttons.*;
 import com.dnamaster10.tcgui.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
@@ -24,6 +23,8 @@ import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
+import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.GREEN_PLUS;
+import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
 
 public class EditGui extends MultipageGui {
     //Used when the next page button is clicked to decide whether to save the gui.
@@ -39,22 +40,27 @@ public class EditGui extends MultipageGui {
         return true;
     }
     @Override
-    protected void generate() throws SQLException {
-        GuiBuilder builder = new GuiBuilder(getDisplayName());
-        builder.addTicketsFromDatabase(getGuiName(), getPageNumber());
-        builder.addLinkersFromDatabase(getGuiName(), getPageNumber());
+    protected void generatePage() throws SQLException {
+        PageBuilder pageBuilder = new PageBuilder();
+
+        //Add items to page
+        pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
+        pageBuilder.addLinkersFromDatabase(getGuiId(), getPageNumber());
+
+        //Add misc buttons
         if (getPageNumber() > 0) {
-            builder.addPrevPageButton();
+            pageBuilder.addPrevPageButton();
         }
-        builder.addNextPageButton();
+        pageBuilder.addNextPageButton();
 
-        SimpleButton deletePageButton = new SimpleButton("delete_page", HeadData.HeadType.RED_CROSS, "Delete Page");
-        builder.addSimpleButton(deletePageButton, 48);
+        SimpleButton deletePageButton = new SimpleButton("delete_page", RED_CROSS, "Delete Page");
+        SimpleButton insertPageButton = new SimpleButton("insert_page", GREEN_PLUS, "Insert Page");
 
-        SimpleButton insertPageButton = new SimpleButton("insert_page", HeadData.HeadType.GREEN_PLUS, "Inset Page");
-        builder.addSimpleButton(insertPageButton, 47);
+        pageBuilder.addSimpleButton(48, deletePageButton);
+        pageBuilder.addSimpleButton(47, insertPageButton);
 
-        setInventory(builder.getInventory());
+        //Add page to the page list
+        setPage(getPageNumber(), pageBuilder.getPage());
     }
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
@@ -85,41 +91,6 @@ public class EditGui extends MultipageGui {
         }
     }
 
-    //Note that in the following methods, was Closed is set to false. This lets the gui manager know that it doesn't need
-    //to save the gui to the database because it either doesn't need to save, or has already been saved.
-    @Override
-    protected void nextPage() {
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Save the current gui
-            save();
-            wasClosed = false;
-
-            //Increment the current page
-            setPageNumber(getPageNumber() + 1);
-            removeCursorItem();
-            open();
-        });
-    }
-
-    @Override
-    protected void prevPage() {
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Save the current page
-            save();
-
-            //Check there is a prev page
-            if (getPageNumber() <= 0) {
-                setPageNumber(0);
-                removeCursorItemAndClose();
-                return;
-            }
-            wasClosed = false;
-
-            setPageNumber(getPageNumber() - 1);
-            removeCursorItem();
-            open();
-        });
-    }
     protected void insertPage() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             //Save the current page first
@@ -146,7 +117,31 @@ public class EditGui extends MultipageGui {
             newGui.open();
         });
     }
-    public void save() {
+    public void saveToPageList() {
+        //Saves the current page to the page hashmap.
+        //Should be used when going between pages.
+        Button[] guiButtons = new Button[54];
+
+        //For every item in the inventory
+        Inventory inventory = getInventory();
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+
+            //Check if the item is a TCGui button
+            if (item == null) {
+                continue;
+            }
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
+                continue;
+            }
+
+            //Item is button, continue
+            //TODO Here, a method may be needed and could be used across all gui classes to get a button object from a button type and an item
+
+        }
+    }
+    public void saveToDatabase() {
         //Saves items in inventory to the database
         List<TicketDatabaseObject> ticketList = new ArrayList<>();
         List<LinkerDatabaseObject> linkerList = new ArrayList<>();

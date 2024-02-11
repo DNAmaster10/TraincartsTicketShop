@@ -1,8 +1,13 @@
 package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.Button;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 
 public abstract class MultipageGui extends Gui {
     //Multipage guis store their inventory contents in an array to save on database queries
@@ -11,27 +16,79 @@ public abstract class MultipageGui extends Gui {
     //The hashmap holds the page number as the key.
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
     private int currentPage;
+    //The highest page number which this gui allows
+    private int maxPage;
     protected int getPageNumber() {
         return this.currentPage;
     }
     protected void setPageNumber(int pageNumber) {
         this.currentPage = pageNumber;
     }
+    protected int getMaxPage() {
+        return this.maxPage;
+    }
+    protected void setMaxPage(int maxPage) {
+        this.maxPage = maxPage;
+    }
+    protected boolean checkPage(int pageNumber) {
+        //Returns true if a page exists
+        return pages.containsKey(pageNumber);
+    }
     protected Button[] getPage(int pageNumber) {
-        if (!pages.containsKey(pageNumber)) {
-            //Return an empty page if no page exists
-            return new Button[54];
-        }
         return pages.get(pageNumber);
     }
     protected void setPage(int pageNumber, Button[] pageContents) {
         pages.put(pageNumber, pageContents);
     }
-    protected abstract void nextPage();
-    protected abstract void prevPage();
+    //Generates a new page for this gui.
+    protected abstract void generatePage() throws SQLException;
+    protected void nextPage() {
+        //Check there are pages beyond this page
+        if (this.currentPage + 1 > maxPage) {
+            return;
+        }
+        //If there are, increment the current page
+        this.currentPage++;
+
+        //Open the new page
+        open();
+    }
+    protected void prevPage() {
+        //Check there are pages before this page
+        if (this.currentPage - 1 < 0) {
+            return;
+        }
+        //If there are, decrement the current page
+        this.currentPage--;
+
+        //Open the new page
+        open();
+    }
     @Override
     public void open() {
-        //Opens a new inventory with the current page
+        //Check if the page exists
+        if (!checkPage(getPageNumber())) {
+            //If it doesn't, generate a new page asynchronously and open it
+            Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+                try {
+                    generatePage();
+                } catch (SQLException e) {
+                    openErrorGui("An error occurred generating that gui");
+                    getPlugin().reportSqlError(getPlayer(), e);
+                    return;
+                }
+                InventoryBuilder inventoryBuilder = new InventoryBuilder(pages.get(currentPage), getDisplayName());
+                Inventory newInventory = inventoryBuilder.getInventory();
+                setInventory(newInventory);
+                getPlayer().openInventory(newInventory);
+            });
+            return;
+        }
 
+        //If the page does exist, open it
+        InventoryBuilder inventoryBuilder = new InventoryBuilder(pages.get(currentPage), getDisplayName());
+        Inventory newInventory = inventoryBuilder.getInventory();
+        setInventory(newInventory);
+        getPlayer().openInventory(newInventory);
     }
 }

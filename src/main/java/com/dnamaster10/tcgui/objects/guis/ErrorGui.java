@@ -1,12 +1,10 @@
 package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ErrorGui extends Gui {

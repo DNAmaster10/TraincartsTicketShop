@@ -2,7 +2,6 @@ package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.Button;
 import com.dnamaster10.tcgui.objects.buttons.Linker;
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import com.dnamaster10.tcgui.objects.buttons.Ticket;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;

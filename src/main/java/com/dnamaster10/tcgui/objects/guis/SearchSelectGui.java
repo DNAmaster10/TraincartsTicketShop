@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

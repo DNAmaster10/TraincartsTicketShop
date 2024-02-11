@@ -1,8 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis.confirmguis;
 
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
-import com.dnamaster10.tcgui.objects.buttons.SimpleButton;
-import com.dnamaster10.tcgui.objects.guis.GuiBuilder;
 import com.dnamaster10.tcgui.util.database.CompanyAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
