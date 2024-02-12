@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.objects.buttons.SimpleItemButton;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -24,19 +25,19 @@ public class SearchSelectGui extends Gui {
     @Override
     protected void generate() {
         //Build gui and add to inventory
-        GuiBuilder builder = new GuiBuilder(getDisplayName());
+        PageBuilder pageBuilder = new PageBuilder();
 
-        if (getPlugin().getGuiManager().checkLastGui(getPlayer())) {
-            builder.addBackButton();
+        if (getSession().checkBack()) {
+            pageBuilder.addBackButton();
         }
 
-        SimpleButton ticketSearchButton = new SimpleButton("search_tickets", Material.PAPER, "Search Tickets");
-        builder.addSimpleButton(ticketSearchButton, 12);
+        SimpleItemButton ticketSearchButton = new SimpleItemButton("search_tickets", Material.PAPER, "Search Tickets");
+        pageBuilder.addButton(12, ticketSearchButton);
 
-        SimpleButton linkerSearchButton = new SimpleButton("search_linkers", Material.ENCHANTED_BOOK, "Search Linkers");
-        builder.addSimpleButton(linkerSearchButton, 14);
+        SimpleItemButton linkerSearchbutton = new SimpleItemButton("search_linkers", Material.ENCHANTED_BOOK, "Search Linkers");
+        pageBuilder.addButton(14, linkerSearchbutton);
 
-        setInventory(builder.getInventory());
+        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
     }
 
     @Override

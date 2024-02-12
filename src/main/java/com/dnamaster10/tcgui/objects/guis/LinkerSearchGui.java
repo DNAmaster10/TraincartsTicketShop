@@ -90,12 +90,13 @@ public class LinkerSearchGui extends SearchGui {
                     return;
                 }
                 newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
-                getSession().addGui(newGui);
-                newGui.open();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e);
+                return;
             }
+            getSession().addGui(newGui);
+            newGui.open();
         });
     }
     public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws SQLException {
