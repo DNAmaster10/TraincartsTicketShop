@@ -45,7 +45,6 @@ public class TableCreator extends DatabaseAccessor {
                         tc_name varchar(100),
                         display_name varchar(100),
                         raw_display_name varchar(100),
-                        price int,
                         UNIQUE KEY gui_page_slot_unique (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE

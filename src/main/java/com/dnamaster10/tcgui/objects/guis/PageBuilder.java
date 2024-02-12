@@ -23,8 +23,8 @@ public class PageBuilder {
                 continue;
             }
             //Create the button
-            Ticket ticket = new Ticket(ticketDatabaseObject.getTcName(), ticketDatabaseObject.getColouredDisplayName());
-            page[ticketDatabaseObject.getSlot()] = ticket;
+            Ticket ticket = new Ticket(ticketDatabaseObject.tcName(), ticketDatabaseObject.colouredDisplayName());
+            page[ticketDatabaseObject.slot()] = ticket;
         }
     }
     public void addLinkers(LinkerDatabaseObject[] linkers) {
@@ -33,8 +33,8 @@ public class PageBuilder {
                 continue;
             }
             //Create the ticket
-            Linker linker = new Linker(linkerDatabaseObject.getLinkedGuiId(), linkerDatabaseObject.getLinkedGuiPage(), linkerDatabaseObject.getColouredDisplayName());
-            page[linkerDatabaseObject.getSlot()] = linker;
+            Linker linker = new Linker(linkerDatabaseObject.linkedGuiId(), linkerDatabaseObject.linkedGuiPage(), linkerDatabaseObject.colouredDisplayName());
+            page[linkerDatabaseObject.slot()] = linker;
         }
     }
     public void addTicketsFromDatabase(int guiId, int pageNumber) throws SQLException {

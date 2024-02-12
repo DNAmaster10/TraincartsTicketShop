@@ -8,21 +8,17 @@ import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
-import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.GREEN_PLUS;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
 
@@ -32,12 +28,14 @@ public class EditGui extends MultipageGui {
     //This value helps the gui manager to know whether a next page button was clicked, in which case it doesn't need to save
     //or whether the gui was actually closed.
     private boolean wasClosed = true;
-    public boolean shouldSave() {
+    public void handleCloseEvent() {
         if (wasClosed) {
-            return true;
+            saveCurrentPage();
+            wasClosed = false;
         }
-        wasClosed = true;
-        return true;
+        else {
+            wasClosed = true;
+        }
     }
     @Override
     protected void generatePage() throws SQLException {
@@ -90,36 +88,45 @@ public class EditGui extends MultipageGui {
             }
         }
     }
-
     protected void insertPage() {
+        removeCursorItem();
+        wasClosed = false;
+
+        //Save the current page first
+        saveCurrentPage();
+
+        //Then, we want to delete pages from the page hashmap where they're equal to or more thn the current page, as keys will all have changed
+        HashMap<Integer, Button[]> pages = getPages();
+        pages.entrySet().removeIf(e -> e.getKey() >= getPageNumber());
+
+        //Now, update items within the database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Save the current page first
-            save();
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.insertPage(getGuiId(), getPageNumber());
             } catch (SQLException e) {
+                openErrorGui("An error occurred inserting that page!");
                 getPlugin().reportSqlError(getPlayer(), e);
+                return;
             }
-            //Save the current page before going to the new one
-            wasClosed = false;
-            //Set current page to the new page
-            removeCursorItem();
+
+            //Open the altered gui to the player
             open();
         });
     }
     private void deletePage() {
+        removeCursorItem();
+        wasClosed = false;
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             removeCursorItem();
             ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());
-            getPlugin().getGuiManager().addGui(getPlayer(), newGui);
-            wasClosed = false;
+            getSession().addGui(newGui);
             newGui.open();
         });
     }
-    public void saveToPageList() {
-        //Saves the current page to the page hashmap.
-        //Should be used when going between pages.
+    public void saveCurrentPage() {
+        //Saves the current page to the page hashmap and then the database
+        //Should be used when going between pages or when the gui is closed.
         Button[] guiButtons = new Button[54];
 
         //For every item in the inventory
@@ -136,117 +143,55 @@ public class EditGui extends MultipageGui {
                 continue;
             }
 
-            //Item is button, continue
-            //TODO Here, a method may be needed and could be used across all gui classes to get a button object from a button type and an item
-
+            //Item is button, create a new button object from the item
+            Button button = Buttons.getNewButton(buttonType, item);
+            guiButtons[i] = button;
         }
+
+        //Save the page to the gui list
+        super.setPage(getPageNumber(), guiButtons);
+
+        //Save the page to the database
+        savePageToDatabase(getPageNumber(), guiButtons);
     }
-    public void saveToDatabase() {
-        //Saves items in inventory to the database
-        List<TicketDatabaseObject> ticketList = new ArrayList<>();
-        List<LinkerDatabaseObject> linkerList = new ArrayList<>();
+    public void savePageToDatabase(int pageNumber, Button[] pageContents) {
+        //Only needs to save tickets and linkers
 
-        //For every item in inventory
-        Inventory inventory = getInventory();
-        for (int i = 0; i < inventory.getSize() - 9; i++) {
-            ItemStack item = inventory.getItem(i);
+        //Create savable lists
+        List<TicketDatabaseObject> tickets = new ArrayList<>();
+        List<LinkerDatabaseObject> linkers = new ArrayList<>();
 
-            //Check if item is button
-            if (item == null) {
+        //Index counts to 9 less than total length to exclude bottom inventory row
+        for (int slot = 0; slot < pageContents.length - 9; slot++) {
+            //For each slot in the page
+            Button button = pageContents[slot];
+            if (button == null) {
+                //Is not a valid button or slot is empty
                 continue;
             }
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null) {
-                continue;
+            if (button instanceof Ticket ticket) {
+                //If button is a ticket, save to the ticket list
+                tickets.add(ticket.getAsDatabaseObject(slot));
             }
-            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-            if (!dataContainer.has(BUTTON_TYPE, PersistentDataType.STRING)) {
-                continue;
-            }
-
-            //Get button type
-            String buttonType = dataContainer.get(BUTTON_TYPE, PersistentDataType.STRING);
-            if (buttonType == null) {
-                continue;
-            }
-            switch (buttonType) {
-                case "ticket" -> {
-                    //Item is a ticket. Check ticket data.
-                    if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
-                        continue;
-                    }
-                    if (!dataContainer.has(TICKET_PRICE, PersistentDataType.INTEGER)) {
-                        continue;
-                    }
-                    //Get data
-                    String tcName = dataContainer.get(TC_TICKET_NAME, PersistentDataType.STRING);
-                    Integer price = dataContainer.get(TICKET_PRICE, PersistentDataType.INTEGER);
-                    if (tcName == null) {
-                        continue;
-                    }
-                    if (price == null) {
-                        continue;
-                    }
-
-                    String colouredDisplayName = meta.getDisplayName();
-                    String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
-
-                    //Check display name length
-                    if (colouredDisplayName.length() > 100) {
-                        continue;
-                    }
-                    if (rawDisplayName.length() > 25) {
-                        continue;
-                    }
-
-                    TicketDatabaseObject ticket = new TicketDatabaseObject(i, tcName, colouredDisplayName, rawDisplayName, price);
-                    ticketList.add(ticket);
-                }
-                case "linker" -> {
-                    //Item is a linker. Check linker data
-                    if (!dataContainer.has(DEST_GUI_ID, PersistentDataType.INTEGER)) {
-                        continue;
-                    }
-                    if (!dataContainer.has(DEST_GUI_PAGE, PersistentDataType.INTEGER)) {
-                        continue;
-                    }
-                    //Get data
-                    Integer destGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
-                    Integer destGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
-                    if (destGuiId == null) {
-                        continue;
-                    }
-                    if (destGuiPage == null) {
-                        destGuiPage = 0;
-                    }
-                    String colouredDisplayName = meta.getDisplayName();
-                    String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
-
-                    //Check if display name is too long
-                    if (colouredDisplayName.length() > 100) {
-                        continue;
-                    }
-                    if (rawDisplayName.length() > 25) {
-                        continue;
-                    }
-
-                    LinkerDatabaseObject linker = new LinkerDatabaseObject(i, destGuiId, destGuiPage, colouredDisplayName, rawDisplayName);
-                    linkerList.add(linker);
-                }
-                //Otherwise, item is not a savable / tcgui item. Ignore it to remove it
+            else if (button instanceof Linker linker) {
+                //if button is a linker, save to the linker list
+                linkers.add(linker.getAsDatabaseObject(slot));
             }
         }
-        try {
-            //Save to database
-            TicketAccessor ticketAccessor = new TicketAccessor();
-            LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-            ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), ticketList);
-            linkerAccessor.saveLinkerPage(getGuiId(), getPageNumber(), linkerList);
-        } catch (SQLException e) {
-            removeCursorItemAndClose();
-            getPlugin().reportSqlError(e);
-        }
+        //With lists of tickets and linkers, we can add them to the database asynchronously
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            try {
+                TicketAccessor ticketAccessor = new TicketAccessor();
+                LinkerAccessor linkerAccessor = new LinkerAccessor();
+
+                ticketAccessor.saveTicketPage(getGuiId(), pageNumber, tickets);
+                linkerAccessor.saveLinkerPage(getGuiId(), pageNumber, linkers);
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e);
+            }
+        });
     }
 
     public EditGui(String guiName, int page, Player p) throws SQLException {

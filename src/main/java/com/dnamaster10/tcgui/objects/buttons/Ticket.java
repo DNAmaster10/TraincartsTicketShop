@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
+import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -14,8 +16,9 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 public class Ticket extends Button {
     private final String tcTicketName;
     private final String displayName;
-    public String getTcTicketName() {
-        return this.tcTicketName;
+    public TicketDatabaseObject getAsDatabaseObject(int slot) {
+        String rawDisplayName = ChatColor.stripColor(displayName);
+        return new TicketDatabaseObject(slot, this.tcTicketName, this.displayName, rawDisplayName);
     }
     @Override
     public ItemStack getItemStack() {

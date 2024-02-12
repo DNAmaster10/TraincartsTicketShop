@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.commands.commandhandlers.company;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.tcgui.objects.guis.confirmguis.ConfirmDeleteCompanyGui;
 import com.dnamaster10.tcgui.util.database.CompanyAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

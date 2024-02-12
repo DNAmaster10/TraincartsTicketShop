@@ -1,7 +1,6 @@
 package com.dnamaster10.tcgui.util.database;
 
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
-import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,7 +80,7 @@ public class LinkerAccessor extends DatabaseAccessor {
             deleteStatement.setInt(1, guiId);
             deleteStatement.setInt(2, page);
             for (int i = 0; i < linkers.size(); i++) {
-                deleteStatement.setInt(i + 3, linkers.get(i).getSlot());
+                deleteStatement.setInt(i + 3, linkers.get(i).slot());
             }
             deleteStatement.execute();
 
@@ -98,11 +97,11 @@ public class LinkerAccessor extends DatabaseAccessor {
             for (LinkerDatabaseObject linker : linkers) {
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
-                statement.setInt(3, linker.getSlot());
-                statement.setInt(4, linker.getLinkedGuiId());
-                statement.setInt(5, linker.getLinkedGuiPage());
-                statement.setString(6, linker.getColouredDisplayName());
-                statement.setString(7, linker.getRawDisplayName());
+                statement.setInt(3, linker.slot());
+                statement.setInt(4, linker.linkedGuiId());
+                statement.setInt(5, linker.linkedGuiPage());
+                statement.setString(6, linker.colouredDisplayName());
+                statement.setString(7, linker.rawDisplayName());
 
                 statement.addBatch();
             }

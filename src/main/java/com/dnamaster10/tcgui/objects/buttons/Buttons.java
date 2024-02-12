@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -48,7 +49,21 @@ public class Buttons {
             }
             default -> {
                 //Item is a simple button, handle as such
-
+                //Check if the simple button is a head button or an item button
+                Material material = item.getType();
+                if (material == Material.PLAYER_HEAD) {
+                    //Item is a payer head button, create new button for that
+                    //First get the head type
+                    HeadData.HeadType type = HeadData.getHeadTypeFromItem(item);
+                    if (type == null) {
+                        return null;
+                    }
+                    return new SimpleHeadButton(buttonType, type, displayName);
+                }
+                else {
+                    //Item is a regular item button, create new button for that
+                    return new SimpleItemButton(buttonType, material, displayName);
+                }
             }
         }
     }

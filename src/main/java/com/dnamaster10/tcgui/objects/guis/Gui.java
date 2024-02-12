@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.util.Session;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -109,5 +110,8 @@ public abstract class Gui {
         ErrorGui errorGui = new ErrorGui(errorMessage, player);
         player.setItemOnCursor(null);
         errorGui.open();
+    }
+    protected Session getSession() {
+        return getPlugin().getGuiManager().getSession(getPlayer());
     }
 }

@@ -1,5 +1,7 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
+import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -15,7 +17,10 @@ public class Linker extends Button {
     private final String displayName;
     private final int linkedGuiId;
     private final int linkedGuiPage;
-
+    public LinkerDatabaseObject getAsDatabaseObject(int slot) {
+        String rawDisplayName = ChatColor.stripColor(displayName);
+        return new LinkerDatabaseObject(slot, linkedGuiId, linkedGuiPage, displayName, rawDisplayName);
+    }
     public ItemStack getItemStack() {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta meta = item.getItemMeta();

@@ -18,6 +18,10 @@ public abstract class MultipageGui extends Gui {
     private int currentPage;
     //The highest page number which this gui allows
     private int maxPage;
+    protected HashMap<Integer, Button[]> getPages() {
+        //Returns the page hashmap
+        return pages;
+    }
     protected int getPageNumber() {
         return this.currentPage;
     }

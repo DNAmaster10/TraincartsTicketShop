@@ -1,6 +1,7 @@
 package com.dnamaster10.tcgui.objects.guis.confirmguis;
 
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
+import com.dnamaster10.tcgui.objects.guis.PageBuilder;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,7 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
     private final int deleteGuiPage;
     @Override
     protected void generate() {
+        PageBuilder builder = new PageBuilder();
         GuiBuilder builder = new GuiBuilder(getDisplayName());
 
         //Check if a back button is needed

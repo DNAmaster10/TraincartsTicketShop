@@ -13,8 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
-import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.GREEN_CHECK;
-import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
+import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.*;
 
 public class HeadData {
     public enum HeadType {
@@ -51,16 +50,29 @@ public class HeadData {
     }
     private static HeadType getTypeFromUrl(String url) {
         //TODO SPLIT THE URL THING FROM PREFIX
-        url = urlPrefix + url;
-        switch (url) {
+        int lastIndex = url.lastIndexOf('/');
+        String code = url.substring(lastIndex + 1);
+        switch (code) {
             case "4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4" -> {
                 return GREEN_CHECK;
             }
             case "beb588b21a6f98ad1ff4e085c552dcb050efc9cab427f46048f18fc803475f7" -> {
                 return RED_CROSS;
             }
-            case
+            case "1b701c1f05e319d6b28f61b28b66a7e2a846a510de322bdc96e94a2388b78469" -> {
+                return GRAY_BACK_ARROW;
+            }
+            case "5ff31431d64587ff6ef98c0675810681f8c13bf96f51d9cb07ed7852b2ffd1" -> {
+                return GREEN_PLUS;
+            }
+            case "8399e5da82ef7765fd5e472f3147ed118d981887730ea7bb80d7a1bed98d5ba" -> {
+                return CHAT_ARROW_RIGHT;
+            }
+            case "76ebaa41d1d405eb6b60845bb9ac724af70e85eac8a96a5544b9e23ad6c96c62" -> {
+                return CHAT_ARROW_LEFT;
+            }
         }
+        return null;
     }
     public static HeadType getHeadTypeFromItem(ItemStack item) {
         if (!(item.getItemMeta() instanceof SkullMeta meta)) {
@@ -70,8 +82,10 @@ public class HeadData {
         if (profile == null) {
             return null;
         }
-        URL urlObject = profile.getTextures().getSkin();
-        String url
+        if (profile.getTextures().getSkin() == null) {
+            return null;
+        }
+        return getTypeFromUrl(profile.getTextures().getSkin().toString());
     }
     private static final UUID RANDOM_UUID = UUID.fromString("68f92a5b-8980-4e0c-a479-89e41ce1ada6");
 
