@@ -47,6 +47,9 @@ public class GuiManager {
         session.handleInventoryClick(event, items);
     }
     public void handleInventoryClose(InventoryCloseEvent event) {
-
+        Session session = getSession((Player) event.getPlayer());
+        if (session != null) {
+            session.handleInventoryClose();
+        }
     }
 }

@@ -40,11 +40,12 @@ public abstract class Gui {
     protected void back() {
         removeCursorItem();
         //Check there is a previous gui
-        if (!getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+        Session currentSession = getSession();
+        if (!currentSession.checkBack()) {
             return;
         }
         //If there is, go back
-        getPlugin().getGuiManager().back(getPlayer());
+        currentSession.back();
     }
     public Inventory getInventory() {
         return this.inventory;

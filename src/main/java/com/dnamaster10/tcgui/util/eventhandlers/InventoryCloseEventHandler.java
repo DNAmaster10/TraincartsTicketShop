@@ -9,6 +9,6 @@ import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 public class InventoryCloseEventHandler implements Listener {
     @EventHandler
     void onPlayerCloseInventory(InventoryCloseEvent event) {
-        getPlugin().getGuiManager().handleInventoryCloseEvent(event);
+        getPlugin().getGuiManager().handleInventoryClose(event);
     }
 }

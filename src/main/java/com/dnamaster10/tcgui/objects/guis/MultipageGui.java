@@ -45,8 +45,8 @@ public abstract class MultipageGui extends Gui {
         pages.put(pageNumber, pageContents);
     }
     //Generates a new page for this gui.
-    protected abstract void generatePage() throws SQLException;
     protected void nextPage() {
+        removeCursorItem();
         //Check there are pages beyond this page
         if (this.currentPage + 1 > maxPage) {
             return;
@@ -58,6 +58,7 @@ public abstract class MultipageGui extends Gui {
         open();
     }
     protected void prevPage() {
+        removeCursorItem();
         //Check there are pages before this page
         if (this.currentPage - 1 < 0) {
             return;
@@ -75,7 +76,7 @@ public abstract class MultipageGui extends Gui {
             //If it doesn't, generate a new page asynchronously and open it
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
                 try {
-                    generatePage();
+                    generate();
                 } catch (SQLException e) {
                     openErrorGui("An error occurred generating that gui");
                     getPlugin().reportSqlError(getPlayer(), e);

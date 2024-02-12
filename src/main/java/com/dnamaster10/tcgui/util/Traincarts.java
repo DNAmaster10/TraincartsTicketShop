@@ -12,7 +12,7 @@ public class Traincarts {
         //Returns true if traincarts ticket exists
         return getTicket(name) != null;
     }
-    public static void giveTicketItem(String tcName, int price, Player p) {
+    public static void giveTicketItem(String tcName, Player p) {
         Ticket ticket = getTicket(tcName);
 
         ItemStack item = ticket.createItem(p);

@@ -37,8 +37,7 @@ public class EditGui extends MultipageGui {
             wasClosed = true;
         }
     }
-    @Override
-    protected void generatePage() throws SQLException {
+    protected void generate() throws SQLException {
         PageBuilder pageBuilder = new PageBuilder();
 
         //Add items to page
@@ -51,11 +50,11 @@ public class EditGui extends MultipageGui {
         }
         pageBuilder.addNextPageButton();
 
-        SimpleButton deletePageButton = new SimpleButton("delete_page", RED_CROSS, "Delete Page");
-        SimpleButton insertPageButton = new SimpleButton("insert_page", GREEN_PLUS, "Insert Page");
+        SimpleHeadButton deletePageButton = new SimpleHeadButton("delete_page", RED_CROSS, "Delete Page");
+        SimpleHeadButton insertPageButton = new SimpleHeadButton("insert_page", GREEN_PLUS, "Insert Page");
 
-        pageBuilder.addSimpleButton(48, deletePageButton);
-        pageBuilder.addSimpleButton(47, insertPageButton);
+        pageBuilder.addButton(48, deletePageButton);
+        pageBuilder.addButton(47, insertPageButton);
 
         //Add page to the page list
         setPage(getPageNumber(), pageBuilder.getPage());
@@ -117,6 +116,9 @@ public class EditGui extends MultipageGui {
     private void deletePage() {
         removeCursorItem();
         wasClosed = false;
+
+        //Clear the current gui hashmap, because we don't know what is and isn't going to be changed
+        getPages().clear();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             removeCursorItem();
             ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());

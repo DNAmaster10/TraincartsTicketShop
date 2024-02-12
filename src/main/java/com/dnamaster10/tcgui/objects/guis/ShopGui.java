@@ -190,7 +190,7 @@ public class ShopGui extends MultipageGui {
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {}, 1L);
         getPlayer().closeInventory();
     }
-    public ShopGui(String guiName, int page, Player p) throws SQLException {
+    public ShopGui(int guiId, int page, Player p) throws SQLException {
         //Should be called from async thread
         //Instantiate gui
         GuiAccessor guiAccessor = new GuiAccessor();

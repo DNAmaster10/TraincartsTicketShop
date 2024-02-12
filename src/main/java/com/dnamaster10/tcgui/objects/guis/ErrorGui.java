@@ -1,23 +1,26 @@
 package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
+import com.dnamaster10.tcgui.objects.buttons.SimpleHeadButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
+
 public class ErrorGui extends Gui {
     //Used when an error occurs building a gui (Such as if the gui was deleted while a player was using it)
     private final String errorText;
     @Override
     protected void generate() {
-        GuiBuilder builder = new GuiBuilder("Error");
+        PageBuilder pageBuilder = new PageBuilder();
 
-        SimpleButton errorButton = new SimpleButton("error", HeadData.HeadType.RED_CROSS, errorText);
-        builder.addSimpleButton(errorButton, 22);
+        SimpleHeadButton errorButton = new SimpleHeadButton("error", RED_CROSS, errorText);
+        pageBuilder.addButton(22, errorButton);
 
-        setInventory(builder.getInventory());
+        setInventory(new InventoryBuilder(pageBuilder.getPage(), "Error").getInventory());
     }
 
     @Override

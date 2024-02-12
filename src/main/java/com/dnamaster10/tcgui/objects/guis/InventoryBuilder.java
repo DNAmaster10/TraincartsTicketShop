@@ -13,7 +13,7 @@ public class InventoryBuilder {
     }
     public InventoryBuilder(Button[] buttons, String displayName) {
         //Create the inventory object
-        inventory = Bukkit.createInventory(null, 54);
+        inventory = Bukkit.createInventory(null, 54, displayName);
 
         //Add page contents to the inventory
         for (int slot = 0; slot < 54; slot++) {

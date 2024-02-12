@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.objects.guis;
 
 import com.dnamaster10.tcgui.objects.buttons.Button;
 import com.dnamaster10.tcgui.objects.buttons.Linker;
+import com.dnamaster10.tcgui.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.tcgui.objects.buttons.Ticket;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
@@ -49,19 +50,19 @@ public class PageBuilder {
         LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
         addLinkers(linkerDatabaseObjects);
     }
-    public void addSimpleButton(int slot, SimpleButton button) {
+    public void addButton(int slot, Button button) {
         page[slot] = button;
     }
     public void addNextPageButton() {
-        SimpleButton button = new SimpleButton("next_page", CHAT_ARROW_RIGHT, "Next Page");
-        addSimpleButton(53, button);
+        SimpleHeadButton button = new SimpleHeadButton("next_page", CHAT_ARROW_RIGHT, "Next Page");
+        addButton(53, button);
     }
     public void addPrevPageButton() {
-        SimpleButton button = new SimpleButton("prev_page", CHAT_ARROW_LEFT, "Prev Page");
-        addSimpleButton(52, button);
+        SimpleHeadButton button = new SimpleHeadButton("prev_page", CHAT_ARROW_LEFT, "Prev Page");
+        addButton(52, button);
     }
     public void addBackButton() {
-        SimpleButton button = new SimpleButton("back", GRAY_BACK_ARROW, "Back");
-        addSimpleButton(45, button);
+        SimpleHeadButton button = new SimpleHeadButton("back", GRAY_BACK_ARROW, "Back");
+        addButton(45, button);
     }
 }

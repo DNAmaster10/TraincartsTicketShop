@@ -21,18 +21,20 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_PAGE;
 public class LinkerSearchGui extends SearchGui {
     @Override
     protected void generate() throws SQLException {
-        GuiBuilder builder = new GuiBuilder(getDisplayName());
-
+        PageBuilder pageBuilder = new PageBuilder();
         LinkerAccessor linkerAccessor = new LinkerAccessor();
-        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
 
-        builder.addLinkers(linkerDatabaseObjects);
+        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
+        pageBuilder.addLinkers(linkerDatabaseObjects);
 
         if (linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45) {
-            builder.addPrevPageButton();
+            pageBuilder.addNextPageButton();
+        }
+        if (getPageNumber() > 0) {
+            pageBuilder.addPrevPageButton();
         }
 
-        setInventory(builder.getInventory());
+        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
     }
 
     @Override
@@ -59,26 +61,27 @@ public class LinkerSearchGui extends SearchGui {
         }
     }
     private void link(ItemStack linker) {
+        //Get button info
+        ItemMeta meta = linker.getItemMeta();
+        if (meta == null) {
+            removeCursorItem();
+            return;
+        }
+
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+        Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
+        if (linkedGuiId == null) {
+            removeCursorItem();
+            return;
+        }
+        if (linkedGuiPage == null) {
+            removeCursorItem();
+            return;
+        }
+
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Get dest page
-            ItemMeta meta = linker.getItemMeta();
-            if (meta == null) {
-                removeCursorItem();
-                return;
-            }
-
-            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-            Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
-            Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
-            if (linkedGuiId == null) {
-                removeCursorItem();
-                return;
-            }
-            if (linkedGuiPage == null) {
-                linkedGuiPage = 0;
-            }
-
-            String destGuiName;
+            //Get info from database
             ShopGui newGui;
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
@@ -86,63 +89,24 @@ public class LinkerSearchGui extends SearchGui {
                     removeCursorItem();
                     return;
                 }
-                destGuiName = guiAccessor.getGuiNameById(linkedGuiId);
-                newGui = new ShopGui(destGuiName, linkedGuiPage, getPlayer());
+                newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
+                getSession().addGui(newGui);
+                newGui.open();
             } catch (SQLException e) {
                 removeCursorItemAndClose();
                 getPlugin().reportSqlError(getPlayer(), e);
-                return;
             }
-
-            getPlugin().getGuiManager().addGui(getPlayer(), newGui);
-            removeCursorItem();
-            newGui.open();
         });
     }
-    @Override
-    protected void nextPage() {
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                //Check that other pages exist beyond this one
-                LinkerAccessor linkerAccessor = new LinkerAccessor();
-                if (!(linkerAccessor.getTotalLinkerSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45)) {
-                    removeCursorItem();
-                    return;
-                }
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-                return;
-            }
-            setPageNumber(getPageNumber() + 1);
-            removeCursorItem();
-            open();
-        });
-    }
-
-    @Override
-    protected void prevPage() {
-        if (getPageNumber() - 1 < 0) {
-            setPageNumber(0);
-            removeCursorItem();
-            return;
-        }
-        setPageNumber(getPageNumber() - 1);
-        removeCursorItem();
-        open();
-    }
-    public LinkerSearchGui(String searchGuiName, String searchTerm, int page, Player p) throws SQLException{
-        setSearchGuiName(searchGuiName);
+    public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws SQLException {
+        //Set basic values
+        setSearchGuiId(searchGuiId);
         setSearchTerm(searchTerm);
-        setPageNumber(page);
+        setPageNumber(0);
         setPlayer(p);
 
-        //Get gui id and display name
+        //Get gui display name
         GuiAccessor guiAccessor = new GuiAccessor();
-        setSearchGuiId(guiAccessor.getGuiIdByName(searchGuiName));
-        setDisplayName("Searching: " + guiAccessor.getColouredGuiDisplayName(searchGuiName));
-    }
-    public LinkerSearchGui(String searchGuiName, String searchTerm, Player p) throws SQLException {
-        this(searchGuiName, searchTerm, 0, p);
+        setDisplayName("Searching: " + guiAccessor.getColouredDisplayNameById(searchGuiId));
     }
 }

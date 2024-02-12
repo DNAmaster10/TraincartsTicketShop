@@ -1,6 +1,8 @@
 package com.dnamaster10.tcgui.objects.guis.confirmguis;
 
 import com.dnamaster10.tcgui.objects.buttons.HeadData;
+import com.dnamaster10.tcgui.objects.buttons.SimpleHeadButton;
+import com.dnamaster10.tcgui.objects.guis.InventoryBuilder;
 import com.dnamaster10.tcgui.objects.guis.PageBuilder;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
@@ -10,24 +12,24 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
 
 public class ConfirmPageDeleteGui extends ConfirmActionGui {
     private final int deleteGuiPage;
     @Override
     protected void generate() {
         PageBuilder builder = new PageBuilder();
-        GuiBuilder builder = new GuiBuilder(getDisplayName());
 
-        //Check if a back button is needed
-        if (getPlugin().getGuiManager().checkLastGui(getPlayer())) {
+        //Check if back button is needed
+        if (getSession().checkBack()) {
             builder.addBackButton();
         }
 
         //Add buttons specific to this gui type
-        SimpleButton deletePageButton = new SimpleButton("confirm_action", HeadData.HeadType.RED_CROSS, "Delete Page");
-        builder.addSimpleButton(deletePageButton, 22);
+        SimpleHeadButton deletePageButton = new SimpleHeadButton("confirm_action", RED_CROSS, "Delete Page");
+        builder.addButton(22, deletePageButton);
 
-        setInventory(builder.getInventory());
+        setInventory(new InventoryBuilder(builder.getPage(), getDisplayName()).getInventory());
     }
     @Override
     protected void confirmAction() {
@@ -41,7 +43,7 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
             }
             //Go back to the previous gui
             removeCursorItem();
-            getPlugin().getGuiManager().back(getPlayer());
+            getSession().back();
         });
     }
     public ConfirmPageDeleteGui(int deleteGuiId, int deletePageNumber, Player p) {

@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
@@ -20,25 +22,20 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 public class TicketSearchGui extends SearchGui {
     @Override
     protected void generate() throws SQLException {
-        //Builds a new inventory based on current class values
-        GuiBuilder builder = new GuiBuilder(getDisplayName());
-
-        //Get tickets from database
+        PageBuilder pageBuilder = new PageBuilder();
         TicketAccessor ticketAccessor = new TicketAccessor();
-        TicketDatabaseObject[] ticketArray = ticketAccessor.searchTickets(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
 
-        //Add tickets to the inventory
-        builder.addTickets(ticketArray);
+        TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.searchTickets(getSearchGuiId(), getPageNumber() * 45, getSearchTerm());
+        pageBuilder.addTickets(ticketDatabaseObjects);
 
-        //Check whether another page is needed
         if (ticketAccessor.getTotalTicketSearchResults(getSearchGuiId(), getSearchTerm()) > (getPageNumber() + 1) * 45) {
-            builder.addNextPageButton();
+            pageBuilder.addNextPageButton();
         }
         if (getPageNumber() > 0) {
-            builder.addPrevPageButton();
+            pageBuilder.addPrevPageButton();
         }
 
-        setInventory(builder.getInventory());
+        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
     }
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
@@ -64,6 +61,28 @@ public class TicketSearchGui extends SearchGui {
         }
     }
     public void handleTicketClick(ItemStack ticket) {
+        //Get ticket data
+        ItemMeta meta = ticket.getItemMeta();
+        if (meta == null) {
+            removeCursorItem();
+            return;
+        }
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
+            removeCursorItem();
+            return;
+        }
+        String tcName = dataContainer.get(TC_TICKET_NAME, PersistentDataType.STRING);
+
+        //Check that the tc ticket exists
+        if (!Traincarts.checkTicket(tcName)) {
+            removeCursorItem();
+            return;
+        }
+
+        //Give ticket to player
+        Traincarts.giveTicketItem(tcName, );
+
         if (!Objects.requireNonNull(ticket.getItemMeta()).getPersistentDataContainer().has(TC_TICKET_NAME, PersistentDataType.STRING)) {
             removeCursorItem();
             return;

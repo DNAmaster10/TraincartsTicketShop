@@ -141,6 +141,18 @@ public class GuiAccessor extends DatabaseAccessor {
             return maxPage;
         }
     }
+    public String getColouredDisplayNameById(int guiId) throws SQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT display_name FROM guis WHERE id=?");
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            String displayName = null;
+            if (result.next()) {
+                displayName = result.getString("display_name");
+            }
+            return displayName;
+        }
+    }
     public String getColouredGuiDisplayName(String guiName) throws SQLException {
         //Returns display name of gui from name
         try (Connection connection = getConnection()) {
