@@ -1,22 +1,18 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
-import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public abstract class Gui {
+    //The inventory currently open within this gui
     private Inventory inventory;
     private String guiName;
     private int guiId;
@@ -24,27 +20,11 @@ public abstract class Gui {
     private String displayName;
     public abstract void open();
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
-    protected void back() {
-        removeCursorItem();
-        //Check there is a previous gui
-        Session currentSession = getSession();
-        if (!currentSession.checkBack()) {
-            return;
-        }
-        //If there is, go back
-        currentSession.back();
-    }
     public Inventory getInventory() {
         return this.inventory;
     }
     protected void setInventory(Inventory inventory) {
         this.inventory = inventory;
-    }
-    protected String getGuiName() {
-        return this.guiName;
-    }
-    protected void setGuiName (String guiName) {
-        this.guiName = guiName;
     }
     public int getGuiId() {
         return this.guiId;
@@ -64,15 +44,15 @@ public abstract class Gui {
     protected void setPlayer(Player p) {
         player = p;
     }
-    protected void updateNewInventory(Inventory newInventory) {
-        //Takes in an inventory, and replaces all current items with new items
-        //Clear the current inventory
-        this.inventory.clear();
-        for (int i = 0; i < newInventory.getSize(); i++) {
-            if (newInventory.getItem(i) != null) {
-                this.inventory.setItem(i, newInventory.getItem(i));
-            }
+    protected void back() {
+        removeCursorItem();
+        //Check there is a previous gui
+        Session currentSession = getSession();
+        if (!currentSession.checkBack()) {
+            return;
         }
+        //If there is, go back
+        currentSession.back();
     }
     protected void removeCursorItem() {
         player.setItemOnCursor(null);
@@ -80,8 +60,7 @@ public abstract class Gui {
     protected void removeCursorItemAndClose() {
         //Removes item on cursor and closes inventory at the same time
         player.setItemOnCursor(null);
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            player.closeInventory();}, 1L);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);
     }
     protected void openErrorGui(String errorMessage) {
         ErrorGui errorGui = new ErrorGui(errorMessage, player);

@@ -11,6 +11,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+
 public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
     //Example command: /traincartsticketshop ticket rename <new_name>
     private String displayName;

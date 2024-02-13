@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
+import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
@@ -17,6 +19,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getBu
 
 public class SearchSelectGui extends Gui {
     //The gui which will be searched
+    private final int searchGuiId;
     @Override
     public void open() {
         generate();
@@ -62,38 +65,74 @@ public class SearchSelectGui extends Gui {
             }
         }
     }
+    private String getGuiName() throws SQLException {
+        //Returns the name of the gui which is being searched from the id
+        GuiAccessor guiAccessor = new GuiAccessor();
+        return guiAccessor.getGuiNameById(searchGuiId);
+    }
+    private void guiDeletedOrMoved() {
+        openErrorGui("Gui was deleted or moved");
+    }
     private void searchTickets() {
-        TextComponent message1;
-        message1 = new TextComponent(ChatColor.AQUA + "|");
-        message1.setBold(true);
-        TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search tickets<<<");
-        message2.setBold(true);
-        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchTickets " + getGuiName() + " "));
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Get the search gui name
+            String searchGuiName;
+            try {
+                searchGuiName = getGuiName();
+            } catch (SQLException e) {
+                guiDeletedOrMoved();
+                return;
+            }
+            if (searchGuiName == null) {
+                guiDeletedOrMoved();
+                return;
+            }
 
-        getPlayer().spigot().sendMessage(message1);
-        getPlayer().spigot().sendMessage(message2);
-        getPlayer().spigot().sendMessage(message1);
+            TextComponent message1;
+            message1 = new TextComponent(ChatColor.AQUA + "|");
+            message1.setBold(true);
+            TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search tickets<<<");
+            message2.setBold(true);
+            message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchTickets " + searchGuiName +" "));
 
-        removeCursorItemAndClose();
+            getPlayer().spigot().sendMessage(message1);
+            getPlayer().spigot().sendMessage(message2);
+            getPlayer().spigot().sendMessage(message1);
+
+            removeCursorItemAndClose();
+        });
     }
     private void searchLinkers() {
-        TextComponent message1;
-        message1 = new TextComponent(ChatColor.AQUA + "|");
-        message1.setBold(true);
-        TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search linkers<<<");
-        message2.setBold(true);
-        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchLinkers " + getGuiName() + " "));
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            String searchGuiName;
+            try {
+                searchGuiName = getGuiName();
+            } catch (SQLException e) {
+                guiDeletedOrMoved();
+                return;
+            }
+            if (searchGuiName == null) {
+                guiDeletedOrMoved();
+                return;
+            }
+            TextComponent message1;
+            message1 = new TextComponent(ChatColor.AQUA + "|");
+            message1.setBold(true);
+            TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search linkers<<<");
+            message2.setBold(true);
+            message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchLinkers " + searchGuiName +" "));
 
-        getPlayer().spigot().sendMessage(message1);
-        getPlayer().spigot().sendMessage(message2);
-        getPlayer().spigot().sendMessage(message1);
+            getPlayer().spigot().sendMessage(message1);
+            getPlayer().spigot().sendMessage(message2);
+            getPlayer().spigot().sendMessage(message1);
 
-        removeCursorItemAndClose();
+            removeCursorItemAndClose();
+        });
     }
 
-    public SearchSelectGui(String searchGuiName, Player p) {
+    public SearchSelectGui(int searchGuiId, Player p) {
         setPlayer(p);
-        setGuiName(searchGuiName);
         setDisplayName("Select a search type");
+        this.searchGuiId = searchGuiId;
     }
 }

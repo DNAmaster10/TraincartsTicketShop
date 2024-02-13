@@ -129,24 +129,9 @@ public class ShopGui extends MultipageGui {
     private void search() {
         //Get the gui name
         removeCursorItem();
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            String guiName = null;
-            try {
-                GuiAccessor guiAccessor = new GuiAccessor();
-                guiName = guiAccessor.getGuiNameById(getGuiId());
-
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-                return;
-            }
-            if (guiName == null) {
-                return;
-            }
-            SearchSelectGui gui = new SearchSelectGui(guiName, getPlayer());
-            getSession().addGui(gui);
-            gui.open();
-        });
+        SearchSelectGui gui = new SearchSelectGui(getGuiId(), getPlayer());
+        getSession().addGui(gui);
+        gui.open();
     }
     private void handleTicketClick(ItemStack ticket) {
         removeCursorItem();

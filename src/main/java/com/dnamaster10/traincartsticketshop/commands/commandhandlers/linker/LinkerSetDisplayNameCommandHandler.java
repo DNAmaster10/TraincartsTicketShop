@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+
 public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
     private String colouredDisplayName;
     private ItemStack linker;
