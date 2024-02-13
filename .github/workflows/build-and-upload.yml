@@ -35,17 +35,18 @@ jobs:
       - name: Delete old prerelease
         uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
-          tag_name: dev
+          tag_name: snapshot
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_release: true
       - name: Workaround Hack
         run: |
-          sleep 60
+          sleep 30
       - name: Publish Snapshot Release
         id: upload_assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: snapshot
           file: ${{ env.filename }}
           overwrite: true
           prerelease: true
