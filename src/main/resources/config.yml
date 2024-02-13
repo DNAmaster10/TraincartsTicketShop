@@ -5,7 +5,7 @@ database:
   user: admin
   password: password
 
-SignIdentifier: [traincartsticketshop]
+SignIdentifier: [tshop]
 
 MaxStoredGuisPerPlayer: 50
 
