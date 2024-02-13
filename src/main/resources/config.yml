@@ -1,6 +1,6 @@
 DatabaseHost: localhost
 DatabasePort: 3306
-DatabaseDatabase: dbname
+DatabaseDatabase: tcdb
 DatabaseUser: admin
 DatabasePassword: password
 

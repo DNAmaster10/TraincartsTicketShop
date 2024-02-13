@@ -32,7 +32,6 @@ public class EditGui extends MultipageGui {
     private boolean wasClosed = true;
     public void handleCloseEvent() {
         if (wasClosed) {
-            saveToHashmap();
             savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
             wasClosed = false;
         }
@@ -71,13 +70,15 @@ public class EditGui extends MultipageGui {
             if (buttonType == null) {
                 continue;
             }
+            //Add the button back to the inventory before saving
+            getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
             switch (buttonType) {
                 case "next_page" -> {
-                    nextPage();
+                    this.nextPage();
                     return;
                 }
                 case "prev_page" -> {
-                    prevPage();
+                    this.prevPage();
                     return;
                 }
                 case "delete_page" -> {
@@ -95,13 +96,13 @@ public class EditGui extends MultipageGui {
     @Override
     protected void nextPage() {
         saveToHashmap();
-        savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
+        saveCurrentPageToDatabase();
         super.nextPage();
     }
     @Override
     protected void prevPage() {
         saveToHashmap();
-        savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
+        saveCurrentPageToDatabase();
         super.prevPage();
     }
     protected void insertPage() {
@@ -116,6 +117,7 @@ public class EditGui extends MultipageGui {
             Button[] page = pageBuilder.getPage();
             try {
                 //Save the current page to the database
+                //Note here that we cannot call "saveCurrentPage" method because this needs to happen before the page numbers are incremented in the database
                 savePageToDatabase(getPageNumber(), page);
 
                 //Move pages up in the database
@@ -137,6 +139,9 @@ public class EditGui extends MultipageGui {
         removeCursorItem();
         wasClosed = false;
 
+        //Save the current page in case the player decides to go back
+        saveCurrentPageToDatabase();
+
         //Clear the current gui hashmap, because we don't know what is and isn't going to be changed
         getPages().clear();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -146,13 +151,21 @@ public class EditGui extends MultipageGui {
             newGui.open();
         });
     }
-    public void saveToHashmap() {
+    private void saveToHashmap() {
         //Saves the current page to the page hashmap
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addInventory(getInventory());
         setPage(getPageNumber(), pageBuilder.getPage());
     }
-    public void savePageToDatabase(int pageNumber, Button[] pageContents) {
+    private void saveCurrentPageToDatabase() {
+        //Can safely be called from sync thread
+        final int currentPageNumber = getPageNumber();
+        PageBuilder pageBuilder = new PageBuilder();
+        pageBuilder.addInventory(getInventory());
+        final Button[] currentPage = pageBuilder.getPage();
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> savePageToDatabase(currentPageNumber, currentPage));
+    }
+    private void savePageToDatabase(int pageNumber, Button[] pageContents) {
         //Saves the given page to the database
         //Only needs to save tickets and linkers - should be called from async thread
 

@@ -17,14 +17,18 @@ public class Buttons {
     public static String getButtonType(ItemStack button) {
         //Returns the button type from a given item
         //First check if item is a button
-        NamespacedKey key = new NamespacedKey(getPlugin(), "button_type");
         if (!button.hasItemMeta()) {
             return null;
         }
-        if (!Objects.requireNonNull(button.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+        ItemMeta meta = button.getItemMeta();
+        assert meta != null;
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+
+        if (!dataContainer.has(BUTTON_TYPE, PersistentDataType.STRING)) {
             return null;
         }
-        return button.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
+
+        return dataContainer.get(BUTTON_TYPE, PersistentDataType.STRING);
     }
     public static Button getNewButton(String buttonType, ItemStack item) {
         //Returns a new button object from a button type and an item

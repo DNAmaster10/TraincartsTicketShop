@@ -97,7 +97,6 @@ public abstract class MultipageGui extends Gui {
             });
             return;
         }
-
         //If the page does exist, open it
         InventoryBuilder inventoryBuilder = new InventoryBuilder(pages.get(currentPage), getDisplayName());
         Inventory newInventory = inventoryBuilder.getInventory();
