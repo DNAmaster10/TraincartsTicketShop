@@ -7,6 +7,7 @@ description: A plugin which allows players to create ticket GUIs for the trainca
 database: true
 prefix: TraincartsGui
 depend: [Train_Carts]
+website: https://github.com/DNAmaster10/TraincartsGui
 
 permissions:
   tcgui.*:
