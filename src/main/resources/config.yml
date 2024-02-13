@@ -4,7 +4,7 @@ DatabaseDatabase: dbname
 DatabaseUser: admin
 DatabasePassword: password
 
-SignIdentifier: [traincartsticketshop]
+SignIdentifier: [tshop]
 
 MaxStoredGuisPerPlayer: 50
 

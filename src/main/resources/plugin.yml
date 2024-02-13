@@ -11,10 +11,10 @@ website: https://github.com/DNAmaster10/TraincartsTicketShop
 
 permissions:
   traincartsticketshop.*:
-    description: Grants all traincartsticketshop permissions
+    description: Grants all TraincartsTicketShop permissions
     default: op
   traincartsticketshop.gui.create:
-    description: Allows the creation of traincartsticketshop guis
+    description: Allows the creation of TraincartsTicketShop guis
     default: false
   traincartsticketshop.gui.edit:
     description: Allows editing guis
@@ -78,7 +78,7 @@ permissions:
     default: false
 
   traincartsticketshop.ticket.create:
-    description: Allows the creation of traincartsticketshop tickets
+    description: Allows the creation of TraincartsTicketShop tickets
     default: false
   traincartsticketshop.ticket.setdisplayname:
     description: Allows player to rename a held ticket
@@ -116,5 +116,6 @@ permissions:
 
 commands:
   traincartsticketshop:
-    description: The parent command for all traincartsticketshop commands
+    description: The parent command for all TraincartsTicketShop commands
     usage: /traincartsticketshop <sub-command>
+    aliases: [tcticketshop, ticketshop, tctshop, tshop]

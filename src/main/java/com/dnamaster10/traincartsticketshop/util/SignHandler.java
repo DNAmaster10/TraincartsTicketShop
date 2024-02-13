@@ -18,8 +18,8 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class SignHandler {
     //Sign format example:
     //Line 1: This is a gui!
-    //Line 2: [traincartsticketshop] <optional page num>
-    //Line 3: <traincartsticketshop name>
+    //Line 2: [tshop] <optional page num>
+    //Line 3: <gui name>
     //Line 4: Test123
     boolean isGuiSign(Sign sign) {
         String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
