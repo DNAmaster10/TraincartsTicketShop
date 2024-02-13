@@ -27,10 +27,10 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Plugin
-          path: target/tcgui*.jar
+          path: target/traincartsticketshop*.jar
       - name: Find file name
         run: |
-          filename=$(ls -d target/tcgui-*)
+          filename=$(ls -d target/traincartsticketshop-*)
           echo filename=$filename >> "$GITHUB_ENV"
       - name: Delete old prerelease
         uses: dev-drprasad/delete-tag-and-release@v1.0

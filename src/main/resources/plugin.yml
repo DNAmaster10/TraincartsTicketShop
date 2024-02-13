@@ -1,120 +1,120 @@
-name: TraincartsGui
+name: TraincartsTicketShop
 version: '${project.version}'
-main: com.dnamaster10.tcgui.TraincartsGui
+main: com.dnamaster10.traincartsticketshop.TraincartsTicketShop
 api-version: '1.20'
 authors: [ DNAmaster10, Dinty1 ]
 description: A plugin which allows players to create ticket GUIs for the traincarts plugin
 database: true
-prefix: TraincartsGui
+prefix: TraincartsTicketShop
 depend: [Train_Carts]
-website: https://github.com/DNAmaster10/TraincartsGui
+website: https://github.com/DNAmaster10/TraincartsTicketShop
 
 permissions:
-  tcgui.*:
-    description: Grants all tcgui permissions
+  traincartsticketshop.*:
+    description: Grants all traincartsticketshop permissions
     default: op
-  tcgui.gui.create:
-    description: Allows the creation of tcgui guis
+  traincartsticketshop.gui.create:
+    description: Allows the creation of traincartsticketshop guis
     default: false
-  tcgui.gui.edit:
+  traincartsticketshop.gui.edit:
     description: Allows editing guis
     default: false
-  tcgui.gui.open:
+  traincartsticketshop.gui.open:
     description: Allows a player to open a gui
     default: false
-  tcgui.gui.rename:
+  traincartsticketshop.gui.rename:
     description: Allows a gui to be renamed
     default: false
-  tcgui.gui.search.searchtickets:
+  traincartsticketshop.gui.search.searchtickets:
     description: Allows a player to search tickets
     default: false
-  tcgui.gui.search.searchlinkers:
+  traincartsticketshop.gui.search.searchlinkers:
     description: Allows a player to search linkers
     default: false
-  tcgui.gui.setdisplayname:
+  traincartsticketshop.gui.setdisplayname:
     description: Allows a gui display name to be changed
     default: false
-  tcgui.gui.delete:
+  traincartsticketshop.gui.delete:
     description: Allows deleting of guis
     default: false
-  tcgui.gui.transfer:
+  traincartsticketshop.gui.transfer:
     description: Allows player to transfer guis they own to other players
     default: false
 
-  tcgui.admin.gui.edit:
+  traincartsticketshop.admin.gui.edit:
     description: Allows player to edit a gui even if they do not have edit perms
     default: false
-  tcgui.admin.gui.rename:
+  traincartsticketshop.admin.gui.rename:
     description: Allows player to rename a gui even if they do not have edit perms
     default: false
-  tcgui.admin.gui.setdisplayname:
+  traincartsticketshop.admin.gui.setdisplayname:
     description: Allows player to set display name for a gui even if they do not have edit perms
     default: false
-  tcgui.admin.gui.transfer:
+  traincartsticketshop.admin.gui.transfer:
     description: Allows player to transfer gui even if they are not the owner
     default: false
 
-  tcgui.editor.add:
+  traincartsticketshop.editor.add:
     description: Allows players to change who can edit their gui
     default: false
-  tcgui.editor.list:
+  traincartsticketshop.editor.list:
     description: Allows players to see who can edit a gui
     default: false
-  tcgui.editor.remove:
+  traincartsticketshop.editor.remove:
     description: Allows players to remove editors from their gui
     default: false
-  tcgui.editor.removeall:
+  traincartsticketshop.editor.removeall:
     description: Allows players to remove all editors from their gui
     default: false
 
-  tcgui.admin.editor.add:
+  traincartsticketshop.admin.editor.add:
     description: Allows player to add an editor to a gui even if they do not own the gui
     default: false
-  tcgui.admin.editor.remove:
+  traincartsticketshop.admin.editor.remove:
     description: Allows player to remove an editor for a gui they don't own
     default: false
-  tcgui.admin.editor.removeall:
+  traincartsticketshop.admin.editor.removeall:
     description: Allows players to remove all editors from a gui they don't own
     default: false
 
-  tcgui.ticket.create:
-    description: Allows the creation of tcgui tickets
+  traincartsticketshop.ticket.create:
+    description: Allows the creation of traincartsticketshop tickets
     default: false
-  tcgui.ticket.setdisplayname:
+  traincartsticketshop.ticket.setdisplayname:
     description: Allows player to rename a held ticket
     default: false
-  tcgui.ticket.settraincartsticket:
+  traincartsticketshop.ticket.settraincartsticket:
     description: Allows a player to set the traincarts ticket for a ticket
     default: false
 
-  tcgui.linker.create:
+  traincartsticketshop.linker.create:
     description: Allows player to create gui linker item
     default: false
-  tcgui.linker.setdisplayname:
+  traincartsticketshop.linker.setdisplayname:
     description: Allows player to rename a linker item
     default: false
-  tcgui.linker.setdestinationpage:
+  traincartsticketshop.linker.setdestinationpage:
     description: Allows a player to set a destination page for a linker
     default: false
 
-  tcgui.company.addmember:
+  traincartsticketshop.company.addmember:
     description: Allows a player to add a member to a company they own
     default: false
-  tcgui.company.create:
+  traincartsticketshop.company.create:
     description: Allows a player to create a company
     default: false
-  tcgui.company.delete:
+  traincartsticketshop.company.delete:
     description: Allows a player to delete a company
     default: false
 
-  tcgui.admin.company.addmember:
+  traincartsticketshop.admin.company.addmember:
     description: Allows player to add a member to a gui they do not own
     default: false
-  tcgui.admin.company.delete:
+  traincartsticketshop.admin.company.delete:
     description: Allows a player to delete a company even if they are not the owner
     default: false
 
 commands:
-  tcgui:
-    description: The parent command for all tcgui commands
-    usage: /tcgui <sub-command>
+  traincartsticketshop:
+    description: The parent command for all traincartsticketshop commands
+    usage: /traincartsticketshop <sub-command>

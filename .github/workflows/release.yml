@@ -42,8 +42,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/tcgui-${{github.event.pull_request.title}}.jar
-          asset_name: tcgui-${{github.event.pull_request.title}}.jar
+          file: target/traincartsticketshop-${{github.event.pull_request.title}}.jar
+          asset_name: traincartsticketshop-${{github.event.pull_request.title}}.jar
           tag: v${{ github.event.pull_request.title }}
           overwrite: true
           make_latest: true

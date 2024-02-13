@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="tcgui" />
+        <module name="traincartsticketshop" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tcgui" target="16" />
+      <module name="tshop" target="16" />
+    </bytecodeTargetLevel>
   </component>
 </project>
