@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop;
 
 import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
 import com.dnamaster10.traincartsticketshop.commands.TabCompleter;
+import com.dnamaster10.traincartsticketshop.util.ConfigUtil;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseConfig;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -35,16 +37,24 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
     public void onEnable() {
         //Get plugin
         plugin = this;
-        plugin.getLogger().info("Staring TraincartsTicketShop...");
+        plugin.getLogger().info("Starting TraincartsTicketShop...");
 
         //Load config file
         getConfig().options().copyDefaults();
         saveDefaultConfig();
 
+        // Update config stuff if needed
+        try {
+            ConfigUtil.migrateIfNeeded(getConfig(), this);
+        } catch (IOException e) {
+            getLogger().severe("Failed to update config values");
+            e.printStackTrace();
+        }
+
         //Configure database
-        DatabaseConfig.setUrl(plugin.getConfig().getString("database.host"), plugin.getConfig().getString("database.port"), plugin.getConfig().getString("database.database"));
-        DatabaseConfig.setUsername(plugin.getConfig().getString("database.user"));
-        DatabaseConfig.setPassword(plugin.getConfig().getString("database.password"));
+        DatabaseConfig.setUrl(plugin.getConfig().getString("DatabaseHost"), plugin.getConfig().getString("DatabasePort"), plugin.getConfig().getString("DatabaseDatabase"));
+        DatabaseConfig.setUsername(plugin.getConfig().getString("DatabaseUser"));
+        DatabaseConfig.setPassword(plugin.getConfig().getString("DatabasePassword"));
 
         //Create tables in database
         try {

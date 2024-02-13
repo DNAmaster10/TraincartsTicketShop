@@ -1,9 +1,8 @@
-database:
-  host: localhost
-  port: 3306
-  database: dbname
-  user: admin
-  password: password
+DatabaseHost: localhost
+DatabasePort: 3306
+DatabaseDatabase: dbname
+DatabaseUser: admin
+DatabasePassword: password
 
 SignIdentifier: [traincartsticketshop]
 
@@ -37,3 +36,6 @@ AllowLinkerSetDestinationPage: true
 AllowCompanyAddMember: true
 AllowCompanyCreate: true
 AllowCompanyDelete: true
+
+# No touch please
+config-version: ${project.version}
