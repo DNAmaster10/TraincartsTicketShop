@@ -18,7 +18,6 @@ public abstract class ConfirmActionGui extends Gui {
         Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
     }
     //Override generate gui so that it no longer throws an SQL exception
-    @Override
     protected abstract void generate();
 
     @Override

@@ -1,4 +1,6 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.multipageguis;
+
+import com.dnamaster10.tcgui.objects.guis.multipageguis.MultipageGui;
 
 public abstract class SearchGui extends MultipageGui {
     private String searchTerm;
@@ -9,12 +11,6 @@ public abstract class SearchGui extends MultipageGui {
     }
     protected String getSearchTerm() {
         return this.searchTerm;
-    }
-    protected void setSearchGuiName(String searchGuiName) {
-        this.searchGuiName = searchGuiName;
-    }
-    protected String getSearchGuiName() {
-        return this.searchGuiName;
     }
     protected void setSearchGuiId(int id) {
         this.searchGuiId = id;

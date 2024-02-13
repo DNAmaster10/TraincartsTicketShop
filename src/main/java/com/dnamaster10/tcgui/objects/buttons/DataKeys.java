@@ -9,5 +9,5 @@ public class DataKeys {
     public static final NamespacedKey DEST_GUI_ID = new NamespacedKey(getPlugin(), "dest_gui_id");
     public static final NamespacedKey DEST_GUI_PAGE = new NamespacedKey(getPlugin(), "dest_gui_page");
     public static final NamespacedKey TC_TICKET_NAME = new NamespacedKey(getPlugin(), "tc_ticket_name");
-    public static final NamespacedKey TICKET_PRICE = new NamespacedKey(getPlugin(), "ticket_price");
+    public static final NamespacedKey HEAD_TYPE = new NamespacedKey(getPlugin(), "tc_ticket_name");
 }

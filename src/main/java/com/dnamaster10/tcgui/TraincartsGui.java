@@ -21,7 +21,13 @@ import java.util.Objects;
 public final class TraincartsGui extends JavaPlugin implements Listener {
     public static TraincartsGui plugin;
     private GuiManager guiManager;
+    public GuiManager getGuiManager() {
+        return this.guiManager;
+    }
     private SignHandler signHandler;
+    public SignHandler getSignHandler() {
+        return this.signHandler;
+    }
     public static TraincartsGui getPlugin() {
         return plugin;
     }
@@ -57,10 +63,10 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
         Objects.requireNonNull(getCommand("tcgui")).setTabCompleter(new TabCompleter());
 
         //Register gui manager
-        guiManager = new GuiManager();
+        this.guiManager = new GuiManager();
 
         //Register the sign handler
-        signHandler = new SignHandler();
+        this.signHandler = new SignHandler();
 
         //Register listeners
         getServer().getPluginManager().registerEvents(new InventoryCloseEventHandler(), plugin);
@@ -75,13 +81,6 @@ public final class TraincartsGui extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-    public GuiManager getGuiManager() {
-        return guiManager;
-    }
-    public SignHandler getSignHandler() {
-        return this.signHandler;
     }
     public void reportSqlError(SQLException e) {
         plugin.getLogger().severe("A database error occurred: " + e);

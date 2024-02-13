@@ -1,6 +1,9 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.multipageguis;
 
+import com.dnamaster10.tcgui.objects.buttons.Button;
 import com.dnamaster10.tcgui.objects.buttons.SimpleItemButton;
+import com.dnamaster10.tcgui.objects.guis.PageBuilder;
+import com.dnamaster10.tcgui.objects.guis.SearchSelectGui;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
@@ -20,7 +23,7 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class ShopGui extends MultipageGui {
     @Override
-    protected void generate() throws SQLException {
+    protected Button[] generateNewPage() throws SQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Build tickets and linkers
@@ -46,7 +49,8 @@ public class ShopGui extends MultipageGui {
         SimpleItemButton searchButton = new SimpleItemButton("search", Material.SPYGLASS, "Search This Gui");
         pageBuilder.addButton(49, searchButton);
 
-        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
+        //Add the page to the pages hashmap
+        return pageBuilder.getPage();
     }
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {

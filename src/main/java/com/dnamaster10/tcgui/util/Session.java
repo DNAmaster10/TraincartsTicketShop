@@ -1,9 +1,8 @@
 package com.dnamaster10.tcgui.util;
 
-import com.dnamaster10.tcgui.objects.guis.EditGui;
+import com.dnamaster10.tcgui.objects.guis.multipageguis.EditGui;
 import com.dnamaster10.tcgui.objects.guis.Gui;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 

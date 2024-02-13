@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+
 public class GuiManager {
     //Holds all current sessions bound to a specific player
     private final HashMap<Player, Session> SESSIONS = new HashMap<>();
@@ -32,7 +34,7 @@ public class GuiManager {
         SESSIONS.put(p, newSession);
     }
     public Session getNewSession(Player p) {
-        //Creates a new session and registers it, and returns the session
+        //Creates a new session, removes a player's old session, and returns the new session
         Session newSession = new Session();
         SESSIONS.put(p, newSession);
         return newSession;

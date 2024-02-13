@@ -9,6 +9,8 @@ SignIdentifier: [tcgui]
 
 MaxStoredGuisPerPlayer: 50
 
+MaxPagesPerGui: 50
+
 AllowGuiCreate: true
 AllowGuiEdit: true
 AllowGuiOpen: true

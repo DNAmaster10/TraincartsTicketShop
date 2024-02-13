@@ -1,5 +1,9 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.multipageguis;
 
+import com.dnamaster10.tcgui.objects.buttons.Button;
+import com.dnamaster10.tcgui.objects.guis.InventoryBuilder;
+import com.dnamaster10.tcgui.objects.guis.PageBuilder;
+import com.dnamaster10.tcgui.objects.guis.multipageguis.SearchGui;
 import com.dnamaster10.tcgui.util.Traincarts;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
@@ -18,7 +22,7 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class TicketSearchGui extends SearchGui {
     @Override
-    protected void generate() throws SQLException {
+    protected Button[] generateNewPage() throws SQLException {
         PageBuilder pageBuilder = new PageBuilder();
         TicketAccessor ticketAccessor = new TicketAccessor();
 
@@ -32,7 +36,7 @@ public class TicketSearchGui extends SearchGui {
             pageBuilder.addPrevPageButton();
         }
 
-        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
+        return pageBuilder.getPage();
     }
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {

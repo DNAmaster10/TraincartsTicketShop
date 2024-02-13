@@ -243,14 +243,6 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.executeUpdate();
         }
     }
-    public void deleteGuiByName(String name) throws SQLException {
-        //Deletes a gui by its name
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE name?");
-            statement.setString(1, name);
-            statement.executeUpdate();
-        }
-    }
     public void deletePage(int guiId, int page) throws SQLException {
         //Deletes the given page from a gui. Deletes tickets and linkers too.
         try (Connection connection = getConnection()) {
@@ -260,26 +252,23 @@ public class GuiAccessor extends DatabaseAccessor {
             statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
-            statement.addBatch();
             statement.executeUpdate();
 
             statement = connection.prepareStatement("DELETE FROM linkers WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
-            statement.addBatch();
             statement.executeUpdate();
 
             //Decrement item pages for items above this page
-            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE gui_id=? AND page >= ?");
+            //Note that ORDER BY is required to prevent duplicate key error
+            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
-            statement.addBatch();
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE gui_id=? AND page >= ?");
+            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
-            statement.addBatch();
             statement.executeUpdate();
         }
     }

@@ -1,5 +1,6 @@
 package com.dnamaster10.tcgui.objects.guis;
 
+import com.dnamaster10.tcgui.objects.buttons.Button;
 import com.dnamaster10.tcgui.util.Session;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -21,21 +22,7 @@ public abstract class Gui {
     private int guiId;
     private Player player;
     private String displayName;
-    public void open() {
-        //Defaults to opening async so that even if someone forgets to run async the server won't lag.
-        //Can always be overwritten to make synchronous if no database calls are needed.
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                generate();
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-                return;
-            }
-            Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
-        });
-    }
-    protected abstract void generate() throws SQLException;
+    public abstract void open();
     public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
     protected void back() {
         removeCursorItem();

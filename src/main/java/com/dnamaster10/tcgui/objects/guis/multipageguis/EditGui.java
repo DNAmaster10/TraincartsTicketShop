@@ -1,6 +1,7 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.multipageguis;
 
 import com.dnamaster10.tcgui.objects.buttons.*;
+import com.dnamaster10.tcgui.objects.guis.PageBuilder;
 import com.dnamaster10.tcgui.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
@@ -27,6 +28,7 @@ public class EditGui extends MultipageGui {
     //This is because the inventory close event is called when opening a new gui.
     //This value helps the gui manager to know whether a next page button was clicked, in which case it doesn't need to save
     //or whether the gui was actually closed.
+    private static final int pageLimit = getPlugin().getConfig().getInt("MaxPagesPerGui");
     private boolean wasClosed = true;
     public void handleCloseEvent() {
         if (wasClosed) {
@@ -37,7 +39,8 @@ public class EditGui extends MultipageGui {
             wasClosed = true;
         }
     }
-    protected void generate() throws SQLException {
+    @Override
+    protected Button[] generateNewPage() throws SQLException {
         PageBuilder pageBuilder = new PageBuilder();
 
         //Add items to page
@@ -57,7 +60,7 @@ public class EditGui extends MultipageGui {
         pageBuilder.addButton(47, insertPageButton);
 
         //Add page to the page list
-        setPage(getPageNumber(), pageBuilder.getPage());
+        return pageBuilder.getPage();
     }
     @Override
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
@@ -87,12 +90,20 @@ public class EditGui extends MultipageGui {
             }
         }
     }
+    //The following methods must be overriden to ensure page is saved
+    @Override
+    protected void nextPage() {
+        saveCurrentPage();
+        super.nextPage();
+    }
+    @Override
+    protected void prevPage() {
+        saveCurrentPage();
+        super.prevPage();
+    }
     protected void insertPage() {
         removeCursorItem();
         wasClosed = false;
-
-        //Save the current page first
-        saveCurrentPage();
 
         //Then, we want to delete pages from the page hashmap where they're equal to or more thn the current page, as keys will all have changed
         HashMap<Integer, Button[]> pages = getPages();
@@ -101,6 +112,8 @@ public class EditGui extends MultipageGui {
         //Now, update items within the database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
+                //Save the current page first
+                saveCurrentPage();
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.insertPage(getGuiId(), getPageNumber());
             } catch (SQLException e) {
@@ -205,6 +218,7 @@ public class EditGui extends MultipageGui {
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(p);
+        setMaxPage(pageLimit);
     }
     public EditGui(int guiId, Player p) throws SQLException {
         this(guiId, 0, p);

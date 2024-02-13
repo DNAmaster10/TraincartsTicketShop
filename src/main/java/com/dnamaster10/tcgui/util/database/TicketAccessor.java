@@ -95,7 +95,7 @@ public class TicketAccessor extends DatabaseAccessor {
                     ON DUPLICATE KEY UPDATE 
                         tc_name=VALUES(tc_name),
                         display_name=VALUES(display_name),
-                        raw_display_name=VALUES(raw_display_name),
+                        raw_display_name=VALUES(raw_display_name)
                     """);
             for (TicketDatabaseObject ticket : tickets) {
                 statement.setInt(1, guiId);

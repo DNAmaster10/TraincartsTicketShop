@@ -1,6 +1,8 @@
-package com.dnamaster10.tcgui.objects.guis;
+package com.dnamaster10.tcgui.objects.guis.multipageguis;
 
 import com.dnamaster10.tcgui.objects.buttons.Button;
+import com.dnamaster10.tcgui.objects.guis.Gui;
+import com.dnamaster10.tcgui.objects.guis.InventoryBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
@@ -22,6 +24,7 @@ public abstract class MultipageGui extends Gui {
         //Returns the page hashmap
         return pages;
     }
+    protected abstract Button[] generateNewPage() throws SQLException;
     protected int getPageNumber() {
         return this.currentPage;
     }
@@ -75,17 +78,22 @@ public abstract class MultipageGui extends Gui {
         if (!checkPage(getPageNumber())) {
             //If it doesn't, generate a new page asynchronously and open it
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+                Button[] newPage;
                 try {
-                    generate();
+                    newPage = generateNewPage();
                 } catch (SQLException e) {
                     openErrorGui("An error occurred generating that gui");
                     getPlugin().reportSqlError(getPlayer(), e);
                     return;
                 }
-                InventoryBuilder inventoryBuilder = new InventoryBuilder(pages.get(currentPage), getDisplayName());
+                //Add the new page to the hashmap
+                setPage(getPageNumber(), newPage);
+                InventoryBuilder inventoryBuilder = new InventoryBuilder(newPage, getDisplayName());
                 Inventory newInventory = inventoryBuilder.getInventory();
                 setInventory(newInventory);
-                getPlayer().openInventory(newInventory);
+
+                //Inventories must be opened sync
+                Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(newInventory));
             });
             return;
         }

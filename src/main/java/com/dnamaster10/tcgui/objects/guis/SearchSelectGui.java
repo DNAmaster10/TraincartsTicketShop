@@ -21,8 +21,6 @@ public class SearchSelectGui extends Gui {
         generate();
         Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(getInventory()));
     }
-
-    @Override
     protected void generate() {
         //Build gui and add to inventory
         PageBuilder pageBuilder = new PageBuilder();
