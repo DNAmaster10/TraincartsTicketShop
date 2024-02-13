@@ -20,6 +20,8 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
 public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
     //Example command: /tcgui linker setDestinationPage <destination page>
+    private Player player;
+    private ItemStack linker;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -34,31 +36,32 @@ public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.linker.setdestinationpage")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.linker.setdestinationpage")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnError(sender, "Missing argument(s): /tcgui linker setDestinationPage <destination page>");
+            returnError(player, "Missing argument(s): /tcgui linker setDestinationPage <destination page>");
             return false;
         }
         if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+            returnError(player, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
         if (!Utilities.isInt(args[2])) {
-            returnError(sender, "Page number must be a valid integer");
+            returnError(player, "Page number must be a valid integer");
             return false;
         }
 
         //Check that player is holding a linker
-        ItemStack linker = ((Player) sender).getInventory().getItemInMainHand();
+        linker = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(linker);
-        if (!Objects.equals(buttonType, "linker")) {
-            returnWrongItemError(sender, "linker");
+        if (buttonType == null || !buttonType.equals("linker")) {
+            returnWrongItemError(player, "linker");
             return false;
         }
         return true;
@@ -66,20 +69,21 @@ public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        return false;
+        return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        ItemStack linker = ((Player) sender).getInventory().getItemInMainHand();
+        //Get the linker meta
         ItemMeta meta = linker.getItemMeta();
         assert meta != null;
-        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
 
+        //Add the keys and data
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(DEST_GUI_PAGE, PersistentDataType.INTEGER, Integer.parseInt(args[2]) - 1);
         linker.setItemMeta(meta);
 
-        sender.sendMessage(ChatColor.GREEN + "Linker page set");
+        player.sendMessage(ChatColor.GREEN + "Linker page set");
     }
 
     @Override

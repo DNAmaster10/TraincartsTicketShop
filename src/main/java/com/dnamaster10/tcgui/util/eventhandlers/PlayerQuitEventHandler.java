@@ -9,6 +9,6 @@ import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 public class PlayerQuitEventHandler implements Listener {
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        getPlugin().getGuiManager().handleLeaveEvent(event.getPlayer());
+        getPlugin().getGuiManager().handlePlayerLeave(event.getPlayer());
     }
 }

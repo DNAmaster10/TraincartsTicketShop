@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.guis.ShopGui;
+import com.dnamaster10.tcgui.util.Session;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 public class GuiOpenCommandHandler extends CommandHandler {
     //Example command: /tcgui gui open <gui_name>
     private GuiAccessor guiAccessor;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -27,7 +29,8 @@ public class GuiOpenCommandHandler extends CommandHandler {
         }
         else {
             //Check permissions
-            if (!p.hasPermission("tcgui.gui.open")) {
+            player = p;
+            if (!player.hasPermission("tcgui.gui.open")) {
                 returnError(sender, "You do not have permission to perform that action");
                 return false;
             }
@@ -56,7 +59,7 @@ public class GuiOpenCommandHandler extends CommandHandler {
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
             return false;
         }
         return true;
@@ -64,16 +67,19 @@ public class GuiOpenCommandHandler extends CommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
+        //Get the gui id
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
+
         //Create a new gui
-        ShopGui gui = new ShopGui(args[2], (Player) sender);
+        ShopGui gui = new ShopGui(guiId, player);
 
-        //Open the gui
+        //Create a new gui session
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
+        //Register the new gui
+        session.addGui(gui);
+
+        //Open the new gui
         gui.open();
-
-        //Remove the old guis attached to this player
-        getPlugin().getGuiManager().clearGuis((Player) sender);
-
-        //Register the gui
-        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 }

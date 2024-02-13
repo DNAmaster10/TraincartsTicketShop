@@ -18,9 +18,9 @@ import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 public class SignHandler {
     //Sign format example:
     //Line 1: This is a gui!
-    //Line 2: Test123
-    //Line 3: [tcgui] <optional page num>
-    //Line 4: <tcgui name>
+    //Line 2: [tcgui] <optional page num>
+    //Line 3: <tcgui name>
+    //Line 4: Test123
     boolean isGuiSign(Sign sign) {
         String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
         if (signIdentifier == null || signIdentifier.isBlank()) {
@@ -106,18 +106,20 @@ public class SignHandler {
                     page = 0;
                 }
 
-                //Create new gui
-                Player p = event.getPlayer();
-                ShopGui gui = new ShopGui(guiName, page, p);
+                Player player = event.getPlayer();
+
+                //Create the new gui
+                ShopGui shopGui = new ShopGui(guiId, page, player);
+
+                //Create a new session
+                Session session = getPlugin().getGuiManager().getSession(player);
+
+                //Register the new gui
+                session.addGui(shopGui);
 
                 //Open the gui
-                gui.open();
+                shopGui.open();
 
-                //Clear old player guis
-                getPlugin().getGuiManager().clearGuis(p);
-
-                //Register the gui
-                getPlugin().getGuiManager().addGui(p, gui);
             } catch (SQLException e) {
                 getPlugin().reportSqlError(event.getPlayer(), e);
             }

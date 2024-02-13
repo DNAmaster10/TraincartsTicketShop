@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.guis.TicketSearchGui;
+import com.dnamaster10.tcgui.util.Session;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -14,6 +15,7 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler {
     //Example command: /tcgui gui searchTickets <gui name> <search term>
     private String searchTerm;
     private GuiAccessor guiAccessor;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -27,19 +29,20 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.search.searchtickets")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.gui.search.searchtickets")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui gui searchTickets <gui name> <search term>");
+            returnError(player, "Missing argument(s): /tcgui gui searchTickets <gui name> <search term>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
             return false;
         }
 
@@ -49,11 +52,11 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler {
         }
         searchTerm = joiner.toString();
         if (searchTerm.length() > 25) {
-            returnError(sender, "Search term cannot be longer than 25 characters in length");
+            returnError(player, "Search term cannot be longer than 25 characters in length");
             return false;
         }
         if (searchTerm.isBlank()) {
-            returnError(sender, "Search term cannot be less than 1 character in length");
+            returnError(player, "Search term cannot be less than 1 character in length");
             return false;
         }
         return true;
@@ -64,7 +67,7 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler {
         //Check gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
             return false;
         }
         return true;
@@ -72,16 +75,19 @@ public class GuiSearchTicketsCommandHandler extends CommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
+        //Get the new gui id
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
+
         //Create new gui
-        TicketSearchGui gui = new TicketSearchGui(args[2], searchTerm, (Player) sender);
+        TicketSearchGui gui = new TicketSearchGui(guiId, searchTerm, 0, (Player) sender);
 
-        //Open the gui
+        //Open a new gui session for the player
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
+        //Register the new gui
+        session.addGui(gui);
+
+        //Open the gui to the player
         gui.open();
-
-        //Clear previous guis opened by the player
-        getPlugin().getGuiManager().clearGuis((Player) sender);
-
-        //Register the gui
-        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 }

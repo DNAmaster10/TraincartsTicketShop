@@ -196,19 +196,17 @@ public class EditGui extends MultipageGui {
         });
     }
 
-    public EditGui(String guiName, int page, Player p) throws SQLException {
+    public EditGui(int guiId, int page, Player p) throws SQLException {
         //Should be called from an asynchronous thread
         GuiAccessor guiAccessor = new GuiAccessor();
-        String displayName = "Editing: " + guiAccessor.getColouredGuiDisplayName(guiName);
-        int guiId = guiAccessor.getGuiIdByName(guiName);
+        String displayName = "Editing: " + guiAccessor.getColouredDisplayNameById(guiId);
 
-        setGuiName(guiName);
         setDisplayName(displayName);
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(p);
     }
-    public EditGui(String guiName, Player p) throws SQLException {
-        this(guiName, 0, p);
+    public EditGui(int guiId, Player p) throws SQLException {
+        this(guiId, 0, p);
     }
 }

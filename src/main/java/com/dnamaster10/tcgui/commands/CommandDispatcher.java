@@ -1,6 +1,5 @@
 package com.dnamaster10.tcgui.commands;
 
-import com.dnamaster10.tcgui.commands.commandhandlers.company.CompanyCreateCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveAllCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.editor.EditorRemoveCommandHandler;
 import com.dnamaster10.tcgui.commands.commandhandlers.gui.*;
@@ -42,14 +41,6 @@ public class CommandDispatcher implements CommandExecutor {
 
         //Decide how to handle command
         switch (args[0].toLowerCase()) {
-            case "company" -> {
-                switch (args[1].toLowerCase()) {
-                    case "create" -> {
-                        CompanyCreateCommandHandler handler = new CompanyCreateCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                }
-            }
             case "gui" -> {
                 switch (args[1].toLowerCase()) {
                     case "create" -> {

@@ -29,9 +29,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
         //Select an appropriate tab completer for the given sub-command
         switch (args[0].toLowerCase()) {
-            case "company" -> {
-                return new CompanyTabCompleter().onTabComplete(commandSender, args);
-            }
             case "gui" -> {
                 return new GuiTabCompleter().onTabComplete(commandSender, args);
             }

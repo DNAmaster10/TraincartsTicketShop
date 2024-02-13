@@ -13,7 +13,9 @@ import java.util.StringJoiner;
 
 public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
     //Example command: /tcgui ticket rename <new_name>
-    String colouredDisplayName;
+    private String displayName;
+    private Player player;
+    ItemStack ticket;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -28,15 +30,16 @@ public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.ticket.setdisplayname")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.ticket.setdisplayname")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnError(sender, "Please enter a new name for the ticket");
+            returnError(player, "Please enter a new name for the ticket");
             return false;
         }
 
@@ -45,25 +48,25 @@ public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
         for (int i = 2; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+        displayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(displayName);
 
         if (rawDisplayName.length() > 25) {
-            returnError(sender, "Ticket names cannot be more than 25 characters in length");
+            returnError(player, "Ticket names cannot be more than 25 characters in length");
             return false;
         }
         if (rawDisplayName.isBlank()) {
-            returnError(sender, "Ticket names cannot be less than 1 character in length");
+            returnError(player, "Ticket names cannot be less than 1 character in length");
             return false;
         }
-        if (colouredDisplayName.length() > 100) {
-            returnError(sender, "Too many colours!");
+        if (displayName.length() > 100) {
+            returnError(player, "Too many colours!");
         }
 
         //Now check that the player is holding a ticket
-        ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
+        ticket = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(ticket);
-        if (buttonType == null) {
+        if (buttonType == null || !buttonType.equals("ticket")) {
             returnWrongItemError(sender, "ticket");
             return false;
         }
@@ -78,13 +81,12 @@ public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        //Get item
-        ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
+        //Set new display name
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(colouredDisplayName);
+        meta.setDisplayName(displayName);
         ticket.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + colouredDisplayName + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + displayName + "\"");
     }
 
     @Override

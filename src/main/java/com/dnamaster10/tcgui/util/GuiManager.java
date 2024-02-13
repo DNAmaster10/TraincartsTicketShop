@@ -31,6 +31,15 @@ public class GuiManager {
         Session newSession = new Session();
         SESSIONS.put(p, newSession);
     }
+    public Session getNewSession(Player p) {
+        //Creates a new session and registers it, and returns the session
+        Session newSession = new Session();
+        SESSIONS.put(p, newSession);
+        return newSession;
+    }
+    public void closeSession(Player player) {
+        SESSIONS.remove(player);
+    }
     public void handleInventoryClick(InventoryClickEvent event, List<ItemStack> items) {
         if (!(event.getWhoClicked() instanceof Player p)) {
             return;
@@ -51,5 +60,13 @@ public class GuiManager {
         if (session != null) {
             session.handleInventoryClose();
         }
+    }
+    public void handlePlayerLeave(Player player) {
+        //The only thing which needs to happen here is to save any open edit gui. This can be handled
+        //the same way as an inventory close event.
+        getSession(player).handleInventoryClose();
+
+        //Delete the session
+        closeSession(player);
     }
 }

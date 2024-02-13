@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.StringJoiner;
@@ -14,6 +15,7 @@ import java.util.StringJoiner;
 public class TicketCreateCommandHandler extends CommandHandler {
     //Example command: /tcgui ticket create <tc_ticket_name> <display_name>
     private String displayName;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
@@ -29,15 +31,16 @@ public class TicketCreateCommandHandler extends CommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.ticket.create")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.ticket.create")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui ticket create <tc ticket name> <display name>");
+            returnError(player, "Missing argument(s): /tcgui ticket create <tc ticket name> <display name>");
             return false;
         }
 
@@ -45,14 +48,19 @@ public class TicketCreateCommandHandler extends CommandHandler {
         for (int i = 3; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
+        displayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(displayName);
 
-        if (displayName.isBlank()) {
-            returnError(sender, "Ticket names cannot be less than 1 character in length");
+        if (rawDisplayName.isBlank()) {
+            returnError(player, "Ticket names cannot be less than 1 character in length");
             return false;
         }
-        if (displayName.length() > 25) {
-            returnError(sender, "Ticket names cannot be more than 25 characters in length");
+        if (rawDisplayName.length() > 25) {
+            returnError(player, "Ticket names cannot be more than 25 characters in length");
+            return false;
+        }
+        if (displayName.length() > 100) {
+            returnError(sender, "You've used too many colours in that display name");
             return false;
         }
 
@@ -64,7 +72,7 @@ public class TicketCreateCommandHandler extends CommandHandler {
         //Check that ticket exits in traincarts.
         //Although not required to do async now, async is used in case traincarts switches to storing tickets in a database
         if (!Traincarts.checkTicket(args[2])) {
-            returnError(sender, "No traincarts ticket with the name \"" + args[2] + "\" exists");
+            returnError(player, "No traincarts ticket with the name \"" + args[2] + "\" exists");
             return false;
         }
         return true;
@@ -72,8 +80,11 @@ public class TicketCreateCommandHandler extends CommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        Ticket ticket = new Ticket(args[2], ChatColor.translateAlternateColorCodes('&', displayName), 0);
-        ticket.giveToPlayer((Player) sender);
-        sender.sendMessage(ChatColor.GREEN + "Successfully created ticket");
+        //Create the ticket object
+        Ticket ticket = new Ticket(args[2], displayName);
+
+        //Give the ticket to the player
+        ItemStack ticketItem = ticket.getItemStack();
+        player.getInventory().addItem(ticketItem);
     }
 }

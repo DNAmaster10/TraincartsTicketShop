@@ -16,6 +16,8 @@ import static com.dnamaster10.tcgui.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class TicketSetTraincartsTicket extends ItemCommandHandler {
     //Example command: /tcgui ticket setTraincartsTicket <traincarts ticket>
+    Player player;
+    ItemStack ticket;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -30,33 +32,34 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.ticket.settraincartsticket")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.ticket.settraincartsticket")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnError(sender, "Missing argument(s): /tcgui ticket setTraincartsTicket <traincarts ticket>");
+            returnError(player, "Missing argument(s): /tcgui ticket setTraincartsTicket <traincarts ticket>");
             return false;
         }
         if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+            returnError(player, "Invalid sub-command \"" + args[3] + "\"");
             return false;
         }
 
-        //Check traincarts ticket exists
+        //Check Traincarts ticket exists
         if (!Traincarts.checkTicket(args[2])) {
-            returnError(sender, "Traincarts ticket \"" + args[2] + "\" does not exist");
+            returnError(player, "Traincarts ticket \"" + args[2] + "\" does not exist");
             return false;
         }
 
         //Check player is holding a ticket
-        ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
+        ticket = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(ticket);
-        if (!Objects.equals(buttonType, "ticket")) {
-            returnWrongItemError(sender, "ticket");
+        if (buttonType == null || !buttonType.equals("ticket")) {
+            returnWrongItemError(player, "ticket");
             return false;
         }
 
@@ -70,7 +73,6 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        ItemStack ticket = ((Player) sender).getInventory().getItemInMainHand();
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
 
@@ -78,7 +80,7 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
         dataContainer.set(TC_TICKET_NAME, PersistentDataType.STRING, args[2]);
         ticket.setItemMeta(meta);
 
-        sender.sendMessage(ChatColor.GREEN + "Traincarts ticket changed to \"" + args[2] + "\"");
+        player.sendMessage(ChatColor.GREEN + "Traincarts ticket changed to \"" + args[2] + "\"");
     }
 
     @Override

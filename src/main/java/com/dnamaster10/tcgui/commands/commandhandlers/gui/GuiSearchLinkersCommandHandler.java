@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.guis.LinkerSearchGui;
+import com.dnamaster10.tcgui.util.Session;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,8 +13,9 @@ import java.util.StringJoiner;
 
 public class GuiSearchLinkersCommandHandler extends CommandHandler {
     //Example command: /tcgui gui searchLinkers <gui name> <search term>
-    String searchTerm;
+    private String searchTerm;
     private GuiAccessor guiAccessor;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -27,15 +29,16 @@ public class GuiSearchLinkersCommandHandler extends CommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.gui.search.searchlinkers")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.gui.search.searchlinkers")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tcgui gui searchLinkers <gui name> <search term>");
+            returnError(player, "Missing argument(s): /tcgui gui searchLinkers <gui name> <search term>");
             return false;
         }
 
@@ -45,11 +48,11 @@ public class GuiSearchLinkersCommandHandler extends CommandHandler {
         }
         searchTerm = joiner.toString();
         if (searchTerm.length() > 25) {
-            returnError(sender, "Search term cannot be longer than 25 characters in length");
+            returnError(player, "Search term cannot be longer than 25 characters in length");
             return false;
         }
         if (searchTerm.isBlank()) {
-            returnError(sender, "Search terms cannot be less than 1 character in length");
+            returnError(player, "Search terms cannot be less than 1 character in length");
             return false;
         }
         return true;
@@ -60,7 +63,7 @@ public class GuiSearchLinkersCommandHandler extends CommandHandler {
         //Check gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
             return false;
         }
         return true;
@@ -68,9 +71,19 @@ public class GuiSearchLinkersCommandHandler extends CommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        LinkerSearchGui gui = new LinkerSearchGui(args[2], searchTerm, (Player) sender);
+        //Get the search gui id
+        int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
+
+        //Create the search gui
+        LinkerSearchGui gui = new LinkerSearchGui(searchGuiId, searchTerm, player);
+
+        //Open a new session
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
+        //Register the new gui
+        session.addGui(gui);
+
+        //Open the new gui
         gui.open();
-        getPlugin().getGuiManager().clearGuis((Player) sender);
-        getPlugin().getGuiManager().addGui((Player) sender, gui);
     }
 }

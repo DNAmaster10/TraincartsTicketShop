@@ -2,6 +2,7 @@ package com.dnamaster10.tcgui.commands.commandhandlers.gui;
 
 import com.dnamaster10.tcgui.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.tcgui.objects.guis.EditGui;
+import com.dnamaster10.tcgui.util.Session;
 import com.dnamaster10.tcgui.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 public class GuiEditCommandHandler extends CommandHandler {
     //Example command: /tcgui gui edit <gui_name>
     private GuiAccessor guiAccessor;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -49,18 +51,18 @@ public class GuiEditCommandHandler extends CommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
         guiAccessor = new GuiAccessor();
+        player = (Player) sender;
 
         //Check that gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
             return false;
         }
 
         //Check that player is owner or editor of gui
-        Player p = (Player) sender;
-        if (!p.hasPermission("tcgui.admin.gui.edit")) {
-            if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
-                returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
+        if (!player.hasPermission("tcgui.admin.gui.edit")) {
+            if (!guiAccessor.playerCanEdit(args[2], player.getUniqueId().toString())) {
+                returnError(player, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
                 return false;
             }
         }
@@ -69,17 +71,19 @@ public class GuiEditCommandHandler extends CommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws SQLException {
-        //Create a new GUI
-        EditGui gui = new EditGui(args[2], (Player) sender);
+        //Get the gui id
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
 
-        //Open the gui
-        gui.open();
+        //Create the new gui
+        EditGui gui = new EditGui(guiId, player);
 
-        //Remove all previous guis registered to player as this is a new session
-        getPlugin().getGuiManager().clearGuis((Player) sender);
+        //Open a new gui session
+        Session session = getPlugin().getGuiManager().getNewSession(player);
 
         //Register the gui
-        getPlugin().getGuiManager().addGui((Player) sender, gui);
-    }
+        session.addGui(gui);
 
+        //Open the new gui
+        gui.open();
+    }
 }

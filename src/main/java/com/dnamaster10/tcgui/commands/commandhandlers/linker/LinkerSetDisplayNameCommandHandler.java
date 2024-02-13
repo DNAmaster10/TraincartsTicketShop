@@ -13,6 +13,8 @@ import java.util.StringJoiner;
 
 public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
     private String colouredDisplayName;
+    private ItemStack linker;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -27,15 +29,16 @@ public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
             return false;
         }
         else {
-            if (!p.hasPermission("tcgui.linker.rename")) {
-                returnError(sender, "You do not have permission to perform that action");
+            player = p;
+            if (!player.hasPermission("tcgui.linker.rename")) {
+                returnError(player, "You do not have permission to perform that action");
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnError(sender, "Please enter a new name for the linker");
+            returnError(player, "Please enter a new name for the linker");
             return false;
         }
 
@@ -49,23 +52,23 @@ public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
         String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
-            returnError(sender, "Linker names cannot be more than 25 characters in length");
+            returnError(player, "Linker names cannot be more than 25 characters in length");
             return false;
         }
         if (rawDisplayName.isBlank()) {
-            returnError(sender, "Linker names cannot be less than 1 character in length");
+            returnError(player, "Linker names cannot be less than 1 character in length");
             return false;
         }
         if (colouredDisplayName.length() > 100) {
-            returnError(sender, "Too many colours!");
+            returnError(player, "Too many colours!");
             return false;
         }
 
         //Check that player is holding a linker
-        ItemStack linker = ((Player) sender).getInventory().getItemInMainHand();
+        linker = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(linker);
-        if (!Objects.equals(buttonType, "linker")) {
-            returnWrongItemError(sender, "linker");
+        if (buttonType == null || !buttonType.equals("linker")) {
+            returnWrongItemError(player, "linker");
         }
         return true;
     }
@@ -77,10 +80,11 @@ public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        //Get item
-        ItemStack linker = ((Player) sender).getInventory().getItemInMainHand();
+        //Get the item meta
         ItemMeta meta = linker.getItemMeta();
         assert meta != null;
+
+        //Set the data
         meta.setDisplayName(colouredDisplayName);
         linker.setItemMeta(meta);
         sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
