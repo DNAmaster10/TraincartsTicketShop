@@ -11,7 +11,6 @@ import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -20,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.GREEN_PLUS;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
 
@@ -32,7 +32,8 @@ public class EditGui extends MultipageGui {
     private boolean wasClosed = true;
     public void handleCloseEvent() {
         if (wasClosed) {
-            saveCurrentPage();
+            saveToHashmap();
+            savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
             wasClosed = false;
         }
         else {
@@ -93,27 +94,31 @@ public class EditGui extends MultipageGui {
     //The following methods must be overriden to ensure page is saved
     @Override
     protected void nextPage() {
-        saveCurrentPage();
+        saveToHashmap();
+        savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
         super.nextPage();
     }
     @Override
     protected void prevPage() {
-        saveCurrentPage();
+        saveToHashmap();
+        savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
         super.prevPage();
     }
     protected void insertPage() {
         removeCursorItem();
         wasClosed = false;
 
-        //Then, we want to delete pages from the page hashmap where they're equal to or more thn the current page, as keys will all have changed
-        HashMap<Integer, Button[]> pages = getPages();
-        pages.entrySet().removeIf(e -> e.getKey() >= getPageNumber());
-
         //Now, update items within the database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Get the current inventory as a page object to save to database
+            PageBuilder pageBuilder = new PageBuilder();
+            pageBuilder.addInventory(getInventory());
+            Button[] page = pageBuilder.getPage();
             try {
-                //Save the current page first
-                saveCurrentPage();
+                //Save the current page to the database
+                savePageToDatabase(getPageNumber(), page);
+
+                //Move pages up in the database
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.insertPage(getGuiId(), getPageNumber());
             } catch (SQLException e) {
@@ -121,6 +126,8 @@ public class EditGui extends MultipageGui {
                 getPlugin().reportSqlError(getPlayer(), e);
                 return;
             }
+            //Remove pages more than or equal to the current page in the hashmap as these have been changed
+            getPages().entrySet().removeIf(e -> e.getKey() >= getPageNumber());
 
             //Open the altered gui to the player
             open();
@@ -139,38 +146,15 @@ public class EditGui extends MultipageGui {
             newGui.open();
         });
     }
-    public void saveCurrentPage() {
-        //Saves the current page to the page hashmap and then the database
-        //Should be used when going between pages or when the gui is closed.
-        Button[] guiButtons = new Button[54];
-
-        //For every item in the inventory
-        Inventory inventory = getInventory();
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
-
-            //Check if the item is a TCGui button
-            if (item == null) {
-                continue;
-            }
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-
-            //Item is button, create a new button object from the item
-            Button button = Buttons.getNewButton(buttonType, item);
-            guiButtons[i] = button;
-        }
-
-        //Save the page to the gui list
-        super.setPage(getPageNumber(), guiButtons);
-
-        //Save the page to the database
-        savePageToDatabase(getPageNumber(), guiButtons);
+    public void saveToHashmap() {
+        //Saves the current page to the page hashmap
+        PageBuilder pageBuilder = new PageBuilder();
+        pageBuilder.addInventory(getInventory());
+        setPage(getPageNumber(), pageBuilder.getPage());
     }
     public void savePageToDatabase(int pageNumber, Button[] pageContents) {
-        //Only needs to save tickets and linkers
+        //Saves the given page to the database
+        //Only needs to save tickets and linkers - should be called from async thread
 
         //Create savable lists
         List<TicketDatabaseObject> tickets = new ArrayList<>();
@@ -195,18 +179,16 @@ public class EditGui extends MultipageGui {
         }
 
         //With lists of tickets and linkers, we can add them to the database asynchronously
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                TicketAccessor ticketAccessor = new TicketAccessor();
-                LinkerAccessor linkerAccessor = new LinkerAccessor();
+        try {
+            TicketAccessor ticketAccessor = new TicketAccessor();
+            LinkerAccessor linkerAccessor = new LinkerAccessor();
 
-                ticketAccessor.saveTicketPage(getGuiId(), pageNumber, tickets);
-                linkerAccessor.saveLinkerPage(getGuiId(), pageNumber, linkers);
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-            }
-        });
+            ticketAccessor.saveTicketPage(getGuiId(), pageNumber, tickets);
+            linkerAccessor.saveLinkerPage(getGuiId(), pageNumber, linkers);
+        } catch (SQLException e) {
+            removeCursorItemAndClose();
+            getPlugin().reportSqlError(getPlayer(), e);
+        }
     }
 
     public EditGui(int guiId, int page, Player p) throws SQLException {

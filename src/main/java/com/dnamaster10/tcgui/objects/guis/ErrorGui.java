@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.RED_CROSS;
 
 public class ErrorGui extends Gui {

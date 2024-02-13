@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 
 public class SearchSelectGui extends Gui {
     //The gui which will be searched

@@ -1,22 +1,41 @@
 package com.dnamaster10.tcgui.objects.guis;
 
-import com.dnamaster10.tcgui.objects.buttons.Button;
-import com.dnamaster10.tcgui.objects.buttons.Linker;
-import com.dnamaster10.tcgui.objects.buttons.SimpleHeadButton;
-import com.dnamaster10.tcgui.objects.buttons.Ticket;
+import com.dnamaster10.tcgui.objects.buttons.*;
 import com.dnamaster10.tcgui.util.database.LinkerAccessor;
 import com.dnamaster10.tcgui.util.database.TicketAccessor;
 import com.dnamaster10.tcgui.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.tcgui.util.database.databaseobjects.TicketDatabaseObject;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.tcgui.objects.buttons.HeadData.HeadType.*;
 
 public class PageBuilder {
     private final Button[] page = new Button[54];
     public Button[] getPage() {
         return this.page;
+    }
+    public void addInventory(Inventory inventory) {
+        //Builds the page from an inventory
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+
+            //Check if the item is a TCGui button
+            if (item == null) {
+                continue;
+            }
+            String buttonType = getButtonType(item);
+            if (buttonType == null) {
+                continue;
+            }
+
+            //Item is button, create a new button object from the item
+            Button button = Buttons.getNewButton(buttonType, item);
+            page[i] = button;
+        }
     }
     public void addTickets(TicketDatabaseObject[] tickets) {
         for (TicketDatabaseObject ticketDatabaseObject : tickets) {

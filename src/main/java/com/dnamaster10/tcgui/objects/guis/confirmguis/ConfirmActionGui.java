@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 
 public abstract class ConfirmActionGui extends Gui {
     @Override

@@ -1,16 +1,31 @@
 package com.dnamaster10.tcgui.objects.buttons;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.Objects;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.*;
 
 public class Buttons {
     //A utility class for buttons
+    public static String getButtonType(ItemStack button) {
+        //Returns the button type from a given item
+        //First check if item is a button
+        NamespacedKey key = new NamespacedKey(getPlugin(), "button_type");
+        if (!button.hasItemMeta()) {
+            return null;
+        }
+        if (!Objects.requireNonNull(button.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+            return null;
+        }
+        return button.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
+    }
     public static Button getNewButton(String buttonType, ItemStack item) {
         //Returns a new button object from a button type and an item
         //If any of the item keys are invalid, null will be returned

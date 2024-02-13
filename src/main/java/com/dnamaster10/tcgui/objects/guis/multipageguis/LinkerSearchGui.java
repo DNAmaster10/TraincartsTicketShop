@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.dnamaster10.tcgui.TraincartsGui.getPlugin;
+import static com.dnamaster10.tcgui.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_ID;
 import static com.dnamaster10.tcgui.objects.buttons.DataKeys.DEST_GUI_PAGE;
 

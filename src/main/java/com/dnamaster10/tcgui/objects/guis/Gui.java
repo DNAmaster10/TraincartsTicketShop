@@ -83,17 +83,6 @@ public abstract class Gui {
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             player.closeInventory();}, 1L);
     }
-    protected String getButtonType(ItemStack button) {
-        //First check if item is a button
-        NamespacedKey key = new NamespacedKey(getPlugin(), "button_type");
-        if (!button.hasItemMeta()) {
-            return null;
-        }
-        if (!Objects.requireNonNull(button.getItemMeta()).getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-            return null;
-        }
-        return button.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
-    }
     protected void openErrorGui(String errorMessage) {
         ErrorGui errorGui = new ErrorGui(errorMessage, player);
         player.setItemOnCursor(null);
