@@ -34,8 +34,7 @@ public class ShopGui extends MultipageGui {
 
 
         //Check if there are any more pages
-        int totalPages = guiAccessor.getMaxPage(getGuiId());
-        if (totalPages > getPageNumber()) {
+        if (getMaxPage() > getPageNumber()) {
             pageBuilder.addNextPageButton();
         }
         if (getPageNumber() > 0) {
@@ -180,6 +179,7 @@ public class ShopGui extends MultipageGui {
         setPlayer(p);
         setPageNumber(page);
         setGuiId(guiId);
+        setMaxPage(guiAccessor.getMaxPage(guiId));
     }
     public ShopGui(int guiId, Player p) throws SQLException {
         this(guiId, 0, p);

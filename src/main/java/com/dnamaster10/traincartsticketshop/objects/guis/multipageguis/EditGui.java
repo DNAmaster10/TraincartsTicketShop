@@ -32,12 +32,11 @@ public class EditGui extends MultipageGui {
     private boolean wasClosed = true;
     public void handleCloseEvent() {
         if (wasClosed) {
-            savePageToDatabase(getPageNumber(), getPage(getPageNumber()));
-            wasClosed = false;
+            saveToHashmap();
+            saveCurrentPageToDatabase();
+            return;
         }
-        else {
-            wasClosed = true;
-        }
+        wasClosed = true;
     }
     @Override
     protected Button[] generateNewPage() throws SQLException {
@@ -71,21 +70,24 @@ public class EditGui extends MultipageGui {
                 continue;
             }
             //Add the button back to the inventory before saving
-            getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
             switch (buttonType) {
                 case "next_page" -> {
+                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
                     this.nextPage();
                     return;
                 }
                 case "prev_page" -> {
+                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
                     this.prevPage();
                     return;
                 }
                 case "delete_page" -> {
+                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
                     deletePage();
                     return;
                 }
                 case "insert_page" -> {
+                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
                     insertPage();
                     return;
                 }
@@ -95,12 +97,14 @@ public class EditGui extends MultipageGui {
     //The following methods must be overriden to ensure page is saved
     @Override
     protected void nextPage() {
+        wasClosed = false;
         saveToHashmap();
         saveCurrentPageToDatabase();
         super.nextPage();
     }
     @Override
     protected void prevPage() {
+        wasClosed = false;
         saveToHashmap();
         saveCurrentPageToDatabase();
         super.prevPage();
@@ -160,9 +164,7 @@ public class EditGui extends MultipageGui {
     private void saveCurrentPageToDatabase() {
         //Can safely be called from sync thread
         final int currentPageNumber = getPageNumber();
-        PageBuilder pageBuilder = new PageBuilder();
-        pageBuilder.addInventory(getInventory());
-        final Button[] currentPage = pageBuilder.getPage();
+        final Button[] currentPage = getPage(currentPageNumber).clone();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> savePageToDatabase(currentPageNumber, currentPage));
     }
     private void savePageToDatabase(int pageNumber, Button[] pageContents) {
