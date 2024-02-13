@@ -38,4 +38,4 @@ AllowCompanyCreate: true
 AllowCompanyDelete: true
 
 # No touch please
-config-version: ${project.version}
+ConfigVersion: ${project.version}

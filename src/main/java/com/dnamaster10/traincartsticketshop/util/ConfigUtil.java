@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ConfigUtil {
     public static void migrateIfNeeded(FileConfiguration oldConfig, Plugin plugin) throws IOException {
-        if (!oldConfig.getString("config-version").equals(plugin.getDescription().getVersion()) || plugin.getDescription().getVersion().contains("SNAPSHOT")) {
+        if (!Objects.equals(oldConfig.getString("ConfigVersion"), plugin.getDescription().getVersion()) || plugin.getDescription().getVersion().contains("SNAPSHOT")) {
             plugin.getLogger().info("Your config version does not match the plugin version (or you are using a dev build), updating...");
 
             //load config
