@@ -25,6 +25,11 @@ public abstract class ConfirmActionGui extends Gui {
     public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
         for (ItemStack item : items) {
             String buttonType = getButtonType(item);
+            if (buttonType == null) {
+                continue;
+            }
+            //Remove item from cursor since it is a button
+            getPlayer().setItemOnCursor(null);
             switch (buttonType) {
                 case "back" -> {
                     back();

@@ -46,6 +46,7 @@ public class TicketSearchGui extends SearchGui {
             if (buttonType == null) {
                 continue;
             }
+            getPlayer().setItemOnCursor(null);
             switch (buttonType) {
                 case "ticket" -> {
                     handleTicketClick(item);
@@ -63,7 +64,6 @@ public class TicketSearchGui extends SearchGui {
         }
     }
     public void handleTicketClick(ItemStack ticket) {
-        removeCursorItem();
         //Get ticket data
         ItemMeta meta = ticket.getItemMeta();
         if (meta == null) {

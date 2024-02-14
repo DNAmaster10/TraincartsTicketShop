@@ -70,25 +70,28 @@ public class EditGui extends MultipageGui {
             if (buttonType == null) {
                 continue;
             }
-            //Add the button back to the inventory before saving
             switch (buttonType) {
                 case "next_page" -> {
                     getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+                    getPlayer().setItemOnCursor(null);
                     this.nextPage();
                     return;
                 }
                 case "prev_page" -> {
                     getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+                    getPlayer().setItemOnCursor(null);
                     this.prevPage();
                     return;
                 }
                 case "delete_page" -> {
                     getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+                    getPlayer().setItemOnCursor(null);
                     deletePage();
                     return;
                 }
                 case "insert_page" -> {
                     getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+                    getPlayer().setItemOnCursor(null);
                     insertPage();
                     return;
                 }
@@ -111,7 +114,6 @@ public class EditGui extends MultipageGui {
         super.prevPage();
     }
     protected void insertPage() {
-        removeCursorItem();
         wasClosed = false;
 
         //Now, update items within the database
@@ -141,7 +143,6 @@ public class EditGui extends MultipageGui {
         });
     }
     private void deletePage() {
-        removeCursorItem();
         wasClosed = false;
 
         //Save the current page in case the player decides to go back
@@ -150,7 +151,6 @@ public class EditGui extends MultipageGui {
         //Clear the current gui hashmap, because we don't know what is and isn't going to be changed
         getPages().clear();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            removeCursorItem();
             ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());
             getSession().addGui(newGui);
             newGui.open();

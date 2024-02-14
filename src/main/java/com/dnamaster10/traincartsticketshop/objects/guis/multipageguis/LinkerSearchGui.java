@@ -48,6 +48,8 @@ public class LinkerSearchGui extends SearchGui {
             if (buttonType == null) {
                 continue;
             }
+            //Remove cursor item since it is a button
+            getPlayer().setItemOnCursor(null);
             switch (buttonType) {
                 case "linker" -> {
                     link(item);
@@ -68,7 +70,6 @@ public class LinkerSearchGui extends SearchGui {
         //Get button info
         ItemMeta meta = linker.getItemMeta();
         if (meta == null) {
-            removeCursorItem();
             return;
         }
 
@@ -76,11 +77,9 @@ public class LinkerSearchGui extends SearchGui {
         Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
         Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
         if (linkedGuiId == null) {
-            removeCursorItem();
             return;
         }
         if (linkedGuiPage == null) {
-            removeCursorItem();
             return;
         }
 
@@ -90,7 +89,6 @@ public class LinkerSearchGui extends SearchGui {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
-                    removeCursorItem();
                     return;
                 }
                 newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());

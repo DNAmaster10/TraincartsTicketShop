@@ -37,6 +37,7 @@ public class ErrorGui extends Gui {
             if (buttonType == null) {
                 continue;
             }
+            getPlayer().setItemOnCursor(null);
             switch (buttonType) {
                 case "error" -> {
                     getPlayer().closeInventory();

@@ -42,7 +42,6 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
                 getPlugin().reportSqlError(getPlayer(), e);
             }
             //Go back to the previous gui
-            removeCursorItem();
             getSession().back();
         });
     }

@@ -44,7 +44,7 @@ public abstract class Gui {
         player = p;
     }
     protected void back() {
-        removeCursorItem();
+        getPlayer().setItemOnCursor(null);
         //Check there is a previous gui
         Session currentSession = getSession();
         if (!currentSession.checkBack()) {
@@ -52,9 +52,6 @@ public abstract class Gui {
         }
         //If there is, go back
         currentSession.back();
-    }
-    protected void removeCursorItem() {
-        player.setItemOnCursor(null);
     }
     protected void removeCursorItemAndClose() {
         //Removes item on cursor and closes inventory at the same time

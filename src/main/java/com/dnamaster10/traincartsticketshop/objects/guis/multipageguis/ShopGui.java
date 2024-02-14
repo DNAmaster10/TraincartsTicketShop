@@ -60,6 +60,8 @@ public class ShopGui extends MultipageGui {
             if (buttonType == null) {
                 continue;
             }
+            //Remove the item from cursor since it is a button
+            getPlayer().setItemOnCursor(null);
             switch (buttonType) {
                 case "ticket" -> {
                     handleTicketClick(item);
@@ -92,7 +94,6 @@ public class ShopGui extends MultipageGui {
         //Get button info
         ItemMeta meta = linker.getItemMeta();
         if (meta == null) {
-            removeCursorItem();
             return;
         }
 
@@ -100,11 +101,9 @@ public class ShopGui extends MultipageGui {
         Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
         Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
         if (linkedGuiId == null) {
-            removeCursorItem();
             return;
         }
         if (linkedGuiPage == null) {
-            removeCursorItem();
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -113,7 +112,6 @@ public class ShopGui extends MultipageGui {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
-                    removeCursorItem();
                     return;
                 }
                 newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
@@ -128,13 +126,11 @@ public class ShopGui extends MultipageGui {
     }
     private void search() {
         //Get the gui name
-        removeCursorItem();
         SearchSelectGui gui = new SearchSelectGui(getGuiId(), getPlayer());
         getSession().addGui(gui);
         gui.open();
     }
     private void handleTicketClick(ItemStack ticket) {
-        removeCursorItem();
         //Get ticket data
         ItemMeta meta = ticket.getItemMeta();
         if (meta == null) {

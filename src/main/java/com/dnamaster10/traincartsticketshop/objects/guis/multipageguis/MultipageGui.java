@@ -49,7 +49,6 @@ public abstract class MultipageGui extends Gui {
     }
     //Generates a new page for this gui.
     protected void nextPage() {
-        removeCursorItem();
         //Check there are pages beyond this page
         if (this.currentPage + 1 > maxPage) {
             return;
@@ -61,7 +60,6 @@ public abstract class MultipageGui extends Gui {
         open();
     }
     protected void prevPage() {
-        removeCursorItem();
         //Check there are pages before this page
         if (this.currentPage - 1 < 0) {
             return;

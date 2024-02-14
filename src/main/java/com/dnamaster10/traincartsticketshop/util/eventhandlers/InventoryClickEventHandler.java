@@ -14,6 +14,7 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class InventoryClickEventHandler implements Listener {
     @EventHandler
     void onInventoryClick(InventoryClickEvent event) {
+        //TODO may be able to only use cursor item instead of iterating through all items
         //First get any items which were altered in the event
         List<ItemStack> items = new ArrayList<>();
         if (event.getCurrentItem() != null) {
