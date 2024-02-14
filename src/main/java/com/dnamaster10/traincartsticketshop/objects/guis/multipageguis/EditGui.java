@@ -71,31 +71,22 @@ public class EditGui extends MultipageGui {
                 continue;
             }
             switch (buttonType) {
-                case "next_page" -> {
-                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
-                    getPlayer().setItemOnCursor(null);
-                    this.nextPage();
-                    return;
-                }
-                case "prev_page" -> {
-                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
-                    getPlayer().setItemOnCursor(null);
-                    this.prevPage();
-                    return;
-                }
-                case "delete_page" -> {
-                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
-                    getPlayer().setItemOnCursor(null);
-                    deletePage();
-                    return;
-                }
-                case "insert_page" -> {
-                    getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
-                    getPlayer().setItemOnCursor(null);
-                    insertPage();
+                case "next_page", "prev_page", "delete_page", "insert_page" -> {
+                    this.handleButtonClick(event, buttonType);
                     return;
                 }
             }
+        }
+    }
+    private void handleButtonClick(InventoryClickEvent event, String buttonType) {
+        //Revert the changes before saving the page
+        getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "next_page" -> this.nextPage();
+            case "prev_page" -> this.prevPage();
+            case "delete_page" -> this.deletePage();
+            case "insert_page" -> this.insertPage();
         }
     }
     //The following methods must be overriden to ensure page is saved
