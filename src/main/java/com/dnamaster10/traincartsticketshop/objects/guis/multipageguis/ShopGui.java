@@ -6,7 +6,6 @@ import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.SearchSelectGui;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,9 +15,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
-import java.util.List;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
@@ -53,41 +50,21 @@ public class ShopGui extends MultipageGui {
         return pageBuilder.getPage();
     }
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
         //Check if player interacted with a button
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            //Remove the item from cursor since it is a button
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "ticket" -> {
-                    handleTicketClick(item);
-                    return;
-                }
-                case "prev_page" -> {
-                    prevPage();
-                    return;
-                }
-                case "next_page" -> {
-                    nextPage();
-                    return;
-                }
-                case "linker" -> {
-                    link(item);
-                    return;
-                }
-                case "back" -> {
-                    back();
-                    return;
-                }
-                case "search" -> {
-                    search();
-                    return;
-                }
-            }
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        //Remove the item from cursor since it is a button
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "ticket" -> handleTicketClick(clickedItem);
+            case "prev_page" -> prevPage();
+            case "next_page" -> nextPage();
+            case "linker" -> link(clickedItem);
+            case "back" -> back();
+            case "search" -> search();
         }
     }
     private void search() {

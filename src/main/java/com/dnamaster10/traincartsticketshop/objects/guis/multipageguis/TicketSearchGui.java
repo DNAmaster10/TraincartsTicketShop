@@ -40,27 +40,16 @@ public class TicketSearchGui extends SearchGui {
         return pageBuilder.getPage();
     }
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "ticket" -> {
-                    handleTicketClick(item);
-                    return;
-                }
-                case "prev_page" -> {
-                    prevPage();
-                    return;
-                }
-                case "next_page" -> {
-                    nextPage();
-                    return;
-                }
-            }
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "ticket" -> handleTicketClick(clickedItem);
+            case "prev_page" -> prevPage();
+            case "next_page" -> nextPage();
         }
     }
     public void handleTicketClick(ItemStack ticket) {

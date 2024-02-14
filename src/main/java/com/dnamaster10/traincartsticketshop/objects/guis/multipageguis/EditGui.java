@@ -63,19 +63,14 @@ public class EditGui extends MultipageGui {
         return pageBuilder.getPage();
     }
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
         //Check if clicked item is a page button
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            switch (buttonType) {
-                case "next_page", "prev_page", "delete_page", "insert_page" -> {
-                    this.handleButtonClick(event, buttonType);
-                    return;
-                }
-            }
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        switch (buttonType) {
+            case "next_page", "prev_page", "delete_page", "insert_page" -> this.handleButtonClick(event, buttonType);
         }
     }
     private void handleButtonClick(InventoryClickEvent event, String buttonType) {

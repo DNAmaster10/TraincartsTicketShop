@@ -26,7 +26,7 @@ public abstract class Gui {
     private Player player;
     private String displayName;
     public abstract void open();
-    public abstract void handleClick(InventoryClickEvent event, List<ItemStack> items);
+    public abstract void handleClick(InventoryClickEvent event, ItemStack clickedItem);
     public Inventory getInventory() {
         return this.inventory;
     }

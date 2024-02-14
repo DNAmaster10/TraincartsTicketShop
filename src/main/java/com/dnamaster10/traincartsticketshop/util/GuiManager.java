@@ -42,7 +42,7 @@ public class GuiManager {
     public void closeSession(Player player) {
         SESSIONS.remove(player);
     }
-    public void handleInventoryClick(InventoryClickEvent event, List<ItemStack> items) {
+    public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
         if (!(event.getWhoClicked() instanceof Player p)) {
             return;
         }
@@ -55,7 +55,7 @@ public class GuiManager {
         }
 
         //Clicked inventory is a gui - handle click
-        session.handleInventoryClick(event, items);
+        session.handleInventoryClick(event, clickedItem);
     }
     public void handleInventoryClose(InventoryCloseEvent event) {
         Session session = getSession((Player) event.getPlayer());

@@ -50,8 +50,8 @@ public class Session {
         //Returns true if there is a gui before the current open gui
         return GUIS.size() > 1;
     }
-    public void handleInventoryClick(InventoryClickEvent event, List<ItemStack> items) {
-        GUIS.peek().handleClick(event, items);
+    public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
+        GUIS.peek().handleClick(event, clickedItem);
     }
     public void handleInventoryClose() {
         Gui topGui = GUIS.peek();

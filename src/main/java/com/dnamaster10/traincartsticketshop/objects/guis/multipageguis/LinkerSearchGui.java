@@ -42,28 +42,17 @@ public class LinkerSearchGui extends SearchGui {
     }
 
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            //Remove cursor item since it is a button
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "linker" -> {
-                    link(item);
-                    return;
-                }
-                case "next_page" -> {
-                    nextPage();
-                    return;
-                }
-                case "prev_page" -> {
-                    prevPage();
-                    return;
-                }
-            }
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        //Remove cursor item since it is a button
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "linker" -> link(clickedItem);
+            case "next_page" -> nextPage();
+            case "prev_page" -> prevPage();
         }
     }
     public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws SQLException {

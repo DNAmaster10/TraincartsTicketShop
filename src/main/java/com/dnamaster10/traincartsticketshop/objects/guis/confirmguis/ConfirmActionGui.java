@@ -22,28 +22,17 @@ public abstract class ConfirmActionGui extends Gui {
     protected abstract void generate();
 
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            //Remove item from cursor since it is a button
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "back" -> {
-                    back();
-                    return;
-                }
-                case "cancel" -> {
-                    getPlayer().closeInventory();
-                    return;
-                }
-                case "confirm_action" -> {
-                    confirmAction();
-                    return;
-                }
-            }
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        //Remove item from cursor since it is a button
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "back" -> back();
+            case "cancel" -> getPlayer().closeInventory();
+            case "confirm_action" -> confirmAction();
         }
     }
 
