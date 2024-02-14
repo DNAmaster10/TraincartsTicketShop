@@ -8,6 +8,7 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.Linker
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -24,7 +25,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
 
 public class EditGui extends MultipageGui {
-    //TODO This class needs major code cleaning
+    //TODO Class may need further code cleanup
     //Used when the next page button is clicked to decide whether to save the gui.
     //This is because the inventory close event is called when opening a new gui.
     //This value helps the gui manager to know whether a next page button was clicked, in which case it doesn't need to save
@@ -194,7 +195,7 @@ public class EditGui extends MultipageGui {
         }
     }
 
-    public EditGui(int guiId, int page, Player p) throws SQLException {
+    public EditGui(int guiId, int page, Player p) throws DQLException {
         //Should be called from an asynchronous thread
         GuiAccessor guiAccessor = new GuiAccessor();
         String displayName = "Editing: " + guiAccessor.getColouredDisplayNameById(guiId);
@@ -205,7 +206,7 @@ public class EditGui extends MultipageGui {
         setPlayer(p);
         setMaxPage(pageLimit);
     }
-    public EditGui(int guiId, Player p) throws SQLException {
+    public EditGui(int guiId, Player p) throws DQLException {
         this(guiId, 0, p);
     }
 }

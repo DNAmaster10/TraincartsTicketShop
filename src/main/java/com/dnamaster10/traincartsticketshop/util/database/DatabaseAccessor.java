@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database;
 
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -17,8 +18,12 @@ public class DatabaseAccessor {
 
         dataSource = new HikariDataSource(config);
     }
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws DQLException {
         //Returns a new connection to the database
-        return dataSource.getConnection();
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new DQLException(e);
+        }
     }
 }

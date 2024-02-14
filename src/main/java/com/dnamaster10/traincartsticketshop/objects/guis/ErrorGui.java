@@ -31,19 +31,14 @@ public class ErrorGui extends Gui {
     }
 
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
-            }
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "error" -> {
-                    getPlayer().closeInventory();
-                    return;
-                }
-            }
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "error" -> getPlayer().closeInventory();
         }
     }
     public ErrorGui(String errorMessage, Player p) {

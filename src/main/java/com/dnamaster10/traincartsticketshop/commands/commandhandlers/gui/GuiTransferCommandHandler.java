@@ -5,6 +5,8 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHand
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -49,7 +51,7 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DMLException, DQLException {
         //Check that the gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -77,7 +79,7 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
         //Transfer the gui
         guiAccessor.updateGuiOwner(args[2], otherPlayer.getUuid());
 

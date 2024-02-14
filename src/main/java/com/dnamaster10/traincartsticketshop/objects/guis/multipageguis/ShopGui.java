@@ -6,6 +6,7 @@ import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.SearchSelectGui;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -94,7 +95,7 @@ public class ShopGui extends MultipageGui {
         Traincarts.giveTicketItem(tcName, getPlayer());
         removeCursorItemAndClose();
     }
-    public ShopGui(int guiId, int page, Player p) throws SQLException {
+    public ShopGui(int guiId, int page, Player p) throws DQLException {
         //Should be called from async thread
         GuiAccessor guiAccessor = new GuiAccessor();
         String displayName = guiAccessor.getColouredDisplayNameById(guiId);
@@ -105,7 +106,7 @@ public class ShopGui extends MultipageGui {
         setGuiId(guiId);
         setMaxPage(guiAccessor.getMaxPage(guiId));
     }
-    public ShopGui(int guiId, Player p) throws SQLException {
+    public ShopGui(int guiId, Player p) throws DQLException {
         this(guiId, 0, p);
     }
 }

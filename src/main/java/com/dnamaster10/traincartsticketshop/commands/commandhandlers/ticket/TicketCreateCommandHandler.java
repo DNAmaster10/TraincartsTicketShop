@@ -4,6 +4,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncComman
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -69,7 +70,7 @@ public class TicketCreateCommandHandler extends AsyncCommandHandler {
         return true;
     }
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         //Check that ticket exits in traincarts.
         //Although not required to do async now, async is used in case traincarts switches to storing tickets in a database
         if (!Traincarts.checkTicket(args[2])) {
@@ -80,7 +81,7 @@ public class TicketCreateCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws DQLException {
         //Create the ticket object
         Ticket ticket = new Ticket(args[2], displayName);
 

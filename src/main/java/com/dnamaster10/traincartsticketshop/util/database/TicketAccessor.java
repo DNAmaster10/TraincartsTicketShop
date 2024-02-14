@@ -1,6 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.database;
 
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TicketAccessor extends DatabaseAccessor {
-    public TicketAccessor() throws SQLException {
+    public TicketAccessor() throws DQLException {
         super();
     }
-    public TicketDatabaseObject[] getTickets(int guiId, int page) throws SQLException {
+    public TicketDatabaseObject[] getTickets(int guiId, int page) throws DQLException {
         //Returns an array of ticket database objects from the database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT slot, tc_name, display_name, raw_display_name FROM tickets WHERE gui_id=? AND page=?");
@@ -25,9 +27,11 @@ public class TicketAccessor extends DatabaseAccessor {
                 ticketList.add(new TicketDatabaseObject(result.getInt("slot"), result.getString("tc_name"), result.getString("display_name"), result.getString("raw_display_name")));
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
+        } catch (SQLException e) {
+            throw new DQLException(e);
         }
     }
-    public TicketDatabaseObject[] searchTickets(int guiId, int offset, String searchTerm) throws SQLException {
+    public TicketDatabaseObject[] searchTickets(int guiId, int offset, String searchTerm) throws DQLException {
         //Takes in an offset value and a search term. The method will do a search for ticket names which start with the search term.
         //Due to the limited size of minecraft double chests, an offset value is used.
         //This value indicates the amount of database results which will be skipped over before returning any results.
@@ -45,9 +49,11 @@ public class TicketAccessor extends DatabaseAccessor {
                 i++;
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
+        } catch (SQLException e) {
+            throw new DQLException(e);
         }
     }
-    public int getTotalTicketSearchResults(int guiId, String searchTerm) throws SQLException {
+    public int getTotalTicketSearchResults(int guiId, String searchTerm) throws DQLException {
         //Returns total search results which were found
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM tickets WHERE gui_id=? AND raw_display_name LIKE ?");
@@ -58,9 +64,11 @@ public class TicketAccessor extends DatabaseAccessor {
                 return result.getInt(1);
             }
             return 0;
+        } catch (SQLException e) {
+            throw new DQLException(e);
         }
     }
-    public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws SQLException {
+    public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws DMLException {
         try (Connection connection = getConnection()) {
             if (tickets.isEmpty()) {
                 //If not tickets were provided, delete all existing tickets and return
@@ -108,6 +116,8 @@ public class TicketAccessor extends DatabaseAccessor {
                 statement.addBatch();
             }
             statement.executeBatch();
+        } catch (SQLException e) {
+            throw new DMLException(e);
         }
     }
 }

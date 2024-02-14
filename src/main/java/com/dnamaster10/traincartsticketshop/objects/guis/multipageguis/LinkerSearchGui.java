@@ -6,6 +6,7 @@ import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -55,7 +56,7 @@ public class LinkerSearchGui extends SearchGui {
             case "prev_page" -> prevPage();
         }
     }
-    public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws SQLException {
+    public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws DQLException {
         //Set basic values
         setSearchGuiId(searchGuiId);
         setSearchTerm(searchTerm);

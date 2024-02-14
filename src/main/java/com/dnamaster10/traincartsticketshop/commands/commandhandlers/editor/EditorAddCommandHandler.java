@@ -5,6 +5,8 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHand
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +52,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
         //Check gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[3])) {
@@ -78,7 +80,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
         int guiId = guiAccessor.getGuiIdByName(args[3]);
         guiAccessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
     }

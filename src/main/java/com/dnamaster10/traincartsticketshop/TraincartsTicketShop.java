@@ -93,26 +93,22 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
     public void reportSqlError(SQLException e) {
-        plugin.getLogger().severe("A database error occurred: " + e);
         e.printStackTrace();
-    }
-    public void reportSqlError(Player p, SQLException e) {
-        p.sendMessage(ChatColor.RED + "An error occurred. Check server logs for more info");
-        plugin.getLogger().severe("A database error occurred: " + e);
-        e.printStackTrace();
-        //Disable the plugin in case of database damage
-        plugin.disable();
     }
     public void reportSqlError(CommandSender sender, SQLException e) {
-        if (sender instanceof Player p) {
-            reportSqlError(p, e);
-        }
-        else if (sender instanceof ConsoleCommandSender) {
-            plugin.getLogger().severe("A database error occurred: " + e.toString());
-            e.printStackTrace();
-            //Disable the plugin in case of database damage
-            plugin.disable();
-        }
+        sender.sendMessage(ChatColor.GREEN + "A database error occurred. Check server logs for more info");
+        reportSqlError(e);
+    }
+    public void reportSqlErrorAndDisable(SQLException e) {
+        plugin.getLogger().severe("A database error occurred: " + e);
+        e.printStackTrace();
+        plugin.getLogger().severe("Since this error occurred while altering the database, the plugin will disable itself to prevent further database damage.");
+        plugin.disable();
+    }
+    public void reportSqlErrorAndDisable(CommandSender sender, SQLException e) {
+        //Used when a database error occurs with a statement that alters the database (eg INSERT, UPDATE or DELETE). This is used to prevent any database damage
+        sender.sendMessage(ChatColor.RED + "A database error occurred. Check server logs for more info");
+        reportSqlErrorAndDisable(e);
     }
     public void disable() {
         //Disables the plugin. For use when a severe error occurs

@@ -43,27 +43,25 @@ public class SearchSelectGui extends Gui {
     }
 
     @Override
-    public void handleClick(InventoryClickEvent event, List<ItemStack> items) {
-        for (ItemStack item : items) {
-            String buttonType = getButtonType(item);
-            if (buttonType == null) {
-                continue;
+    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType == null) {
+            return;
+        }
+        //Remove cursor item since it is a button
+        getPlayer().setItemOnCursor(null);
+        switch (buttonType) {
+            case "search_tickets" -> {
+                searchTickets();
+                return;
             }
-            //Remove cursor item since it is a button
-            getPlayer().setItemOnCursor(null);
-            switch (buttonType) {
-                case "search_tickets" -> {
-                    searchTickets();
-                    return;
-                }
-                case "search_linkers" -> {
-                    searchLinkers();
-                    return;
-                }
-                case "back" -> {
-                    back();
-                    return;
-                }
+            case "search_linkers" -> {
+                searchLinkers();
+                return;
+            }
+            case "back" -> {
+                back();
+                return;
             }
         }
     }

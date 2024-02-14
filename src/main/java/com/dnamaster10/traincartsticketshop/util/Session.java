@@ -32,9 +32,6 @@ public class Session {
     public void addGui(Gui gui) {
         GUIS.push(gui);
     }
-    private void removeTopGui() {
-        GUIS.pop();
-    }
     public void back() {
         //Check that there is a gui before this one
         if (GUIS.size() <= 1) {

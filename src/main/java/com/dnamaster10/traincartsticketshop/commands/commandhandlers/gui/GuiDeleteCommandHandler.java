@@ -5,6 +5,8 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHand
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -50,7 +52,7 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         //Check that GUI exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -69,8 +71,8 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Create and open a delete confirm gui
-
+        //TODO finish this
     }
 }

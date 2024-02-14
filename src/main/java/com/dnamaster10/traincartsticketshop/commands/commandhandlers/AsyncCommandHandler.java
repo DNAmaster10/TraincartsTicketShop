@@ -1,13 +1,15 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers;
 
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.sql.SQLException;
 
 public abstract class AsyncCommandHandler extends CommandHandler {
-    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws SQLException;
-    protected abstract void execute(CommandSender sender, String[] args) throws SQLException;
+    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException;
+    protected abstract void execute(CommandSender sender, String[] args) throws DQLException, DMLException;
     @Override
     public void handle(CommandSender sender, String[] args) {
         if (!checkSync(sender, args)) {
@@ -19,8 +21,10 @@ public abstract class AsyncCommandHandler extends CommandHandler {
                     return;
                 }
                 execute(sender, args);
-            } catch (SQLException e) {
+            } catch (DQLException e) {
                 getPlugin().reportSqlError(sender, e);
+            } catch (DMLException e) {
+                getPlugin().reportSqlErrorAndDisable(sender, e);
             }
         });
     }

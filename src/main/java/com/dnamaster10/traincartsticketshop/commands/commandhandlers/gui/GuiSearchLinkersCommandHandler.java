@@ -5,6 +5,8 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHand
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -63,7 +65,7 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         //Check gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -74,7 +76,7 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws SQLException {
+    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
         //Get the search gui id
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 

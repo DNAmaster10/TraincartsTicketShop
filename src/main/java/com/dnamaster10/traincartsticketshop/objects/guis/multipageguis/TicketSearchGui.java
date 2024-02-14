@@ -8,6 +8,7 @@ import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +74,7 @@ public class TicketSearchGui extends SearchGui {
         Traincarts.giveTicketItem(tcName, getPlayer());
         removeCursorItemAndClose();
     }
-    public TicketSearchGui(int searchGuiId, String searchTerm, int page, Player p) throws SQLException {
+    public TicketSearchGui(int searchGuiId, String searchTerm, int page, Player p) throws DQLException {
         //Must be run async
         setSearchGuiId(searchGuiId);
         setSearchTerm(searchTerm);
