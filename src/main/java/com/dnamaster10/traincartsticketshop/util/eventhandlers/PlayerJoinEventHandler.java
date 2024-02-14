@@ -1,6 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.eventhandlers;
 
 import com.dnamaster10.traincartsticketshop.util.database.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +22,8 @@ public class PlayerJoinEventHandler implements Listener {
                 PlayerAccessor accessor = new PlayerAccessor();
                 Player p = event.getPlayer();
                 accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(e);
+            } catch (DQLException | DMLException e) {
+                getPlugin().handleSqlException(e);
             }
         });
     }

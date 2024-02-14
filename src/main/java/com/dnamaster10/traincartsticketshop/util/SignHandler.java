@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -120,8 +121,8 @@ public class SignHandler {
                 //Open the gui
                 shopGui.open();
 
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(event.getPlayer(), e);
+            } catch (DQLException e) {
+                getPlugin().handleSqlException(event.getPlayer(), e);
             }
         });
         return  true;

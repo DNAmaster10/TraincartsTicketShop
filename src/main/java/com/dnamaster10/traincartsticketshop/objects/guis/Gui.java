@@ -3,6 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -102,9 +104,8 @@ public abstract class Gui {
                 }
                 //Gui exists, create the new gui
                 newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
+            } catch (DQLException e) {
+                getPlugin().handleSqlException(getPlayer(), e);
                 return;
             }
             getSession().addGui(newGui);

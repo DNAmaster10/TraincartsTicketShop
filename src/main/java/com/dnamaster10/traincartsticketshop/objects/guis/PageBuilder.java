@@ -5,6 +5,7 @@ import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,13 +59,13 @@ public class PageBuilder {
             page[linkerDatabaseObject.slot()] = linker;
         }
     }
-    public void addTicketsFromDatabase(int guiId, int pageNumber) throws SQLException {
+    public void addTicketsFromDatabase(int guiId, int pageNumber) throws DQLException {
         //Fetches tickets from database and adds their buttons to the gui
         TicketAccessor ticketAccessor = new TicketAccessor();
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
         addTickets(ticketDatabaseObjects);
     }
-    public void addLinkersFromDatabase(int guiId, int pageNumber) throws SQLException {
+    public void addLinkersFromDatabase(int guiId, int pageNumber) throws DQLException {
         //Fetches linkers from the database and adds their buttons to the gui
         LinkerAccessor linkerAccessor = new LinkerAccessor();
         LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);

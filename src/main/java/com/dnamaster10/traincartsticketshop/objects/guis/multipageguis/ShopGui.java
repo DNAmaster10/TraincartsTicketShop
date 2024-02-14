@@ -22,7 +22,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class ShopGui extends MultipageGui {
     @Override
-    protected Button[] generateNewPage() throws SQLException {
+    protected Button[] generateNewPage() throws DQLException {
         GuiAccessor guiAccessor = new GuiAccessor();
 
         //Build tickets and linkers

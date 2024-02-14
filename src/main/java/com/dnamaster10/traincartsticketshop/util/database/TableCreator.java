@@ -1,5 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.database;
 
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -7,11 +10,11 @@ import java.sql.SQLException;
 public class TableCreator extends DatabaseAccessor {
 
 
-    public TableCreator() throws SQLException {
+    public TableCreator() throws DQLException {
         super();
     }
 
-    public void createTables() throws SQLException {
+    public void createTables() throws DMLException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
             statement = connection.prepareStatement("""
@@ -105,6 +108,8 @@ public class TableCreator extends DatabaseAccessor {
                     ) ENGINE=INNODB;
                     """);
             statement.execute();
+        } catch (SQLException e) {
+            throw new DMLException(e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -12,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
@@ -51,21 +51,12 @@ public class SearchSelectGui extends Gui {
         //Remove cursor item since it is a button
         getPlayer().setItemOnCursor(null);
         switch (buttonType) {
-            case "search_tickets" -> {
-                searchTickets();
-                return;
-            }
-            case "search_linkers" -> {
-                searchLinkers();
-                return;
-            }
-            case "back" -> {
-                back();
-                return;
-            }
+            case "search_tickets" -> searchTickets();
+            case "search_linkers" -> searchLinkers();
+            case "back" -> back();
         }
     }
-    private String getGuiName() throws SQLException {
+    private String getGuiName() throws DQLException {
         //Returns the name of the gui which is being searched from the id
         GuiAccessor guiAccessor = new GuiAccessor();
         return guiAccessor.getGuiNameById(searchGuiId);
@@ -79,8 +70,8 @@ public class SearchSelectGui extends Gui {
             String searchGuiName;
             try {
                 searchGuiName = getGuiName();
-            } catch (SQLException e) {
-                guiDeletedOrMoved();
+            } catch (DQLException e) {
+                getPlugin().handleSqlException(e);
                 return;
             }
             if (searchGuiName == null) {
@@ -107,8 +98,8 @@ public class SearchSelectGui extends Gui {
             String searchGuiName;
             try {
                 searchGuiName = getGuiName();
-            } catch (SQLException e) {
-                guiDeletedOrMoved();
+            } catch (DQLException e) {
+                getPlugin().handleSqlException(e);
                 return;
             }
             if (searchGuiName == null) {

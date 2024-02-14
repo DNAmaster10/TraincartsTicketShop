@@ -3,6 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
@@ -24,7 +26,7 @@ public abstract class MultipageGui extends Gui {
         //Returns the page hashmap
         return pages;
     }
-    protected abstract Button[] generateNewPage() throws SQLException;
+    protected abstract Button[] generateNewPage() throws DQLException;
     protected int getPageNumber() {
         return this.currentPage;
     }
@@ -79,9 +81,9 @@ public abstract class MultipageGui extends Gui {
                 Button[] newPage;
                 try {
                     newPage = generateNewPage();
-                } catch (SQLException e) {
+                } catch (DQLException e) {
                     openErrorGui("An error occurred generating that gui");
-                    getPlugin().reportSqlError(getPlayer(), e);
+                    getPlugin().handleSqlException(getPlayer(), e);
                     return;
                 }
                 //Add the new page to the hashmap

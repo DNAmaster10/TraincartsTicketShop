@@ -21,10 +21,8 @@ public abstract class AsyncCommandHandler extends CommandHandler {
                     return;
                 }
                 execute(sender, args);
-            } catch (DQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            } catch (DMLException e) {
-                getPlugin().reportSqlErrorAndDisable(sender, e);
+            } catch (DQLException | DMLException e) {
+                getPlugin().handleSqlException(sender, e);
             }
         });
     }

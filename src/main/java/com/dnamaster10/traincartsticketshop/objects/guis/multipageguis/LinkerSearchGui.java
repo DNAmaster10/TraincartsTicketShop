@@ -25,7 +25,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST
 
 public class LinkerSearchGui extends SearchGui {
     @Override
-    protected Button[] generateNewPage() throws SQLException {
+    protected Button[] generateNewPage() throws DQLException {
         PageBuilder pageBuilder = new PageBuilder();
         LinkerAccessor linkerAccessor = new LinkerAccessor();
 

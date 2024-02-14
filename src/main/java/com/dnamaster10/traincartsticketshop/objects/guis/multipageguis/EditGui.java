@@ -8,6 +8,7 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.Linker
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class EditGui extends MultipageGui {
         wasClosed = true;
     }
     @Override
-    protected Button[] generateNewPage() throws SQLException {
+    protected Button[] generateNewPage() throws DQLException {
         PageBuilder pageBuilder = new PageBuilder();
 
         //Add items to page
@@ -118,9 +119,9 @@ public class EditGui extends MultipageGui {
                 //Move pages up in the database
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.insertPage(getGuiId(), getPageNumber());
-            } catch (SQLException e) {
+            } catch (DQLException | DMLException e) {
                 openErrorGui("An error occurred inserting that page!");
-                getPlugin().reportSqlError(getPlayer(), e);
+                getPlugin().handleSqlException(getPlayer(), e);
                 return;
             }
             //Remove pages more than or equal to the current page in the hashmap as these have been changed
@@ -189,9 +190,8 @@ public class EditGui extends MultipageGui {
 
             ticketAccessor.saveTicketPage(getGuiId(), pageNumber, tickets);
             linkerAccessor.saveLinkerPage(getGuiId(), pageNumber, linkers);
-        } catch (SQLException e) {
-            removeCursorItemAndClose();
-            getPlugin().reportSqlError(getPlayer(), e);
+        } catch (DQLException | DMLException e) {
+            getPlugin().handleSqlException(getPlayer(), e);
         }
     }
 

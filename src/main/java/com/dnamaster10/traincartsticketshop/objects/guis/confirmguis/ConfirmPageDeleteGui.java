@@ -1,15 +1,14 @@
 package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 
-import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import java.sql.SQLException;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
@@ -37,9 +36,8 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
             try {
                 GuiAccessor guiAccessor = new GuiAccessor();
                 guiAccessor.deletePage(getGuiId(), deleteGuiPage);
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
+            } catch (DQLException | DMLException e) {
+                getPlugin().handleSqlException(getPlayer(), e);
             }
             //Go back to the previous gui
             getSession().back();
