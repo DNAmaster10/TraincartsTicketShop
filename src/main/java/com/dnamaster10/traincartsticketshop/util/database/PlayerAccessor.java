@@ -128,19 +128,15 @@ public class PlayerAccessor extends DatabaseAccessor{
             if (alreadyExists) {
                 //Update current UUID player
                 statement = connection.prepareStatement("UPDATE players SET username=?, last_join=? WHERE uuid=?");
-                statement.setString(1, name);
-                statement.setInt(2, lastJoin);
-                statement.setString(3, uuid);
-                statement.executeUpdate();
             }
             else {
                 //Add the new player
                 statement = connection.prepareStatement("INSERT INTO players (username, last_join, uuid) VALUES (?, ?, ?)");
-                statement.setString(1, name);
-                statement.setInt(2, lastJoin);
-                statement.setString(3, uuid);
-                statement.executeUpdate();
             }
+            statement.setString(1, name);
+            statement.setInt(2, lastJoin);
+            statement.setString(3, uuid);
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);
         }

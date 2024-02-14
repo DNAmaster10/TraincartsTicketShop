@@ -16,8 +16,9 @@ import java.sql.SQLException;
 public class EditorRemoveCommandHandler extends AsyncCommandHandler {
     //TODO command needs finishing
     //Example command: /traincartsticketshop editor remove <player_name> <gui_name>
-    PlayerDatabaseObject editorDatabaseObject;
-    GuiAccessor guiAccessor;
+    private PlayerDatabaseObject editorDatabaseObject;
+    private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -52,9 +53,11 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
-        //Check that gui exists
         guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[3])) {
+
+        //Get the guiID and check that the gui exists
+        guiId = guiAccessor.getGuiIdByName(args[3]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[3]);
             return false;
         }
@@ -62,7 +65,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
         //If player, check that they own the gui
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.editor.remove")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(args[3], p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -76,7 +79,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
             return false;
         }
         //Check that the editor exists in the editors table
-        if (!guiAccessor.checkGuiEditorByUuid(args[3], editorDatabaseObject.getUuid())) {
+        if (!guiAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.getUuid())) {
             returnError(sender, "Player \"" + args[2] + "\" is not a registered editor for gui \"" + args[3] + "\"");
             return false;
         }
@@ -84,9 +87,8 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
+    protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Remove the editor
-        int guiId = guiAccessor.getGuiIdByName(args[3]);
         guiAccessor.removeGuiEditorByUuid(guiId, editorDatabaseObject.getUuid());
     }
 }

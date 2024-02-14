@@ -15,6 +15,7 @@ import java.sql.SQLException;
 public class GuiRenameCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
     private GuiAccessor guiAccessor;
+    private Integer guiId;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -70,8 +71,9 @@ public class GuiRenameCommandHandler extends AsyncCommandHandler {
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         guiAccessor = new GuiAccessor();
 
-        //First check that the gui exists
-        if (!guiAccessor.checkGuiByName(args[2])) {
+        //Get the gui ID and check that it exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
@@ -79,7 +81,7 @@ public class GuiRenameCommandHandler extends AsyncCommandHandler {
         //If sender is player, check that player is an editor of that gui if they don't have admin perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.rename")) {
-                if (!guiAccessor.playerCanEdit(args[2], p.getUniqueId().toString())) {
+                if (!guiAccessor.playerCanEdit(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
                     return false;
                 }

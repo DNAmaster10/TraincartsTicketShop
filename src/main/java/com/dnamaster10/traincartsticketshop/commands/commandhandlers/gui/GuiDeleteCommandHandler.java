@@ -17,6 +17,7 @@ import java.sql.SQLException;
 public class GuiDeleteCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop gui delete <gui_name>
     private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks
@@ -53,16 +54,18 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        //Check that GUI exists
         guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[2])) {
+
+        //Get the gui id and check the gui exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
         //If sender is player, check they are owner
         if (sender instanceof Player p) {
-            if (!guiAccessor.checkGuiOwnershipByUuid(args[2], p.getUniqueId().toString())) {
+            if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
                 returnError(sender, "You must be the owner of the gui in order to delete it");
                 return false;
             }

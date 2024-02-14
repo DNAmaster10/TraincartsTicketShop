@@ -16,6 +16,7 @@ public class GuiEditCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui edit <gui_name>
     private GuiAccessor guiAccessor;
     private Player player;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -29,22 +30,24 @@ public class GuiEditCommandHandler extends AsyncCommandHandler {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        if (!sender.hasPermission("traincartsticketshop.gui.edit") && !sender.hasPermission("traincartsticketshop.admin.gui.edit")) {
-            returnInsufficientPermissionsError(sender);
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.gui.edit") && !player.hasPermission("traincartsticketshop.admin.gui.edit")) {
+            returnInsufficientPermissionsError(player);
             return false;
         }
 
         //Check syntax
         if (args.length < 3)  {
-            returnMissingArgumentsError(sender, "/tshop gui edit <gui name>");
+            returnMissingArgumentsError(player, "/tshop gui edit <gui name>");
             return false;
         }
         if (args.length > 3) {
-            returnInvalidSubCommandError(sender, args[3]);
+            returnInvalidSubCommandError(player, args[3]);
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
+            returnGuiNotFoundError(player, args[2]);
         }
 
         return true;
@@ -53,17 +56,16 @@ public class GuiEditCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         guiAccessor = new GuiAccessor();
-        player = (Player) sender;
 
-        //Check that gui exists
-        if (!guiAccessor.checkGuiByName(args[2])) {
+        //Get the guiID and check that it exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(player, args[2]);
-            return false;
         }
 
         //Check that player is owner or editor of gui
         if (!player.hasPermission("traincartsticketshop.admin.gui.edit")) {
-            if (!guiAccessor.playerCanEdit(args[2], player.getUniqueId().toString())) {
+            if (!guiAccessor.playerCanEdit(guiId, player.getUniqueId().toString())) {
                 returnError(player, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
                 return false;
             }
@@ -72,10 +74,7 @@ public class GuiEditCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        //Get the gui id
-        int guiId = guiAccessor.getGuiIdByName(args[2]);
-
+    protected void execute(CommandSender sender, String[] args) throws DQLException {
         //Create the new gui
         EditGui gui = new EditGui(guiId, player);
 

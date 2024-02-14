@@ -15,6 +15,7 @@ public class GuiOpenCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui open <gui_name>
     private GuiAccessor guiAccessor;
     private Player player;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -58,8 +59,9 @@ public class GuiOpenCommandHandler extends AsyncCommandHandler {
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         guiAccessor = new GuiAccessor();
 
-        //Check that gui exists
-        if (!guiAccessor.checkGuiByName(args[2])) {
+        //Get the guiID and check the gui exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(player, args[2]);
             return false;
         }
@@ -68,9 +70,6 @@ public class GuiOpenCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException {
-        //Get the gui id
-        int guiId = guiAccessor.getGuiIdByName(args[2]);
-
         //Create a new gui
         ShopGui gui = new ShopGui(guiId, player);
 

@@ -16,6 +16,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
     //TODO command needs finishing and redoing in places
     //Example command: /traincartsticketshop gui editor list <gui_name>
     private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check syntax
@@ -42,9 +43,11 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        //Check that gui exists
         guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[3])) {
+
+        //Get the guiID and check that it exists
+        guiId = guiAccessor.getGuiIdByName(args[3]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[3]);
             return false;
         }
@@ -54,7 +57,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
             //If players aren't able to view editor for other people's guis
             if (!getPlugin().getConfig().getBoolean("AllowListGuiEditorsOtherOwners")) {
                 //If player isn't the owner or editor
-                if (guiAccessor.playerCanEdit(args[3], p.getUniqueId().toString())) {
+                if (guiAccessor.playerCanEdit(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not have permission to view the editor for that gui");
                     return false;
                 }

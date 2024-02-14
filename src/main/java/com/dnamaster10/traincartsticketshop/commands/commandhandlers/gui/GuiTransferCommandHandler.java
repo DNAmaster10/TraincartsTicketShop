@@ -18,6 +18,7 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         if (!getPlugin().getConfig().getBoolean("AllowGuiTransfer")) {
@@ -52,9 +53,11 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DMLException, DQLException {
-        //Check that the gui exists
         guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[2])) {
+
+        //Get the gui ID and check gui exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
@@ -62,7 +65,7 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
         //If sender is player, and they don't have admin transfer rights, check they are owner
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.transfer")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(args[2], p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -79,14 +82,11 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
+    protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Transfer the gui
         guiAccessor.updateGuiOwner(args[2], otherPlayer.getUuid());
 
         //If the new owner is registered as an editor, remove them
-        int guiId = guiAccessor.getGuiIdByName(args[2]);
-        guiAccessor.removeGuiEditorByUuid(guiId, otherPlayer.getUuid());
-
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.getUsername());
     }
 }

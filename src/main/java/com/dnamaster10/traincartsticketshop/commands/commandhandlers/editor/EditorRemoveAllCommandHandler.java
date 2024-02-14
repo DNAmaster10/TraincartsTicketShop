@@ -17,6 +17,7 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
     //TODO command needs finishing
     //Example command: /traincartsticketshop editor removeAll <gui name>
     private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
@@ -51,9 +52,11 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        //Check gui exists
         guiAccessor = new GuiAccessor();
-        if (!guiAccessor.checkGuiByName(args[2])) {
+
+        //Get the gui ID and check that it exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
@@ -61,7 +64,7 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
         //Check player is owner or isn't admin
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.editor.removeall")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(args[2], p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -72,7 +75,6 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        int guiId = guiAccessor.getGuiIdByName(args[2]);
         guiAccessor.removeAllGuiEditors(guiId);
     }
 }

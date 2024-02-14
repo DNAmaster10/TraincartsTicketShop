@@ -45,11 +45,11 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public boolean checkGuiOwnershipByUuid(String guiName, String ownerUuid) throws DQLException {
+    public boolean checkGuiOwnershipByUuid(int guiId, String ownerUuid) throws DQLException {
         //Returns true if uuid owns gui
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=? AND owner_uuid=?");
-            statement.setString(1, guiName);
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=? AND owner_uuid=?");
+            statement.setInt(1, guiId);
             statement.setString(2, ownerUuid);
             ResultSet guiResult = statement.executeQuery();
             boolean isOwner = false;
@@ -61,22 +61,10 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public boolean checkGuiEditorByUuid(String guiName, String uuid) throws DQLException {
+    public boolean checkGuiEditorByUuid(int guiId, String uuid) throws DQLException {
         //Returns true if player appears in the editor list for the given gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
-
-            //Get gui id
-            statement = connection.prepareStatement("SELECT id FROM guis WHERE name=?");
-            statement.setString(1, guiName);
-            ResultSet guiIdResult = statement.executeQuery();
-            Integer guiId = null;
-            if (guiIdResult.next()) {
-                guiId = guiIdResult.getInt(1);
-            }
-            if (guiId == null) {
-                return false;
-            }
 
             //Check if player is an editor of the gui
             statement = connection.prepareStatement("SELECT COUNT(*) FROM guieditors WHERE gui_id=? AND player_uuid=?");
@@ -92,9 +80,9 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public boolean playerCanEdit(String guiName, String ownerUUID) throws DQLException {
+    public boolean playerCanEdit(int guiId, String ownerUUID) throws DQLException {
         //Returns true if player is either an owner of a gui or a listed editor
-        return checkGuiOwnershipByUuid(guiName, ownerUUID) || checkGuiEditorByUuid(guiName, ownerUUID);
+        return checkGuiOwnershipByUuid(guiId, ownerUUID) || checkGuiEditorByUuid(guiId, ownerUUID);
     }
 
     public Integer getGuiIdByName(String name) throws DQLException {
