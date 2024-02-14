@@ -27,18 +27,18 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
         //Check permissions if player
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.delete")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length > 3) {
-            returnError(sender, "Unrecognised sub-command \"" + args[3] + "\"");
+            returnInvalidSubCommandError(sender, args[3]);
             return false;
         }
         if (args.length < 3) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop gui delete <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui delete <gui name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

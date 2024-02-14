@@ -29,18 +29,18 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
 
         //Check sender is player and permissions
         if (!(sender instanceof Player)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         if (!sender.hasPermission("traincartsticketshop.gui.create")) {
-            returnError(sender, "You do not have permission to perform that action");
+            returnInsufficientPermissionsError(sender);
             return false;
         }
 
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Invalid syntax: /traincartsticketshop gui create <gui name> <display name>");
+            returnMissingArgumentsError(sender, "/tshop gui create <gui name> <display name>");
             return false;
         }
         if (args[2].length() > 20) {

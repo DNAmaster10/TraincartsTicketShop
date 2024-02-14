@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditorListCommandHandler extends AsyncCommandHandler {
+    //TODO command needs finishing and redoing in places
     //Example command: /traincartsticketshop gui editor list <gui_name>
     private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check syntax
         if (args.length > 4) {
-            returnError(sender, "Unrecognised sub-command \"" + args[4] + "\"");
+            returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
         if (args.length < 4) {
-            returnError(sender, "Please enter a gui name");
+            returnMissingArgumentsError(sender, "/tshop gui editor list <gui_name>");
             return false;
         }
 
@@ -30,7 +31,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.editor.list")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
@@ -43,7 +44,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
         //Check that gui exists
         guiAccessor = new GuiAccessor();
         if (!guiAccessor.checkGuiByName(args[3])) {
-            returnError(sender, "No gui with name \"" + args[3] + "\" exists");
+            returnGuiNotFoundError(sender, args[3]);
             return false;
         }
 

@@ -24,21 +24,21 @@ public class GuiEditCommandHandler extends AsyncCommandHandler {
 
         //Check sender is player and permissions
         if (!(sender instanceof Player)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         if (!sender.hasPermission("traincartsticketshop.gui.edit") && !sender.hasPermission("traincartsticketshop.admin.gui.edit")) {
-            returnError(sender, "You do not have permission to perform that action");
+            returnInsufficientPermissionsError(sender);
             return false;
         }
 
         //Check syntax
         if (args.length < 3)  {
-            returnError(sender, "Missing argument(s): /traincartsticketshop gui edit <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui edit <gui name>");
             return false;
         }
         if (args.length > 3) {
-            returnError(sender, "Invalid sub-command \"" + args[3] + "\"");
+            returnInvalidSubCommandError(sender, args[3]);
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

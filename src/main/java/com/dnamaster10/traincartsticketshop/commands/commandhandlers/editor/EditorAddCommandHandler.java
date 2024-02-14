@@ -27,18 +27,18 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
         //If player check perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.editor.add") && !p.hasPermission("traincartsticketshop.admin.editor.add")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /tshop editor add <gui_name> <username>");
+            returnMissingArgumentsError(sender, "/tshop editor add <gui_name> <username>");
             return false;
         }
         if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
+            returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
         if (!checkGuiNameSyntax(args[3])) {

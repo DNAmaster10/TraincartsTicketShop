@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 
 public class EditorRemoveCommandHandler extends AsyncCommandHandler {
+    //TODO command needs finishing
     //Example command: /traincartsticketshop editor remove <player_name> <gui_name>
     PlayerDatabaseObject editorDatabaseObject;
     GuiAccessor guiAccessor;

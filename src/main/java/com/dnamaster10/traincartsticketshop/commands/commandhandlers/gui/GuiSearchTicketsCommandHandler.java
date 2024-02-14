@@ -25,20 +25,20 @@ public class GuiSearchTicketsCommandHandler extends AsyncCommandHandler {
         }
         //Check permission and that sender is player
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.gui.search.searchtickets")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(player, "Missing argument(s): /traincartsticketshop gui searchTickets <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchTickets <gui name> <search term>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

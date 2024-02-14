@@ -38,6 +38,18 @@ public abstract class CommandHandler {
     protected void returnWrongItemError(CommandSender sender, String correctItem) {
         sender.sendMessage(ChatColor.RED + "You must be holding a " + correctItem + " to perform that action");
     }
+    protected void returnOnlyPlayersExecuteError(CommandSender sender) {
+        sender.sendMessage(ChatColor.RED + "Command must be executed by a player");
+    }
+    protected void returnInsufficientPermissionsError(CommandSender sender) {
+        sender.sendMessage(ChatColor.RED + "You do not have permission to perform that action");
+    }
+    protected void returnMissingArgumentsError(CommandSender sender, String commandSyntax) {
+        sender.sendMessage(ChatColor.RED + "Missing argument(s): " + commandSyntax);
+    }
+    protected void returnInvalidSubCommandError(CommandSender sender, String subCommand) {
+        sender.sendMessage(ChatColor.RED + "Invalid sub-command \"" + subCommand + "\"");
+    }
     protected boolean checkStringFormat(String input) {
         //Checks that a string only contains letters, numbers, underscores and dashes
         return STRING_PATTERN.matcher(input).matches();

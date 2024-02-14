@@ -27,19 +27,19 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
 
         //Check sender is player and permissions
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.linker.create")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }
         //Check syntax
         if (args.length < 4) {
-            returnError(player, "Missing arguments: /traincartsticketshop linker create <linked_gui_name> <display_name>");
+            returnMissingArgumentsError(player, "/tshop linker create <linked_gui_name> <display_name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

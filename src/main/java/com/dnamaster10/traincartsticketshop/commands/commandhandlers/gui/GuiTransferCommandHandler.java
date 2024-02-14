@@ -26,18 +26,18 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
         //Check permissions and if player
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.transfer") && !p.hasPermission("traincartsticketshop.admin.gui.transfer")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
+            returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop gui transfer <gui name> <player>");
+            returnMissingArgumentsError(sender, "/tshop gui transfer <gui name> <player>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

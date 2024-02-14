@@ -28,20 +28,20 @@ public class TicketCreateCommandHandler extends AsyncCommandHandler {
 
         //Check sender is player and permissions
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.ticket.create")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(player, "Missing argument(s): /traincartsticketshop ticket create <tc ticket name> <display name>");
+            returnMissingArgumentsError(player, "/tshop ticket create <tc ticket name> <display name>");
             return false;
         }
 

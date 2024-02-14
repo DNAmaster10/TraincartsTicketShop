@@ -25,20 +25,20 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
         }
         //Check permission and that sender is player
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.gui.search.searchlinkers")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(player, "Missing argument(s): /traincartsticketshop gui searchLinkers <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchLinkers <gui name> <search term>");
             return false;
         }
 
@@ -55,6 +55,7 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
             returnError(player, "Search terms cannot be less than 1 character in length");
             return false;
         }
+        //TODO check gui name syntax
         return true;
     }
 

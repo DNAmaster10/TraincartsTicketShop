@@ -27,24 +27,24 @@ public class TicketSetTraincartsTicket extends SyncCommandHandler {
 
         //Check permissions and that sender is player
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.ticket.settraincartsticket")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnError(player, "Missing argument(s): /traincartsticketshop ticket setTraincartsTicket <traincarts ticket>");
+            returnMissingArgumentsError(player, "/tshop ticket setTraincartsTicket <tc ticket name>");
             return false;
         }
         if (args.length > 3) {
-            returnError(player, "Invalid sub-command \"" + args[3] + "\"");
+            returnInvalidSubCommandError(player, args[3]);
             return false;
         }
 

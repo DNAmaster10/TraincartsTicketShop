@@ -26,13 +26,13 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
 
         //Check that sender is a player
         if (!(sender instanceof Player p)) {
-            returnError(sender, "Command must be executed by a player");
+            returnOnlyPlayersExecuteError(sender);
             return false;
         }
         else {
             player = p;
             if (!player.hasPermission("traincartsticketshop.ticket.setdisplayname")) {
-                returnError(player, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(player);
                 return false;
             }
         }

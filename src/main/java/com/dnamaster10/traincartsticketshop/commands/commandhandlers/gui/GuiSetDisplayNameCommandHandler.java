@@ -29,14 +29,14 @@ public class GuiSetDisplayNameCommandHandler extends AsyncCommandHandler {
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.setdisplayname") && !p.hasPermission("traincartsticketshop.admin.gui.setdisplayname")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop setDisplayName <gui name> <gui display name>");
+            returnMissingArgumentsError(sender, "/tshop setDisplayName <gui name> <gui display name>");
             return false;
         }
 

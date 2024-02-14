@@ -27,11 +27,11 @@ public class GuiRenameCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop gui rename <old_name> <new_name>");
+            returnMissingArgumentsError(sender, "/tshop gui rename <old name> <new name>");
             return false;
         }
         if (args.length > 4) {
-            returnError(sender, "Unrecognised sub-command \"" + args[4] + "\"");
+            returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
         if (args[3].length() > 20) {
@@ -55,7 +55,7 @@ public class GuiRenameCommandHandler extends AsyncCommandHandler {
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.rename") && !p.hasPermission("traincartsticketshop.admin.gui.rename")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
