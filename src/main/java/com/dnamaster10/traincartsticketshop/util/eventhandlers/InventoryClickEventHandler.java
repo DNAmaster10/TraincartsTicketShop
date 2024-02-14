@@ -15,19 +15,8 @@ public class InventoryClickEventHandler implements Listener {
     @EventHandler
     void onInventoryClick(InventoryClickEvent event) {
         //TODO may be able to only use cursor item instead of iterating through all items
-        //First get any items which were altered in the event
-        List<ItemStack> items = new ArrayList<>();
-        if (event.getCurrentItem() != null) {
-            items.add(event.getCurrentItem());
-        }
-        if (event.getClickedInventory() != null && event.getClickedInventory().getItem(event.getSlot()) != null) {
-            items.add(event.getClickedInventory().getItem(event.getSlot()));
-        }
-        if (event.getWhoClicked().getItemOnCursor().getAmount() > 0) {
-            items.add(event.getWhoClicked().getItemOnCursor());
-        }
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            getPlugin().getGuiManager().handleInventoryClick(event, items);
-        }, 1L);
+        //Get item which was clicked
+        ItemStack item = event.getWhoClicked().getItemOnCursor();
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getGuiManager().handleInventoryClick(event, item), 1L);
     }
 }
