@@ -7,9 +7,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
-
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class GuiManager {
     //Holds all current sessions bound to a specific player
@@ -27,11 +24,6 @@ public class GuiManager {
             return null;
         }
         return SESSIONS.get(p);
-    }
-    public void createNewSession(Player p) {
-        //Removes a player's old session and replaced it with a new one
-        Session newSession = new Session();
-        SESSIONS.put(p, newSession);
     }
     public Session getNewSession(Player p) {
         //Creates a new session, removes a player's old session, and returns the new session

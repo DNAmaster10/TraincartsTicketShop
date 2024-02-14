@@ -3,12 +3,10 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;

@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
@@ -10,7 +9,6 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.StringJoiner;
 
 public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {

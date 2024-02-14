@@ -15,16 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.sql.SQLException;
-
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class ShopGui extends MultipageGui {
     @Override
     protected Button[] generateNewPage() throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
-
         //Build tickets and linkers
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());

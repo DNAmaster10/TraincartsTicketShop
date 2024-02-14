@@ -11,7 +11,6 @@ import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.sql.SQLException;
 import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;

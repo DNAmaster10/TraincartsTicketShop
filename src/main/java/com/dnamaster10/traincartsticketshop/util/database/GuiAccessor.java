@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class GuiAccessor extends DatabaseAccessor {
     public GuiAccessor() throws DQLException {
         super();

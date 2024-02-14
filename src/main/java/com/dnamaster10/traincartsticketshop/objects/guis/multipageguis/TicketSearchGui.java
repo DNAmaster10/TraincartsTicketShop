@@ -1,9 +1,7 @@
 package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
-import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.SearchGui;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
@@ -15,9 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.sql.SQLException;
-import java.util.List;
 
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.TC_TICKET_NAME;

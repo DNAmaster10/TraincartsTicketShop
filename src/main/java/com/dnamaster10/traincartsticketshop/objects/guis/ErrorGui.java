@@ -1,15 +1,11 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
-import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
 
@@ -37,8 +33,8 @@ public class ErrorGui extends Gui {
             return;
         }
         getPlayer().setItemOnCursor(null);
-        switch (buttonType) {
-            case "error" -> getPlayer().closeInventory();
+        if (buttonType.equals("error")) {
+            getPlayer().closeInventory();
         }
     }
     public ErrorGui(String errorMessage, Player p) {

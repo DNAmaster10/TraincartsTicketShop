@@ -8,7 +8,6 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class Players {
     //Contains utility methods for players

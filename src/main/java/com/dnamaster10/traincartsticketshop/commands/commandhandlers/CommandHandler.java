@@ -1,13 +1,11 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers;
 
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 public abstract class CommandHandler {
@@ -55,8 +53,5 @@ public abstract class CommandHandler {
     }
     protected boolean checkGuiNameSyntax(String guiName) {
         return guiName.length() <= 25 && guiName.length() >= 3 && checkStringFormat(guiName);
-    }
-    protected boolean checkCompanyNameSyntax(String companyName) {
-        return companyName.length() <= 25 && companyName.length() >= 3 && checkStringFormat(companyName);
     }
 }

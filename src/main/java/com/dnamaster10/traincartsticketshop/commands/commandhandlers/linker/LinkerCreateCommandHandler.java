@@ -1,17 +1,14 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.util.StringJoiner;
 
 public class LinkerCreateCommandHandler extends AsyncCommandHandler {
