@@ -41,6 +41,10 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
             returnMissingArgumentsError(player, "/tshop gui searchLinkers <gui name> <search term>");
             return false;
         }
+        //Check gui name
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(player, args[2]);
+        }
 
         StringJoiner joiner = new StringJoiner(" ");
         for (int i = 3; i < args.length; i++) {
@@ -55,7 +59,6 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
             returnError(player, "Search terms cannot be less than 1 character in length");
             return false;
         }
-        //TODO check gui name syntax
         return true;
     }
 

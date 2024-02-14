@@ -99,18 +99,19 @@ public class EditGui extends MultipageGui {
         }
     }
     //The following methods must be overriden to ensure page is saved
-    @Override
-    protected void nextPage() {
+    private void handlePageChange() {
         wasClosed = false;
         saveToHashmap();
         saveCurrentPageToDatabase();
+    }
+    @Override
+    protected void nextPage() {
+        handlePageChange();
         super.nextPage();
     }
     @Override
     protected void prevPage() {
-        wasClosed = false;
-        saveToHashmap();
-        saveCurrentPageToDatabase();
+        handlePageChange();
         super.prevPage();
     }
     protected void insertPage() {

@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 public abstract class CommandHandler {
-    //TODO May need to also create a sync-command handler and an aync-command handler to eliminate needing to override the handle method
     //Extends exception is used for the checkAsync method and execute method
     //which may throw an SQL exception if accessing the database.
     private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");

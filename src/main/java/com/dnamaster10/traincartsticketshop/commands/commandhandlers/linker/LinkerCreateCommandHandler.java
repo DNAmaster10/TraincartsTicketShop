@@ -83,8 +83,7 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the linker
-        //TODO This probably needs looking at a bit more
-        Linker linker = new Linker(guiId, 0, ChatColor.translateAlternateColorCodes('&', displayName));
+        Linker linker = new Linker(guiId, 0, displayName);
 
         //Give the linker to the player
         ItemStack item = linker.getItemStack();
