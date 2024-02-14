@@ -52,9 +52,9 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         }
 
         //Configure database
-        DatabaseConfig.setUrl(plugin.getConfig().getString("DatabaseHost"), plugin.getConfig().getString("DatabasePort"), plugin.getConfig().getString("DatabaseDatabase"));
-        DatabaseConfig.setUsername(plugin.getConfig().getString("DatabaseUser"));
-        DatabaseConfig.setPassword(plugin.getConfig().getString("DatabasePassword"));
+        DatabaseConfig.setUrl(plugin.getConfig().getString("database.host"), plugin.getConfig().getString("database.port"), plugin.getConfig().getString("database.database"));
+        DatabaseConfig.setUsername(plugin.getConfig().getString("database.user"));
+        DatabaseConfig.setPassword(plugin.getConfig().getString("database.password"));
 
         //Create tables in database
         try {

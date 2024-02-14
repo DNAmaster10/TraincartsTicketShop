@@ -1,8 +1,9 @@
-DatabaseHost: localhost
-DatabasePort: 3306
-DatabaseDatabase: tcdb
-DatabaseUser: admin
-DatabasePassword: password
+database:
+  host: localhost
+  port: 3306
+  database: tcdb
+  user: admin
+  password: password
 
 SignIdentifier: [tshop]
 
