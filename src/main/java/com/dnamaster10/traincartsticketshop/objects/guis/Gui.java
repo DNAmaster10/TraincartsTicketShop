@@ -1,15 +1,23 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
+import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
+import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_ID;
+import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
 public abstract class Gui {
     //The inventory currently open within this gui
@@ -58,6 +66,10 @@ public abstract class Gui {
         player.setItemOnCursor(null);
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);
     }
+    protected void closeInventory() {
+        //Closed the inventory the player has open
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);
+    }
     protected void openErrorGui(String errorMessage) {
         ErrorGui errorGui = new ErrorGui(errorMessage, player);
         player.setItemOnCursor(null);
@@ -65,5 +77,38 @@ public abstract class Gui {
     }
     protected Session getSession() {
         return getPlugin().getGuiManager().getSession(getPlayer());
+    }
+    protected void link(ItemStack linker) {
+        //Get button info
+        ItemMeta meta = linker.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+        Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
+        if (linkedGuiId == null || linkedGuiPage == null) {
+            //This is not a valid linker
+            return;
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            //Get and check info from database
+            ShopGui newGui;
+            try {
+                GuiAccessor guiAccessor = new GuiAccessor();
+                if (!guiAccessor.checkGuiById(linkedGuiId)) {
+                    return;
+                }
+                //Gui exists, create the new gui
+                newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
+            } catch (SQLException e) {
+                removeCursorItemAndClose();
+                getPlugin().reportSqlError(getPlayer(), e);
+                return;
+            }
+            getSession().addGui(newGui);
+            newGui.open();
+        });
     }
 }

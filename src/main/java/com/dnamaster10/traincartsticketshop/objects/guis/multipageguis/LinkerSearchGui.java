@@ -66,41 +66,6 @@ public class LinkerSearchGui extends SearchGui {
             }
         }
     }
-    private void link(ItemStack linker) {
-        //Get button info
-        ItemMeta meta = linker.getItemMeta();
-        if (meta == null) {
-            return;
-        }
-
-        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-        Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
-        Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
-        if (linkedGuiId == null) {
-            return;
-        }
-        if (linkedGuiPage == null) {
-            return;
-        }
-
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            //Get info from database
-            ShopGui newGui;
-            try {
-                GuiAccessor guiAccessor = new GuiAccessor();
-                if (!guiAccessor.checkGuiById(linkedGuiId)) {
-                    return;
-                }
-                newGui = new ShopGui(linkedGuiId, linkedGuiPage, getPlayer());
-            } catch (SQLException e) {
-                removeCursorItemAndClose();
-                getPlugin().reportSqlError(getPlayer(), e);
-                return;
-            }
-            getSession().addGui(newGui);
-            newGui.open();
-        });
-    }
     public LinkerSearchGui(int searchGuiId, String searchTerm, Player p) throws SQLException {
         //Set basic values
         setSearchGuiId(searchGuiId);
