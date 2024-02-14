@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class EditorAddCommandHandler extends CommandHandler {
+public class EditorAddCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop editor add <player_name> <gui_name>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
@@ -33,7 +34,7 @@ public class EditorAddCommandHandler extends CommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop editor add <gui_name> <username>");
+            returnError(sender, "Missing argument(s): /tshop editor add <gui_name> <username>");
             return false;
         }
         if (args.length > 4) {

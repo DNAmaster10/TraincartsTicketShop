@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.TicketSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class GuiSearchTicketsCommandHandler extends CommandHandler {
+public class GuiSearchTicketsCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui searchTickets <gui name> <search term>
     private String searchTerm;
     private GuiAccessor guiAccessor;

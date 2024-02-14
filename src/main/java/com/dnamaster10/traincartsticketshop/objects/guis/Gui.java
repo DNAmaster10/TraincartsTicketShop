@@ -14,7 +14,6 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public abstract class Gui {
     //The inventory currently open within this gui
     private Inventory inventory;
-    private String guiName;
     private int guiId;
     private Player player;
     private String displayName;

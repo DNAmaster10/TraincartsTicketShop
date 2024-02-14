@@ -1,10 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ItemCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class LinkerCreateCommandHandler extends ItemCommandHandler {
+public class LinkerCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop linker create <linked_gui_name> <display_name>
     private String displayName;
     private GuiAccessor guiAccessor;

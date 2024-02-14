@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 
-public class TicketCreateCommandHandler extends CommandHandler {
+public class TicketCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop ticket create <tc_ticket_name> <display_name>
     private String displayName;
     private Player player;

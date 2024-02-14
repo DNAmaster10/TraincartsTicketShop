@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class EditorRemoveAllCommandHandler extends CommandHandler {
+public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop editor removeAll <gui name>
     private GuiAccessor guiAccessor;
     @Override

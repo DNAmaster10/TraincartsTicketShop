@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import org.bukkit.Bukkit;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditorListCommandHandler extends CommandHandler {
+public class EditorListCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui editor list <gui_name>
     private GuiAccessor guiAccessor;
     @Override

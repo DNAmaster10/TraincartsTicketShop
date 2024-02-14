@@ -1,19 +1,17 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ItemCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
-public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
+public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
     //Example command: /traincartsticketshop ticket rename <new_name>
     private String displayName;
     private Player player;
@@ -75,12 +73,6 @@ public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
 
         return true;
     }
-
-    @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) {
-        return true;
-    }
-
     @Override
     protected void execute(CommandSender sender, String[] args) {
         //Set new display name
@@ -89,13 +81,5 @@ public class TicketSetDisplayNameCommandHandler extends ItemCommandHandler {
         meta.setDisplayName(displayName);
         ticket.setItemMeta(meta);
         sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + displayName + "\"");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        execute(sender, args);
     }
 }

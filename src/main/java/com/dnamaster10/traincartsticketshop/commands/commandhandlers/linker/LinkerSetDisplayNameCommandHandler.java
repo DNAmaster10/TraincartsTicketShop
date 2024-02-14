@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ItemCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,12 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
-public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
+public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
     private String colouredDisplayName;
     private ItemStack linker;
     private Player player;
@@ -74,12 +73,6 @@ public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
         }
         return true;
     }
-
-    @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        return true;
-    }
-
     @Override
     protected void execute(CommandSender sender, String[] args) {
         //Get the item meta
@@ -90,13 +83,5 @@ public class LinkerSetDisplayNameCommandHandler extends ItemCommandHandler {
         meta.setDisplayName(colouredDisplayName);
         linker.setItemMeta(meta);
         sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        execute(sender, args);
     }
 }

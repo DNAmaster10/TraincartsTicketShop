@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiOpenCommandHandler extends CommandHandler {
+public class GuiOpenCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui open <gui_name>
     private GuiAccessor guiAccessor;
     private Player player;

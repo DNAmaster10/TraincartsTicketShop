@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 
-public class GuiDeleteCommandHandler extends CommandHandler {
+public class GuiDeleteCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop gui delete <gui_name>
     private GuiAccessor guiAccessor;
     @Override

@@ -1,9 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.CommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ItemCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,13 +11,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
-import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.BUTTON_TYPE;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
-public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
+public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
     //Example command: /traincartsticketshop linker setDestinationPage <destination page>
     private Player player;
     private ItemStack linker;
@@ -67,12 +63,6 @@ public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
         }
         return true;
     }
-
-    @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws SQLException {
-        return true;
-    }
-
     @Override
     protected void execute(CommandSender sender, String[] args) {
         //Get the linker meta
@@ -85,13 +75,5 @@ public class LinkerSetDestinationPageCommandHandler extends ItemCommandHandler {
         linker.setItemMeta(meta);
 
         player.sendMessage(ChatColor.GREEN + "Linker page set");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        execute(sender, args);
     }
 }

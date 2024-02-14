@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ItemCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,12 +10,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Objects;
-
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.TC_TICKET_NAME;
 
-public class TicketSetTraincartsTicket extends ItemCommandHandler {
+public class TicketSetTraincartsTicket extends SyncCommandHandler {
     //Example command: /traincartsticketshop ticket setTraincartsTicket <traincarts ticket>
     Player player;
     ItemStack ticket;
@@ -66,12 +64,6 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
 
         return true;
     }
-
-    @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) {
-        return true;
-    }
-
     @Override
     protected void execute(CommandSender sender, String[] args) {
         ItemMeta meta = ticket.getItemMeta();
@@ -82,13 +74,5 @@ public class TicketSetTraincartsTicket extends ItemCommandHandler {
         ticket.setItemMeta(meta);
 
         player.sendMessage(ChatColor.GREEN + "Traincarts ticket changed to \"" + args[2] + "\"");
-    }
-
-    @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        execute(sender, args);
     }
 }

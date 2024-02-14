@@ -17,26 +17,8 @@ public abstract class CommandHandler {
     private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
     //For synchronous command checks (E.g. syntax checks)
     protected abstract boolean checkSync(CommandSender sender, String[] args);
-    //For asynchronous command checks (E.g. database checks)
-    protected abstract boolean checkAsync(CommandSender sender, String[] args) throws SQLException;
-    //Runs the command after all checks are completed
-    protected abstract void execute(CommandSender sender, String[] args) throws SQLException;
     //Runs appropriate checks before command is executed
-    public void handle(CommandSender sender, String[] args) {
-        if (!checkSync(sender, args)) {
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            try {
-                if (!checkAsync(sender, args)) {
-                    return;
-                }
-                execute(sender, args);
-            } catch (SQLException e) {
-                getPlugin().reportSqlError(sender, e);
-            }
-        });
-    }
+    public abstract void handle(CommandSender sender, String[] args);
     public TraincartsTicketShop getPlugin() {
         return TraincartsTicketShop.getPlugin();
     }
@@ -53,8 +35,8 @@ public abstract class CommandHandler {
         //Returns a "No gui with name "x" exists error to the sender
         returnError(sender, "No gui with the name \"" + guiName + "\" exists");
     }
-    protected void returnCompanyNotFoundError(CommandSender sender, String companyName) {
-        returnError(sender, "No gui with the name \"" + companyName + "\" exists");
+    protected void returnWrongItemError(CommandSender sender, String correctItem) {
+        sender.sendMessage(ChatColor.RED + "You must be holding a " + correctItem + " to perform that action");
     }
     protected boolean checkStringFormat(String input) {
         //Checks that a string only contains letters, numbers, underscores and dashes
