@@ -20,6 +20,7 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
     private String rawDisplayName;
     private String colouredDisplayName;
     private GuiAccessor guiAccessor;
+    private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Synchronous checks (Syntax etc.)
@@ -34,27 +35,29 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        if (!sender.hasPermission("traincartsticketshop.gui.create")) {
-            returnInsufficientPermissionsError(sender);
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.gui.create")) {
+            returnInsufficientPermissionsError(player);
             return false;
         }
 
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui create <gui name> <display name>");
+            returnMissingArgumentsError(player, "/tshop gui create <gui name> <display name>");
             return false;
         }
         if (args[2].length() > 20) {
-            returnError(sender, "Gui names cannot be more than 20 characters in length");
+            returnError(player, "Gui names cannot be more than 20 characters in length");
             return false;
         }
         if (args[2].length() < 3) {
-            returnError(sender, "Gui names cannot be less than 3 characters in length");
+            returnError(player, "Gui names cannot be less than 3 characters in length");
             return false;
         }
         if (!checkStringFormat(args[2])) {
-            returnError(sender, "Gui names can only contain characters Aa to Zz, numbers, underscores and dashes");
+            returnError(player, "Gui names can only contain characters Aa to Zz, numbers, underscores and dashes");
             return false;
         }
 
@@ -68,11 +71,11 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
 
         //Check display name
         if (rawDisplayName.length() > 25) {
-            returnError(sender, "Gui display names cannot be longer than 25 characters in length");
+            returnError(player, "Gui display names cannot be longer than 25 characters in length");
             return false;
         }
         if (rawDisplayName.isBlank()) {
-            returnError(sender, "Gui display names cannot be less than 1 character in length");
+            returnError(player, "Gui display names cannot be less than 1 character in length");
             return false;
         }
 
@@ -82,15 +85,12 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        //Asynchronous checks (Database etc.)
-        //Method must be run from an already asynchronous method in order to be async
-        Player p = (Player) sender;
         String guiName = args[2];
         guiAccessor = new GuiAccessor();
 
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {
-            returnError(p, "A gui with the name \"" + guiName + "\" already exists");
+            returnError(player, "A gui with the name \"" + guiName + "\" already exists");
             return false;
         }
         return true;
@@ -99,7 +99,7 @@ public class GuiCreateCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Runs the command
-        guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, ((Player) sender).getUniqueId().toString());
-        sender.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
+        guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, player.getUniqueId().toString());
+        player.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");
     }
 }

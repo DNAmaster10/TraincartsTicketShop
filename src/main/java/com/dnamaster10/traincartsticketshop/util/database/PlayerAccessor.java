@@ -15,22 +15,6 @@ public class PlayerAccessor extends DatabaseAccessor{
     public PlayerAccessor() throws DQLException {
         super();
     }
-
-    public boolean checkPlayerByUuid(String uuid) throws DQLException {
-        //Returns true if a player exists in database
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE uuid=?");
-            statement.setString(1, uuid);
-            ResultSet result = statement.executeQuery();
-            int total = 0;
-            while (result.next()) {
-                total = result.getInt(1);
-            }
-            return total > 0;
-        } catch (SQLException e) {
-            throw new DQLException(e);
-        }
-    }
     public boolean checkPlayerByUsername(String username) throws DQLException {
         //Returns true if a player with the given username exists in database. Case-insensitive
         try (Connection connection = getConnection()) {
@@ -42,21 +26,6 @@ public class PlayerAccessor extends DatabaseAccessor{
                 total = result.getInt(1);
             }
             return total > 0;
-        } catch (SQLException e) {
-            throw new DQLException(e);
-        }
-    }
-    public String getUsernameFromUuid(String uuid) throws DQLException {
-        //Returns player name from UUID as string
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT username FROM players WHERE uuid=?");
-            statement.setString(1, uuid);
-            ResultSet result = statement.executeQuery();
-            String name = null;
-            while (result.next()) {
-                name = result.getString("username");
-            }
-            return name;
         } catch (SQLException e) {
             throw new DQLException(e);
         }

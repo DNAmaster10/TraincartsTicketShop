@@ -94,7 +94,7 @@ public class GuiSetDisplayNameCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
-        guiAccessor.updateGuiDisplayName(args[2], colouredDisplayName, rawDisplayName);
+        guiAccessor.updateGuiDisplayName(guiId, colouredDisplayName, rawDisplayName);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s display name was changed to \"" + colouredDisplayName + "\"");
     }
 }

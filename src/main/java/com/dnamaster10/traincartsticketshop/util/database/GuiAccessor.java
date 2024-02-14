@@ -171,24 +171,24 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DMLException(e);
         }
     }
-    public void updateGuiDisplayName(String guiName, String colouredDisplayName, String rawDisplayName) throws DMLException {
+    public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws DMLException {
         //Updates a gui display name
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=?, raw_display_name=? WHERE name=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=?, raw_display_name=? WHERE id=?");
             statement.setString(1, colouredDisplayName);
             statement.setString(2, rawDisplayName);
-            statement.setString(3, guiName);
+            statement.setInt(3, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);
         }
     }
-    public void updateGuiOwner(String guiName, String uuid) throws DMLException {
+    public void updateGuiOwner(int guiId, String uuid) throws DMLException {
         //Changes the owner of the gui to another player
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET owner_uuid=? WHERE name=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET owner_uuid=? WHERE id=?");
             statement.setString(1, uuid);
-            statement.setString(2, guiName);
+            statement.setInt(2, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);
