@@ -38,6 +38,7 @@ public class ConfirmGuiDeleteGui extends ConfirmActionGui {
             } catch (DQLException | DMLException e) {
                 getPlugin().handleSqlException(getPlayer(), e);
             }
+            closeInventory();
         });
     }
     public ConfirmGuiDeleteGui(int deleteGuiId, Player p) {

@@ -51,6 +51,7 @@ public class Session {
 
     public void back() {
         if (guis.size() <= 1) {
+            owner.closeInventory();
             return;
         }
         guis.pop();

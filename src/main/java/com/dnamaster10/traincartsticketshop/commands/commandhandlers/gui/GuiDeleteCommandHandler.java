@@ -68,7 +68,7 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
