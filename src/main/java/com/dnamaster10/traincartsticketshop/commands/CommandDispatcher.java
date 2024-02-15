@@ -23,18 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class CommandDispatcher implements CommandExecutor {
-    private static void returnError(CommandSender sender, String error) {
-        if (sender instanceof Player p) {
-            p.sendMessage(ChatColor.RED + error);
-        }
-        else if (sender instanceof ConsoleCommandSender) {
-            getPlugin().getLogger().warning(error);
-        }
+    private void returnError(CommandSender sender, String error) {
+        sender.sendMessage(ChatColor.RED + error);
+    }
+    private void returnInvalidSubCommandError(CommandSender sender, String argument) {
+        returnError(sender, "Invalid sub-command \"" + argument + "\"");
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Check that a sub-command was provided
-        if (args.length < 1) {
+        if (args.length < 2) {
             returnError(sender, "Please enter a valid sub-command");
             return true;
         }
@@ -43,100 +41,49 @@ public class CommandDispatcher implements CommandExecutor {
         switch (args[0].toLowerCase()) {
             case "gui" -> {
                 switch (args[1].toLowerCase()) {
-                    case "create" -> {
-                        GuiCreateCommandHandler handler = new GuiCreateCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "delete" -> {
-                        GuiDeleteCommandHandler handler = new GuiDeleteCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "open" -> {
-                        GuiOpenCommandHandler handler = new GuiOpenCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "rename" -> {
-                        GuiRenameCommandHandler handler = new GuiRenameCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "edit" -> {
-                        GuiEditCommandHandler handler = new GuiEditCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "setdisplayname" -> {
-                        GuiSetDisplayNameCommandHandler handler = new GuiSetDisplayNameCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "searchlinkers" -> {
-                        GuiSearchLinkersCommandHandler handler = new GuiSearchLinkersCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "searchtickets" -> {
-                        GuiSearchTicketsCommandHandler handler = new GuiSearchTicketsCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "transfer" -> {
-                        GuiTransferCommandHandler handler = new GuiTransferCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                    case "create" -> new GuiCreateCommandHandler().handle(sender, args);
+                    case "delete" -> new GuiDeleteCommandHandler().handle(sender, args);
+                    case "open" -> new GuiOpenCommandHandler().handle(sender, args);
+                    case "rename" -> new GuiRenameCommandHandler().handle(sender, args);
+                    case "edit" -> new GuiEditCommandHandler().handle(sender, args);
+                    case "setdisplayname" -> new GuiSetDisplayNameCommandHandler().handle(sender, args);
+                    case "searchlinkers" -> new GuiSearchLinkersCommandHandler().handle(sender, args);
+                    case "searchtickets" -> new GuiSearchTicketsCommandHandler().handle(sender, args);
+                    case "transfer" -> new GuiTransferCommandHandler().handle(sender, args);
+
+                    default -> returnInvalidSubCommandError(sender, args[1]);
                 }
             }
             case "ticket" -> {
                 switch (args[1].toLowerCase()) {
-                    case "create" -> {
-                        TicketCreateCommandHandler handler = new TicketCreateCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "setdisplayname" -> {
-                        TicketSetDisplayNameCommandHandler handler = new TicketSetDisplayNameCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "settraincartsticket" -> {
-                        TicketSetTraincartsTicket handler = new TicketSetTraincartsTicket();
-                        handler.handle(sender, args);
-                    }
-                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                    case "create" -> new TicketCreateCommandHandler().handle(sender, args);
+                    case "setdisplayname" -> new TicketSetDisplayNameCommandHandler().handle(sender, args);
+                    case "settraincartsticket" -> new TicketSetTraincartsTicket().handle(sender, args);
+
+                    default -> returnInvalidSubCommandError(sender, args[1]);
                 }
             }
             case "linker" -> {
                 switch (args[1].toLowerCase()) {
-                    case "create" -> {
-                        LinkerCreateCommandHandler handler = new LinkerCreateCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "setdisplayname" -> {
-                        LinkerSetDisplayNameCommandHandler handler = new LinkerSetDisplayNameCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "setdestinationpage" -> {
-                        LinkerSetDestinationPageCommandHandler handler = new LinkerSetDestinationPageCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    default -> returnError(sender, "Unrecognised sub-command \"" + args[1] + "\"");
+                    case "create" -> new LinkerCreateCommandHandler().handle(sender, args);
+                    case "setdisplayname" -> new LinkerSetDisplayNameCommandHandler().handle(sender, args);
+                    case "setdestinationpage" -> new LinkerSetDestinationPageCommandHandler().handle(sender, args);
+
+                    default -> returnInvalidSubCommandError(sender, args[1]);
                 }
             }
             case "editor" -> {
                 switch (args[1].toLowerCase()) {
-                    case "add" -> {
-                        EditorAddCommandHandler handler = new EditorAddCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "list" -> {
-                        EditorListCommandHandler handler = new EditorListCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "remove" -> {
-                        EditorRemoveCommandHandler handler = new EditorRemoveCommandHandler();
-                        handler.handle(sender, args);
-                    }
-                    case "removeall" -> {
-                        EditorRemoveAllCommandHandler handler = new EditorRemoveAllCommandHandler();
-                        handler.handle(sender, args);
-                    }
+                    case "add" -> new EditorAddCommandHandler().handle(sender, args);
+                    case "list" -> new EditorListCommandHandler().handle(sender, args);
+                    case "remove" -> new EditorRemoveCommandHandler().handle(sender, args);
+                    case "removeall" -> new EditorRemoveAllCommandHandler().handle(sender, args);
+
+                    default -> returnInvalidSubCommandError(sender, args[1]);
                 }
             }
-            default -> returnError(sender, "Unrecognised command \"" + args[0] + "\"");
+
+            default -> returnInvalidSubCommandError(sender, args[1]);
         }
         return true;
     }

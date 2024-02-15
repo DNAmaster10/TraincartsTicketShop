@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class TicketCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop ticket create <tc_ticket_name> <display_name>
     private String displayName;

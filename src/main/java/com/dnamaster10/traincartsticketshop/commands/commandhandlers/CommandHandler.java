@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 
 import java.util.regex.Pattern;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public abstract class CommandHandler {
     //Extends exception is used for the checkAsync method and execute method
     //which may throw an SQL exception if accessing the database.
@@ -16,9 +18,6 @@ public abstract class CommandHandler {
     protected abstract boolean checkSync(CommandSender sender, String[] args);
     //Runs appropriate checks before command is executed
     public abstract void handle(CommandSender sender, String[] args);
-    public TraincartsTicketShop getPlugin() {
-        return TraincartsTicketShop.getPlugin();
-    }
     protected void returnError(CommandSender sender, String error) {
         //Returns an error to sender
         if (sender instanceof Player p) {

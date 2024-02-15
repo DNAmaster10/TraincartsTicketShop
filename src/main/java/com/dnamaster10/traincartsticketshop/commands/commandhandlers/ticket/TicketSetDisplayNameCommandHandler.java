@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
 public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {

@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class GuiCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui create <gui name> <display name>
 

@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class EditorListCommandHandler extends AsyncCommandHandler {
     //TODO command needs finishing and redoing in places
     //Example command: /traincartsticketshop gui editor list <gui_name>

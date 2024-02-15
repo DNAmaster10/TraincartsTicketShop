@@ -9,6 +9,8 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class EditorRemoveCommandHandler extends AsyncCommandHandler {
     //TODO command needs finishing
     //Example command: /traincartsticketshop editor remove <player_name> <gui_name>

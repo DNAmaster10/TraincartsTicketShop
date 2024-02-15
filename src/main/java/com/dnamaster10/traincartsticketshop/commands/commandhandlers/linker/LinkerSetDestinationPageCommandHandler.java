@@ -12,6 +12,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_PAGE;
 

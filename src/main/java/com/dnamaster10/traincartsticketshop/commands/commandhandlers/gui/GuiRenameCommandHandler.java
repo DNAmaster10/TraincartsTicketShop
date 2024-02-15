@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class GuiRenameCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
     private GuiAccessor guiAccessor;

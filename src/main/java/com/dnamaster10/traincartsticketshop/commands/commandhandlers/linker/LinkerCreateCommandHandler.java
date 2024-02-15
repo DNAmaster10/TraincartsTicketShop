@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.StringJoiner;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class LinkerCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop linker create <linked_gui_name> <display_name>
     private String displayName;

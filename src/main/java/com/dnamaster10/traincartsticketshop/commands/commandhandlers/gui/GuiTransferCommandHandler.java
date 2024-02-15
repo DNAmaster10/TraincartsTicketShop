@@ -10,6 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class GuiTransferCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;

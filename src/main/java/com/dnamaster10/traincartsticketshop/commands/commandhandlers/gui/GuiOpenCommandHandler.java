@@ -8,6 +8,8 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class GuiOpenCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui open <gui_name>
     private GuiAccessor guiAccessor;

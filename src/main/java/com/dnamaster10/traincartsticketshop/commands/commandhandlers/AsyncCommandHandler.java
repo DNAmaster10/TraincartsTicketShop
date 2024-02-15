@@ -5,6 +5,8 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public abstract class AsyncCommandHandler extends CommandHandler {
     protected abstract boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException;
     protected abstract void execute(CommandSender sender, String[] args) throws DQLException, DMLException;
