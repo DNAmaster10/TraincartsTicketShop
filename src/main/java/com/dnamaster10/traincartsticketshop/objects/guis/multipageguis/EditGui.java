@@ -26,10 +26,6 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 
 public class EditGui extends MultipageGui {
     //TODO Class may need further code cleanup
-    //Used when the next page button is clicked to decide whether to save the gui.
-    //This is because the inventory close event is called when opening a new gui.
-    //This value helps the gui manager to know whether a next page button was clicked, in which case it doesn't need to save
-    //or whether the gui was actually closed.
     private static final int pageLimit = getPlugin().getConfig().getInt("MaxPagesPerGui");
     private boolean wasClosed = true;
 

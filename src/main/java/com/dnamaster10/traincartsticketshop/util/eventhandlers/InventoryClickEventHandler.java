@@ -18,7 +18,7 @@ public class InventoryClickEventHandler implements Listener {
         }
 
         //Get item which was clicked
-        ItemStack item = event.getWhoClicked().getItemOnCursor();
+        ItemStack item = event.getCurrentItem();
 
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getGuiManager().handleInventoryClick(event, item), 1L);
     }
