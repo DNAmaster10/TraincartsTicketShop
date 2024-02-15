@@ -71,6 +71,6 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        guiAccessor.removeAllGuiEditors(guiId);
+        //guiAccessor.removeAllGuiEditors(guiId);
     }
 }

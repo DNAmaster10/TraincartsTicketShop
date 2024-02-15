@@ -3,9 +3,11 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,6 +18,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
     private GuiAccessor guiAccessor;
+    private GuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -81,11 +84,19 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
             returnError(sender, "Player \"" + playerDatabaseObject.getUsername() + "\" already owns that gui");
             return false;
         }
+
+        editorsAccessor = new GuiEditorsAccessor();
+        //Check that the player isn't already an editor
+        if (editorsAccessor.checkGuiEditorByUuid(guiId, playerDatabaseObject.getUuid())) {
+            returnError(sender, "Player \"" + playerDatabaseObject.getUsername() + "\" is already an editor of that gui");
+            return false;
+        }
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        guiAccessor.addGuiEditor(playerDatabaseObject.getUuid(), guiId);
+        editorsAccessor.addGuiEditor(guiId, playerDatabaseObject.getUuid());
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.getUsername() + "\" was registered as an editor for gui \"" + args[3] + "\"");
     }
 }

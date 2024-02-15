@@ -3,9 +3,11 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,6 +18,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop editor remove <player_name> <gui_name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiAccessor guiAccessor;
+    private GuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -77,9 +80,10 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
+        editorsAccessor = new GuiEditorsAccessor();
         //Check that the editor exists in the editors table
-        if (!guiAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.getUuid())) {
-            returnError(sender, "Player \"" + args[2] + "\" is not a registered editor for gui \"" + args[3] + "\"");
+        if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.getUuid())) {
+            returnError(sender, "Player \"" + editorDatabaseObject.getUsername() + "\" is not a registered editor for gui \"" + args[3] + "\"");
             return false;
         }
         return true;
@@ -88,6 +92,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Remove the editor
-        guiAccessor.removeGuiEditorByUuid(guiId, editorDatabaseObject.getUuid());
+        editorsAccessor.removeGuiEditor(guiId, editorDatabaseObject.getUuid());
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.getUsername() + "\" is no longer an editor of gui \"" + args[3] + "\"");
     }
 }

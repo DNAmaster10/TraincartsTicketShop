@@ -59,28 +59,11 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public boolean checkGuiEditorByUuid(int guiId, String uuid) throws DQLException {
-        //Returns true if player appears in the editor list for the given gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement;
-
-            //Check if player is an editor of the gui
-            statement = connection.prepareStatement("SELECT COUNT(*) FROM guieditors WHERE gui_id=? AND player_uuid=?");
-            statement.setInt(1, guiId);
-            statement.setString(2, uuid);
-            ResultSet result = statement.executeQuery();
-            boolean isEditor = false;
-            while (result.next()) {
-                isEditor = result.getInt(1) > 0;
-            }
-            return isEditor;
-        } catch (SQLException e) {
-            throw new DQLException(e);
-        }
-    }
-    public boolean playerCanEdit(int guiId, String ownerUUID) throws DQLException {
+    public boolean playerCanEdit(int guiId, String uuid) throws DQLException {
         //Returns true if player is either an owner of a gui or a listed editor
-        return checkGuiOwnerByUuid(guiId, ownerUUID) || checkGuiEditorByUuid(guiId, ownerUUID);
+        boolean isOwner = checkGuiOwnerByUuid(guiId, uuid);
+        GuiEditorsAccessor guiEditorsAccessor = new GuiEditorsAccessor();
+        return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid) || isOwner;
     }
 
     public Integer getGuiIdByName(String name) throws DQLException {
@@ -205,17 +188,6 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DMLException(e);
         }
     }
-    public void addGuiEditor(String uuid, int guiId) throws DMLException {
-        //Adds an editor for a given gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO guieditors (gui_id, player_uuid) VALUES (?, ?)");
-            statement.setInt(1, guiId);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DMLException(e);
-        }
-    }
     public void insertPage(int guiId, int currentPage) throws DMLException {
         //Inserts a page above the current page
         try(Connection connection = getConnection()) {
@@ -276,27 +248,6 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DMLException(e);
-        }
-    }
-    public void removeGuiEditorByUuid(int guiId, String uuid) throws DMLException {
-        //Removes a player as editor from gui editors
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE gui_id=? AND player_uuid=?");
-            statement.setInt(1, guiId);
-            statement.setString(2, uuid);
-            statement.execute();
-        } catch (SQLException e) {
-            throw new DMLException(e);
-        }
-    }
-    public void removeAllGuiEditors(int guiId) throws DMLException {
-        //Removes all editors from a given gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM guieditors WHERE gui_id=?");
-            statement.setInt(1, guiId);
-            statement.execute();
         } catch (SQLException e) {
             throw new DMLException(e);
         }
