@@ -1,9 +1,12 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmGuiDeleteGui;
+import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -70,7 +73,16 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
-        //Create and open a delete confirm gui
-        //TODO finish this
+        if (sender instanceof Player p) {
+            ConfirmGuiDeleteGui newGui = new ConfirmGuiDeleteGui(guiId, p);
+            Session session = getPlugin().getGuiManager().getNewSession(p);
+            session.addGui(newGui);
+            newGui.open();
+            return;
+        }
+        //If sender isn't a player, we don't need to bother with a confirm action gui.
+        //Delete the gui.
+        guiAccessor.deleteGuiById(guiId);
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was deleted");
     }
 }
