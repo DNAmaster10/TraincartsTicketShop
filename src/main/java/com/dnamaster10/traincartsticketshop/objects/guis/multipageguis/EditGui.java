@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
@@ -33,11 +34,32 @@ public class EditGui extends MultipageGui {
     private boolean wasClosed = true;
     public void handleCloseEvent() {
         if (wasClosed) {
+            //Player has either closed the inventory, or gone to a new gui
             saveToHashmap();
             saveCurrentPageToDatabase();
+
+            //Deregister this as an edit gui in the gui manager
+            getPlugin().getGuiManager().removeEditGui(getGuiId());
             return;
         }
         wasClosed = true;
+    }
+    @Override
+    public void open() {
+        //Overriden to check if a player is already editing this gui
+        //Check if there is a player editing this gui
+        Player editor = getPlugin().getGuiManager().getGuiEditor(getGuiId());
+        if (editor == null) {
+            super.open();
+            return;
+        }
+        //Someone is editing the gui, check if editor matches this guis owner
+        if (Objects.equals(getPlayer(), editor)) {
+            super.open();
+            return;
+        }
+        //Gui is being edited by someone else, open an error gui
+        openErrorGui("Someone else is editing that gui");
     }
     @Override
     protected Button[] generateNewPage() throws DQLException {
@@ -130,11 +152,6 @@ public class EditGui extends MultipageGui {
         });
     }
     private void deletePage() {
-        wasClosed = false;
-
-        //Save the current page in case the player decides to go back
-        saveCurrentPageToDatabase();
-
         //Clear the current gui hashmap, because we don't know what is and isn't going to be changed
         getPages().clear();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {

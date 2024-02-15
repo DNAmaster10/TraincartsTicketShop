@@ -1,7 +1,9 @@
 package com.dnamaster10.traincartsticketshop.util;
 
+import com.dnamaster10.traincartsticketshop.objects.guis.ErrorGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.EditGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +17,7 @@ public class Session {
     //Holds information about a player's current gui session
     //Indicates the maximum amount of guis a player can have stored in their session stack
     private static final int maxGuis;
+    private final Player owner;
 
     static {
         maxGuis = getPlugin().getConfig().getInt("MaxStoredGuisPerPlayer");
@@ -30,6 +33,10 @@ public class Session {
     }
     public void addGui(Gui gui) {
         GUIS.push(gui);
+        //If edit gui, add to gui edit list in gui manager
+        if (gui instanceof EditGui) {
+            getPlugin().getGuiManager().addEditGui(gui.getGuiId(), owner);
+        }
     }
     public void back() {
         //Check that there is a gui before this one
@@ -39,8 +46,8 @@ public class Session {
 
         //Open the last gui behind the current one and remove the current one
         GUIS.pop();
-        Gui newGui = GUIS.peek();
-        newGui.open();
+        Gui previousGui = GUIS.peek();
+        previousGui.open();
     }
     public boolean checkBack() {
         //Returns true if there is a gui before the current open gui
@@ -54,5 +61,8 @@ public class Session {
         if (topGui instanceof EditGui e) {
             e.handleCloseEvent();
         }
+    }
+    public Session(Player owner) {
+        this.owner = owner;
     }
 }
