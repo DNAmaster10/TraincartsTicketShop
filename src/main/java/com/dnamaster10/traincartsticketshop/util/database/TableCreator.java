@@ -85,29 +85,6 @@ public class TableCreator extends DatabaseAccessor {
                     """);
             statement.execute();
 
-            statement = connection.prepareStatement("""
-                    CREATE TABLE IF NOT EXISTS companies (
-                        id int AUTO_INCREMENT PRIMARY KEY,
-                        owner_uuid varchar(50),
-                        company_name varchar(100) UNIQUE,
-                        FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
-                            ON DELETE SET NULL
-                    ) ENGINE=INNODB;
-                    """);
-            statement.execute();
-
-            statement = connection.prepareStatement("""
-                    CREATE TABLE IF NOT EXISTS companymembers (
-                        id int AUTO_INCREMENT PRIMARY KEY,
-                        company_id int NOT NULL,
-                        member_uuid varchar(100) NOT NULL,
-                        FOREIGN KEY (company_id) REFERENCES companies(id)
-                            ON DELETE CASCADE,
-                        FOREIGN KEY (member_uuid) REFERENCES players(uuid)
-                            ON DELETE CASCADE
-                    ) ENGINE=INNODB;
-                    """);
-            statement.execute();
         } catch (SQLException e) {
             throw new DMLException(e);
         }
