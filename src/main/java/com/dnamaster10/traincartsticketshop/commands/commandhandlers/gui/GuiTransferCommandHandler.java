@@ -61,7 +61,7 @@ public class GuiTransferCommandHandler extends AsyncCommandHandler {
         //If sender is player, and they don't have admin transfer rights, check they are owner
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.transfer")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }

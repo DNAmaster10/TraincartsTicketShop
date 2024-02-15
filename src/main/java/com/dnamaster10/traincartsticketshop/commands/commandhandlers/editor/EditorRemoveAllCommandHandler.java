@@ -58,7 +58,7 @@ public class EditorRemoveAllCommandHandler extends AsyncCommandHandler {
         //Check player is owner or isn't admin
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.editor.removeall")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }

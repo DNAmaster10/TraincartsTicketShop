@@ -61,7 +61,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
         //If player, check that they own the gui
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.editor.remove")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
+                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -74,6 +74,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
             returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
             return false;
         }
+
         //Check that the editor exists in the editors table
         if (!guiAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.getUuid())) {
             returnError(sender, "Player \"" + args[2] + "\" is not a registered editor for gui \"" + args[3] + "\"");

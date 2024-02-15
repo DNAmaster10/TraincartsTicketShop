@@ -60,12 +60,10 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
         }
 
         //Check player is owner
-        if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.admin.editor.add")) {
-                if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
-                    returnError(sender, "You do not own that gui");
-                    return false;
-                }
+        if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.admin.editor.add")) {
+            if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
+                returnError(sender, "You do not own that gui");
+                return false;
             }
         }
 
@@ -73,6 +71,12 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
         playerDatabaseObject = Players.getPlayerByUsername(args[2]);
         if (playerDatabaseObject == null) {
             returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
+            return false;
+        }
+
+        //Check that the new player isn't the same player as the owner
+        if (guiAccessor.checkGuiOwnerByUuid(guiId, playerDatabaseObject.getUuid())) {
+            returnError(sender, "Player \"" + playerDatabaseObject.getUsername() + "\" already owns that gui");
             return false;
         }
         return true;

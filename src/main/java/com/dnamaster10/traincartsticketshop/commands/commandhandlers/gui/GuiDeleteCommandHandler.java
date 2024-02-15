@@ -58,7 +58,7 @@ public class GuiDeleteCommandHandler extends AsyncCommandHandler {
 
         //If sender is player, check they are owner
         if (sender instanceof Player p) {
-            if (!guiAccessor.checkGuiOwnershipByUuid(guiId, p.getUniqueId().toString())) {
+            if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                 returnError(p, "You must be the owner of the gui in order to delete it");
                 return false;
             }

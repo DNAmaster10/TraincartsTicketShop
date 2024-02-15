@@ -43,7 +43,7 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public boolean checkGuiOwnershipByUuid(int guiId, String ownerUuid) throws DQLException {
+    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws DQLException {
         //Returns true if uuid owns gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=? AND owner_uuid=?");
@@ -80,7 +80,7 @@ public class GuiAccessor extends DatabaseAccessor {
     }
     public boolean playerCanEdit(int guiId, String ownerUUID) throws DQLException {
         //Returns true if player is either an owner of a gui or a listed editor
-        return checkGuiOwnershipByUuid(guiId, ownerUUID) || checkGuiEditorByUuid(guiId, ownerUUID);
+        return checkGuiOwnerByUuid(guiId, ownerUUID) || checkGuiEditorByUuid(guiId, ownerUUID);
     }
 
     public Integer getGuiIdByName(String name) throws DQLException {
