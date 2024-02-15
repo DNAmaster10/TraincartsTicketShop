@@ -21,7 +21,7 @@ public class SignHandler {
     //Line 2: [tshop] <optional page num>
     //Line 3: <gui name>
     //Line 4: Test123
-    private static String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
+    private static final String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
     boolean isGuiSign(Sign sign) {
         if (signIdentifier == null || signIdentifier.isBlank()) {
             return false;
