@@ -14,7 +14,6 @@ public class EditorTabCompleter extends SubCommandCompleter {
         ARGS1.add("add");
         ARGS1.add("list");
         ARGS1.add("remove");
-        ARGS1.add("removeAll");
     }
     @Override
     protected boolean checkPermission(Player p, String command) {

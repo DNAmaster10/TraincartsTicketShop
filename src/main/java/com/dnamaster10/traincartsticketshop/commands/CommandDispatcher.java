@@ -1,6 +1,5 @@
 package com.dnamaster10.traincartsticketshop.commands;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor.EditorRemoveAllCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor.EditorRemoveCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.*;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor.EditorAddCommandHandler;
@@ -73,7 +72,6 @@ public class CommandDispatcher implements CommandExecutor {
                     case "add" -> new EditorAddCommandHandler().handle(sender, args);
                     case "list" -> new EditorListCommandHandler().handle(sender, args);
                     case "remove" -> new EditorRemoveCommandHandler().handle(sender, args);
-                    case "removeall" -> new EditorRemoveAllCommandHandler().handle(sender, args);
 
                     default -> returnInvalidSubCommandError(sender, args[1]);
                 }

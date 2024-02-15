@@ -14,8 +14,7 @@ import org.bukkit.entity.Player;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class EditorRemoveCommandHandler extends AsyncCommandHandler {
-    //TODO command needs finishing
-    //Example command: /traincartsticketshop editor remove <player_name> <gui_name>
+    //Example command: /tshop editor remove <player_name> <gui_name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiAccessor guiAccessor;
     private GuiEditorsAccessor editorsAccessor;
@@ -28,21 +27,21 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        //If player check perms
+        //Check sender perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.editor.remove") && !p.hasPermission("traincartsticketshop.admin.editor.remove")) {
-                returnError(sender, "You do not have permission to perform that action");
+                returnInsufficientPermissionsError(sender);
                 return false;
             }
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnError(sender, "Missing argument(s): /traincartsticketshop editor add <gui_name> <username");
+            returnMissingArgumentsError(sender, "/tshop editor add <gui name> <player username>");
             return false;
         }
         if (args.length > 4) {
-            returnError(sender, "Invalid sub-command \"" + args[4] + "\"");
+            returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
         if (!checkGuiNameSyntax(args[3])) {

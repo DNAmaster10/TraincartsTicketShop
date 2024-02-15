@@ -63,18 +63,12 @@ permissions:
   traincartsticketshop.editor.remove:
     description: Allows players to remove editors from their gui
     default: false
-  traincartsticketshop.editor.removeall:
-    description: Allows players to remove all editors from their gui
-    default: false
 
   traincartsticketshop.admin.editor.add:
     description: Allows player to add an editor to a gui even if they do not own the gui
     default: false
   traincartsticketshop.admin.editor.remove:
     description: Allows player to remove an editor for a gui they don't own
-    default: false
-  traincartsticketshop.admin.editor.removeall:
-    description: Allows players to remove all editors from a gui they don't own
     default: false
 
   traincartsticketshop.ticket.create:
@@ -95,23 +89,6 @@ permissions:
     default: false
   traincartsticketshop.linker.setdestinationpage:
     description: Allows a player to set a destination page for a linker
-    default: false
-
-  traincartsticketshop.company.addmember:
-    description: Allows a player to add a member to a company they own
-    default: false
-  traincartsticketshop.company.create:
-    description: Allows a player to create a company
-    default: false
-  traincartsticketshop.company.delete:
-    description: Allows a player to delete a company
-    default: false
-
-  traincartsticketshop.admin.company.addmember:
-    description: Allows player to add a member to a gui they do not own
-    default: false
-  traincartsticketshop.admin.company.delete:
-    description: Allows a player to delete a company even if they are not the owner
     default: false
 
 commands:
