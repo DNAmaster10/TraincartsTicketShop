@@ -19,9 +19,8 @@ public abstract class MultipageGui extends Gui {
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
     private int currentPage;
     //The highest page number which this gui allows
-    private int maxPage;
+    private int maximumPage;
     protected HashMap<Integer, Button[]> getPages() {
-        //Returns the page hashmap
         return pages;
     }
     protected abstract Button[] generateNewPage() throws DQLException;
@@ -31,11 +30,11 @@ public abstract class MultipageGui extends Gui {
     protected void setPageNumber(int pageNumber) {
         this.currentPage = pageNumber;
     }
-    protected int getMaxPage() {
-        return this.maxPage;
+    protected int getMaximumPage() {
+        return this.maximumPage;
     }
-    protected void setMaxPage(int maxPage) {
-        this.maxPage = maxPage;
+    protected void setMaximumPage(int maximumPage) {
+        this.maximumPage = maximumPage;
     }
     protected boolean checkPage(int pageNumber) {
         //Returns true if a page exists
@@ -50,7 +49,7 @@ public abstract class MultipageGui extends Gui {
     //Generates a new page for this gui.
     protected void nextPage() {
         //Check there are pages beyond this page
-        if (this.currentPage + 1 > maxPage) {
+        if (this.currentPage + 1 > maximumPage) {
             return;
         }
         //If there are, increment the current page
@@ -84,19 +83,16 @@ public abstract class MultipageGui extends Gui {
                     getPlugin().handleSqlException(getPlayer(), e);
                     return;
                 }
-                //Add the new page to the hashmap
-                setPage(getPageNumber(), newPage);
-                InventoryBuilder inventoryBuilder = new InventoryBuilder(newPage, getDisplayName());
-                Inventory newInventory = inventoryBuilder.getInventory();
-                setInventory(newInventory);
-
                 //Inventories must be opened sync
-                Bukkit.getScheduler().runTask(getPlugin(), () -> getPlayer().openInventory(newInventory));
+                Bukkit.getScheduler().runTask(getPlugin(), () -> openPage(newPage));
             });
             return;
         }
         //If the page does exist, open it
-        InventoryBuilder inventoryBuilder = new InventoryBuilder(pages.get(currentPage), getDisplayName());
+        openPage(pages.get(currentPage));
+    }
+    private void openPage(Button[] pageButtons) {
+        InventoryBuilder inventoryBuilder = new InventoryBuilder(pageButtons, getDisplayName());
         Inventory newInventory = inventoryBuilder.getInventory();
         setInventory(newInventory);
         getPlayer().openInventory(newInventory);

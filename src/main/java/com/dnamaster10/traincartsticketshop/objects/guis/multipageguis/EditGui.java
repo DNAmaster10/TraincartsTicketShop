@@ -219,7 +219,7 @@ public class EditGui extends MultipageGui {
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(p);
-        setMaxPage(pageLimit);
+        setMaximumPage(pageLimit);
     }
     public EditGui(int guiId, Player p) throws DQLException {
         this(guiId, 0, p);

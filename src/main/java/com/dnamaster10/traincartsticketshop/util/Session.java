@@ -1,6 +1,5 @@
 package com.dnamaster10.traincartsticketshop.util;
 
-import com.dnamaster10.traincartsticketshop.objects.guis.ErrorGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.EditGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import org.bukkit.entity.Player;
@@ -18,51 +17,56 @@ public class Session {
     //Indicates the maximum amount of guis a player can have stored in their session stack
     private static final int maxGuis;
     private final Player owner;
+    private final Stack<Gui> guis = new Stack<>();
 
     static {
         maxGuis = getPlugin().getConfig().getInt("MaxStoredGuisPerPlayer");
     }
-    private final Stack<Gui> GUIS = new Stack<>();
+
+    public Session(Player owner) {
+        this.owner = owner;
+        if (owner == null) {
+            throw new IllegalArgumentException("Owner cannot be null");
+        }
+    }
+
     public boolean isGuiInventory(Inventory inventory) {
         //Returns true if the passed inventory matches that of the highest gui on the stack
-        if (GUIS.isEmpty()) {
+        if (guis.isEmpty()) {
             return false;
         }
-        Inventory guiInventory = GUIS.peek().getInventory();
+        Inventory guiInventory = guis.peek().getInventory();
         return Objects.equals(inventory, guiInventory);
     }
+
     public void addGui(Gui gui) {
-        GUIS.push(gui);
-        //If edit gui, add to gui edit list in gui manager
+        guis.push(gui);
         if (gui instanceof EditGui) {
             getPlugin().getGuiManager().addEditGui(gui.getGuiId(), owner);
         }
     }
+
     public void back() {
-        //Check that there is a gui before this one
-        if (GUIS.size() <= 1) {
+        if (guis.size() <= 1) {
             return;
         }
-
-        //Open the last gui behind the current one and remove the current one
-        GUIS.pop();
-        Gui previousGui = GUIS.peek();
+        guis.pop();
+        Gui previousGui = guis.peek();
         previousGui.open();
     }
+
     public boolean checkBack() {
-        //Returns true if there is a gui before the current open gui
-        return GUIS.size() > 1;
+        return guis.size() > 1;
     }
+
     public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
-        GUIS.peek().handleClick(event, clickedItem);
+        guis.peek().handleClick(event, clickedItem);
     }
+
     public void handleInventoryClose() {
-        Gui topGui = GUIS.peek();
+        Gui topGui = guis.peek();
         if (topGui instanceof EditGui e) {
             e.handleCloseEvent();
         }
-    }
-    public Session(Player owner) {
-        this.owner = owner;
     }
 }
