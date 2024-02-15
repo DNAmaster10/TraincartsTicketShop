@@ -32,6 +32,22 @@ public class EditGui extends MultipageGui {
     //or whether the gui was actually closed.
     private static final int pageLimit = getPlugin().getConfig().getInt("MaxPagesPerGui");
     private boolean wasClosed = true;
+
+    public EditGui(int guiId, int page, Player p) throws DQLException {
+        //Should be called from an asynchronous thread
+        GuiAccessor guiAccessor = new GuiAccessor();
+        String displayName = "Editing: " + guiAccessor.getColouredDisplayNameById(guiId);
+
+        setDisplayName(displayName);
+        setGuiId(guiId);
+        setPageNumber(page);
+        setPlayer(p);
+        setMaxPages(pageLimit);
+    }
+    public EditGui(int guiId, Player p) throws DQLException {
+        this(guiId, 0, p);
+    }
+
     public void handleCloseEvent() {
         if (wasClosed) {
             //Player has either closed the inventory, or gone to a new gui
@@ -182,12 +198,7 @@ public class EditGui extends MultipageGui {
 
         //Index counts to 9 less than total length to exclude bottom inventory row
         for (int slot = 0; slot < pageContents.length - 9; slot++) {
-            //For each slot in the page
             Button button = pageContents[slot];
-            if (button == null) {
-                //Is not a valid button or slot is empty
-                continue;
-            }
             if (button instanceof Ticket ticket) {
                 //If button is a ticket, save to the ticket list
                 tickets.add(ticket.getAsDatabaseObject(slot));
@@ -208,20 +219,5 @@ public class EditGui extends MultipageGui {
         } catch (DQLException | DMLException e) {
             getPlugin().handleSqlException(getPlayer(), e);
         }
-    }
-
-    public EditGui(int guiId, int page, Player p) throws DQLException {
-        //Should be called from an asynchronous thread
-        GuiAccessor guiAccessor = new GuiAccessor();
-        String displayName = "Editing: " + guiAccessor.getColouredDisplayNameById(guiId);
-
-        setDisplayName(displayName);
-        setGuiId(guiId);
-        setPageNumber(page);
-        setPlayer(p);
-        setMaximumPage(pageLimit);
-    }
-    public EditGui(int guiId, Player p) throws DQLException {
-        this(guiId, 0, p);
     }
 }

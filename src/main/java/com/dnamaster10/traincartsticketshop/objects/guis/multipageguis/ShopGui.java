@@ -28,7 +28,7 @@ public class ShopGui extends MultipageGui {
 
 
         //Check if there are any more pages
-        if (getMaximumPage() > getPageNumber()) {
+        if (getMaxPages() > getPageNumber()) {
             pageBuilder.addNextPageButton();
         }
         if (getPageNumber() > 0) {
@@ -100,7 +100,7 @@ public class ShopGui extends MultipageGui {
         setPlayer(p);
         setPageNumber(page);
         setGuiId(guiId);
-        setMaximumPage(guiAccessor.getMaxPage(guiId));
+        setMaxPages(guiAccessor.getMaxPage(guiId));
     }
     public ShopGui(int guiId, Player p) throws DQLException {
         this(guiId, 0, p);

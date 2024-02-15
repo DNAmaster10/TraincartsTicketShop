@@ -19,7 +19,7 @@ public abstract class MultipageGui extends Gui {
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
     private int currentPage;
     //The highest page number which this gui allows
-    private int maximumPage;
+    private int maxPages;
     protected HashMap<Integer, Button[]> getPages() {
         return pages;
     }
@@ -30,11 +30,11 @@ public abstract class MultipageGui extends Gui {
     protected void setPageNumber(int pageNumber) {
         this.currentPage = pageNumber;
     }
-    protected int getMaximumPage() {
-        return this.maximumPage;
+    protected int getMaxPages() {
+        return this.maxPages;
     }
-    protected void setMaximumPage(int maximumPage) {
-        this.maximumPage = maximumPage;
+    protected void setMaxPages(int maxPages) {
+        this.maxPages = maxPages;
     }
     protected boolean checkPage(int pageNumber) {
         //Returns true if a page exists
@@ -49,7 +49,7 @@ public abstract class MultipageGui extends Gui {
     //Generates a new page for this gui.
     protected void nextPage() {
         //Check there are pages beyond this page
-        if (this.currentPage + 1 > maximumPage) {
+        if (this.currentPage + 1 > maxPages) {
             return;
         }
         //If there are, increment the current page
