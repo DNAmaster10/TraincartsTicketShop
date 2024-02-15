@@ -21,17 +21,14 @@ public class SignHandler {
     //Line 2: [tshop] <optional page num>
     //Line 3: <gui name>
     //Line 4: Test123
+    private static String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
     boolean isGuiSign(Sign sign) {
-        String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
         if (signIdentifier == null || signIdentifier.isBlank()) {
             return false;
         }
         SignSide side1 = sign.getSide(Side.FRONT);
         SignSide side2 = sign.getSide(Side.BACK);
-        if (side1.getLine(2).contains(signIdentifier)) {
-            return true;
-        }
-        return side2.getLine(2).contains(signIdentifier);
+        return side1.getLine(1).contains(signIdentifier) || side2.getLine(1).contains(signIdentifier);
     }
     Side getSignSide(Sign sign) {
         //This method will be replaced in the future with a built-in method from Spigot.
@@ -39,18 +36,17 @@ public class SignHandler {
         //So this method will just return whichever side contains the traincartsticketshop identifier,
         //prioritising side 1 if they both contain a sign identifier.
         //A pull request has been added on the spigot repo to add this.
-        String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
         if (signIdentifier == null || signIdentifier.isBlank()) {
             return null;
         }
-        if (sign.getSide(Side.FRONT).getLine(2).contains(signIdentifier)) {
+        if (sign.getSide(Side.FRONT).getLine(1).contains(signIdentifier)) {
             return Side.FRONT;
         }
         return Side.BACK;
     }
     int getPage(SignSide side) {
         //Defaults to page 0 if none is specified
-        String[] args = side.getLine(2).split(" ");
+        String[] args = side.getLine(1).split(" ");
         if (args.length > 1) {
             if (Utilities.isInt(args[1])) {
                 //Page must be reduced by one to convert from a regular number to an index
@@ -60,7 +56,7 @@ public class SignHandler {
         return 0;
     }
     String getGuiName(SignSide side) {
-        String nameLine = side.getLine(3);
+        String nameLine = side.getLine(2);
         if (nameLine.isBlank()) {
             return null;
         }
@@ -88,13 +84,11 @@ public class SignHandler {
         //Handle sign click async from here. True will be returned beforehand to cancel the sign edit event.
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                //Check the gui exists
                 GuiAccessor guiAccessor = new GuiAccessor();
                 if (!guiAccessor.checkGuiByName(guiName)) {
                     event.getPlayer().sendMessage(ChatColor.RED + "No gui with name \"" + guiName + "\" exists");
                     return;
                 }
-
                 //Check the max page number. If the number on the sign is higher than the max pages in the gui, set the page to the highest possible page
                 int page = getPage(side);
                 int guiId = guiAccessor.getGuiIdByName(guiName);
