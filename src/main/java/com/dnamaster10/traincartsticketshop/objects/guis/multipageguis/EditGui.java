@@ -195,12 +195,11 @@ public class EditGui extends MultipageGui {
         //Index counts to 9 less than total length to exclude bottom inventory row
         for (int slot = 0; slot < pageContents.length - 9; slot++) {
             Button button = pageContents[slot];
+
             if (button instanceof Ticket ticket) {
-                //If button is a ticket, save to the ticket list
                 tickets.add(ticket.getAsDatabaseObject(slot));
             }
             else if (button instanceof Linker linker) {
-                //if button is a linker, save to the linker list
                 linkers.add(linker.getAsDatabaseObject(slot));
             }
         }

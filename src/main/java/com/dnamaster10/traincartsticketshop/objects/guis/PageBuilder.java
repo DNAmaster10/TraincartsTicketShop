@@ -6,8 +6,10 @@ import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.*;
@@ -16,6 +18,22 @@ public class PageBuilder {
     private final Button[] page = new Button[54];
     public Button[] getPage() {
         return this.page;
+    }
+    private boolean checkButtonDisplayName(ItemStack item) {
+        //Returns false if display name of item is too long or too short. Should be used for tickets and linkers.
+        if (!item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+        String colouredDisplayName = meta.getDisplayName();
+
+        if (colouredDisplayName.length() > 100) {
+            return false;
+        }
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+
+        return rawDisplayName.length() <= 25 && !rawDisplayName.isBlank();
     }
     public void addInventory(Inventory inventory) {
         //Builds the page from an inventory
@@ -28,6 +46,10 @@ public class PageBuilder {
             }
             String buttonType = getButtonType(item);
             if (buttonType == null) {
+                continue;
+            }
+
+            if (!checkButtonDisplayName(item)) {
                 continue;
             }
 
