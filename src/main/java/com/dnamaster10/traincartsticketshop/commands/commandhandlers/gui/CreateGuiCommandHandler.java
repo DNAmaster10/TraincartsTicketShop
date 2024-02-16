@@ -12,7 +12,7 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class CreateCommandHandler extends AsyncCommandHandler {
+public class CreateGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui create <gui name> <display name>
 
     //Used to store the display name since spaces can be entered here

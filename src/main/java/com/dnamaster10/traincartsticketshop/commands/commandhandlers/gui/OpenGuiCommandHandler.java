@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class OpenCommandHandler extends AsyncCommandHandler {
+public class OpenGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui open <gui_name>
     private GuiAccessor guiAccessor;
     private Player player;

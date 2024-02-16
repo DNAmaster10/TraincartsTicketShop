@@ -7,7 +7,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.ListEdi
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker.LinkerCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker.LinkerSetDisplayNameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker.LinkerSetDestinationPageCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.OpenCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.OpenGuiCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
@@ -37,17 +37,17 @@ public class CommandDispatcher implements CommandExecutor {
             case "gui" -> {
                 switch (args[1].toLowerCase()) {
                     case "addeditor" -> new AddEditorCommandHandler().handle(sender, args);
-                    case "create" -> new CreateCommandHandler().handle(sender, args);
-                    case "delete" -> new DeleteCommandHandler().handle(sender, args);
-                    case "edit" -> new EditCommandHandler().handle(sender, args);
+                    case "create" -> new CreateGuiCommandHandler().handle(sender, args);
+                    case "delete" -> new DeleteGuiCommandHandler().handle(sender, args);
+                    case "edit" -> new EditGuiCommandHandler().handle(sender, args);
                     case "listeditors" -> new ListEditorsCommandHandler().handle(sender, args);
-                    case "open" -> new OpenCommandHandler().handle(sender, args);
+                    case "open" -> new OpenGuiCommandHandler().handle(sender, args);
                     case "removeeditor" -> new RemoveEditorCommandHandler().handle(sender, args);
-                    case "rename" -> new RenameCommandHandler().handle(sender, args);
+                    case "rename" -> new RenameGuiCommandHandler().handle(sender, args);
                     case "setdisplayname" -> new SetGuiDisplayNameCommandHandler().handle(sender, args);
                     case "searchlinkers" -> new SearchLinkersCommandHandler().handle(sender, args);
                     case "searchtickets" -> new SearchTicketsCommandHandler().handle(sender, args);
-                    case "transfer" -> new TransferCommandHandler().handle(sender, args);
+                    case "transfer" -> new TransferGuiCommandHandler().handle(sender, args);
 
                     default -> returnInvalidSubCommandError(sender, args[1]);
                 }

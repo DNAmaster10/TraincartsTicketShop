@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class RenameCommandHandler extends AsyncCommandHandler {
+public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
     private GuiAccessor guiAccessor;
     private Integer guiId;

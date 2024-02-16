@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class TransferCommandHandler extends AsyncCommandHandler {
+public class TransferGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiAccessor guiAccessor;
