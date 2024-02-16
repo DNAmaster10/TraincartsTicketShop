@@ -83,6 +83,7 @@ public abstract class MultipageGui extends Gui {
                     getPlugin().handleSqlException(getPlayer(), e);
                     return;
                 }
+                setPage(getPageNumber(), newPage);
                 //Inventories must be opened sync
                 Bukkit.getScheduler().runTask(getPlugin(), () -> openPage(newPage));
             });
