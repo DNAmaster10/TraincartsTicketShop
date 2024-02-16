@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
@@ -76,8 +77,10 @@ public class TicketSearchGui extends SearchGui {
         setPageNumber(page);
         setPlayer(p);
 
-        //Get gui display name
         GuiAccessor guiAccessor = new GuiAccessor();
         setDisplayName("Searching: " + guiAccessor.getColouredDisplayNameById(searchGuiId));
+
+        TicketAccessor ticketAccessor = new TicketAccessor();
+        setMaxPages(Utilities.getPageCount(ticketAccessor.getTotalTicketSearchResults(searchGuiId, searchTerm), 45));
     }
 }

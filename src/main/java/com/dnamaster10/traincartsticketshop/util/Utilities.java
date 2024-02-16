@@ -10,4 +10,8 @@ public class Utilities {
             return false;
         }
     }
+    public static int getPageCount(int elementCount, int pageSize) {
+        //Returns the minimum amount of pages that would be required to hold given elements
+        return (int) Math.ceil((double) elementCount / pageSize);
+    }
 }

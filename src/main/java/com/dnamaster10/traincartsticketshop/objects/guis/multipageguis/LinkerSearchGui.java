@@ -2,8 +2,10 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.entity.Player;
@@ -55,5 +57,8 @@ public class LinkerSearchGui extends SearchGui {
         //Get gui display name
         GuiAccessor guiAccessor = new GuiAccessor();
         setDisplayName("Searching: " + guiAccessor.getColouredDisplayNameById(searchGuiId));
+
+        LinkerAccessor linkerAccessor = new LinkerAccessor();
+        setMaxPages(Utilities.getPageCount(linkerAccessor.getTotalLinkerSearchResults(searchGuiId, searchTerm), 45));
     }
 }

@@ -95,7 +95,7 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        totalPages = (int) Math.ceil((double) totalEditors / playersPerPage);
+        totalPages = Utilities.getPageCount(totalEditors, playersPerPage);
         //Check if the page is valid
         if (pageNumber > totalPages) {
             returnError(sender, "Page " + pageNumber + " does not exist");
