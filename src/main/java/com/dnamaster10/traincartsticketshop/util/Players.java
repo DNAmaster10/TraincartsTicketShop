@@ -16,6 +16,11 @@ public class Players {
         //Or returns the corrected player username.
         //First checks online players, then the database, and then the Mojang api as a final fallback
 
+        //Check name length
+        if (username.length() < 3) {
+            return null;
+        }
+
         //Check online players
         for (Player p : TraincartsTicketShop.getPlugin().getServer().getOnlinePlayers()) {
             if (p.getDisplayName().equalsIgnoreCase(username)) {

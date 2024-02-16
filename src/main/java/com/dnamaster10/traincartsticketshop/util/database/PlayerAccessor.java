@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerAccessor extends DatabaseAccessor{
     public PlayerAccessor() throws DQLException {
@@ -26,32 +24,6 @@ public class PlayerAccessor extends DatabaseAccessor{
                 total = result.getInt(1);
             }
             return total > 0;
-        } catch (SQLException e) {
-            throw new DQLException(e);
-        }
-    }
-    public List<String> getUsernamesFromUuids(List<String> uuids) throws DQLException {
-        //Takes a list of UUIDs and returns a list of usernames
-        try (Connection connection = getConnection()) {
-            //Build the SQL statement
-            StringBuilder sql = new StringBuilder("SELECT username FROM players WHERE uuid IN (");
-            sql.append("?, ".repeat(uuids.size()));
-            //Delete last comma
-            sql.delete(sql.length()-1, sql.length());
-            sql.append(") ORDER BY username");
-
-            //Assign parameters
-            PreparedStatement s = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < uuids.size(); i++) {
-                s.setString(i + 1, uuids.get(i));
-            }
-
-            ResultSet result = s.executeQuery();
-            List<String> usernames = new ArrayList<>();
-            while (result.next()) {
-                usernames.add(result.getString("username"));
-            }
-            return usernames;
         } catch (SQLException e) {
             throw new DQLException(e);
         }
@@ -77,12 +49,12 @@ public class PlayerAccessor extends DatabaseAccessor{
         }
     }
     public void updatePlayer(String name, String uuid) throws DMLException {
+        //TODO change to on duplicate key
         //Updates or inserts a player into the players table.
         //The join date is used in the event that a player changes their username.
         //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most
         //recently joined player.
         try (Connection connection = getConnection()) {
-            int lastJoin = (int) System.currentTimeMillis();
             PreparedStatement statement;
 
             //First check if the current UUID already exists. If it does, update
@@ -103,7 +75,7 @@ public class PlayerAccessor extends DatabaseAccessor{
                 statement = connection.prepareStatement("INSERT INTO players (username, last_join, uuid) VALUES (?, ?, ?)");
             }
             statement.setString(1, name);
-            statement.setInt(2, lastJoin);
+            statement.setLong(2, System.currentTimeMillis());
             statement.setString(3, uuid);
             statement.executeUpdate();
         } catch (SQLException e) {

@@ -11,6 +11,7 @@ import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -62,16 +63,18 @@ public class EditGui extends MultipageGui {
         //Check if there is a player editing this gui
         Player editor = getPlugin().getGuiManager().getGuiEditor(getGuiId());
         if (editor == null) {
+            getPlugin().getGuiManager().addEditGui(getGuiId(), getPlayer());
             super.open();
             return;
         }
         //Someone is editing the gui, check if editor matches this guis owner
-        if (Objects.equals(getPlayer(), editor)) {
+        if (getPlayer().getUniqueId() == editor.getUniqueId()) {
             super.open();
             return;
         }
         //Gui is being edited by someone else, open an error gui
-        openErrorGui("Someone else is editing that gui");
+        getPlayer().sendMessage(ChatColor.RED + "Someone else is already editing that gui");
+        closeInventory();
     }
     @Override
     protected Button[] generateNewPage() throws DQLException {

@@ -41,9 +41,6 @@ public class Session {
 
     public void addGui(Gui gui) {
         guis.push(gui);
-        if (gui instanceof EditGui) {
-            getPlugin().getGuiManager().addEditGui(gui.getGuiId(), owner);
-        }
         if (guis.size() > maxGuis) {
             guis.remove(0);
         }
