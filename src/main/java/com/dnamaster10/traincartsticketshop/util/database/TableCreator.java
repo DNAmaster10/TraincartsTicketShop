@@ -20,8 +20,8 @@ public class TableCreator extends DatabaseAccessor {
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS players (
                         uuid varchar(50) PRIMARY KEY NOT NULL,
-                        username varchar(17),
-                        last_join int
+                        username varchar(20),
+                        last_join bigint
                     ) ENGINE=INNODB;
                     """);
             statement.execute();
@@ -62,7 +62,7 @@ public class TableCreator extends DatabaseAccessor {
                         page int,
                         slot int,
                         linked_gui_id int,
-                        linked_gui_page int,
+                        linked_gui_page int DEFAULT 0,
                         display_name varchar(100),
                         raw_display_name varchar(100),
                         UNIQUE KEY gui_page_slot (gui_id, page, slot),
