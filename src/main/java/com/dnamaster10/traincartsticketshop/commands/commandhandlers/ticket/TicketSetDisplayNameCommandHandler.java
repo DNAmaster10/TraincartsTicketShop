@@ -14,7 +14,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getBu
 
 public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
     //Example command: /traincartsticketshop ticket rename <new_name>
-    private String displayName;
+    private String colouredDisplayName;
     private Player player;
     ItemStack ticket;
     @Override
@@ -49,8 +49,8 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
         for (int i = 2; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        String rawDisplayName = ChatColor.stripColor(displayName);
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
             returnError(player, "Ticket names cannot be more than 25 characters in length");
@@ -60,8 +60,9 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
             returnError(player, "Ticket names cannot be less than 1 character in length");
             return false;
         }
-        if (displayName.length() > 100) {
+        if (colouredDisplayName.length() > 100) {
             returnError(player, "Too many colours!");
+            return false;
         }
 
         //Now check that the player is holding a ticket
@@ -79,8 +80,8 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
         //Set new display name
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(displayName);
+        meta.setDisplayName(colouredDisplayName);
         ticket.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + displayName + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + colouredDisplayName + "\"");
     }
 }

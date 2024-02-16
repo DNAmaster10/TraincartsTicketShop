@@ -77,6 +77,10 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
             returnError(player, "Gui display names cannot be less than 1 character in length");
             return false;
         }
+        if (colouredDisplayName.length() > 100) {
+            returnError(player, "Too many colours used in display name");
+            return false;
+        }
 
         //If all checks have passed return true
         return true;

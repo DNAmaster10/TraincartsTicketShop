@@ -14,8 +14,8 @@ import java.util.StringJoiner;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class LinkerCreateCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop linker create <linked_gui_name> <display_name>
-    private String displayName;
+    //Example command: /tshop linker create <linked_gui_name> <display_name>
+    private String colouredDisplayName;
     private GuiAccessor guiAccessor;
     private Player player;
     @Override
@@ -31,12 +31,11 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.linker.create")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.linker.create")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
         //Check syntax
         if (args.length < 4) {
@@ -52,13 +51,19 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
         for (int i = 3; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = stringJoiner.toString();
-        if (displayName.length() > 25) {
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+
+        if (rawDisplayName.length() > 25) {
             returnError(player, "Linker display names cannot be more than 25 characters in length");
             return false;
         }
-        if (displayName.isBlank()) {
+        if (rawDisplayName.isBlank()) {
             returnError(player, "Linker display names cannot be less than 1 character in length");
+            return false;
+        }
+        if (colouredDisplayName.length() > 100) {
+            returnError(player, "Too many colours used in display name");
             return false;
         }
 
@@ -84,7 +89,7 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the linker
-        Linker linker = new Linker(guiId, 0, displayName);
+        Linker linker = new Linker(guiId, 0, colouredDisplayName);
 
         //Give the linker to the player
         ItemStack item = linker.getItemStack();

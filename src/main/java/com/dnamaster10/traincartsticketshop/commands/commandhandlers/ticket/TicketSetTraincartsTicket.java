@@ -15,7 +15,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getBu
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.TC_TICKET_NAME;
 
 public class TicketSetTraincartsTicket extends SyncCommandHandler {
-    //Example command: /traincartsticketshop ticket setTraincartsTicket <traincarts ticket>
+    //Example command: /tshop ticket setTraincartsTicket <traincarts ticket>
     Player player;
     ItemStack ticket;
     @Override
@@ -27,16 +27,15 @@ public class TicketSetTraincartsTicket extends SyncCommandHandler {
         }
 
         //Check permissions and that sender is player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.ticket.settraincartsticket")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.ticket.settraincartsticket")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
 
         //Check syntax

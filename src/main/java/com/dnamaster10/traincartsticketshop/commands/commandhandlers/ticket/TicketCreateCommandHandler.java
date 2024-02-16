@@ -1,9 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,30 +12,27 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class TicketCreateCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop ticket create <tc_ticket_name> <display_name>
-    private String displayName;
+public class TicketCreateCommandHandler extends SyncCommandHandler {
+    //Example command: /tshop ticket create <tc_ticket_name> <display_name>
+    private String colouredDisplayName;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Synchronous checks (Syntax etc.)
-        //Check config
         if (!getPlugin().getConfig().getBoolean("AllowTicketCreate")) {
             returnError(sender, "Ticket creation is disabled on this server");
             return false;
         }
 
         //Check sender is player and permissions
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.ticket.create")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.ticket.create")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
 
         //Check syntax
@@ -49,8 +45,8 @@ public class TicketCreateCommandHandler extends AsyncCommandHandler {
         for (int i = 3; i < args.length; i++) {
             stringJoiner.add(args[i]);
         }
-        displayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        String rawDisplayName = ChatColor.stripColor(displayName);
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.isBlank()) {
             returnError(player, "Ticket names cannot be less than 1 character in length");
@@ -60,32 +56,30 @@ public class TicketCreateCommandHandler extends AsyncCommandHandler {
             returnError(player, "Ticket names cannot be more than 25 characters in length");
             return false;
         }
-        if (displayName.length() > 100) {
+        if (colouredDisplayName.length() > 100) {
             returnError(sender, "You've used too many colours in that display name");
+            return false;
+        }
+
+        //Check traincarts ticket
+        if (!Traincarts.checkTicket(args[2])) {
+            returnError(player, "No traincarts ticket with the name \"" + args[2] + "\" exists");
             return false;
         }
 
         //If all checks pass return true
         return true;
     }
-    @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        //Check that ticket exits in traincarts.
-        //Although not required to do async now, async is used in case traincarts switches to storing tickets in a database
-        if (!Traincarts.checkTicket(args[2])) {
-            returnError(player, "No traincarts ticket with the name \"" + args[2] + "\" exists");
-            return false;
-        }
-        return true;
-    }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException {
+    protected void execute(CommandSender sender, String[] args) {
         //Create the ticket object
-        Ticket ticket = new Ticket(args[2], displayName);
+        Ticket ticket = new Ticket(args[2], colouredDisplayName);
 
         //Give the ticket to the player
         ItemStack ticketItem = ticket.getItemStack();
         player.getInventory().addItem(ticketItem);
+
+        player.sendMessage(ChatColor.GREEN + "Ticket created");
     }
 }

@@ -64,6 +64,10 @@ public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
             returnError(sender, "Gui display names cannot be less than 1 character in length");
             return false;
         }
+        if (colouredDisplayName.length() > 100) {
+            returnError(sender, "Too many colours used in display name");
+            return false;
+        }
         return true;
     }
 

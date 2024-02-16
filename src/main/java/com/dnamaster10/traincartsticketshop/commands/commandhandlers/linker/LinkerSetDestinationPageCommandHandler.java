@@ -29,16 +29,15 @@ public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
         }
 
         //Check perms and that sender is a player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.linker.setdestinationpage")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.linker.setdestinationpage")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
 
         //Check syntax

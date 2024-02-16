@@ -14,6 +14,8 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
 public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
+    //Example command: /tshop linker setDisplayName <display name>
+
     private String colouredDisplayName;
     private ItemStack linker;
     private Player player;
@@ -26,16 +28,15 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
         }
 
         //Check that sender is a player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.linker.rename")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.linker.rename")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
 
         //Check syntax
@@ -50,7 +51,6 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
             stringJoiner.add(args[i]);
         }
         colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        //traincartsticketshop linker rename <display_name>
         String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
@@ -71,6 +71,7 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
         String buttonType = getButtonType(linker);
         if (buttonType == null || !buttonType.equals("linker")) {
             returnWrongItemError(player, "linker");
+            return false;
         }
         return true;
     }

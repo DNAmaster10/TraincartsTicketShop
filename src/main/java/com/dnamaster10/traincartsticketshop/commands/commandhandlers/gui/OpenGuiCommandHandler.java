@@ -24,17 +24,16 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
         }
 
         //Check sender is player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            //Check permissions
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.gui.open")) {
-                returnInsufficientPermissionsError(sender);
-                return false;
-            }
+        player = (Player) sender;
+
+        //Check permissions
+        if (!player.hasPermission("traincartsticketshop.gui.open")) {
+            returnInsufficientPermissionsError(sender);
+            return false;
         }
 
         //Check syntax
