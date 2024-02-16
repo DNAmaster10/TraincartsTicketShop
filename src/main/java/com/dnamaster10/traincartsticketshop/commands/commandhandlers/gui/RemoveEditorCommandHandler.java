@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
@@ -13,10 +13,9 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class EditorRemoveCommandHandler extends AsyncCommandHandler {
+public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor remove <player_name> <gui_name>
     private PlayerDatabaseObject editorDatabaseObject;
-    private GuiAccessor guiAccessor;
     private GuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     @Override
@@ -29,7 +28,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
 
         //Check sender perms
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.editor.remove") && !p.hasPermission("traincartsticketshop.admin.editor.remove")) {
+            if (!p.hasPermission("traincartsticketshop.gui.removeEditor") && !p.hasPermission("traincartsticketshop.admin.gui.removeEditor")) {
                 returnInsufficientPermissionsError(sender);
                 return false;
             }
@@ -37,7 +36,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop editor add <gui name> <player username>");
+            returnMissingArgumentsError(sender, "/tshop gui removeEditor <player username> <gui name>");
             return false;
         }
         if (args.length > 4) {
@@ -53,7 +52,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
-        guiAccessor = new GuiAccessor();
+        GuiAccessor guiAccessor = new GuiAccessor();
 
         //Get the guiID and check that the gui exists
         guiId = guiAccessor.getGuiIdByName(args[3]);
@@ -64,7 +63,7 @@ public class EditorRemoveCommandHandler extends AsyncCommandHandler {
 
         //If player, check that they own the gui
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.admin.editor.remove")) {
+            if (!p.hasPermission("traincartsticketshop.admin.gui.removeEditor")) {
                 if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;

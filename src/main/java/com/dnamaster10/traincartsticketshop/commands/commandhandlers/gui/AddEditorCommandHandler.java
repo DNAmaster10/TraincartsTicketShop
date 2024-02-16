@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
@@ -13,24 +13,23 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class EditorAddCommandHandler extends AsyncCommandHandler {
+public class AddEditorCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop editor add <player_name> <gui_name>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
-    private GuiAccessor guiAccessor;
     private GuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
         if (!getPlugin().getConfig().getBoolean("AllowEditorAdd")) {
-            returnError(sender, "Adding editor is disabled on this server");
+            returnError(sender, "Adding editors is disabled on this server");
             return false;
         }
 
         //If player check perms
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.editor.add") && !p.hasPermission("traincartsticketshop.admin.editor.add")) {
+            if (!p.hasPermission("traincartsticketshop.gui.addeditor") && !p.hasPermission("traincartsticketshop.admin.gui.addeditor")) {
                 returnInsufficientPermissionsError(sender);
                 return false;
             }
@@ -38,7 +37,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop editor add <gui_name> <username>");
+            returnMissingArgumentsError(sender, "/tshop gui addEditor <player username> <gui name>");
             return false;
         }
         if (args.length > 4) {
@@ -55,7 +54,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
-        guiAccessor = new GuiAccessor();
+        GuiAccessor guiAccessor = new GuiAccessor();
 
         //Get the gui ID and check that the gui exists
         guiId = guiAccessor.getGuiIdByName(args[3]);
@@ -65,7 +64,7 @@ public class EditorAddCommandHandler extends AsyncCommandHandler {
         }
 
         //Check player is owner
-        if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.admin.editor.add")) {
+        if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.admin.gui.addeditor")) {
             if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
                 returnError(sender, "You do not own that gui");
                 return false;

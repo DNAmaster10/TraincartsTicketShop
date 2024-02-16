@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.TicketSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
@@ -13,15 +13,15 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui searchLinkers <gui name> <search term>
+public class SearchTicketsCommandHandler extends AsyncCommandHandler {
+    //Example command: /traincartsticketshop gui searchTickets <gui name> <search term>
     private String searchTerm;
     private GuiAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiSearchLinkers")) {
+        if (!getPlugin().getConfig().getBoolean("AllowGuiSearchTickets")) {
             returnError(sender, "Searching linkers is disabled on this server");
             return false;
         }
@@ -32,7 +32,7 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
         }
         else {
             player = p;
-            if (!player.hasPermission("traincartsticketshop.gui.search.searchlinkers")) {
+            if (!player.hasPermission("traincartsticketshop.gui.search.searchtickets")) {
                 returnInsufficientPermissionsError(player);
                 return false;
             }
@@ -40,12 +40,12 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop gui searchLinkers <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchTickets <gui name> <search term>");
             return false;
         }
-        //Check gui name
         if (!checkGuiNameSyntax(args[2])) {
             returnGuiNotFoundError(player, args[2]);
+            return false;
         }
 
         StringJoiner joiner = new StringJoiner(" ");
@@ -58,7 +58,7 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
             return false;
         }
         if (searchTerm.isBlank()) {
-            returnError(player, "Search terms cannot be less than 1 character in length");
+            returnError(player, "Search term cannot be less than 1 character in length");
             return false;
         }
         return true;
@@ -77,19 +77,19 @@ public class GuiSearchLinkersCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        //Get the search gui id
-        int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
+        //Get the new gui id
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
 
-        //Create the search gui
-        LinkerSearchGui gui = new LinkerSearchGui(searchGuiId, searchTerm, player);
+        //Create new gui
+        TicketSearchGui gui = new TicketSearchGui(guiId, searchTerm, 0, (Player) sender);
 
-        //Open a new session
+        //Open a new gui session for the player
         Session session = getPlugin().getGuiManager().getNewSession(player);
 
         //Register the new gui
         session.addGui(gui);
 
-        //Open the new gui
+        //Open the gui to the player
         gui.open();
     }
 }

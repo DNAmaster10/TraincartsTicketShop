@@ -12,10 +12,13 @@ public class GuiTabCompleter extends SubCommandCompleter {
     private static final List<String> ARGS1;
     static {
         ARGS1 = new ArrayList<>();
+        ARGS1.add("addEditor");
         ARGS1.add("create");
         ARGS1.add("delete");
         ARGS1.add("edit");
+        ARGS1.add("listEditors");
         ARGS1.add("open");
+        ARGS1.add("removeEditor");
         ARGS1.add("rename");
         ARGS1.add("searchLinkers");
         ARGS1.add("searchTickets");

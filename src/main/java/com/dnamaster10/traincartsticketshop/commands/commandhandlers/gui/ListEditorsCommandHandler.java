@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.editor;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
@@ -14,9 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
-public class EditorListCommandHandler extends AsyncCommandHandler {
+public class ListEditorsCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor list <gui_name> <optional page number>
 
     private GuiEditorsAccessor editorsAccessor;
@@ -29,7 +27,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.editor.list")) {
+            if (!p.hasPermission("traincartsticketshop.gui.listeditors")) {
                 returnInsufficientPermissionsError(sender);
                 return false;
             }
@@ -41,7 +39,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
             return false;
         }
         if (args.length < 3) {
-            returnMissingArgumentsError(sender, "/tshop gui editor list <gui_name> <optional page number>");
+            returnMissingArgumentsError(sender, "/tshop gui listEditors <gui_name> <optional page number>");
             return false;
         }
 
@@ -78,13 +76,11 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        //If sender is a player
+        //Check permissions with owner access
         if (sender instanceof Player p) {
-            //If players aren't able to view editor for other people's guis
-            if (!getPlugin().getConfig().getBoolean("AllowListGuiEditorsOtherOwners")) {
-                //If player isn't the owner or editor
-                if (guiAccessor.playerCanEdit(guiId, p.getUniqueId().toString())) {
-                    returnError(sender, "You do not have permission to view the editors for that gui");
+            if (!p.hasPermission("traincartsticketshop.admin.gui.listeditors")) {
+                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
+                    returnError(sender, "You do not own that gui");
                     return false;
                 }
             }
@@ -93,7 +89,7 @@ public class EditorListCommandHandler extends AsyncCommandHandler {
         editorsAccessor = new GuiEditorsAccessor();
 
         //Check there are any editors
-        Integer totalEditors = editorsAccessor.getTotalEditors(guiId);
+        int totalEditors = editorsAccessor.getTotalEditors(guiId);
         if (totalEditors == 0) {
             returnError(sender, "There are no editors for gui \"" + args[2] + "\"");
             return false;

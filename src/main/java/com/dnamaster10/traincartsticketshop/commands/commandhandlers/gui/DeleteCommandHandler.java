@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class GuiDeleteCommandHandler extends AsyncCommandHandler {
+public class DeleteCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop gui delete <gui_name>
     private GuiAccessor guiAccessor;
     private Integer guiId;

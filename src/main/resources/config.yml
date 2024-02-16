@@ -24,7 +24,6 @@ AllowGuiTransfer: true
 AllowEditorAdd: true
 AllowEditorRemove: true
 AllowEditorRemoveAll: true
-AllowListGuiEditorsOtherOwners: true
 
 AllowTicketCreate: true
 AllowTicketSetDisplayName: true
