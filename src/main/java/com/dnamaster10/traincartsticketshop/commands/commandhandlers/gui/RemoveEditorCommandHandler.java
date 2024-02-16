@@ -80,8 +80,8 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
 
         editorsAccessor = new GuiEditorsAccessor();
         //Check that the editor exists in the editors table
-        if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.getUuid())) {
-            returnError(sender, "Player \"" + editorDatabaseObject.getUsername() + "\" is not a registered editor for gui \"" + args[3] + "\"");
+        if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.uuid())) {
+            returnError(sender, "Player \"" + editorDatabaseObject.username() + "\" is not a registered editor for gui \"" + args[3] + "\"");
             return false;
         }
         return true;
@@ -90,7 +90,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Remove the editor
-        editorsAccessor.removeGuiEditor(guiId, editorDatabaseObject.getUuid());
-        sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.getUsername() + "\" is no longer an editor of gui \"" + args[3] + "\"");
+        editorsAccessor.removeGuiEditor(guiId, editorDatabaseObject.uuid());
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.username() + "\" is no longer an editor of gui \"" + args[3] + "\"");
     }
 }

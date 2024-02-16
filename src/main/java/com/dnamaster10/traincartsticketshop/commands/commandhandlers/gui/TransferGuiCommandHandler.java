@@ -82,9 +82,9 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
         //Transfer the gui
-        guiAccessor.updateGuiOwner(guiId, otherPlayer.getUuid());
+        guiAccessor.updateGuiOwner(guiId, otherPlayer.uuid());
 
         //If the new owner is registered as an editor, remove them
-        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.getUsername());
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.username());
     }
 }

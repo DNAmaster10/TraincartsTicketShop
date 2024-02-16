@@ -79,15 +79,15 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
         }
 
         //Check that the new player isn't the same player as the owner
-        if (guiAccessor.checkGuiOwnerByUuid(guiId, playerDatabaseObject.getUuid())) {
-            returnError(sender, "Player \"" + playerDatabaseObject.getUsername() + "\" already owns that gui");
+        if (guiAccessor.checkGuiOwnerByUuid(guiId, playerDatabaseObject.uuid())) {
+            returnError(sender, "Player \"" + playerDatabaseObject.username() + "\" already owns that gui");
             return false;
         }
 
         editorsAccessor = new GuiEditorsAccessor();
         //Check that the player isn't already an editor
-        if (editorsAccessor.checkGuiEditorByUuid(guiId, playerDatabaseObject.getUuid())) {
-            returnError(sender, "Player \"" + playerDatabaseObject.getUsername() + "\" is already an editor of that gui");
+        if (editorsAccessor.checkGuiEditorByUuid(guiId, playerDatabaseObject.uuid())) {
+            returnError(sender, "Player \"" + playerDatabaseObject.username() + "\" is already an editor of that gui");
             return false;
         }
         return true;
@@ -95,7 +95,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
-        editorsAccessor.addGuiEditor(guiId, playerDatabaseObject.getUuid());
-        sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.getUsername() + "\" was registered as an editor for gui \"" + args[3] + "\"");
+        editorsAccessor.addGuiEditor(guiId, playerDatabaseObject.uuid());
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.username() + "\" was registered as an editor for gui \"" + args[3] + "\"");
     }
 }
