@@ -107,7 +107,7 @@ public class LinkerAccessor extends DatabaseAccessor {
 
             //Prepare update query
             PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO linkers (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name) 
+                    INSERT INTO linkers (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
                     VALUES (?, ?, ?, ?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE 
                         linked_gui_id=VALUES(linked_gui_id),

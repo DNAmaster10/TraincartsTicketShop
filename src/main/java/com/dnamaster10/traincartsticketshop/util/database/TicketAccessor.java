@@ -111,7 +111,7 @@ public class TicketAccessor extends DatabaseAccessor {
 
             //With old tickets now deleted, we can update existing ones and insert new ones too
             PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name) 
+                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name)
                     VALUES (?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE 
                         tc_name=VALUES(tc_name),

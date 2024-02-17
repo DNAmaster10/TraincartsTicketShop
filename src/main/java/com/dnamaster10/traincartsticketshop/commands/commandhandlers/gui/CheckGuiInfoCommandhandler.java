@@ -4,7 +4,6 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncComman
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +43,7 @@ public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
         guiAccessor = new GuiAccessor();
 
         guiId = guiAccessor.getGuiIdByName(args[2]);
@@ -57,7 +56,7 @@ public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
+    protected void execute(CommandSender sender, String[] args) throws DQLException {
         //Fetch info
         String guiName = guiAccessor.getGuiNameById(guiId);
         String owner = guiAccessor.getOwnerUsername(guiId);

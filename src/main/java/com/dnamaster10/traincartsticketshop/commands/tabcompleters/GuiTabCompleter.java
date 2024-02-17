@@ -1,11 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
-import com.dnamaster10.traincartsticketshop.commands.tabcompleters.SubCommandCompleter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GuiTabCompleter extends SubCommandCompleter {

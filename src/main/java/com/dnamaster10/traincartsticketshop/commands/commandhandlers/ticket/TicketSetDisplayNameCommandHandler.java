@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
 public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
@@ -20,16 +19,15 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check that sender is a player
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
-        else {
-            player = p;
-            if (!player.hasPermission("traincartsticketshop.ticket.setdisplayname")) {
-                returnInsufficientPermissionsError(player);
-                return false;
-            }
+        player = (Player) sender;
+
+        if (!player.hasPermission("traincartsticketshop.ticket.setdisplayname")) {
+            returnInsufficientPermissionsError(player);
+            return false;
         }
 
         //Check syntax
@@ -63,7 +61,7 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
         ticket = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(ticket);
         if (buttonType == null || !buttonType.equals("ticket")) {
-            returnWrongItemError(sender, "ticket");
+            returnWrongItemError(player, "ticket");
             return false;
         }
 
@@ -76,6 +74,6 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
         assert meta != null;
         meta.setDisplayName(colouredDisplayName);
         ticket.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + colouredDisplayName + "\"");
+        player.sendMessage(ChatColor.GREEN + "Held ticket was renamed to \"" + colouredDisplayName + "\"");
     }
 }

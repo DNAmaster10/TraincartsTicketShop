@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class EditGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui edit <gui_name>
-    private GuiAccessor guiAccessor;
     private Player player;
     private Integer guiId;
     @Override
@@ -48,7 +46,8 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        guiAccessor = new GuiAccessor();
+        //Example command: /traincartsticketshop gui edit <gui_name>
+        GuiAccessor guiAccessor = new GuiAccessor();
 
         //Get the guiID and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);

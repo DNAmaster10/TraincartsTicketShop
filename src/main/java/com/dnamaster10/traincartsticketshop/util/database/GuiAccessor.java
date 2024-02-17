@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class GuiAccessor extends DatabaseAccessor {
     public GuiAccessor() throws DQLException {
         super();
@@ -162,12 +160,12 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public void updateGuiName(String oldName, String newName) throws DMLException {
+    public void updateGuiName(int guiId, String newName) throws DMLException {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET name=? WHERE name=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE guis SET name=? WHERE id=?");
             statement.setString(1, newName);
-            statement.setString(2, oldName);
+            statement.setInt(2, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);

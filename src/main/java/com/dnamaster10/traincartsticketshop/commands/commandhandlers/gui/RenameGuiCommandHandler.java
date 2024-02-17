@@ -8,8 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
     private GuiAccessor guiAccessor;
@@ -87,7 +85,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DMLException {
-        guiAccessor.updateGuiName(args[2], args[3]);
+        guiAccessor.updateGuiName(guiId, args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was successfully renamed to \"" + args[3] + "\"");
     }
 }

@@ -49,7 +49,6 @@ public class PlayerAccessor extends DatabaseAccessor{
         }
     }
     public void updatePlayer(String name, String uuid) throws DMLException {
-        //TODO change to on duplicate key
         //Updates or inserts a player into the players table.
         //The last_join column is used in the event that a player changes their username.
         //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most

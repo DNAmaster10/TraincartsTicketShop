@@ -11,17 +11,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class LinkerCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop linker create <linked_gui_name> <display_name>
     private String colouredDisplayName;
-    private GuiAccessor guiAccessor;
     private Player player;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player and permissions
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
@@ -66,10 +64,11 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        guiAccessor = new GuiAccessor();
+        GuiAccessor guiAccessor = new GuiAccessor();
 
-        //Check that gui exists
-        if (!guiAccessor.checkGuiByName(args[2])) {
+        //Check that the gui exists
+        guiId = guiAccessor.getGuiIdByName(args[2]);
+        if (guiId == null) {
             returnGuiNotFoundError(player, args[2]);
             return false;
         }
@@ -79,9 +78,6 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws DQLException {
-        //Get gui ID
-        int guiId = guiAccessor.getGuiIdByName(args[2]);
-
         //Create the linker
         Linker linker = new Linker(guiId, 0, colouredDisplayName);
 

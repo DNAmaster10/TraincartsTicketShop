@@ -7,10 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.sql.SQLException;
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
 
 public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
@@ -78,6 +76,6 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
         //Set the data
         meta.setDisplayName(colouredDisplayName);
         linker.setItemMeta(meta);
-        sender.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
+        player.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
     }
 }

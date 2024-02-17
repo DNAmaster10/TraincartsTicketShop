@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui setdisplayname <gui name> <gui display name>
     private String rawDisplayName;

@@ -11,8 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor remove <player_name> <gui_name>
     private PlayerDatabaseObject editorDatabaseObject;
