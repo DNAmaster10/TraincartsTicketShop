@@ -26,7 +26,6 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
 
 public class EditGui extends MultipageGui {
-    //TODO Class may need further code cleanup
     private static final int pageLimit = getPlugin().getConfig().getInt("MaxPagesPerGui");
     private boolean wasClosed = true;
 

@@ -51,32 +51,20 @@ public class PlayerAccessor extends DatabaseAccessor{
     public void updatePlayer(String name, String uuid) throws DMLException {
         //TODO change to on duplicate key
         //Updates or inserts a player into the players table.
-        //The join date is used in the event that a player changes their username.
+        //The last_join column is used in the event that a player changes their username.
         //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most
         //recently joined player.
         try (Connection connection = getConnection()) {
-            PreparedStatement statement;
-
-            //First check if the current UUID already exists. If it does, update
-            statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE uuid=?");
-            statement.setString(1, uuid);
-            ResultSet result1 = statement.executeQuery();
-            boolean alreadyExists = false;
-            while (result1.next()) {
-                alreadyExists = result1.getInt(1) > 0;
-            }
-
-            if (alreadyExists) {
-                //Update current UUID player
-                statement = connection.prepareStatement("UPDATE players SET username=?, last_join=? WHERE uuid=?");
-            }
-            else {
-                //Add the new player
-                statement = connection.prepareStatement("INSERT INTO players (username, last_join, uuid) VALUES (?, ?, ?)");
-            }
+            PreparedStatement statement = connection.prepareStatement("""
+                    INSERT INTO players (username, uuid, last_join)
+                    VALUES (?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        username=VALUES(username),
+                        last_join=VALUES(last_join)
+                    """);
             statement.setString(1, name);
-            statement.setLong(2, System.currentTimeMillis());
-            statement.setString(3, uuid);
+            statement.setString(2, uuid);
+            statement.setLong(3, System.currentTimeMillis());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);
