@@ -93,7 +93,8 @@ public abstract class MultipageGui extends Gui {
         openPage(pages.get(currentPage));
     }
     private void openPage(Button[] pageButtons) {
-        InventoryBuilder inventoryBuilder = new InventoryBuilder(pageButtons, getDisplayName());
+        String pageText = (currentPage + 1) + (" / ") + (maxPages + 1);
+        InventoryBuilder inventoryBuilder = new InventoryBuilder(pageButtons, getDisplayName() + " - " + pageText);
         Inventory newInventory = inventoryBuilder.getInventory();
         setInventory(newInventory);
         getPlayer().openInventory(newInventory);

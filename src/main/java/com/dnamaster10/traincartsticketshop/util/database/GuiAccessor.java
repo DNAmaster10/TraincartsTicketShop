@@ -97,7 +97,7 @@ public class GuiAccessor extends DatabaseAccessor {
         }
     }
     public Integer getMaxPage(int guiId) throws DQLException {
-        //Returns the total pages for this giu
+        //Returns the total pages for this gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
             int maxPage = 0;
