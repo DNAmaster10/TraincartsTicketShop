@@ -10,9 +10,6 @@ depend: [Train_Carts]
 website: https://github.com/DNAmaster10/TraincartsTicketShop
 
 permissions:
-  traincartsticketshop.*:
-    description: Grants all TraincartsTicketShop permissions
-    default: op
   traincartsticketshop.gui.addeditor:
     description: Allows player to add an editor to a gui they own
     default: false
