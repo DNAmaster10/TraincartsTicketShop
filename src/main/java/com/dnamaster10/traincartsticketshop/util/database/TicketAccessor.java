@@ -53,6 +53,19 @@ public class TicketAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
+    public int getTotalTickets(int guiId) throws DQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM tickets WHERE gui_id=?");
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return result.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new DQLException(e);
+        }
+    }
     public int getTotalTicketSearchResults(int guiId, String searchTerm) throws DQLException {
         //Returns total search results which were found
         try (Connection connection = getConnection()) {

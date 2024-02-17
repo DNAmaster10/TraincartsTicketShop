@@ -98,7 +98,7 @@ public class GuiAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
-    public Integer getMaxPage(int guiId) throws DQLException {
+    public int getMaxPage(int guiId) throws DQLException {
         //Returns the total pages for this gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -139,6 +139,25 @@ public class GuiAccessor extends DatabaseAccessor {
                 displayName = result.getString("display_name");
             }
             return displayName;
+        } catch (SQLException e) {
+            throw new DQLException(e);
+        }
+    }
+    public String getOwnerUsername(int guiId) throws DQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT players.username
+                    FROM guis
+                    INNER JOIN players ON guis.owner_uuid=players.uuid
+                    WHERE guis.id=?
+                    """);
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            String ownerUsername = null;
+            if (result.next()) {
+                ownerUsername = result.getString(1);
+            }
+            return ownerUsername;
         } catch (SQLException e) {
             throw new DQLException(e);
         }

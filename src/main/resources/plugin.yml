@@ -13,6 +13,9 @@ permissions:
   traincartsticketshop.gui.addeditor:
     description: Allows player to add an editor to a gui they own
     default: false
+  traincartsticketshop.gui.checkinfo:
+    description: Allows players to see who owns a gui
+    default: false
   traincartsticketshop.gui.create:
     description: Allows the creation of TraincartsTicketShop guis
     default: false

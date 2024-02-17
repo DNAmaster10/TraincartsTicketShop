@@ -50,6 +50,19 @@ public class LinkerAccessor extends DatabaseAccessor {
             throw new DQLException(e);
         }
     }
+    public int getTotalLinkers(int guiId) throws DQLException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=?");
+            statement.setInt(1, guiId);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return result.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new DQLException(e);
+        }
+    }
     public int getTotalLinkerSearchResults(int guiId, String searchTerm) throws DQLException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=? AND raw_display_name LIKE ?");
