@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
@@ -178,12 +177,14 @@ public class EditGui extends MultipageGui {
     }
     private void saveToHashmap() {
         //Saves the current page to the page hashmap
+        if (getInventory() == null) return;
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addInventory(getInventory());
         setPage(getPageNumber(), pageBuilder.getPage());
     }
     private void saveCurrentPageToDatabase() {
         //Can safely be called from sync thread
+        if (getInventory() == null) return;
         final int currentPageNumber = getPageNumber();
         final Button[] currentPage = getPage(currentPageNumber).clone();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> savePageToDatabase(currentPageNumber, currentPage));

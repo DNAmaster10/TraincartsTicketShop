@@ -36,6 +36,9 @@ public class PageBuilder {
         return rawDisplayName.length() <= 25 && !rawDisplayName.isBlank();
     }
     public void addInventory(Inventory inventory) {
+        if (inventory == null) {
+            return;
+        }
         //Builds the page from an inventory
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
