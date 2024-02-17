@@ -1,1 +1,1 @@
-A plugin for the MRT which will allow players to purchase warp and traincarts tickets
+A plugin which allows players to create ticket shop guis for purchasing tickets from the Traincarts plugin.
