@@ -46,6 +46,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
         }
         if (!checkGuiNameSyntax(args[2])) {
             returnGuiNotFoundError(player, args[2]);
+            return false;
         }
 
         return true;
@@ -59,6 +60,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
         guiId = guiAccessor.getGuiIdByName(args[2]);
         if (guiId == null) {
             returnGuiNotFoundError(player, args[2]);
+            return false;
         }
 
         //Check that player is owner or editor of gui
