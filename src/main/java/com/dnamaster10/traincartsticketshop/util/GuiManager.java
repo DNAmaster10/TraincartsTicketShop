@@ -56,7 +56,10 @@ public class GuiManager {
         }
     }
     public void handlePlayerLeave(Player player) {
-        getSession(player).handleInventoryClose();
+        Session session = getSession(player);
+        if (session == null) return;
+
+        session.handleInventoryClose();
         closeSession(player);
     }
 }
