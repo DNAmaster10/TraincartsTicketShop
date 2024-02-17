@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class GuiAccessor extends DatabaseAccessor {
     public GuiAccessor() throws DQLException {
         super();
@@ -61,9 +63,9 @@ public class GuiAccessor extends DatabaseAccessor {
     }
     public boolean playerCanEdit(int guiId, String uuid) throws DQLException {
         //Returns true if player is either an owner of a gui or a listed editor
-        boolean isOwner = checkGuiOwnerByUuid(guiId, uuid);
+        if (checkGuiOwnerByUuid(guiId, uuid)) return true;
         GuiEditorsAccessor guiEditorsAccessor = new GuiEditorsAccessor();
-        return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid) || isOwner;
+        return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
     }
 
     public Integer getGuiIdByName(String name) throws DQLException {
@@ -145,8 +147,8 @@ public class GuiAccessor extends DatabaseAccessor {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("UPDATE guis SET name=? WHERE name=?");
-            statement.setString(1, oldName);
-            statement.setString(2, newName);
+            statement.setString(1, newName);
+            statement.setString(2, oldName);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DMLException(e);
