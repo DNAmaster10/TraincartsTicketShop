@@ -38,7 +38,7 @@ public class EditGui extends MultipageGui {
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(p);
-        setMaxPages(pageLimit);
+        setMaxPages(pageLimit - 1);
     }
     public EditGui(int guiId, Player p) throws DQLException {
         this(guiId, 0, p);
@@ -87,7 +87,9 @@ public class EditGui extends MultipageGui {
         if (getPageNumber() > 0) {
             pageBuilder.addPrevPageButton();
         }
-        pageBuilder.addNextPageButton();
+        if (getPageNumber() < getMaxPages()) {
+            pageBuilder.addNextPageButton();
+        }
 
         SimpleHeadButton deletePageButton = new SimpleHeadButton("delete_page", RED_CROSS, "Delete Page");
         SimpleHeadButton insertPageButton = new SimpleHeadButton("insert_page", GREEN_PLUS, "Insert Page");
