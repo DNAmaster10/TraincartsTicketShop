@@ -28,8 +28,6 @@ public class GuiTabCompleter extends SubCommandCompleter {
 
     @Override
     protected boolean checkPermission(Player p, String command) {
-        //Returns boolean indicating whether player has permission
-        //to run the specific sub-command.
         return p.hasPermission("traincartsticketshop.gui." + command.toLowerCase()) || p.hasPermission("traincartsticketshop.admin.gui." + command.toLowerCase());
     }
 
