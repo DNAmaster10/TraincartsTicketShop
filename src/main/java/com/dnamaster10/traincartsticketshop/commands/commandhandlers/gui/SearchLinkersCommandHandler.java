@@ -20,11 +20,6 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiSearchLinkers")) {
-            returnError(sender, "Searching linkers is disabled on this server");
-            return false;
-        }
         //Check permission and that sender is player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

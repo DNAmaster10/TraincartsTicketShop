@@ -19,12 +19,6 @@ public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
     ItemStack ticket;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowTicketSetDisplayName")) {
-            returnError(sender, "Ticket renaming is disabled on this server");
-            return false;
-        }
-
         //Check that sender is a player
         if (!(sender instanceof Player p)) {
             returnOnlyPlayersExecuteError(sender);

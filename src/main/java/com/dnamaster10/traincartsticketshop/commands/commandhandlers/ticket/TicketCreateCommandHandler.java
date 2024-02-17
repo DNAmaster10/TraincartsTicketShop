@@ -18,11 +18,6 @@ public class TicketCreateCommandHandler extends SyncCommandHandler {
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        if (!getPlugin().getConfig().getBoolean("AllowTicketCreate")) {
-            returnError(sender, "Ticket creation is disabled on this server");
-            return false;
-        }
-
         //Check sender is player and permissions
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

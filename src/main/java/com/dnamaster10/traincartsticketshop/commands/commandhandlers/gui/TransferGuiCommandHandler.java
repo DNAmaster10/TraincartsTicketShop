@@ -19,11 +19,6 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        if (!getPlugin().getConfig().getBoolean("AllowGuiTransfer")) {
-            returnError(sender, "Gui transfer is disabled on this server");
-            return false;
-        }
-
         //Check permissions and if player
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.transfer") && !p.hasPermission("traincartsticketshop.admin.gui.transfer")) {

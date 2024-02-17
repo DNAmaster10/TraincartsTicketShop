@@ -21,12 +21,6 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowLinkerRename")) {
-            returnError(sender, "Linker renaming is disabled on this server");
-            return false;
-        }
-
         //Check that sender is a player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

@@ -1,7 +1,7 @@
 database:
   host: localhost
   port: 3306
-  database: tcdb
+  database: dbname
   user: admin
   password: password
 
@@ -10,32 +10,6 @@ SignIdentifier: [tshop]
 MaxStoredGuisPerPlayer: 50
 
 MaxPagesPerGui: 50
-
-AllowGuiCreate: true
-AllowGuiEdit: true
-AllowGuiOpen: true
-AllowGuiRename: true
-AllowGuiDelete: true
-AllowGuiSearchTickets: true
-AllowGuiSearchLinkers: true
-AllowGuiSetDisplayName: true
-AllowGuiTransfer: true
-
-AllowEditorAdd: true
-AllowEditorRemove: true
-AllowEditorRemoveAll: true
-
-AllowTicketCreate: true
-AllowTicketSetDisplayName: true
-AllowTicketSetTraincartsTicket: true
-
-AllowLinkerCreate: true
-AllowLinkerSetDisplayName: true
-AllowLinkerSetDestinationPage: true
-
-AllowCompanyAddMember: true
-AllowCompanyCreate: true
-AllowCompanyDelete: true
 
 # No touch please
 ConfigVersion: ${project.version}

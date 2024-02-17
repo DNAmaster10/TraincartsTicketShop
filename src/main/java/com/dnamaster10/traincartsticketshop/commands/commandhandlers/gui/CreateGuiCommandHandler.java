@@ -22,13 +22,6 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Synchronous checks (Syntax etc.)
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiCreate")) {
-            returnError(sender, "Gui creation is disabled on this server");
-            return false;
-        }
-
         //Check sender is player and permissions
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

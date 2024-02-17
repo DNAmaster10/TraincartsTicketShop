@@ -17,15 +17,6 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //This command can be run by the player as well as other interfaces.
-        //We first check things which apply to both
-
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiRename")) {
-            returnError(sender, "Gui renaming is disabled on this server");
-            return false;
-        }
-
         //Check syntax
         if (args.length < 4) {
             returnMissingArgumentsError(sender, "/tshop gui rename <old name> <new name>");

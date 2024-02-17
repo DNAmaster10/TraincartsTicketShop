@@ -20,12 +20,6 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowLinkerCreate")) {
-            returnError(sender, "Linker creation is disabled on this server");
-            return false;
-        }
-
         //Check sender is player and permissions
         if (!(sender instanceof Player p)) {
             returnOnlyPlayersExecuteError(sender);

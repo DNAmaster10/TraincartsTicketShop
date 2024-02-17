@@ -17,12 +17,6 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiEdit")) {
-            returnError(sender, "Gui editing is disabled on this server");
-            return false;
-        }
-
         //Check sender is player and permissions
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

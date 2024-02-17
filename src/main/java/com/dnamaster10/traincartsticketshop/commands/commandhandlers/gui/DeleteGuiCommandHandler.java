@@ -18,13 +18,6 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Synchronous checks
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiDelete")) {
-            returnError(sender, "Gui deletion is disabled on this server");
-            return false;
-        }
-
         //Check permissions if player
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.delete") && !p.hasPermission("traincartsticketshop.admin.gui.delete")) {

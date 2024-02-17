@@ -20,14 +20,6 @@ public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //This command can be run by the player as well as other interfaces
-
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiSetDisplayName")) {
-            returnError(sender, "Changing gui display names is disabled on this server");
-            return false;
-        }
-
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.setdisplayname") && !p.hasPermission("traincartsticketshop.admin.gui.setdisplayname")) {

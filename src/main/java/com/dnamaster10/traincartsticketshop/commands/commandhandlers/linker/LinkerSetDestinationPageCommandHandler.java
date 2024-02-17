@@ -22,12 +22,6 @@ public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
     private ItemStack linker;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowLinkerSetDestinationPage")) {
-            returnError(sender, "Setting the destination page for a linker is disabled on this server");
-            return false;
-        }
-
         //Check perms and that sender is a player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

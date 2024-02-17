@@ -17,12 +17,6 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowGuiOpen")) {
-            returnError(sender, "Opening guis is disabled on this server");
-            return false;
-        }
-
         //Check sender is player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

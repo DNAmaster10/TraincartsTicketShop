@@ -21,12 +21,6 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowEditorAdd")) {
-            returnError(sender, "Adding editors is disabled on this server");
-            return false;
-        }
-
         //If player check perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.addeditor") && !p.hasPermission("traincartsticketshop.admin.gui.addeditor")) {

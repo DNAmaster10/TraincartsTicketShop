@@ -20,12 +20,6 @@ public class TicketSetTraincartsTicket extends SyncCommandHandler {
     ItemStack ticket;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowTicketSetTraincartsTicket")) {
-            returnError(sender, "Setting the Traincarts ticket is disabled on this server");
-            return false;
-        }
-
         //Check permissions and that sender is player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);

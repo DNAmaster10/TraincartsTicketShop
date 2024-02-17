@@ -20,12 +20,6 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check config
-        if (!getPlugin().getConfig().getBoolean("AllowEditorRemove")) {
-            returnError(sender, "Removing editor is disabled on this server");
-            return false;
-        }
-
         //Check sender perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.removeEditor") && !p.hasPermission("traincartsticketshop.admin.gui.removeEditor")) {
