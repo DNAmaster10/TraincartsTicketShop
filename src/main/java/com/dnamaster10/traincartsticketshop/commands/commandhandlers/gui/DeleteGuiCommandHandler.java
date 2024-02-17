@@ -27,7 +27,7 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
 
         //Check permissions if player
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.gui.delete")) {
+            if (!p.hasPermission("traincartsticketshop.gui.delete") && !p.hasPermission("traincartsticketshop.admin.gui.delete")) {
                 returnInsufficientPermissionsError(sender);
                 return false;
             }
@@ -63,9 +63,11 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
 
         //If sender is player, check they are owner
         if (sender instanceof Player p) {
-            if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
-                returnError(p, "You must be the owner of the gui in order to delete it");
-                return false;
+            if (!p.hasPermission("traincartsticketshop.admin.gui.delete")) {
+                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
+                    returnError(p, "You must be the owner of the gui in order to delete it");
+                    return false;
+                }
             }
         }
         return true;

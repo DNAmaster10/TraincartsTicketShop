@@ -53,6 +53,9 @@ permissions:
   traincartsticketshop.admin.gui.addeditor:
     description: Allows player to add editors to guis they don't own
     default: false
+  traincartsticketshop.admin.gui.delete:
+    description: Allows player to delete guis they don't own
+    default: false
   traincartsticketshop.admin.gui.edit:
     description: Allows player to edit a gui even if they do not have edit perms
     default: false
