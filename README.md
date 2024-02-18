@@ -45,7 +45,7 @@ This should give us a linker item which looks something like this:
 
 With this new linker, we can run:
 - `/tshop gui edit mainline`
-- 
+  
 and drag and drop the linker item anywhere within the `mainline` gui, even amongst other tickets.
 
 ![image(1)](https://github.com/DNAmaster10/TraincartsTicketShop/assets/44494235/ad39b4f3-5caa-436d-a124-69a82d72a48a)
@@ -58,7 +58,7 @@ It's also possible to set the destination page that a linker item will link to.
 
 For example:
 - `/tshop linker setDestinationPage 10`
-- 
+  
 will make it so that when the linker is clicked, it will try to redirect the player to page 10 of the destination gui.
 
 
