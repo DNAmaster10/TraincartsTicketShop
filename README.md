@@ -20,4 +20,5 @@ Create a sign with this format:
 
 ```
 ![image](https://github.com/DNAmaster10/TraincartsTicketShop/assets/67452089/8a287820-3aab-4e71-ae9a-40ebfc168b81)
+
 Right click on it to open the shop GUI.
