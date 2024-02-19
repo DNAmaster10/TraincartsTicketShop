@@ -36,7 +36,7 @@ public class Session {
             return false;
         }
         Inventory guiInventory = guis.peek().getInventory();
-        return Objects.equals(inventory, guiInventory);
+        return Objects.equals(guiInventory, inventory);
     }
 
     public void addGui(Gui gui) {

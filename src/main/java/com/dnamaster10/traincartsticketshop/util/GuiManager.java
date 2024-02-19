@@ -44,16 +44,19 @@ public class GuiManager {
     public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
         Player player = (Player) event.getWhoClicked();
         Session session = getSession(player);
-        if (session == null || !isGuiInventory(event.getClickedInventory(), player)) {
-            return;
-        }
+
+        if (session == null || !isGuiInventory(event.getClickedInventory(), player)) return;
+
         session.handleInventoryClick(event, clickedItem);
     }
     public void handleInventoryClose(InventoryCloseEvent event) {
-        Session session = getSession((Player) event.getPlayer());
-        if (session != null) {
-            session.handleInventoryClose();
-        }
+        if (!(event.getPlayer() instanceof Player player)) return;
+
+        Session session = getSession(player);
+
+        if (session == null || !isGuiInventory(event.getInventory(), player)) return;
+
+        session.handleInventoryClose();
     }
     public void handlePlayerLeave(Player player) {
         Session session = getSession(player);

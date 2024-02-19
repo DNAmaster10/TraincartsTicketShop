@@ -3,6 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
 
 public class InventoryBuilder {
     //Takes in an array of buttons and outputs an inventory

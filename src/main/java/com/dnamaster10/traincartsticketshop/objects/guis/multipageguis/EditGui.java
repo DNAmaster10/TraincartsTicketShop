@@ -113,7 +113,8 @@ public class EditGui extends MultipageGui {
     }
     private void handleButtonClick(InventoryClickEvent event, String buttonType) {
         //Revert the changes before saving the page
-        getInventory().setItem(event.getSlot(), event.getWhoClicked().getItemOnCursor());
+        ItemStack clickedItem = event.getWhoClicked().getItemOnCursor().clone();
+        getInventory().setItem(event.getSlot(), clickedItem);
         getPlayer().setItemOnCursor(null);
         switch (buttonType) {
             case "next_page" -> this.nextPage();

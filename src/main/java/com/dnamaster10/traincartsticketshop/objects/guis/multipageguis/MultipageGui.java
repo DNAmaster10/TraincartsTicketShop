@@ -97,6 +97,6 @@ public abstract class MultipageGui extends Gui {
         InventoryBuilder inventoryBuilder = new InventoryBuilder(pageButtons, getDisplayName() + " " + pageText);
         Inventory newInventory = inventoryBuilder.getInventory();
         setInventory(newInventory);
-        getPlayer().openInventory(newInventory);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(newInventory), 1L);
     }
 }
