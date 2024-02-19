@@ -51,7 +51,7 @@ public class EditGui extends MultipageGui {
 
             //Deregister this as an edit gui in the gui manager
             getPlugin().getGuiManager().removeEditGui(getGuiId());
-            getPlayer().sendMessage(ChatColor.GREEN + "Your changes will be saved!");
+            getPlayer().sendMessage(ChatColor.GREEN + "Your changes have been saved!");
             return;
         }
         wasClosed = true;
