@@ -5,33 +5,11 @@ database:
   user: admin
   password: password
 
-SignIdentifier: [tcgui]
+SignIdentifier: [tshop]
 
 MaxStoredGuisPerPlayer: 50
 
-AllowGuiCreate: true
-AllowGuiEdit: true
-AllowGuiRename: true
-AllowGuiDelete: true
-AllowGuiSearchTickets: true
-AllowGuiSearchLinkers: true
-AllowGuiSetDisplayName: true
-AllowGuiTransfer: true
+MaxPagesPerGui: 50
 
-AllowEditorAdd: true
-AllowEditorRemove: true
-AllowEditorRemoveAll: true
-AllowListGuiEditorsOtherOwners: true
-
-AllowTicketCreate: true
-AllowTicketSetDisplayName: true
-AllowTicketSetTraincartsTicket: true
-
-AllowLinkerCreate: true
-AllowLinkerSetDisplayName: true
-AllowLinkerSetDestinationPage: true
-
-AllowCompanyCreate: true
-AllowCompanyDelete: true
-
-AllowOpenShops: true
+# No touch please
+ConfigVersion: ${project.version}

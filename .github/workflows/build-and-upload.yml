@@ -27,15 +27,15 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Plugin
-          path: target/tcgui*.jar
+          path: target/traincartsticketshop*.jar
       - name: Find file name
         run: |
-          filename=$(ls -d target/tcgui-*)
+          filename=$(ls -d target/traincartsticketshop-*)
           echo filename=$filename >> "$GITHUB_ENV"
       - name: Delete old prerelease
         uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
-          tag_name: dev
+          tag_name: snapshot
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_release: true
       - name: Workaround Hack
@@ -46,6 +46,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: snapshot
           file: ${{ env.filename }}
           overwrite: true
           prerelease: true

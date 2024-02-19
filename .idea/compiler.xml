@@ -7,7 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="tcgui" />
+        <module name="traincartsticketshop" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tshop" target="16" />
+    </bytecodeTargetLevel>
   </component>
 </project>
