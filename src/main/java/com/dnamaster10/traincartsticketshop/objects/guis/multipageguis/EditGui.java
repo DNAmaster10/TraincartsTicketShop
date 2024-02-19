@@ -64,11 +64,13 @@ public class EditGui extends MultipageGui {
         if (editor == null) {
             getPlugin().getGuiManager().addEditGui(getGuiId(), getPlayer());
             super.open();
+            wasClosed = true;
             return;
         }
         //Someone is editing the gui, check if editor matches this guis owner
         if (getPlayer().getUniqueId() == editor.getUniqueId()) {
             super.open();
+            wasClosed = true;
             return;
         }
         //Gui is being edited by someone else, open an error gui
@@ -170,6 +172,9 @@ public class EditGui extends MultipageGui {
     }
     private void deletePage() {
         //Clear the current gui hashmap, because we don't know what is and isn't going to be changed
+        wasClosed = false;
+        saveToHashmap();
+        saveCurrentPageToDatabase();
         getPages().clear();
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());
