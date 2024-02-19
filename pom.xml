@@ -6,7 +6,7 @@
 
   <groupId>com.dnamaster10</groupId>
   <artifactId>traincartsticketshop</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>TraincartsTicketShop</name>
