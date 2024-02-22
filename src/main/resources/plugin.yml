@@ -3,7 +3,7 @@ version: '${project.version}'
 main: com.dnamaster10.traincartsticketshop.TraincartsTicketShop
 api-version: '1.20'
 authors: [ DNAmaster10, Dinty1 ]
-description: A plugin which allows players to create ticket shop GUIs for the traincarts plugin
+description: Allows players to create ticket shop GUIs for the TrainCarts plugin
 database: true
 prefix: TraincartsTicketShop
 depend: [Train_Carts]
