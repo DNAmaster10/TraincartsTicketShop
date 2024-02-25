@@ -19,7 +19,7 @@ public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions
         if (sender instanceof Player p) {
-            if (!p.hasPermission("traincartsticketshop.gui.cehckinfo")) {
+            if (!p.hasPermission("traincartsticketshop.gui.checkguiinfo")) {
                 returnInsufficientPermissionsError(p);
                 return false;
             }
