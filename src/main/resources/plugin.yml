@@ -34,10 +34,10 @@ permissions:
   traincartsticketshop.gui.rename:
     description: Allows a gui to be renamed
     default: false
-  traincartsticketshop.gui.search.searchtickets:
+  traincartsticketshop.gui.search.tickets:
     description: Allows a player to search tickets
     default: false
-  traincartsticketshop.gui.search.searchlinkers:
+  traincartsticketshop.gui.search.linkers:
     description: Allows a player to search linkers
     default: false
   traincartsticketshop.gui.setdisplayname:

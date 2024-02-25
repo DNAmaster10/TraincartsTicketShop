@@ -26,7 +26,7 @@ public class SearchTicketsCommandHandler extends AsyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.gui.search.searchtickets")) {
+        if (!player.hasPermission("traincartsticketshop.gui.search.tickets")) {
             returnInsufficientPermissionsError(player);
             return false;
         }

@@ -26,7 +26,7 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.gui.search.searchlinkers")) {
+        if (!player.hasPermission("traincartsticketshop.gui.search.linkers")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
