@@ -99,4 +99,4 @@ commands:
   traincartsticketshop:
     description: The parent command for all TraincartsTicketShop commands
     usage: /traincartsticketshop <sub-command>
-    aliases: [tcticketshop, ticketshop, tshop]
+    aliases: [tcticketshop, ticketshop, tshop, tcts]
