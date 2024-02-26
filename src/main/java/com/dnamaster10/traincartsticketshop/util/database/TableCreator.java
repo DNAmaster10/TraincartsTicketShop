@@ -91,6 +91,7 @@ public class TableCreator extends DatabaseAccessor {
             statement = connection.prepareStatement("""
                     ALTER TABLE tickets ADD COLUMN IF NOT EXISTS purchase_message varchar(1000);
                     """);
+            statement.execute();
 
         } catch (SQLException e) {
             throw new DMLException(e);
