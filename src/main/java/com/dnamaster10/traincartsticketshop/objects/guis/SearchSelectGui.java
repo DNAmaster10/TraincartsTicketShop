@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
 public class SearchSelectGui extends Gui {
     //The gui which will be searched

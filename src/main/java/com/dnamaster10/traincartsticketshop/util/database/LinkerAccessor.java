@@ -34,7 +34,12 @@ public class LinkerAccessor extends DatabaseAccessor {
     }
     public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws DQLException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT linked_gui_id, linked_gui_page, display_name FROM linkers WHERE gui_id=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT linked_gui_id, linked_gui_page, display_name
+                    FROM linkers 
+                    WHERE gui_id=? AND raw_display_name LIKE ? 
+                    ORDER BY raw_display_name LIMIT 45 OFFSET ?
+                    """);
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             statement.setInt(3, offset);

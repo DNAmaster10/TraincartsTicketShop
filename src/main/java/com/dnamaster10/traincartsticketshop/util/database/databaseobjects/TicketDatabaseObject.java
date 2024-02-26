@@ -4,5 +4,6 @@ public record TicketDatabaseObject (
         int slot,
         String tcName,
         String colouredDisplayName,
-        String rawDisplayName
+        String rawDisplayName,
+        String purchaseMessage
 ) {}

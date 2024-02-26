@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
 public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
     //Example command: /tshop linker setDisplayName <display name>

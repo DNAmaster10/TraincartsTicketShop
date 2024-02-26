@@ -15,6 +15,8 @@ public class TableCreator extends DatabaseAccessor {
     }
 
     public void createTables() throws DMLException {
+        //TODO Need to force collation to be case insensitive
+        //TODO Need to define an index for display names
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
             statement = connection.prepareStatement("""
@@ -84,6 +86,11 @@ public class TableCreator extends DatabaseAccessor {
                     ) ENGINE=INNODB;
                     """);
             statement.execute();
+
+            //Post plugin release updates
+            statement = connection.prepareStatement("""
+                    ALTER TABLE tickets ADD COLUMN IF NOT EXISTS purchase_message varchar(1000);
+                    """);
 
         } catch (SQLException e) {
             throw new DMLException(e);

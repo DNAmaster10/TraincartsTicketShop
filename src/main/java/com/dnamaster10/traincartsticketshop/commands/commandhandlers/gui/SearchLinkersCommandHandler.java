@@ -74,7 +74,7 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the search gui
-        LinkerSearchGui gui = new LinkerSearchGui(searchGuiId, searchTerm, player);
+        LinkerSearchGui gui = new LinkerSearchGui(searchGuiId, searchTerm, 0, player);
 
         //Open a new session
         Session session = getPlugin().getGuiManager().getNewSession(player);

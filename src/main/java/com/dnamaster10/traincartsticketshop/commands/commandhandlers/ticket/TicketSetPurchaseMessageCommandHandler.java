@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,44 +9,52 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.TC_TICKET_NAME;
+import java.util.StringJoiner;
 
-public class TicketSetTraincartsTicket extends SyncCommandHandler {
-    //Example command: /tshop ticket setTraincartsTicket <traincarts ticket>
-    Player player;
-    ItemStack ticket;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
+import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.PURCHASE_MESSAGE;
+
+public class TicketSetPurchaseMessageCommandHandler extends SyncCommandHandler {
+    //Example command: /tshop ticket setPurchaseMessage <message>
+    private Player player;
+    private String displayText;
+    private ItemStack ticket;
+
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check permissions and that sender is player
+        //Check that sender is a player
         if (!(sender instanceof Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.ticket.settraincartsticket")) {
+        if (!player.hasPermission("traincartsticketshop.ticket.setpurchasemessage")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(player, "/tshop ticket setTraincartsTicket <tc ticket name>");
-            return false;
-        }
-        if (args.length > 3) {
-            returnInvalidSubCommandError(player, args[3]);
+            returnMissingArgumentsError(sender, "/tshop ticket setPurchaseMessage <message>");
             return false;
         }
 
-        //Check Traincarts ticket exists
-        if (!Traincarts.checkTicket(args[2])) {
-            returnError(player, "Traincarts ticket \"" + args[2] + "\" does not exist");
+        //Build display text
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 2; i < args.length; i++) stringJoiner.add(args[i]);
+        displayText = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+
+        if (displayText.length() > 500) {
+            returnError(player, "Purchase messages cannot be more than 500 characters in length");
+            return false;
+        }
+        if (displayText.isBlank()) {
+            returnError(player, "Purchase messages cannot be blank");
             return false;
         }
 
-        //Check player is holding a ticket
+        //Check that player is holding a ticket
         ticket = player.getInventory().getItemInMainHand();
         String buttonType = getButtonType(ticket);
         if (buttonType == null || !buttonType.equals("ticket")) {
@@ -57,15 +64,14 @@ public class TicketSetTraincartsTicket extends SyncCommandHandler {
 
         return true;
     }
+
     @Override
     protected void execute(CommandSender sender, String[] args) {
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
-
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-        dataContainer.set(TC_TICKET_NAME, PersistentDataType.STRING, args[2]);
+        dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, displayText);
         ticket.setItemMeta(meta);
-
-        player.sendMessage(ChatColor.GREEN + "Traincarts ticket changed to \"" + args[2] + "\"");
+        player.sendMessage(ChatColor.GREEN + "Held ticket's purchase message was set successfully");
     }
 }
