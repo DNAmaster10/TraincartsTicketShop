@@ -9,13 +9,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.StringJoiner;
 
-import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
 public class TicketSetDisplayNameCommandHandler extends SyncCommandHandler {
-    //Example command: /traincartsticketshop ticket rename <new_name>
+    //Example command: /tshop ticket rename <new_name>
     private String colouredDisplayName;
     private Player player;
-    ItemStack ticket;
+    private ItemStack ticket;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check that sender is a player

@@ -18,13 +18,16 @@ public class TicketAccessor extends DatabaseAccessor {
     public TicketDatabaseObject[] getTickets(int guiId, int page) throws DQLException {
         //Returns an array of ticket database objects from the database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT slot, tc_name, display_name, raw_display_name FROM tickets WHERE gui_id=? AND page=?");
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT slot, tc_name, display_name, raw_display_name, purchase_message
+                    FROM tickets
+                    WHERE gui_id=? AND page=?""");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             ResultSet result = statement.executeQuery();
             List<TicketDatabaseObject> ticketList = new ArrayList<>();
             while (result.next()) {
-                ticketList.add(new TicketDatabaseObject(result.getInt("slot"), result.getString("tc_name"), result.getString("display_name"), result.getString("raw_display_name")));
+                ticketList.add(new TicketDatabaseObject(result.getInt("slot"), result.getString("tc_name"), result.getString("display_name"), result.getString("raw_display_name"), result.getString("purchase_message")));
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
         } catch (SQLException e) {
@@ -37,7 +40,10 @@ public class TicketAccessor extends DatabaseAccessor {
         //This value indicates the amount of database results which will be skipped over before returning any results.
         //This can be used to have multi-page search guis.
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT tc_name, display_name, raw_display_name FROM tickets WHERE gui_id=? AND raw_display_name LIKE ? ORDER BY raw_display_name LIMIT 45 OFFSET ?");
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT tc_name, display_name, raw_display_name, purchase_message
+                    FROM tickets WHERE gui_id=? AND raw_display_name LIKE ?
+                    ORDER BY raw_display_name LIMIT 45 OFFSET ?""");
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             statement.setInt(3, offset);
@@ -45,7 +51,7 @@ public class TicketAccessor extends DatabaseAccessor {
             List<TicketDatabaseObject> ticketList = new ArrayList<>();
             int i = 0;
             while (result.next()) {
-                ticketList.add(new TicketDatabaseObject(i, result.getString("tc_name"), result.getString("display_name"), result.getString("raw_display_name")));
+                ticketList.add(new TicketDatabaseObject(i, result.getString("tc_name"), result.getString("display_name"), result.getString("raw_display_name"), result.getString("purchase_message")));
                 i++;
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
@@ -111,12 +117,13 @@ public class TicketAccessor extends DatabaseAccessor {
 
             //With old tickets now deleted, we can update existing ones and insert new ones too
             PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE 
+                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
                         tc_name=VALUES(tc_name),
                         display_name=VALUES(display_name),
-                        raw_display_name=VALUES(raw_display_name)
+                        raw_display_name=VALUES(raw_display_name),
+                        purchase_message=VALUES(purchase_message)
                     """);
             for (TicketDatabaseObject ticket : tickets) {
                 statement.setInt(1, guiId);
@@ -125,6 +132,7 @@ public class TicketAccessor extends DatabaseAccessor {
                 statement.setString(4, ticket.tcName());
                 statement.setString(5, ticket.colouredDisplayName());
                 statement.setString(6, ticket.rawDisplayName());
+                statement.setString(7, ticket.purchaseMessage());
 
                 statement.addBatch();
             }

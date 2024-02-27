@@ -74,7 +74,7 @@ public class SearchTicketsCommandHandler extends AsyncCommandHandler {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create new gui
-        TicketSearchGui gui = new TicketSearchGui(guiId, searchTerm, 0, (Player) sender);
+        TicketSearchGui gui = new TicketSearchGui(guiId, searchTerm, 0, player);
 
         //Open a new gui session for the player
         Session session = getPlugin().getGuiManager().getNewSession(player);

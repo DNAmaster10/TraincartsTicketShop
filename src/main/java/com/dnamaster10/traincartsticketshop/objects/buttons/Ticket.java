@@ -16,9 +16,10 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 public class Ticket extends Button {
     private final String tcTicketName;
     private final String displayName;
+    private final String purchaseMessage;
     public TicketDatabaseObject getAsDatabaseObject(int slot) {
         String rawDisplayName = ChatColor.stripColor(displayName);
-        return new TicketDatabaseObject(slot, this.tcTicketName, this.displayName, rawDisplayName);
+        return new TicketDatabaseObject(slot, tcTicketName, displayName, rawDisplayName, purchaseMessage);
     }
     @Override
     public ItemStack getItemStack() {
@@ -30,12 +31,14 @@ public class Ticket extends Button {
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(BUTTON_TYPE, PersistentDataType.STRING, "ticket");
         dataContainer.set(TC_TICKET_NAME, PersistentDataType.STRING, this.tcTicketName);
+        dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, this.purchaseMessage);
 
         item.setItemMeta(meta);
         return item;
     }
-    public Ticket(String tcName, String displayName) {
+    public Ticket(String tcName, String displayName, String purchaseMessage) {
         this.tcTicketName = tcName;
         this.displayName = displayName;
+        this.purchaseMessage = purchaseMessage;
     }
 }

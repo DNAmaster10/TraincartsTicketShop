@@ -84,6 +84,9 @@ permissions:
   traincartsticketshop.ticket.settraincartsticket:
     description: Allows a player to set the traincarts ticket for a ticket
     default: false
+  traincartsticketshop.ticket.setpurchasemessage:
+    description: Allows a player to set the purchase message for a ticket
+    default: false
 
   traincartsticketshop.linker.create:
     description: Allows player to create gui linker item

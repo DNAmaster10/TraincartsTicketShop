@@ -60,7 +60,7 @@ public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
         //Fetch info
         String guiName = guiAccessor.getGuiNameById(guiId);
         String owner = guiAccessor.getOwnerUsername(guiId);
-        int totalPages = guiAccessor.getMaxPage(guiId) + 1;
+        int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
 
         TicketAccessor ticketAccessor = new TicketAccessor();
         LinkerAccessor linkerAccessor = new LinkerAccessor();

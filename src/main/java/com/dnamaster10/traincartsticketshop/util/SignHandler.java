@@ -92,7 +92,7 @@ public class SignHandler {
                 //Check the max page number. If the number on the sign is higher than the max pages in the gui, set the page to the highest possible page
                 int page = getPage(side);
                 int guiId = guiAccessor.getGuiIdByName(guiName);
-                int maxPage = guiAccessor.getMaxPage(guiId);
+                int maxPage = guiAccessor.getHighestPageNumber(guiId);
                 if (page > maxPage) {
                     page = maxPage;
                 }

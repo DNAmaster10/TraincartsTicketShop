@@ -1,18 +1,15 @@
-package com.dnamaster10.traincartsticketshop.objects.buttons;
+package com.dnamaster10.traincartsticketshop.util;
 
+import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Objects;
-
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
-public class Buttons {
+public class ButtonUtils {
     //A utility class for buttons
     public static String getButtonType(ItemStack button) {
         //Returns the button type from a given item
@@ -41,6 +38,7 @@ public class Buttons {
         String displayName = meta.getDisplayName();
 
         switch (buttonType) {
+            //TODO maybe move each of these into their own method?
             case "ticket" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
                 if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
@@ -50,7 +48,10 @@ public class Buttons {
                 if (tcTicketName == null) {
                     return null;
                 }
-                return new Ticket(tcTicketName, displayName);
+                String purchaseMessage = null;
+                if (dataContainer.has(PURCHASE_MESSAGE, PersistentDataType.STRING)) purchaseMessage = dataContainer.get(PURCHASE_MESSAGE, PersistentDataType.STRING);
+                if (purchaseMessage == null || purchaseMessage.isBlank()) purchaseMessage = "";
+                return new Ticket(tcTicketName, displayName, purchaseMessage);
             }
             case "linker" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
@@ -87,4 +88,5 @@ public class Buttons {
             }
         }
     }
+
 }

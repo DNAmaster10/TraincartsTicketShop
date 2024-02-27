@@ -67,7 +67,7 @@ public class TicketCreateCommandHandler extends SyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) {
         //Create the ticket object
-        Ticket ticket = new Ticket(args[2], colouredDisplayName);
+        Ticket ticket = new Ticket(args[2], colouredDisplayName, "");
 
         //Give the ticket to the player
         ItemStack ticketItem = ticket.getItemStack();

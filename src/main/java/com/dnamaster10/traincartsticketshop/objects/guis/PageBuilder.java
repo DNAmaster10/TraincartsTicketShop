@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
+import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
@@ -11,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static com.dnamaster10.traincartsticketshop.objects.buttons.Buttons.getButtonType;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.*;
 
 public class PageBuilder {
@@ -40,8 +41,9 @@ public class PageBuilder {
             return;
         }
         //Builds the page from an inventory
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
+        ItemStack[] contents = inventory.getContents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
 
             //Check if the item is a Traincartsticketshop button
             if (item == null) {
@@ -57,7 +59,7 @@ public class PageBuilder {
             }
 
             //Item is button, create a new button object from the item
-            Button button = Buttons.getNewButton(buttonType, item);
+            Button button = ButtonUtils.getNewButton(buttonType, item);
             page[i] = button;
         }
     }
@@ -67,7 +69,7 @@ public class PageBuilder {
                 continue;
             }
             //Create the button
-            Ticket ticket = new Ticket(ticketDatabaseObject.tcName(), ticketDatabaseObject.colouredDisplayName());
+            Ticket ticket = new Ticket(ticketDatabaseObject.tcName(), ticketDatabaseObject.colouredDisplayName(), ticketDatabaseObject.purchaseMessage());
             page[ticketDatabaseObject.slot()] = ticket;
         }
     }
