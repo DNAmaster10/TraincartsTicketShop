@@ -15,7 +15,6 @@ public class TableCreator extends DatabaseAccessor {
     }
 
     public void createTables() throws DMLException {
-        //TODO Need to force collation to be case insensitive
         //TODO Need to define an index for display names
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -24,7 +23,7 @@ public class TableCreator extends DatabaseAccessor {
                         uuid varchar(50) PRIMARY KEY NOT NULL,
                         username varchar(20),
                         last_join bigint
-                    ) ENGINE=INNODB;
+                    ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                     """);
             statement.execute();
 
@@ -37,7 +36,7 @@ public class TableCreator extends DatabaseAccessor {
                         raw_display_name varchar(100),
                         FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
                             ON DELETE SET NULL
-                    ) ENGINE=INNODB;
+                    ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                     """);
             statement.execute();
 
@@ -53,7 +52,7 @@ public class TableCreator extends DatabaseAccessor {
                         UNIQUE KEY gui_page_slot_unique (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
-                    ) ENGINE=INNODB;
+                    ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                     """);
             statement.execute();
 
@@ -70,7 +69,7 @@ public class TableCreator extends DatabaseAccessor {
                         UNIQUE KEY gui_page_slot (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
-                    ) ENGINE=INNODB;
+                    ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                     """);
             statement.execute();
 
@@ -83,7 +82,7 @@ public class TableCreator extends DatabaseAccessor {
                             ON DELETE CASCADE,
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
-                    ) ENGINE=INNODB;
+                    ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                     """);
             statement.execute();
 
