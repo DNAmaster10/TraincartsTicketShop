@@ -4,7 +4,7 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
-import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmGuiDeleteGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
 import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
@@ -58,23 +58,28 @@ public class EditGui extends MultipageGui {
     }
 
     private Button[] getNewPage() throws DQLException {
+        GuiAccessor guiAccessor = new GuiAccessor();
+        setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
+
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
         pageBuilder.addLinkersFromDatabase(getGuiId(), getPageNumber());
 
         if (getPageNumber() > 0) pageBuilder.addPrevPageButton();
-        if (getPageNumber() < getTotalPages()) pageBuilder.addNextPageButton();
+        if (getPageNumber() + 1 < getMaxPages()) pageBuilder.addNextPageButton();
+
+        if (getTotalPages() < getMaxPages()) {
+            SimpleHeadButton insertPageButton = new SimpleHeadButton("insert_page", GREEN_PLUS, "Insert Page");
+            pageBuilder.addButton(47, insertPageButton);
+        }
 
         SimpleHeadButton deletePageButton = new SimpleHeadButton("delete_page", RED_CROSS, "Delete Page");
-        SimpleHeadButton insertPageButton = new SimpleHeadButton("insert_page", GREEN_PLUS, "Insert Page");
-
         pageBuilder.addButton(48, deletePageButton);
-        pageBuilder.addButton(47, insertPageButton);
 
         return pageBuilder.getPage();
     }
     private void openPage(Button[] page) {
-        String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + (getTotalPages() + 1);
+        String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + getTotalPages() + ")";
         InventoryBuilder inventoryBuilder = new InventoryBuilder(page, pageText);
         setInventory(inventoryBuilder.getInventory());
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(getInventory()), 1L);
@@ -112,28 +117,30 @@ public class EditGui extends MultipageGui {
         String buttonType = getButtonType(clickedItem);
         if (buttonType == null) return;
         switch (buttonType) {
-            case "next_page", "prev_page", "delete_page", "insert_page" -> handleButtonClick(event, clickedItem, buttonType);
+            case "next_page", "prev_page", "delete_page", "insert_page" -> handleButtonClick(event, buttonType);
         }
 
     }
-    private void handleButtonClick(InventoryClickEvent event, ItemStack clickedItem, String buttonType) {
+    private void handleButtonClick(InventoryClickEvent event, String buttonType) {
         wasClosed = false;
 
         //Save the current page
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addInventory(event.getClickedInventory());
         Button[] page = pageBuilder.getPage();
+        getPlayer().setItemOnCursor(null);
 
         //Now run asynchronous to save the inventory
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             savePageToDatabase(page);
-            event.getWhoClicked().setItemOnCursor(null);
             switch (buttonType) {
                 case "next_page" -> {
+                    pageBuilder.addNextPageButton();
                     pages.put(getPageNumber(), page);
                     this.nextPage();
                 }
                 case "prev_page" -> {
+                    pageBuilder.addPrevPageButton();
                     pages.put(getPageNumber(), page);
                     this.prevPage();
                 }
@@ -151,7 +158,7 @@ public class EditGui extends MultipageGui {
 
     @Override
     protected void nextPage() {
-        if (getPageNumber() + 1 > getTotalPages()) return;
+        if (getPageNumber() + 1 > getMaxPages()) return;
         setPageNumber(getPageNumber() + 1);
         open();
     }
@@ -165,6 +172,9 @@ public class EditGui extends MultipageGui {
 
     private void insertPage() {
         //TODO add check if inserting a page would be too much
+        if (getTotalPages() + 1 > getMaxPages()) {
+            return;
+        }
         try {
             GuiAccessor guiAccessor = new GuiAccessor();
             guiAccessor.insertPage(getGuiId(), getPageNumber());
@@ -176,7 +186,7 @@ public class EditGui extends MultipageGui {
         }
     }
     private void deletePage() {
-        ConfirmGuiDeleteGui newGui = new ConfirmGuiDeleteGui(getGuiId(), getPlayer());
+        ConfirmPageDeleteGui newGui = new ConfirmPageDeleteGui(getGuiId(), getPageNumber(), getPlayer());
         getSession().addGui(newGui);
         newGui.open();
     }

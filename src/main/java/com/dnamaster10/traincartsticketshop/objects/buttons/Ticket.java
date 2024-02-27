@@ -31,7 +31,9 @@ public class Ticket extends Button {
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(BUTTON_TYPE, PersistentDataType.STRING, "ticket");
         dataContainer.set(TC_TICKET_NAME, PersistentDataType.STRING, this.tcTicketName);
-        dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, this.purchaseMessage);
+        if (purchaseMessage != null) {
+            dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, this.purchaseMessage);
+        }
 
         item.setItemMeta(meta);
         return item;
