@@ -56,7 +56,7 @@ public class SignHandler {
         return 0;
     }
     String getGuiName(SignSide side) {
-        String nameLine = side.getLine(2);
+        String nameLine = ChatColor.stripColor(side.getLine(2));
         if (nameLine.isBlank()) {
             return null;
         }
