@@ -1,8 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.eventhandlers;
 
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBPlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,10 +17,10 @@ public class PlayerJoinEventHandler implements Listener {
         //Update player in database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                MariaDBPlayerAccessor accessor = new MariaDBPlayerAccessor();
+                PlayerAccessor accessor = AccessorFactory.getPlayerAccessor();
                 Player p = event.getPlayer();
                 accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
-            } catch (QueryException | ModificationException e) {
+            } catch (ModificationException e) {
                 getPlugin().handleSqlException(e);
             }
         });
