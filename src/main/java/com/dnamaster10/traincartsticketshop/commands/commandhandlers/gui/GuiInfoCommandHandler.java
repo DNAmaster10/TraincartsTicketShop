@@ -1,10 +1,10 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ import net.md_5.bungee.api.chat.*;
 public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui checkInfo <gui name>
 
-    GuiAccessor guiAccessor;
+    MariaDBGuiAccessor guiAccessor;
     Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -43,8 +43,8 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        guiAccessor = new GuiAccessor();
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+        guiAccessor = new MariaDBGuiAccessor();
 
         guiId = guiAccessor.getGuiIdByName(args[2]);
         if (guiId == null) {
@@ -56,14 +56,14 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException {
+    protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Fetch info
         String guiName = guiAccessor.getGuiNameById(guiId);
         String owner = guiAccessor.getOwnerUsername(guiId);
         int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
 
-        TicketAccessor ticketAccessor = new TicketAccessor();
-        LinkerAccessor linkerAccessor = new LinkerAccessor();
+        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
+        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
 
         int totalTickets = ticketAccessor.getTotalTickets(guiId);
         int totalLinkers = linkerAccessor.getTotalLinkers(guiId);

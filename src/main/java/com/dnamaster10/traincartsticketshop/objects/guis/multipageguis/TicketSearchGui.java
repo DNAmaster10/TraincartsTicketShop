@@ -2,12 +2,11 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipagePurchasableGui;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
 
 public class TicketSearchGui extends MultipagePurchasableGui {
@@ -15,22 +14,22 @@ public class TicketSearchGui extends MultipagePurchasableGui {
     private final String searchTerm;
     private final int totalSearchResults;
 
-    public TicketSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
-        TicketAccessor ticketAccessor = new TicketAccessor();
+    public TicketSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws QueryException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
 
         this.searchGuiId = searchGuiId;
         this.searchTerm = searchTerm;
         this.totalSearchResults = ticketAccessor.getTotalTicketSearchResults(searchGuiId, searchTerm);
         setPageNumber(page);
         setPlayer(player);
-        setDisplayName("Searching: " + guiAccessor.getColouredDisplayNameById(searchGuiId));
+        setDisplayName("Searching: " + guiAccessor.getDisplayNameById(searchGuiId));
         setTotalPages(Utilities.getPageCount(totalSearchResults, 45));
     }
 
     @Override
-    protected Button[] getNewPage() throws DQLException {
-        TicketAccessor ticketAccessor = new TicketAccessor();
+    protected Button[] getNewPage() throws QueryException {
+        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
         PageBuilder pageBuilder = new PageBuilder();
 
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.searchTickets(searchGuiId, getPageNumber() * 45, searchTerm);

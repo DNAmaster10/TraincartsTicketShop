@@ -1,8 +1,9 @@
-package com.dnamaster10.traincartsticketshop.util.database;
+package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,12 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinkerAccessor extends DatabaseAccessor {
-    public LinkerAccessor() throws DQLException {
+public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements LinkerAccessor {
+    public MariaDBLinkerAccessor() throws QueryException {
         super();
     }
 
-    public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws DQLException {
+    public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws QueryException {
         //Returns an array of linkers for a given gui ID and page number
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_gui_id, linked_gui_page, display_name, raw_display_name FROM linkers WHERE gui_id=? AND page=?");
@@ -29,15 +30,15 @@ public class LinkerAccessor extends DatabaseAccessor {
             }
             return linkersList.toArray(LinkerDatabaseObject[]::new);
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws DQLException {
+    public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
                     SELECT linked_gui_id, linked_gui_page, display_name
-                    FROM linkers 
-                    WHERE gui_id=? AND raw_display_name LIKE ? 
+                    FROM linkers
+                    WHERE gui_id=? AND raw_display_name LIKE ?
                     ORDER BY raw_display_name LIMIT 45 OFFSET ?
                     """);
             statement.setInt(1, guiId);
@@ -52,10 +53,10 @@ public class LinkerAccessor extends DatabaseAccessor {
             }
             return linkerList.toArray(LinkerDatabaseObject[]::new);
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public int getTotalLinkers(int guiId) throws DQLException {
+    public int getTotalLinkers(int guiId) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=?");
             statement.setInt(1, guiId);
@@ -65,10 +66,10 @@ public class LinkerAccessor extends DatabaseAccessor {
             }
             return 0;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public int getTotalLinkerSearchResults(int guiId, String searchTerm) throws DQLException {
+    public int getTotalLinkerSearchResults(int guiId, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=? AND raw_display_name LIKE ?");
             statement.setInt(1, guiId);
@@ -79,10 +80,10 @@ public class LinkerAccessor extends DatabaseAccessor {
             }
             return 0;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public void saveLinkerPage(int guiId, int page, List<LinkerDatabaseObject> linkers) throws DMLException {
+    public void saveLinkerPage(int guiId, int page, List<LinkerDatabaseObject> linkers) throws ModificationException {
         try (Connection connection = getConnection()) {
             //Delete non-existent slots
             if (linkers.isEmpty()) {
@@ -113,8 +114,8 @@ public class LinkerAccessor extends DatabaseAccessor {
             //Prepare update query
             PreparedStatement statement = connection.prepareStatement("""
                     INSERT INTO linkers (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
-                    VALUES (?, ?, ?, ?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
                         linked_gui_id=VALUES(linked_gui_id),
                         linked_gui_page=VALUES(linked_gui_page),
                         display_name=VALUES(display_name),
@@ -133,7 +134,7 @@ public class LinkerAccessor extends DatabaseAccessor {
             }
             statement.executeBatch();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
 }

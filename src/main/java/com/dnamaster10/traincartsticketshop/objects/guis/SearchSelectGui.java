@@ -1,8 +1,8 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -54,9 +54,9 @@ public class SearchSelectGui extends Gui {
             case "back" -> back();
         }
     }
-    private String getGuiName() throws DQLException {
+    private String getGuiName() throws QueryException {
         //Returns the name of the gui which is being searched from the id
-        GuiAccessor guiAccessor = new GuiAccessor();
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
         return guiAccessor.getGuiNameById(searchGuiId);
     }
     private void guiDeletedOrMoved() {
@@ -68,7 +68,7 @@ public class SearchSelectGui extends Gui {
             String searchGuiName;
             try {
                 searchGuiName = getGuiName();
-            } catch (DQLException e) {
+            } catch (QueryException e) {
                 getPlugin().handleSqlException(e);
                 return;
             }
@@ -96,7 +96,7 @@ public class SearchSelectGui extends Gui {
             String searchGuiName;
             try {
                 searchGuiName = getGuiName();
-            } catch (DQLException e) {
+            } catch (QueryException e) {
                 getPlugin().handleSqlException(e);
                 return;
             }

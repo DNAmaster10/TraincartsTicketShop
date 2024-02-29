@@ -3,15 +3,14 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipagePurchasableGui;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class ShopGui extends MultipagePurchasableGui {
     @Override
-    protected Button[] getNewPage() throws DQLException {
+    protected Button[] getNewPage() throws QueryException {
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
         pageBuilder.addLinkersFromDatabase(getGuiId(), getPageNumber());
@@ -26,9 +25,9 @@ public class ShopGui extends MultipagePurchasableGui {
         return pageBuilder.getPage();
     }
 
-    public ShopGui(int guiId, int page, Player player) throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
-        String displayName = guiAccessor.getColouredDisplayNameById(guiId);
+    public ShopGui(int guiId, int page, Player player) throws QueryException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        String displayName = guiAccessor.getDisplayNameById(guiId);
 
         setDisplayName(displayName);
         setPlayer(player);
@@ -36,7 +35,7 @@ public class ShopGui extends MultipagePurchasableGui {
         setGuiId(guiId);
         setTotalPages(guiAccessor.getHighestPageNumber(guiId));
     }
-    public ShopGui(int guiId, Player player) throws DQLException {
+    public ShopGui(int guiId, Player player) throws QueryException {
         this(guiId, 0, player);
     }
 }

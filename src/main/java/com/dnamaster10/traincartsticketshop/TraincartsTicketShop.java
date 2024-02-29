@@ -6,10 +6,10 @@ import com.dnamaster10.traincartsticketshop.util.ConfigUtil;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseConfig;
-import com.dnamaster10.traincartsticketshop.util.database.TableCreator;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTableCreator;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
@@ -58,10 +58,10 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
 
         //Create tables in database
         try {
-            TableCreator tableCreator = new TableCreator();
+            MariaDBTableCreator tableCreator = new MariaDBTableCreator();
             tableCreator.createTables();
         }
-        catch (DQLException | DMLException e) {
+        catch (QueryException | ModificationException e) {
             //Disable plugin if failed
             plugin.handleSqlException(e);
         }
@@ -95,7 +95,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //If the exception was only a query, report it. If it altered the database, disable the plugin too as a failsafe.
         plugin.getLogger().severe("A database error occurred: " + e);
         e.printStackTrace();
-        if (e instanceof DQLException) {
+        if (e instanceof QueryException) {
             return;
         }
         disable();

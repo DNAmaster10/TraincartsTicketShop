@@ -4,7 +4,7 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.SearchSelectGui;
 import com.dnamaster10.traincartsticketshop.util.GuiUtils;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonTyp
 public abstract class MultipagePurchasableGui extends MultipageGui {
 
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
-    protected abstract Button[] getNewPage() throws DQLException;
+    protected abstract Button[] getNewPage() throws QueryException;
     @Override
     public void open() {
         if (pages.containsKey(getPageNumber())) {
@@ -28,7 +28,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
             Button[] newPage;
             try {
                 newPage = getNewPage();
-            } catch (DQLException e) {
+            } catch (QueryException e) {
                 openErrorGui("An error occurred generating that gui");
                 getPlugin().handleSqlException(getPlayer(), e);
                 return;

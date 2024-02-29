@@ -2,11 +2,11 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
-import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -83,15 +83,15 @@ public class PageBuilder {
             page[linkerDatabaseObject.slot()] = linker;
         }
     }
-    public void addTicketsFromDatabase(int guiId, int pageNumber) throws DQLException {
+    public void addTicketsFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches tickets from database and adds their buttons to the gui
-        TicketAccessor ticketAccessor = new TicketAccessor();
+        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
         addTickets(ticketDatabaseObjects);
     }
-    public void addLinkersFromDatabase(int guiId, int pageNumber) throws DQLException {
+    public void addLinkersFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches linkers from the database and adds their buttons to the gui
-        LinkerAccessor linkerAccessor = new LinkerAccessor();
+        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
         LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
         addLinkers(linkerDatabaseObjects);
     }

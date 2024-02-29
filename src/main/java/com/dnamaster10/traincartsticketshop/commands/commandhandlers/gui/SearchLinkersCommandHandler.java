@@ -3,8 +3,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +15,7 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui searchLinkers <gui name> <search term>
     private String searchTerm;
-    private GuiAccessor guiAccessor;
+    private MariaDBGuiAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -58,9 +58,9 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         //Check gui exists
-        guiAccessor = new GuiAccessor();
+        guiAccessor = new MariaDBGuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(player, args[2]);
             return false;
@@ -69,7 +69,7 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException {
+    protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Get the search gui id
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 

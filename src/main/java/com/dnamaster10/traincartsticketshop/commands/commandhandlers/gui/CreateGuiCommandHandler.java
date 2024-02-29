@@ -1,9 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     //Used to store the display name since spaces can be entered here
     private String rawDisplayName;
     private String colouredDisplayName;
-    private GuiAccessor guiAccessor;
+    private MariaDBGuiAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -78,9 +78,9 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         String guiName = args[2];
-        guiAccessor = new GuiAccessor();
+        guiAccessor = new MariaDBGuiAccessor();
 
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {
@@ -91,7 +91,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DMLException {
+    protected void execute(CommandSender sender, String[] args) throws ModificationException {
         //Runs the command
         guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, player.getUniqueId().toString());
         player.sendMessage(ChatColor.GREEN + "A gui with name \"" + args[2] + "\" was created");

@@ -4,9 +4,9 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,9 +33,9 @@ public class ConfirmGuiDeleteGui extends ConfirmActionGui {
     protected void confirmAction() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                GuiAccessor guiAccessor = new GuiAccessor();
+                MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
                 guiAccessor.deleteGuiById(deleteGuiId);
-            } catch (DQLException | DMLException e) {
+            } catch (QueryException | ModificationException e) {
                 getPlugin().handleSqlException(getPlayer(), e);
             }
             closeInventory();

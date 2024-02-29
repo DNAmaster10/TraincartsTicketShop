@@ -1,16 +1,16 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
-    private GuiAccessor guiAccessor;
+    private MariaDBGuiAccessor guiAccessor;
     private Integer guiId;
 
     @Override
@@ -55,8 +55,8 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        guiAccessor = new GuiAccessor();
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+        guiAccessor = new MariaDBGuiAccessor();
 
         //Get the gui ID and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);
@@ -84,7 +84,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DMLException {
+    protected void execute(CommandSender sender, String[] args) throws ModificationException {
         guiAccessor.updateGuiName(guiId, args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was successfully renamed to \"" + args[3] + "\"");
     }

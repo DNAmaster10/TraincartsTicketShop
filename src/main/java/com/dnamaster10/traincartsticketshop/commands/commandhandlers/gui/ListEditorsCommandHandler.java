@@ -2,9 +2,9 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.GuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ListEditorsCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor list <gui_name> <optional page number>
 
-    private GuiEditorsAccessor editorsAccessor;
+    private MariaDBGuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     private Integer pageNumber;
     private Integer totalPages;
@@ -66,8 +66,8 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
 
         //Get the guiID and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);
@@ -86,7 +86,7 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
             }
         }
 
-        editorsAccessor = new GuiEditorsAccessor();
+        editorsAccessor = new MariaDBGuiEditorsAccessor();
 
         //Check there are any editors
         int totalEditors = editorsAccessor.getTotalEditors(guiId);
@@ -105,7 +105,7 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException {
+    protected void execute(CommandSender sender, String[] args) throws QueryException {
         String[] editors = editorsAccessor.getEditorUsernames(guiId, (pageNumber - 1) * playersPerPage, playersPerPage);
 
         //Build message

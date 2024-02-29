@@ -6,13 +6,13 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.LinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -32,15 +32,15 @@ public class EditGui extends MultipageGui {
     private boolean wasClosed;
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
 
-    public EditGui(int guiId, int page, Player player) throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
-        setDisplayName("Editing: " + guiAccessor.getColouredDisplayNameById(guiId));
+    public EditGui(int guiId, int page, Player player) throws QueryException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        setDisplayName("Editing: " + guiAccessor.getDisplayNameById(guiId));
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(player);
         setTotalPages(guiAccessor.getHighestPageNumber(guiId));
     }
-    public EditGui(int guiId, Player player) throws DQLException {
+    public EditGui(int guiId, Player player) throws QueryException {
         this(guiId, 0, player);
     }
 
@@ -57,8 +57,8 @@ public class EditGui extends MultipageGui {
         wasClosed = true;
     }
 
-    private Button[] getNewPage() throws DQLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+    private Button[] getNewPage() throws QueryException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
         setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
 
         PageBuilder pageBuilder = new PageBuilder();
@@ -102,7 +102,7 @@ public class EditGui extends MultipageGui {
             Button[] newPage;
             try {
                 newPage = getNewPage();
-            } catch (DQLException e) {
+            } catch (QueryException e) {
                 openErrorGui("An error occurred generating that gui");
                 getPlugin().handleSqlException(getPlayer(), e);
                 return;
@@ -176,10 +176,10 @@ public class EditGui extends MultipageGui {
             return;
         }
         try {
-            GuiAccessor guiAccessor = new GuiAccessor();
+            MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
             guiAccessor.insertPage(getGuiId(), getPageNumber());
             open();
-        } catch (DQLException | DMLException e) {
+        } catch (QueryException | ModificationException e) {
             getPlayer().sendMessage(ChatColor.RED + "Failed to insert page");
             closeInventory();
             getPlugin().handleSqlException(e);
@@ -202,12 +202,12 @@ public class EditGui extends MultipageGui {
             if (button instanceof Linker linker) linkers.add(linker.getAsDatabaseObject(slot));
         }
         try {
-            TicketAccessor ticketAccessor = new TicketAccessor();
-            LinkerAccessor linkerAccessor = new LinkerAccessor();
+            MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
+            MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
 
             ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), tickets);
             linkerAccessor.saveLinkerPage(getGuiId(), getPageNumber(), linkers);
-        } catch (DQLException | DMLException e) {
+        } catch (QueryException | ModificationException e) {
             getPlayer().sendMessage(ChatColor.RED + "An error occurred saving to the database");
             closeInventory();
             getPlugin().handleSqlException(e);

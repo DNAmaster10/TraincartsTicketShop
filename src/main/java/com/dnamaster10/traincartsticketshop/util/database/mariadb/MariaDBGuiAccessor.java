@@ -1,19 +1,17 @@
-package com.dnamaster10.traincartsticketshop.util.database;
+package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GuiAccessor extends DatabaseAccessor {
-    public GuiAccessor() throws DQLException {
-        super();
-    }
+public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAccessor {
 
-    public boolean checkGuiByName(String name) throws DQLException {
+    public boolean checkGuiByName(String name) throws QueryException {
         //returns true if the gui with the given name exists in database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?");
@@ -25,10 +23,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return total > 0;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public boolean checkGuiById(int id) throws DQLException {
+    public boolean checkGuiById(int id) throws QueryException {
         //Returns true if the gui with the given name exists in database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=?");
@@ -40,10 +38,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return total > 0;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws DQLException {
+    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException {
         //Returns true if uuid owns gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=? AND owner_uuid=?");
@@ -56,17 +54,17 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return isOwner;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public boolean playerCanEdit(int guiId, String uuid) throws DQLException {
+    public boolean playerCanEdit(int guiId, String uuid) throws QueryException {
         //Returns true if player is either an owner of a gui or a listed editor
         if (checkGuiOwnerByUuid(guiId, uuid)) return true;
-        GuiEditorsAccessor guiEditorsAccessor = new GuiEditorsAccessor();
+        MariaDBGuiEditorsAccessor guiEditorsAccessor = new MariaDBGuiEditorsAccessor();
         return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
     }
 
-    public Integer getGuiIdByName(String name) throws DQLException {
+    public Integer getGuiIdByName(String name) throws QueryException {
         //Returns gui id from name
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT id FROM guis WHERE name=?");
@@ -78,10 +76,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return id;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public String getGuiNameById(int id) throws DQLException {
+    public String getGuiNameById(int id) throws QueryException {
         //Returns gui name from id
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT name FROM guis WHERE id=?");
@@ -93,10 +91,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return name;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public int getHighestPageNumber(int guiId) throws DQLException {
+    public int getHighestPageNumber(int guiId) throws QueryException {
         //Returns the total pages for this gui
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -124,10 +122,10 @@ public class GuiAccessor extends DatabaseAccessor {
 
             return maxPage;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public String getColouredDisplayNameById(int guiId) throws DQLException {
+    public String getDisplayNameById(int guiId) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT display_name FROM guis WHERE id=?");
             statement.setInt(1, guiId);
@@ -138,10 +136,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return displayName;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public String getOwnerUsername(int guiId) throws DQLException {
+    public String getOwnerUsername(int guiId) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
                     SELECT players.username
@@ -157,10 +155,10 @@ public class GuiAccessor extends DatabaseAccessor {
             }
             return ownerUsername;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public void updateGuiName(int guiId, String newName) throws DMLException {
+    public void updateGuiName(int guiId, String newName) throws ModificationException {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("UPDATE guis SET name=? WHERE id=?");
@@ -168,10 +166,10 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(2, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws DMLException {
+    public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws ModificationException {
         //Updates a gui display name
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("UPDATE guis SET display_name=?, raw_display_name=? WHERE id=?");
@@ -180,10 +178,10 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(3, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void updateGuiOwner(int guiId, String uuid) throws DMLException {
+    public void updateGuiOwner(int guiId, String uuid) throws ModificationException {
         //Changes the owner of the gui to another player
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("UPDATE guis SET owner_uuid=? WHERE id=?");
@@ -191,10 +189,10 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(2, guiId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws DMLException {
+    public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
         //Registers a new GUI in the database
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)");
@@ -204,10 +202,10 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setString(4, ownerUuid);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void insertPage(int guiId, int currentPage) throws DMLException {
+    public void insertPage(int guiId, int currentPage) throws ModificationException {
         //Inserts a page above the current page
         try(Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -227,20 +225,20 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(2, currentPage);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void deleteGuiById(int id) throws DMLException {
+    public void deleteGuiById(int id) throws ModificationException {
         //Deletes a gui by its id
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
-    public void deletePage(int guiId, int page) throws DMLException {
+    public void deletePage(int guiId, int page) throws ModificationException {
         //Deletes the given page from a gui. Deletes tickets and linkers too.
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -268,7 +266,7 @@ public class GuiAccessor extends DatabaseAccessor {
             statement.setInt(2, page);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
 }

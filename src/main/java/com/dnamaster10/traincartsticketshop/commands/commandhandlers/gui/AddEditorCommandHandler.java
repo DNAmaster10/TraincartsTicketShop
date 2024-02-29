@@ -2,11 +2,11 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop editor add <player_name> <gui_name>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
-    private GuiEditorsAccessor editorsAccessor;
+    private MariaDBGuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -45,8 +45,8 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws DQLException, DMLException {
-        GuiAccessor guiAccessor = new GuiAccessor();
+    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException, ModificationException {
+        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
 
         //Get the gui ID and check that the gui exists
         guiId = guiAccessor.getGuiIdByName(args[3]);
@@ -76,7 +76,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        editorsAccessor = new GuiEditorsAccessor();
+        editorsAccessor = new MariaDBGuiEditorsAccessor();
         //Check that the player isn't already an editor
         if (editorsAccessor.checkGuiEditorByUuid(guiId, playerDatabaseObject.uuid())) {
             returnError(sender, "Player \"" + playerDatabaseObject.username() + "\" is already an editor of that gui");
@@ -86,7 +86,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws DQLException, DMLException {
+    protected void execute(CommandSender sender, String[] args) throws QueryException, ModificationException {
         editorsAccessor.addGuiEditor(guiId, playerDatabaseObject.uuid());
         sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.username() + "\" was registered as an editor for gui \"" + args[3] + "\"");
     }

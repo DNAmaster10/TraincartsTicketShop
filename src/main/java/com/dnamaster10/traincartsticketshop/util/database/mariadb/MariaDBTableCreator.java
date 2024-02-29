@@ -1,20 +1,20 @@
-package com.dnamaster10.traincartsticketshop.util.database;
+package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TableCreator extends DatabaseAccessor {
+public class MariaDBTableCreator extends MariaDBDatabaseAccessor {
 
 
-    public TableCreator() throws DQLException {
+    public MariaDBTableCreator() throws QueryException {
         super();
     }
 
-    public void createTables() throws DMLException {
+    public void createTables() throws ModificationException {
         //TODO Need to define an index for display names
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
@@ -93,7 +93,7 @@ public class TableCreator extends DatabaseAccessor {
             statement.execute();
 
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
 }

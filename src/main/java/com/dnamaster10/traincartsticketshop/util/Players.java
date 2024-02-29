@@ -1,17 +1,17 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
-import com.dnamaster10.traincartsticketshop.util.database.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBPlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
 public class Players {
     //Contains utility methods for players
-    public static PlayerDatabaseObject getPlayerByUsername(String username) throws DQLException, DMLException {
+    public static PlayerDatabaseObject getPlayerByUsername(String username) throws QueryException, ModificationException {
         //Takes in a username, and returns either null if the player doesn't exist
         //Or returns the corrected player username.
         //First checks online players, then the database, and then the Mojang api as a final fallback
@@ -29,7 +29,7 @@ public class Players {
         }
 
         //Check if the player exists in the database
-        PlayerAccessor playerAccessor = new PlayerAccessor();
+        MariaDBPlayerAccessor playerAccessor = new MariaDBPlayerAccessor();
         if (playerAccessor.checkPlayerByUsername(username)) {
             return playerAccessor.getPlayerByUsername(username);
         }

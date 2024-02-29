@@ -1,19 +1,20 @@
-package com.dnamaster10.traincartsticketshop.util.database;
+package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DMLException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PlayerAccessor extends DatabaseAccessor{
-    public PlayerAccessor() throws DQLException {
+public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements PlayerAccessor {
+    public MariaDBPlayerAccessor() throws QueryException {
         super();
     }
-    public boolean checkPlayerByUsername(String username) throws DQLException {
+    public boolean checkPlayerByUsername(String username) throws QueryException {
         //Returns true if a player with the given username exists in database. Case-insensitive
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE username=?");
@@ -25,10 +26,10 @@ public class PlayerAccessor extends DatabaseAccessor{
             }
             return total > 0;
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public PlayerDatabaseObject getPlayerByUsername(String name) throws DQLException {
+    public PlayerDatabaseObject getPlayerByUsername(String name) throws QueryException {
         //Returns player database object from username. Case-insensitive
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players WHERE username=? ORDER BY last_join DESC LIMIT 1");
@@ -45,10 +46,10 @@ public class PlayerAccessor extends DatabaseAccessor{
             }
             return new PlayerDatabaseObject(username, uuid);
         } catch (SQLException e) {
-            throw new DQLException(e);
+            throw new QueryException(e);
         }
     }
-    public void updatePlayer(String name, String uuid) throws DMLException {
+    public void updatePlayer(String name, String uuid) throws ModificationException {
         //Updates or inserts a player into the players table.
         //The last_join column is used in the event that a player changes their username.
         //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most
@@ -66,7 +67,7 @@ public class PlayerAccessor extends DatabaseAccessor{
             statement.setLong(3, System.currentTimeMillis());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DMLException(e);
+            throw new ModificationException(e);
         }
     }
 }

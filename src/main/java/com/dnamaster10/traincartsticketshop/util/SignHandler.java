@@ -1,8 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
-import com.dnamaster10.traincartsticketshop.util.database.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.exceptions.DQLException;
+import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -84,7 +84,7 @@ public class SignHandler {
         //Handle sign click async from here. True will be returned beforehand to cancel the sign edit event.
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                GuiAccessor guiAccessor = new GuiAccessor();
+                MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
                 if (!guiAccessor.checkGuiByName(guiName)) {
                     event.getPlayer().sendMessage(ChatColor.RED + "No gui with name \"" + guiName + "\" exists");
                     return;
@@ -114,7 +114,7 @@ public class SignHandler {
                 //Open the gui
                 shopGui.open();
 
-            } catch (DQLException e) {
+            } catch (QueryException e) {
                 getPlugin().handleSqlException(event.getPlayer(), e);
             }
         });
