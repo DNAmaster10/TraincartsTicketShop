@@ -28,7 +28,7 @@ public class SignHandler {
         }
         SignSide side1 = sign.getSide(Side.FRONT);
         SignSide side2 = sign.getSide(Side.BACK);
-        return side1.getLine(1).contains(signIdentifier) || side2.getLine(1).contains(signIdentifier);
+        return ChatColor.stripColor(side1.getLine(1)).contains(signIdentifier) || ChatColor.stripColor(side2.getLine(1)).contains(signIdentifier);
     }
     Side getSignSide(Sign sign) {
         //This method will be replaced in the future with a built-in method from Spigot.
@@ -39,14 +39,14 @@ public class SignHandler {
         if (signIdentifier == null || signIdentifier.isBlank()) {
             return null;
         }
-        if (sign.getSide(Side.FRONT).getLine(1).contains(signIdentifier)) {
+        if (ChatColor.stripColor(sign.getSide(Side.FRONT).getLine(1)).contains(signIdentifier)) {
             return Side.FRONT;
         }
         return Side.BACK;
     }
     int getPage(SignSide side) {
         //Defaults to page 0 if none is specified
-        String[] args = side.getLine(1).split(" ");
+        String[] args = ChatColor.stripColor(side.getLine(1)).split(" ");
         if (args.length > 1) {
             if (Utilities.isInt(args[1])) {
                 //Page must be reduced by one to convert from a regular number to an index
