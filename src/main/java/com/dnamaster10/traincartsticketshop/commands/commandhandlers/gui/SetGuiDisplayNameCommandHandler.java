@@ -1,6 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -14,7 +16,7 @@ public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui setdisplayname <gui name> <gui display name>
     private String rawDisplayName;
     private String colouredDisplayName;
-    private MariaDBGuiAccessor guiAccessor;
+    private GuiAccessor guiAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -63,7 +65,7 @@ public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = new MariaDBGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui id and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);

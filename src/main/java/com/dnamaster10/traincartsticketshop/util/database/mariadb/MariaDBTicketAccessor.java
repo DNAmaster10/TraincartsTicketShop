@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MariaDBTicketAccessor extends MariaDBDatabaseAccessor implements TicketAccessor {
-    public MariaDBTicketAccessor() throws QueryException {
-        super();
-    }
+
     public TicketDatabaseObject[] getTickets(int guiId, int page) throws QueryException {
         //Returns an array of ticket database objects from the database
         try (Connection connection = getConnection()) {

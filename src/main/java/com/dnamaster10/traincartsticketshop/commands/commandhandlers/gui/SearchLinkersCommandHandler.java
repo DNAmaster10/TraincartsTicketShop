@@ -3,7 +3,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui searchLinkers <gui name> <search term>
     private String searchTerm;
-    private MariaDBGuiAccessor guiAccessor;
+    private GuiAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -60,7 +61,7 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         //Check gui exists
-        guiAccessor = new MariaDBGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(player, args[2]);
             return false;

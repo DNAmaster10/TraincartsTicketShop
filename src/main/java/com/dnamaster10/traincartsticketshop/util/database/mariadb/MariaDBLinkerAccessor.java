@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements LinkerAccessor {
-    public MariaDBLinkerAccessor() throws QueryException {
-        super();
-    }
 
     public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws QueryException {
         //Returns an array of linkers for a given gui ID and page number

@@ -3,7 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class ShopGui extends MultipagePurchasableGui {
     }
 
     public ShopGui(int guiId, int page, Player player) throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
         String displayName = guiAccessor.getDisplayNameById(guiId);
 
         setDisplayName(displayName);

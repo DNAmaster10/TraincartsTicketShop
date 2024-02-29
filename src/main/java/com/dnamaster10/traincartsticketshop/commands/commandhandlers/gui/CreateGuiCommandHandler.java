@@ -1,7 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
@@ -16,7 +17,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     //Used to store the display name since spaces can be entered here
     private String rawDisplayName;
     private String colouredDisplayName;
-    private MariaDBGuiAccessor guiAccessor;
+    private GuiAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -80,7 +81,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         String guiName = args[2];
-        guiAccessor = new MariaDBGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {

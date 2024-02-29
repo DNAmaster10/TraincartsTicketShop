@@ -2,8 +2,9 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ListEditorsCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor list <gui_name> <optional page number>
 
-    private MariaDBGuiEditorsAccessor editorsAccessor;
+    private GuiEditorsAccessor editorsAccessor;
     private Integer guiId;
     private Integer pageNumber;
     private Integer totalPages;
@@ -67,7 +68,7 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);
@@ -86,7 +87,7 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
             }
         }
 
-        editorsAccessor = new MariaDBGuiEditorsAccessor();
+        editorsAccessor = AccessorFactory.getGuiEditorsAccessor();
 
         //Check there are any editors
         int totalEditors = editorsAccessor.getTotalEditors(guiId);

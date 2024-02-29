@@ -3,9 +3,9 @@ package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -36,9 +36,9 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
     protected void confirmAction() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+                GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
                 guiAccessor.deletePage(deleteGuiId, deleteGuiPage);
-            } catch (QueryException | ModificationException e) {
+            } catch (ModificationException e) {
                 getPlugin().handleSqlException(getPlayer(), e);
             }
             //Go back to the previous gui

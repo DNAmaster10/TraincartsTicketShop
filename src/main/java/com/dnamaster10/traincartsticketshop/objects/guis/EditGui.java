@@ -6,9 +6,10 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
@@ -33,7 +34,7 @@ public class EditGui extends MultipageGui {
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
 
     public EditGui(int guiId, int page, Player player) throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
         setDisplayName("Editing: " + guiAccessor.getDisplayNameById(guiId));
         setGuiId(guiId);
         setPageNumber(page);
@@ -58,7 +59,7 @@ public class EditGui extends MultipageGui {
     }
 
     private Button[] getNewPage() throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
         setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
 
         PageBuilder pageBuilder = new PageBuilder();
@@ -176,10 +177,10 @@ public class EditGui extends MultipageGui {
             return;
         }
         try {
-            MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+            GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
             guiAccessor.insertPage(getGuiId(), getPageNumber());
             open();
-        } catch (QueryException | ModificationException e) {
+        } catch (ModificationException e) {
             getPlayer().sendMessage(ChatColor.RED + "Failed to insert page");
             closeInventory();
             getPlugin().handleSqlException(e);
@@ -202,12 +203,12 @@ public class EditGui extends MultipageGui {
             if (button instanceof Linker linker) linkers.add(linker.getAsDatabaseObject(slot));
         }
         try {
-            MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
-            MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
+            TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
+            LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
 
             ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), tickets);
             linkerAccessor.saveLinkerPage(getGuiId(), getPageNumber(), linkers);
-        } catch (QueryException | ModificationException e) {
+        } catch (ModificationException e) {
             getPlayer().sendMessage(ChatColor.RED + "An error occurred saving to the database");
             closeInventory();
             getPlugin().handleSqlException(e);

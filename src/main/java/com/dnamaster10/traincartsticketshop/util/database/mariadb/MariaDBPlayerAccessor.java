@@ -11,9 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements PlayerAccessor {
-    public MariaDBPlayerAccessor() throws QueryException {
-        super();
-    }
+
     public boolean checkPlayerByUsername(String username) throws QueryException {
         //Returns true if a player with the given username exists in database. Case-insensitive
         try (Connection connection = getConnection()) {

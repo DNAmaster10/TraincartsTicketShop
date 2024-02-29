@@ -2,7 +2,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -94,7 +95,7 @@ public abstract class Gui {
             //Get and check info from database
             ShopGui newGui;
             try {
-                MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+                GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
                     return;
                 }

@@ -5,8 +5,8 @@ import com.dnamaster10.traincartsticketshop.commands.TabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtil;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
-import com.dnamaster10.traincartsticketshop.util.database.DatabaseConfig;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTableCreator;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -52,16 +52,13 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         }
 
         //Configure database
-        DatabaseConfig.setUrl(plugin.getConfig().getString("database.host"), plugin.getConfig().getString("database.port"), plugin.getConfig().getString("database.database"));
-        DatabaseConfig.setUsername(plugin.getConfig().getString("database.user"));
-        DatabaseConfig.setPassword(plugin.getConfig().getString("database.password"));
 
         //Create tables in database
         try {
-            MariaDBTableCreator tableCreator = new MariaDBTableCreator();
+            TableCreator tableCreator = AccessorFactory.getTableCreator();
             tableCreator.createTables();
         }
-        catch (QueryException | ModificationException e) {
+        catch (ModificationException e) {
             //Disable plugin if failed
             plugin.handleSqlException(e);
         }

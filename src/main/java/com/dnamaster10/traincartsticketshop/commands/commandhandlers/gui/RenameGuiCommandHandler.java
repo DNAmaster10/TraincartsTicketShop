@@ -1,7 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
-    private MariaDBGuiAccessor guiAccessor;
+    private GuiAccessor guiAccessor;
     private Integer guiId;
 
     @Override
@@ -56,7 +57,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = new MariaDBGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui ID and check that it exists
         guiId = guiAccessor.getGuiIdByName(args[2]);

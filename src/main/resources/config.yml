@@ -1,4 +1,6 @@
+#TODO May want to look into how to do this with multiple database types
 database:
+  type: mariadb
   host: localhost
   port: 3306
   database: dbname

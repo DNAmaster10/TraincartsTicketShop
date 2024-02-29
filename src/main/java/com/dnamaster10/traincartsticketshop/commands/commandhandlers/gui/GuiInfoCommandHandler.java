@@ -1,7 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -13,7 +14,7 @@ import net.md_5.bungee.api.chat.*;
 public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui checkInfo <gui name>
 
-    MariaDBGuiAccessor guiAccessor;
+    GuiAccessor guiAccessor;
     Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -44,7 +45,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = new MariaDBGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         guiId = guiAccessor.getGuiIdByName(args[2]);
         if (guiId == null) {

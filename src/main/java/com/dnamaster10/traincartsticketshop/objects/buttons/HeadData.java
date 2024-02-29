@@ -11,27 +11,23 @@ import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.HEAD_TYPE;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.*;
 
 public class HeadData {
     public enum HeadType {
-        GREEN_CHECK("https://textures.minecraft.net/texture/4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4"),
         RED_CROSS("https://textures.minecraft.net/texture/beb588b21a6f98ad1ff4e085c552dcb050efc9cab427f46048f18fc803475f7"),
         GRAY_BACK_ARROW("https://textures.minecraft.net/texture/1b701c1f05e319d6b28f61b28b66a7e2a846a510de322bdc96e94a2388b78469"),
         GREEN_PLUS("https://textures.minecraft.net/texture/5ff31431d64587ff6ef98c0675810681f8c13bf96f51d9cb07ed7852b2ffd1"),
         CHAT_ARROW_RIGHT("https://textures.minecraft.net/texture/8399e5da82ef7765fd5e472f3147ed118d981887730ea7bb80d7a1bed98d5ba"),
         CHAT_ARROW_LEFT("https://textures.minecraft.net/texture/76ebaa41d1d405eb6b60845bb9ac724af70e85eac8a96a5544b9e23ad6c96c62");
         public final String url;
-        private HeadType(String url) {
+        HeadType(String url) {
             this.url = url;
         }
     }
-    private static final String urlPrefix = "https://textures.minecraft.net/texture/";
     private static final UUID RANDOM_UUID = UUID.fromString("68f92a5b-8980-4e0c-a479-89e41ce1ada6");
     private static PlayerProfile getProfile(HeadType type) {
         PlayerProfile profile = Bukkit.createPlayerProfile(RANDOM_UUID);

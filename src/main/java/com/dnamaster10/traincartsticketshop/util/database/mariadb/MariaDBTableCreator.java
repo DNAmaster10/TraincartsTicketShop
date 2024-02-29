@@ -1,18 +1,13 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class MariaDBTableCreator extends MariaDBDatabaseAccessor {
-
-
-    public MariaDBTableCreator() throws QueryException {
-        super();
-    }
+public class MariaDBTableCreator extends MariaDBDatabaseAccessor implements TableCreator {
 
     public void createTables() throws ModificationException {
         //TODO Need to define an index for display names

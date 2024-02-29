@@ -8,8 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class GuiManager {
     //Holds all current sessions bound to a specific player
     private final HashMap<Player, Session> sessions = new HashMap<>();

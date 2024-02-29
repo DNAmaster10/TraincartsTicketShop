@@ -3,8 +3,9 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
@@ -15,8 +16,8 @@ public class LinkerSearchGui extends MultipagePurchasableGui {
     private final int totalSearchResults;
 
     public LinkerSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
-        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
 
         this.searchGuiId = searchGuiId;
         this.searchTerm = searchTerm;
@@ -29,7 +30,7 @@ public class LinkerSearchGui extends MultipagePurchasableGui {
 
     @Override
     protected Button[] getNewPage() throws QueryException {
-        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
+        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
         PageBuilder pageBuilder = new PageBuilder();
 
         LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(searchGuiId, getPageNumber() * 45, searchTerm);

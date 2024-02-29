@@ -3,14 +3,11 @@ package com.dnamaster10.traincartsticketshop.objects.buttons;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class Linker extends Button {

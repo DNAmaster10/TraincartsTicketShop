@@ -1,7 +1,8 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -56,7 +57,7 @@ public class SearchSelectGui extends Gui {
     }
     private String getGuiName() throws QueryException {
         //Returns the name of the gui which is being searched from the id
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
         return guiAccessor.getGuiNameById(searchGuiId);
     }
     private void guiDeletedOrMoved() {

@@ -2,8 +2,9 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -85,13 +86,13 @@ public class PageBuilder {
     }
     public void addTicketsFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches tickets from database and adds their buttons to the gui
-        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
+        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
         addTickets(ticketDatabaseObjects);
     }
     public void addLinkersFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches linkers from the database and adds their buttons to the gui
-        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
+        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
         LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
         addLinkers(linkerDatabaseObjects);
     }

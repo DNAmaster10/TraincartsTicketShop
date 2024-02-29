@@ -1,7 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBPlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -29,7 +30,7 @@ public class Players {
         }
 
         //Check if the player exists in the database
-        MariaDBPlayerAccessor playerAccessor = new MariaDBPlayerAccessor();
+        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
         if (playerAccessor.checkPlayerByUsername(username)) {
             return playerAccessor.getPlayerByUsername(username);
         }

@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MariaDBGuiEditorsAccessor extends MariaDBDatabaseAccessor implements GuiEditorsAccessor {
-    public MariaDBGuiEditorsAccessor() throws QueryException {
-        super();
-    }
 
     public boolean checkGuiEditorByUuid(int guiId, String uuid) throws QueryException {
         //Returns true if uuid appears in gui edit list for the given gui id
