@@ -1,16 +1,16 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
-import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
+import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -64,7 +64,7 @@ public class EditGui extends MultipageGui {
 
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
-        pageBuilder.addLinkersFromDatabase(getGuiId(), getPageNumber());
+        pageBuilder.addLinksFromDatabase(getGuiId(), getPageNumber());
 
         if (getPageNumber() > 0) pageBuilder.addPrevPageButton();
         if (getPageNumber() + 1 < getMaxPages()) pageBuilder.addNextPageButton();
@@ -195,19 +195,19 @@ public class EditGui extends MultipageGui {
     private void savePageToDatabase(Button[] page) {
         //TODO possible optimization to check if any changes were made before saving?
         List<TicketDatabaseObject> tickets = new ArrayList<>();
-        List<LinkerDatabaseObject> linkers = new ArrayList<>();
+        List<LinkDatabaseObject> links = new ArrayList<>();
 
         for (int slot = 0; slot < page.length - 9; slot++) {
             Button button = page[slot];
             if (button instanceof Ticket ticket) tickets.add(ticket.getAsDatabaseObject(slot));
-            if (button instanceof Linker linker) linkers.add(linker.getAsDatabaseObject(slot));
+            if (button instanceof Link link) links.add(link.getAsDatabaseObject(slot));
         }
         try {
             TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
-            LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
+            LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
 
             ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), tickets);
-            linkerAccessor.saveLinkerPage(getGuiId(), getPageNumber(), linkers);
+            linkAccessor.saveLinkPage(getGuiId(), getPageNumber(), links);
         } catch (ModificationException e) {
             getPlayer().sendMessage(ChatColor.RED + "An error occurred saving to the database");
             closeInventory();

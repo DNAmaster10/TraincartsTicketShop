@@ -52,7 +52,7 @@ public class MariaDBTableCreator extends MariaDBDatabaseAccessor implements Tabl
             statement.execute();
 
             statement = connection.prepareStatement("""
-                    CREATE TABLE IF NOT EXISTS linkers (
+                    CREATE TABLE IF NOT EXISTS links (
                         id int AUTO_INCREMENT PRIMARY KEY,
                         gui_id int,
                         page int,

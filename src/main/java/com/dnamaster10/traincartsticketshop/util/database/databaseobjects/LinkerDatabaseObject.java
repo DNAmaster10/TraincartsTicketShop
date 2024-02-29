@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database.databaseobjects;
 
-public record LinkerDatabaseObject (
+public record LinkDatabaseObject (
         int slot,
         int linkedGuiId,
         int linkedGuiPage,

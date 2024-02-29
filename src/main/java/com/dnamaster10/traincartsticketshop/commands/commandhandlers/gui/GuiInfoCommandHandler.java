@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
@@ -64,10 +64,10 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
         int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
 
         TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
-        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
+        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
 
         int totalTickets = ticketAccessor.getTotalTickets(guiId);
-        int totalLinkers = linkerAccessor.getTotalLinkers(guiId);
+        int totalLinks = linkAccessor.getTotalLinks(guiId);
 
         //Send info to player
         TextComponent line;
@@ -80,7 +80,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
         sender.spigot().sendMessage(line);
         line = new TextComponent(ChatColor.WHITE + "| Tickets: " + totalTickets);
         sender.spigot().sendMessage(line);
-        line = new TextComponent(ChatColor.WHITE + "| Linkers: " + totalLinkers);
+        line = new TextComponent(ChatColor.WHITE + "| Links: " + totalLinks);
         sender.spigot().sendMessage(line);
     }
 }

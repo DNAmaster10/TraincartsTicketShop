@@ -14,7 +14,7 @@ public class ShopGui extends MultipagePurchasableGui {
     protected Button[] getNewPage() throws QueryException {
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
-        pageBuilder.addLinkersFromDatabase(getGuiId(), getPageNumber());
+        pageBuilder.addLinksFromDatabase(getGuiId(), getPageNumber());
 
         if (getTotalPages() > getPageNumber()) pageBuilder.addNextPageButton();
         if (getPageNumber() > 0) pageBuilder.addPrevPageButton();

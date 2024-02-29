@@ -19,7 +19,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
         ARGS1.add("open");
         ARGS1.add("removeEditor");
         ARGS1.add("rename");
-        ARGS1.add("searchLinkers");
+        ARGS1.add("searchLinks");
         ARGS1.add("searchTickets");
         ARGS1.add("setDisplayName");
         ARGS1.add("transfer");

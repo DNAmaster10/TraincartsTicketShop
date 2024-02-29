@@ -1,7 +1,7 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.link;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
+import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.StringJoiner;
 
-public class LinkerCreateCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop linker create <linked_gui_name> <display_name>
+public class LinkCreateCommandHandler extends AsyncCommandHandler {
+    //Example command: /tshop link create <linked_gui_name> <display_name>
     private String colouredDisplayName;
     private Player player;
     private Integer guiId;
@@ -26,13 +26,13 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.linker.create")) {
+        if (!player.hasPermission("traincartsticketshop.link.create")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop linker create <linked_gui_name> <display_name>");
+            returnMissingArgumentsError(player, "/tshop link create <linked_gui_name> <display_name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
@@ -48,11 +48,11 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
         String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
-            returnError(player, "Linker display names cannot be more than 25 characters in length");
+            returnError(player, "Link display names cannot be more than 25 characters in length");
             return false;
         }
         if (rawDisplayName.isBlank()) {
-            returnError(player, "Linker display names cannot be less than 1 character in length");
+            returnError(player, "Link display names cannot be less than 1 character in length");
             return false;
         }
         if (colouredDisplayName.length() > 100) {
@@ -79,13 +79,13 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
-        //Create the linker
-        Linker linker = new Linker(guiId, 0, colouredDisplayName);
+        //Create the link
+        Link link = new Link(guiId, 0, colouredDisplayName);
 
-        //Give the linker to the player
-        ItemStack item = linker.getItemStack();
+        //Give the link to the player
+        ItemStack item = link.getItemStack();
         player.getInventory().addItem(item);
 
-        player.sendMessage(ChatColor.GREEN + "Linker created");
+        player.sendMessage(ChatColor.GREEN + "Link created");
     }
 }

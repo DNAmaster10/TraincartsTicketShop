@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkerSearchGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.LinkSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
@@ -13,8 +13,8 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class SearchLinkersCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui searchLinkers <gui name> <search term>
+public class SearchLinksCommandHandler extends AsyncCommandHandler {
+    //Example command: /traincartsticketshop gui searchLinks <gui name> <search term>
     private String searchTerm;
     private GuiAccessor guiAccessor;
     private Player player;
@@ -27,14 +27,14 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.gui.search.linkers")) {
+        if (!player.hasPermission("traincartsticketshop.gui.search.links")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop gui searchLinkers <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchLinks <gui name> <search term>");
             return false;
         }
         //Check gui name
@@ -75,7 +75,7 @@ public class SearchLinkersCommandHandler extends AsyncCommandHandler {
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the search gui
-        LinkerSearchGui gui = new LinkerSearchGui(searchGuiId, searchTerm, 0, player);
+        LinkSearchGui gui = new LinkSearchGui(searchGuiId, searchTerm, 0, player);
 
         //Open a new session
         Session session = getPlugin().getGuiManager().getNewSession(player);

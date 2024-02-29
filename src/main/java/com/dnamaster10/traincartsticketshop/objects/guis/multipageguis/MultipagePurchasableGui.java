@@ -56,7 +56,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
             }
             case "prev_page" -> prevPage();
             case "next_page" -> nextPage();
-            case "linker" -> link(clickedItem);
+            case "link" -> link(clickedItem);
             case "back" -> back();
             case "search" -> search();
         }

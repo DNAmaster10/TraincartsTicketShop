@@ -3,9 +3,9 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
@@ -22,7 +22,7 @@ public class PageBuilder {
         return this.page;
     }
     private boolean checkButtonDisplayName(ItemStack item) {
-        //Returns false if display name of item is too long or too short. Should be used for tickets and linkers.
+        //Returns false if display name of item is too long or too short. Should be used for tickets and links.
         if (!item.hasItemMeta()) {
             return false;
         }
@@ -74,14 +74,14 @@ public class PageBuilder {
             page[ticketDatabaseObject.slot()] = ticket;
         }
     }
-    public void addLinkers(LinkerDatabaseObject[] linkers) {
-        for (LinkerDatabaseObject linkerDatabaseObject : linkers) {
-            if (linkerDatabaseObject == null) {
+    public void addLinks(LinkDatabaseObject[] links) {
+        for (LinkDatabaseObject linkDatabaseObject : links) {
+            if (linkDatabaseObject == null) {
                 continue;
             }
             //Create the ticket
-            Linker linker = new Linker(linkerDatabaseObject.linkedGuiId(), linkerDatabaseObject.linkedGuiPage(), linkerDatabaseObject.colouredDisplayName());
-            page[linkerDatabaseObject.slot()] = linker;
+            Link link = new Link(linkDatabaseObject.linkedGuiId(), linkDatabaseObject.linkedGuiPage(), linkDatabaseObject.colouredDisplayName());
+            page[linkDatabaseObject.slot()] = link;
         }
     }
     public void addTicketsFromDatabase(int guiId, int pageNumber) throws QueryException {
@@ -90,11 +90,11 @@ public class PageBuilder {
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
         addTickets(ticketDatabaseObjects);
     }
-    public void addLinkersFromDatabase(int guiId, int pageNumber) throws QueryException {
-        //Fetches linkers from the database and adds their buttons to the gui
-        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
-        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.getLinkersByGuiId(guiId, pageNumber);
-        addLinkers(linkerDatabaseObjects);
+    public void addLinksFromDatabase(int guiId, int pageNumber) throws QueryException {
+        //Fetches links from the database and adds their buttons to the gui
+        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
+        LinkDatabaseObject[] linkDatabaseObjects = linkAccessor.getLinksByGuiId(guiId, pageNumber);
+        addLinks(linkDatabaseObjects);
     }
     public void addButton(int slot, Button button) {
         page[slot] = button;

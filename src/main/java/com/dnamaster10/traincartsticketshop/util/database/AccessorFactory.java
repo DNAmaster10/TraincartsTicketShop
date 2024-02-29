@@ -50,10 +50,10 @@ public class AccessorFactory {
         throw new IllegalArgumentException("Database type \"" + databaseType + "\" is not supported");
     }
 
-    public static LinkerAccessor getLinkerAccessor() {
+    public static LinkAccessor getLinkAccessor() {
         switch (databaseType) {
             case "mariadb" -> {
-                return new MariaDBLinkerAccessor();
+                return new MariaDBLinkAccessor();
             }
         }
         throw new IllegalArgumentException("Database type \"" + databaseType + "\" is not supported");

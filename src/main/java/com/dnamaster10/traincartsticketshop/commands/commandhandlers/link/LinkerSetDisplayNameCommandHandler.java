@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.link;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import org.bukkit.ChatColor;
@@ -11,11 +11,11 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
-public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
-    //Example command: /tshop linker setDisplayName <display name>
+public class LinkSetDisplayNameCommandHandler extends SyncCommandHandler {
+    //Example command: /tshop link setDisplayName <display name>
 
     private String colouredDisplayName;
-    private ItemStack linker;
+    private ItemStack link;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -26,14 +26,14 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.linker.rename")) {
+        if (!player.hasPermission("traincartsticketshop.link.rename")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(player, "/tshop linker setDisplayName <display name>");
+            returnMissingArgumentsError(player, "/tshop link setDisplayName <display name>");
             return false;
         }
 
@@ -46,11 +46,11 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
         String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {
-            returnError(player, "Linker names cannot be more than 25 characters in length");
+            returnError(player, "Link names cannot be more than 25 characters in length");
             return false;
         }
         if (rawDisplayName.isBlank()) {
-            returnError(player, "Linker names cannot be less than 1 character in length");
+            returnError(player, "Link names cannot be less than 1 character in length");
             return false;
         }
         if (colouredDisplayName.length() > 100) {
@@ -58,11 +58,11 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
             return false;
         }
 
-        //Check that player is holding a linker
-        linker = player.getInventory().getItemInMainHand();
-        String buttonType = getButtonType(linker);
-        if (buttonType == null || !buttonType.equals("linker")) {
-            returnWrongItemError(player, "linker");
+        //Check that player is holding a link
+        link = player.getInventory().getItemInMainHand();
+        String buttonType = getButtonType(link);
+        if (buttonType == null || !buttonType.equals("link")) {
+            returnWrongItemError(player, "link");
             return false;
         }
         return true;
@@ -70,12 +70,12 @@ public class LinkerSetDisplayNameCommandHandler extends SyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) {
         //Get the item meta
-        ItemMeta meta = linker.getItemMeta();
+        ItemMeta meta = link.getItemMeta();
         assert meta != null;
 
         //Set the data
         meta.setDisplayName(colouredDisplayName);
-        linker.setItemMeta(meta);
-        player.sendMessage(ChatColor.GREEN + "Held linker was renamed to \"" + colouredDisplayName + "\"");
+        link.setItemMeta(meta);
+        player.sendMessage(ChatColor.GREEN + "Held link was renamed to \"" + colouredDisplayName + "\"");
     }
 }

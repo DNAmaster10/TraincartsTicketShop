@@ -24,8 +24,8 @@ Create a sign with this format:
 
 Right click on it to open the shop GUI.
 
-## Linkers
-Linkers are a powerful tool which allows players to "link" multiple guis together.
+## Links
+Links are a powerful tool which allows players to "link" multiple guis together.
 
 To get started, you must have at least two guis already created. For example, we may have run:
 - `/tshop gui create mainline Mainline Tickets`
@@ -33,33 +33,33 @@ To get started, you must have at least two guis already created. For example, we
 
 We may want to have it so that the gui `mainline` links to the second gui, `subline`.
 
-Firstly, we must create a new "linker". To do this, we can run:
-- `/tshop linker create <linked gui name> <display name>`
+Firstly, we must create a new "link". To do this, we can run:
+- `/tshop link create <linked gui name> <display name>`
 
 In our example, this would look something like:
-- `/tshop linker create subline Subline Tickets`
+- `/tshop link create subline Subline Tickets`
 
-This should give us a linker item which looks something like this:
+This should give us a link item which looks something like this:
 
 ![image](https://github.com/DNAmaster10/TraincartsTicketShop/assets/44494235/92f18aec-fd6f-446b-8475-ee71d26646e3)
 
-With this new linker, we can run:
+With this new link, we can run:
 - `/tshop gui edit mainline`
   
-and drag and drop the linker item anywhere within the `mainline` gui, even amongst other tickets.
+and drag and drop the link item anywhere within the `mainline` gui, even amongst other tickets.
 
 ![image(1)](https://github.com/DNAmaster10/TraincartsTicketShop/assets/44494235/ad39b4f3-5caa-436d-a124-69a82d72a48a)
 
-Now, when a player opens the `mainline` gui, they will be able to click the linker item. This will redirect them to the `subline` gui.
+Now, when a player opens the `mainline` gui, they will be able to click the link item. This will redirect them to the `subline` gui.
 
 ![Untitled-2024-01-25-2133](https://github.com/DNAmaster10/TraincartsTicketShop/assets/44494235/bea04e28-cb23-4448-9102-7a74238354cd)
 
-It's also possible to set the destination page that a linker item will link to.
+It's also possible to set the destination page that a link item will link to.
 
 For example:
-- `/tshop linker setDestinationPage 10`
+- `/tshop link setDestinationPage 10`
   
-will make it so that when the linker is clicked, it will try to redirect the player to page 10 of the destination gui.
+will make it so that when the link is clicked, it will try to redirect the player to page 10 of the destination gui.
 
 
 

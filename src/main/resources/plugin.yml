@@ -37,8 +37,8 @@ permissions:
   traincartsticketshop.gui.search.tickets:
     description: Allows a player to search tickets
     default: false
-  traincartsticketshop.gui.search.linkers:
-    description: Allows a player to search linkers
+  traincartsticketshop.gui.search.links:
+    description: Allows a player to search links
     default: false
   traincartsticketshop.gui.setdisplayname:
     description: Allows a gui display name to be changed
@@ -88,14 +88,14 @@ permissions:
     description: Allows a player to set the purchase message for a ticket
     default: false
 
-  traincartsticketshop.linker.create:
-    description: Allows player to create gui linker item
+  traincartsticketshop.link.create:
+    description: Allows player to create gui link item
     default: false
-  traincartsticketshop.linker.setdisplayname:
-    description: Allows player to rename a linker item
+  traincartsticketshop.link.setdisplayname:
+    description: Allows player to rename a link item
     default: false
-  traincartsticketshop.linker.setdestinationpage:
-    description: Allows a player to set a destination page for a linker
+  traincartsticketshop.link.setdestinationpage:
+    description: Allows a player to set a destination page for a link
     default: false
 
 commands:

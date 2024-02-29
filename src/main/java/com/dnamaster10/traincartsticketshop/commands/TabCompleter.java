@@ -16,7 +16,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         ARGS0 = new ArrayList<>();
         ARGS0.add("gui");
         ARGS0.add("ticket");
-        ARGS0.add("linker");
+        ARGS0.add("link");
     }
     @Nullable
     @Override
@@ -34,8 +34,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             case "ticket" -> {
                 return new TicketTabCompleter().onTabComplete(commandSender, args);
             }
-            case "linker" -> {
-                return new LinkerTabCompleter().onTabComplete(commandSender, args);
+            case "link" -> {
+                return new LinkTabCompleter().onTabComplete(commandSender, args);
             }
         }
         return null;

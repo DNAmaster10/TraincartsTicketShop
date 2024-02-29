@@ -53,7 +53,7 @@ public class ButtonUtils {
                 if (purchaseMessage == null || purchaseMessage.isBlank()) purchaseMessage = "";
                 return new Ticket(tcTicketName, displayName, purchaseMessage);
             }
-            case "linker" -> {
+            case "link" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
                 if (!dataContainer.has(DEST_GUI_ID, PersistentDataType.INTEGER)) {
                     return null;
@@ -66,7 +66,7 @@ public class ButtonUtils {
                 if (linkedGuiPage == null) {
                     linkedGuiPage = 0;
                 }
-                return new Linker(linkedGuiId, linkedGuiPage, displayName);
+                return new Link(linkedGuiId, linkedGuiPage, displayName);
             }
             default -> {
                 //Item is a simple button, handle as such

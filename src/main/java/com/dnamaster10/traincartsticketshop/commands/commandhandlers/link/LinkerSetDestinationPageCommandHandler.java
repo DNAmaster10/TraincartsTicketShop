@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
+package com.dnamaster10.traincartsticketshop.commands.commandhandlers.link;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
@@ -13,10 +13,10 @@ import org.bukkit.persistence.PersistentDataType;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
-public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
-    //Example command: /traincartsticketshop linker setDestinationPage <destination page>
+public class LinkSetDestinationPageCommandHandler extends SyncCommandHandler {
+    //Example command: /traincartsticketshop link setDestinationPage <destination page>
     private Player player;
-    private ItemStack linker;
+    private ItemStack link;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check perms and that sender is a player
@@ -26,14 +26,14 @@ public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.linker.setdestinationpage")) {
+        if (!player.hasPermission("traincartsticketshop.link.setdestinationpage")) {
             returnInsufficientPermissionsError(player);
             return false;
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(player, "/tshop linker setDestinationPage <destination page>");
+            returnMissingArgumentsError(player, "/tshop link setDestinationPage <destination page>");
             return false;
         }
         if (args.length > 3) {
@@ -45,26 +45,26 @@ public class LinkerSetDestinationPageCommandHandler extends SyncCommandHandler {
             return false;
         }
 
-        //Check that player is holding a linker
-        linker = player.getInventory().getItemInMainHand();
-        String buttonType = getButtonType(linker);
-        if (buttonType == null || !buttonType.equals("linker")) {
-            returnWrongItemError(player, "linker");
+        //Check that player is holding a link
+        link = player.getInventory().getItemInMainHand();
+        String buttonType = getButtonType(link);
+        if (buttonType == null || !buttonType.equals("link")) {
+            returnWrongItemError(player, "link");
             return false;
         }
         return true;
     }
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        //Get the linker meta
-        ItemMeta meta = linker.getItemMeta();
+        //Get the link meta
+        ItemMeta meta = link.getItemMeta();
         assert meta != null;
 
         //Add the keys and data
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(DEST_GUI_PAGE, PersistentDataType.INTEGER, Integer.parseInt(args[2]) - 1);
-        linker.setItemMeta(meta);
+        link.setItemMeta(meta);
 
-        player.sendMessage(ChatColor.GREEN + "Linker page set");
+        player.sendMessage(ChatColor.GREEN + "Link page set");
     }
 }

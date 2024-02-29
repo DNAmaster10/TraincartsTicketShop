@@ -35,8 +35,8 @@ public class SearchSelectGui extends Gui {
         SimpleItemButton ticketSearchButton = new SimpleItemButton("search_tickets", Material.PAPER, "Search Tickets");
         pageBuilder.addButton(12, ticketSearchButton);
 
-        SimpleItemButton linkerSearchbutton = new SimpleItemButton("search_linkers", Material.ENCHANTED_BOOK, "Search Linkers");
-        pageBuilder.addButton(14, linkerSearchbutton);
+        SimpleItemButton linkSearchbutton = new SimpleItemButton("search_links", Material.ENCHANTED_BOOK, "Search Links");
+        pageBuilder.addButton(14, linkSearchbutton);
 
         setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
     }
@@ -51,7 +51,7 @@ public class SearchSelectGui extends Gui {
         getPlayer().setItemOnCursor(null);
         switch (buttonType) {
             case "search_tickets" -> searchTickets();
-            case "search_linkers" -> searchLinkers();
+            case "search_links" -> searchLinks();
             case "back" -> back();
         }
     }
@@ -92,7 +92,7 @@ public class SearchSelectGui extends Gui {
             removeCursorItemAndClose();
         });
     }
-    private void searchLinkers() {
+    private void searchLinks() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             String searchGuiName;
             try {
@@ -108,9 +108,9 @@ public class SearchSelectGui extends Gui {
             TextComponent message1;
             message1 = new TextComponent(ChatColor.AQUA + "|");
             message1.setBold(true);
-            TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search linkers<<<");
+            TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search links<<<");
             message2.setBold(true);
-            message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchLinkers " + searchGuiName +" "));
+            message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchLinks " + searchGuiName +" "));
 
             getPlayer().spigot().sendMessage(message1);
             getPlayer().spigot().sendMessage(message2);

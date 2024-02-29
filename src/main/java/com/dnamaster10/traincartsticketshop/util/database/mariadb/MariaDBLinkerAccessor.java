@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
@@ -12,29 +12,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements LinkerAccessor {
+public class MariaDBLinkAccessor extends MariaDBDatabaseAccessor implements LinkAccessor {
 
-    public LinkerDatabaseObject[] getLinkersByGuiId(int guiId, int page) throws QueryException {
-        //Returns an array of linkers for a given gui ID and page number
+    public LinkDatabaseObject[] getLinksByGuiId(int guiId, int page) throws QueryException {
+        //Returns an array of links for a given gui ID and page number
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_gui_id, linked_gui_page, display_name, raw_display_name FROM linkers WHERE gui_id=? AND page=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT slot, linked_gui_id, linked_gui_page, display_name, raw_display_name FROM links WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             ResultSet result = statement.executeQuery();
-            List<LinkerDatabaseObject> linkersList = new ArrayList<>();
+            List<LinkDatabaseObject> linksList = new ArrayList<>();
             while (result.next()) {
-                linkersList.add(new LinkerDatabaseObject(result.getInt("slot"), result.getInt("linked_gui_id"), result.getInt("linked_gui_page"), result.getString("display_name"), result.getString("raw_display_name")));
+                linksList.add(new LinkDatabaseObject(result.getInt("slot"), result.getInt("linked_gui_id"), result.getInt("linked_gui_page"), result.getString("display_name"), result.getString("raw_display_name")));
             }
-            return linkersList.toArray(LinkerDatabaseObject[]::new);
+            return linksList.toArray(LinkDatabaseObject[]::new);
         } catch (SQLException e) {
             throw new QueryException(e);
         }
     }
-    public LinkerDatabaseObject[] searchLinkers(int guiId, int offset, String searchTerm) throws QueryException {
+    public LinkDatabaseObject[] searchLinks(int guiId, int offset, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
                     SELECT linked_gui_id, linked_gui_page, display_name
-                    FROM linkers
+                    FROM links
                     WHERE gui_id=? AND raw_display_name LIKE ?
                     ORDER BY raw_display_name LIMIT 45 OFFSET ?
                     """);
@@ -42,20 +42,20 @@ public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements Li
             statement.setString(2, searchTerm + "%");
             statement.setInt(3, offset);
             ResultSet result = statement.executeQuery();
-            List<LinkerDatabaseObject> linkerList = new ArrayList<>();
+            List<LinkDatabaseObject> linkList = new ArrayList<>();
             int i = 0;
             while (result.next()) {
-                linkerList.add(new LinkerDatabaseObject(i, result.getInt("linked_gui_id"), result.getInt("linked_gui_page"), result.getString("display_name"), null));
+                linkList.add(new LinkDatabaseObject(i, result.getInt("linked_gui_id"), result.getInt("linked_gui_page"), result.getString("display_name"), null));
                 i++;
             }
-            return linkerList.toArray(LinkerDatabaseObject[]::new);
+            return linkList.toArray(LinkDatabaseObject[]::new);
         } catch (SQLException e) {
             throw new QueryException(e);
         }
     }
-    public int getTotalLinkers(int guiId) throws QueryException {
+    public int getTotalLinks(int guiId) throws QueryException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM links WHERE gui_id=?");
             statement.setInt(1, guiId);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -66,9 +66,9 @@ public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements Li
             throw new QueryException(e);
         }
     }
-    public int getTotalLinkerSearchResults(int guiId, String searchTerm) throws QueryException {
+    public int getTotalLinkSearchResults(int guiId, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM linkers WHERE gui_id=? AND raw_display_name LIKE ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM links WHERE gui_id=? AND raw_display_name LIKE ?");
             statement.setInt(1, guiId);
             statement.setString(2, searchTerm + "%");
             ResultSet result = statement.executeQuery();
@@ -80,21 +80,21 @@ public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements Li
             throw new QueryException(e);
         }
     }
-    public void saveLinkerPage(int guiId, int page, List<LinkerDatabaseObject> linkers) throws ModificationException {
+    public void saveLinkPage(int guiId, int page, List<LinkDatabaseObject> links) throws ModificationException {
         try (Connection connection = getConnection()) {
             //Delete non-existent slots
-            if (linkers.isEmpty()) {
-                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM linkers WHERE gui_id=? AND page=?");
+            if (links.isEmpty()) {
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM links WHERE gui_id=? AND page=?");
                 deleteStatement.setInt(1, guiId);
                 deleteStatement.setInt(2, page);
                 deleteStatement.executeUpdate();
                 return;
             }
-            String sql = "DELETE FROM linkers WHERE gui_id=? AND page=? AND slot NOT IN (";
+            String sql = "DELETE FROM links WHERE gui_id=? AND page=? AND slot NOT IN (";
             StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < linkers.size(); i++) {
+            for (int i = 0; i < links.size(); i++) {
                 placeholders.append("?");
-                if (i < linkers.size() - 1) {
+                if (i < links.size() - 1) {
                     placeholders.append(", ");
                 }
             }
@@ -103,14 +103,14 @@ public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements Li
             //Set values for placeholders
             deleteStatement.setInt(1, guiId);
             deleteStatement.setInt(2, page);
-            for (int i = 0; i < linkers.size(); i++) {
-                deleteStatement.setInt(i + 3, linkers.get(i).slot());
+            for (int i = 0; i < links.size(); i++) {
+                deleteStatement.setInt(i + 3, links.get(i).slot());
             }
             deleteStatement.execute();
 
             //Prepare update query
             PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO linkers (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
+                    INSERT INTO links (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
                         linked_gui_id=VALUES(linked_gui_id),
@@ -118,14 +118,14 @@ public class MariaDBLinkerAccessor extends MariaDBDatabaseAccessor implements Li
                         display_name=VALUES(display_name),
                         raw_display_name=VALUES(raw_display_name)
                     """);
-            for (LinkerDatabaseObject linker : linkers) {
+            for (LinkDatabaseObject link : links) {
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
-                statement.setInt(3, linker.slot());
-                statement.setInt(4, linker.linkedGuiId());
-                statement.setInt(5, linker.linkedGuiPage());
-                statement.setString(6, linker.colouredDisplayName());
-                statement.setString(7, linker.rawDisplayName());
+                statement.setInt(3, link.slot());
+                statement.setInt(4, link.linkedGuiId());
+                statement.setInt(5, link.linkedGuiPage());
+                statement.setString(6, link.colouredDisplayName());
+                statement.setString(7, link.rawDisplayName());
 
                 statement.addBatch();
             }

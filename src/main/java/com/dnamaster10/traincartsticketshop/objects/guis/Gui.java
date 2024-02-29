@@ -77,9 +77,9 @@ public abstract class Gui {
     protected Session getSession() {
         return getPlugin().getGuiManager().getSession(getPlayer());
     }
-    protected void link(ItemStack linker) {
+    protected void link(ItemStack link) {
         //Get button info
-        ItemMeta meta = linker.getItemMeta();
+        ItemMeta meta = link.getItemMeta();
         if (meta == null) {
             return;
         }
@@ -88,7 +88,7 @@ public abstract class Gui {
         Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
         Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
         if (linkedGuiId == null || linkedGuiPage == null) {
-            //This is not a valid linker
+            //This is not a valid link
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {

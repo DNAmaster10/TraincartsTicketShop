@@ -5,23 +5,23 @@ import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
 
-public class LinkerSearchGui extends MultipagePurchasableGui {
+public class LinkSearchGui extends MultipagePurchasableGui {
     private final int searchGuiId;
     private final String searchTerm;
     private final int totalSearchResults;
 
-    public LinkerSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws QueryException {
+    public LinkSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws QueryException {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
+        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
 
         this.searchGuiId = searchGuiId;
         this.searchTerm = searchTerm;
-        this.totalSearchResults = linkerAccessor.getTotalLinkerSearchResults(searchGuiId, searchTerm);
+        this.totalSearchResults = linkAccessor.getTotalLinkSearchResults(searchGuiId, searchTerm);
         setPageNumber(page);
         setPlayer(player);
         setDisplayName("Searching: " + guiAccessor.getDisplayNameById(searchGuiId));
@@ -30,11 +30,11 @@ public class LinkerSearchGui extends MultipagePurchasableGui {
 
     @Override
     protected Button[] getNewPage() throws QueryException {
-        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
+        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
         PageBuilder pageBuilder = new PageBuilder();
 
-        LinkerDatabaseObject[] linkerDatabaseObjects = linkerAccessor.searchLinkers(searchGuiId, getPageNumber() * 45, searchTerm);
-        pageBuilder.addLinkers(linkerDatabaseObjects);
+        LinkDatabaseObject[] linkDatabaseObjects = linkAccessor.searchLinks(searchGuiId, getPageNumber() * 45, searchTerm);
+        pageBuilder.addLinks(linkDatabaseObjects);
 
         if (Utilities.getPageCount(totalSearchResults, 45) > getPageNumber()) {
             pageBuilder.addNextPageButton();

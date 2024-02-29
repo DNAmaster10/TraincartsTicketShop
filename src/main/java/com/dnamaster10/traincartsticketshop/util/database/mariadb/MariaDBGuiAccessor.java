@@ -110,16 +110,16 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
                 maxPage = ticketsResult.getInt(1);
             }
 
-            //Check linkers
-            statement = connection.prepareStatement("SELECT MAX(page) FROM linkers WHERE gui_id=?");
+            //Check links
+            statement = connection.prepareStatement("SELECT MAX(page) FROM links WHERE gui_id=?");
             statement.setInt(1, guiId);
-            ResultSet linkersResult = statement.executeQuery();
-            int linkersPages = 0;
-            if (linkersResult.next()) {
-                linkersPages = linkersResult.getInt(1);
+            ResultSet linksResult = statement.executeQuery();
+            int linksPages = 0;
+            if (linksResult.next()) {
+                linksPages = linksResult.getInt(1);
             }
-            if (linkersPages > maxPage) {
-                maxPage = linkersPages;
+            if (linksPages > maxPage) {
+                maxPage = linksPages;
             }
 
             return maxPage;
@@ -221,8 +221,8 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             statement.setInt(2, currentPage);
             statement.executeUpdate();
 
-            //Increment linkers page
-            statement = connection.prepareStatement("UPDATE linkers SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
+            //Increment links page
+            statement = connection.prepareStatement("UPDATE links SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
@@ -241,7 +241,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         }
     }
     public void deletePage(int guiId, int page) throws ModificationException {
-        //Deletes the given page from a gui. Deletes tickets and linkers too.
+        //Deletes the given page from a gui. Deletes tickets and links too.
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
 
@@ -251,7 +251,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("DELETE FROM linkers WHERE gui_id=? AND page=?");
+            statement = connection.prepareStatement("DELETE FROM links WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
@@ -263,7 +263,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE linkers SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
+            statement = connection.prepareStatement("UPDATE links SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
