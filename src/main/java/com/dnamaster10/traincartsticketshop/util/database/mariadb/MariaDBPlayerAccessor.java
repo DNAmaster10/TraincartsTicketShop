@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements PlayerAccessor {
 
@@ -27,6 +29,21 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
             throw new QueryException(e);
         }
     }
+
+    public List<PlayerDatabaseObject> getAllPlayers() throws QueryException {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players");
+            ResultSet result = statement.executeQuery();
+            List<PlayerDatabaseObject> players = new ArrayList<>();
+            while (result.next()) {
+                players.add(new PlayerDatabaseObject(result.getString("username"), result.getString("uuid")));
+            }
+            return players;
+        } catch (SQLException e) {
+            throw new QueryException(e);
+        }
+    }
+
     public PlayerDatabaseObject getPlayerByUsername(String name) throws QueryException {
         //Returns player database object from username. Case-insensitive
         try (Connection connection = getConnection()) {

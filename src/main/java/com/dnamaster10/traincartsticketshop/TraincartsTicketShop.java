@@ -7,6 +7,7 @@ import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
+import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -62,6 +63,15 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
             //Disable plugin if failed
             plugin.handleSqlException(e);
         }
+
+        //Initialize database caches
+        try {
+            PlayerCache.initialize();
+        } catch (QueryException e) {
+            plugin.handleSqlException(e);
+            getPlugin().disable();
+        }
+
         //Register the "traincartsticketshop" command
         Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
 
