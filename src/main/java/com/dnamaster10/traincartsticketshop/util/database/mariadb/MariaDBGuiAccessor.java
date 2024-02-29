@@ -1,6 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
@@ -60,7 +62,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     public boolean playerCanEdit(int guiId, String uuid) throws QueryException {
         //Returns true if player is either an owner of a gui or a listed editor
         if (checkGuiOwnerByUuid(guiId, uuid)) return true;
-        MariaDBGuiEditorsAccessor guiEditorsAccessor = new MariaDBGuiEditorsAccessor();
+        GuiEditorsAccessor guiEditorsAccessor = AccessorFactory.getGuiEditorsAccessor();
         return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
     }
 

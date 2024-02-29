@@ -2,7 +2,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.linker;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Linker;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -64,7 +65,7 @@ public class LinkerCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        MariaDBGuiAccessor guiAccessor = new MariaDBGuiAccessor();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Check that the gui exists
         guiId = guiAccessor.getGuiIdByName(args[2]);
