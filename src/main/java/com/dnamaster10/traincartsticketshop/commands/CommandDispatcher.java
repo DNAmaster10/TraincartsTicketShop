@@ -37,7 +37,7 @@ public class CommandDispatcher implements CommandExecutor {
             case "gui" -> {
                 switch (args[1].toLowerCase()) {
                     case "addeditor" -> new AddEditorCommandHandler().handle(sender, args);
-                    case "checkguiinfo" -> new CheckGuiInfoCommandhandler().handle(sender, args);
+                    case "info" -> new GuiInfoCommandHandler().handle(sender, args);
                     case "create" -> new CreateGuiCommandHandler().handle(sender, args);
                     case "delete" -> new DeleteGuiCommandHandler().handle(sender, args);
                     case "edit" -> new EditGuiCommandHandler().handle(sender, args);

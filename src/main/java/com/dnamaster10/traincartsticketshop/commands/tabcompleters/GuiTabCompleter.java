@@ -11,7 +11,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("addEditor");
-        ARGS1.add("checkGuiInfo");
+        ARGS1.add("info");
         ARGS1.add("create");
         ARGS1.add("delete");
         ARGS1.add("edit");

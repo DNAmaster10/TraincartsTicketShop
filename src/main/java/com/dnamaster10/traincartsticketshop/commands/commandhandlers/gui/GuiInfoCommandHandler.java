@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.*;
 
-public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
+public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui checkInfo <gui name>
 
     GuiAccessor guiAccessor;
@@ -27,7 +27,7 @@ public class CheckGuiInfoCommandhandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(sender, "/tshop gui checkInfo <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui info <gui name>");
             return false;
         }
         if (args.length > 3) {
