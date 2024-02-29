@@ -3,8 +3,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBLinkerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBTicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -63,8 +63,8 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
         String owner = guiAccessor.getOwnerUsername(guiId);
         int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
 
-        MariaDBTicketAccessor ticketAccessor = new MariaDBTicketAccessor();
-        MariaDBLinkerAccessor linkerAccessor = new MariaDBLinkerAccessor();
+        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
+        LinkerAccessor linkerAccessor = AccessorFactory.getLinkerAccessor();
 
         int totalTickets = ticketAccessor.getTotalTickets(guiId);
         int totalLinkers = linkerAccessor.getTotalLinkers(guiId);
