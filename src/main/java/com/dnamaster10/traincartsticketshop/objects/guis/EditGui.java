@@ -110,6 +110,7 @@ public class EditGui extends MultipageGui {
             }
             pages.put(getPageNumber(), newPage);
             openPage(newPage);
+            wasClosed = true;
         });
     }
 
@@ -209,7 +210,6 @@ public class EditGui extends MultipageGui {
             ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), tickets);
             linkAccessor.saveLinkPage(getGuiId(), getPageNumber(), links);
         } catch (ModificationException e) {
-            getPlayer().sendMessage(ChatColor.RED + "An error occurred saving to the database");
             closeInventory();
             getPlugin().handleSqlException(e);
         }
