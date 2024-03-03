@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
+import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
@@ -48,6 +49,12 @@ public class PageBuilder {
 
             //Check if the item is a Traincartsticketshop button
             if (item == null) {
+                continue;
+            }
+            if (Traincarts.isTraincartsTicket(item)) {
+                //Convert the ticket to a ticket shop item
+                Ticket ticket = Traincarts.getAsTicketShopTicket(item);
+                page[i] = ticket;
                 continue;
             }
             String buttonType = getButtonType(item);
