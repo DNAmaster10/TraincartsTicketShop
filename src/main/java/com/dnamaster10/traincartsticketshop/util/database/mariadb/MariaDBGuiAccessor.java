@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
@@ -10,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAccessor {
 
@@ -66,6 +69,26 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
     }
 
+    public List<GuiDatabaseObject> getGuis() throws QueryException {
+        //Returns a list of all guis
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT id,name,display_name,owner_uuid, FROM guis");
+            ResultSet result = statement.executeQuery();
+            List<GuiDatabaseObject> guis = new ArrayList<>();
+            while (result.next()) {
+                GuiDatabaseObject gui = new GuiDatabaseObject(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("display_name"),
+                        result.getString("owner_uuid")
+                );
+                guis.add(gui);
+            }
+            return guis;
+        } catch (SQLException e) {
+            throw new QueryException(e);
+        }
+    }
     public Integer getGuiIdByName(String name) throws QueryException {
         //Returns gui id from name
         try (Connection connection = getConnection()) {

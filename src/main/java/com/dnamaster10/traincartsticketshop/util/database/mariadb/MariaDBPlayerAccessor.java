@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -44,26 +45,11 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
         }
     }
 
-    public PlayerDatabaseObject getPlayerByUsername(String name) throws QueryException {
+    public PlayerDatabaseObject getPlayerByUsername(String name) {
         //Returns player database object from username. Case-insensitive
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players WHERE username=? ORDER BY last_join DESC LIMIT 1");
-            statement.setString(1, name);
-            ResultSet result = statement.executeQuery();
-            String username = null;
-            String uuid = null;
-            while (result.next()) {
-                username = result.getString("username");
-                uuid = result.getString("uuid");
-            }
-            if (username == null || uuid == null) {
-                return null;
-            }
-            return new PlayerDatabaseObject(username, uuid);
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+        return PlayerCache.getPlayerByUsername(name);
     }
+
     public void updatePlayer(String name, String uuid) throws ModificationException {
         //Updates or inserts a player into the players table.
         //The last_join column is used in the event that a player changes their username.
@@ -81,6 +67,9 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
             statement.setString(2, uuid);
             statement.setLong(3, System.currentTimeMillis());
             statement.executeUpdate();
+
+            //Update database cache
+            PlayerCache.updatePlayer(new PlayerDatabaseObject(name, uuid));
         } catch (SQLException e) {
             throw new ModificationException(e);
         }

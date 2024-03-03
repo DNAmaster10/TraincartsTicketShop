@@ -1,7 +1,10 @@
 package com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces;
 
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+
+import java.util.List;
 
 public interface GuiAccessor {
     boolean checkGuiByName(String name) throws QueryException;
@@ -9,6 +12,7 @@ public interface GuiAccessor {
     boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException;
     boolean playerCanEdit(int guiId, String uuid) throws QueryException;
 
+    List<GuiDatabaseObject> getGuis() throws QueryException;
     Integer getGuiIdByName(String name) throws QueryException;
     String getGuiNameById(int id) throws QueryException;
     int getHighestPageNumber(int guiId) throws QueryException;

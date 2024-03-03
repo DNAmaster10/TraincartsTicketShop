@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.util;
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -18,9 +19,7 @@ public class Players {
         //First checks online players, then the database, and then the Mojang api as a final fallback
 
         //Check name length
-        if (username.length() < 3) {
-            return null;
-        }
+        if (username.length() < 3) return null;
 
         //Check online players
         for (Player p : TraincartsTicketShop.getPlugin().getServer().getOnlinePlayers()) {
@@ -29,11 +28,8 @@ public class Players {
             }
         }
 
-        //Check if the player exists in the database
-        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
-        if (playerAccessor.checkPlayerByUsername(username)) {
-            return playerAccessor.getPlayerByUsername(username);
-        }
+        //Check database cache
+        if (PlayerCache.checkPlayerByUsername(username)) return PlayerCache.getPlayerByUsername(username);
 
         //Finally, if the player has not been found in any of the above places, get them from the Mojang API
         //The Mojang API is limited to 600 requests per 10 minutes. As a result, if this is run too frequently, it will
@@ -44,6 +40,7 @@ public class Players {
             String[] playerInfo = apiAccessor.getPlayerFromUsername(username);
 
             //Register the player in the database to save future API requests
+            PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
             playerAccessor.updatePlayer(playerInfo[0], playerInfo[1]);
             return new PlayerDatabaseObject(playerInfo[0], playerInfo[1]);
         } catch (IOException e) {
