@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
+import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class MariaDBDatabaseAccessor {
+public class MariaDBDatabaseAccessor extends DatabaseAccessor {
     private static final HikariDataSource dataSource;
     static {
         String url = getPlugin().getConfig().getString("database.host");
@@ -28,6 +29,7 @@ public class MariaDBDatabaseAccessor {
 
         dataSource = new HikariDataSource(config);
     }
+
     public Connection getConnection() throws QueryException {
         //Returns a new connection to the database
         try {

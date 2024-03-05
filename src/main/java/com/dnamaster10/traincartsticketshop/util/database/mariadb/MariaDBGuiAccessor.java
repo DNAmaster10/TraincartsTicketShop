@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.caches.GuiCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -193,6 +194,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+        GuiCache.updateGuiName(guiId, newName);
     }
     public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws ModificationException {
         //Updates a gui display name
@@ -205,6 +207,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+        GuiCache.updateGuiDisplayName(guiId, colouredDisplayName);
     }
     public void updateGuiOwner(int guiId, String uuid) throws ModificationException {
         //Changes the owner of the gui to another player
@@ -216,6 +219,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+        GuiCache.updateGuiOwner(guiId, uuid);
     }
     public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
         //Registers a new GUI in the database
