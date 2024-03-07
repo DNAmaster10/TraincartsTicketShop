@@ -54,6 +54,10 @@ public class PageBuilder {
             if (Traincarts.isTraincartsTicket(item)) {
                 //Convert the ticket to a ticket shop item
                 Ticket ticket = Traincarts.getAsTicketShopTicket(item);
+
+                //Check that the ticket hasn't been deleted already
+                if (ticket == null) continue;
+
                 page[i] = ticket;
                 continue;
             }

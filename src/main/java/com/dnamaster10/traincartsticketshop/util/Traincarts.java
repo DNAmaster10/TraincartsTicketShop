@@ -19,6 +19,7 @@ public class Traincarts {
     }
     public static com.dnamaster10.traincartsticketshop.objects.buttons.Ticket getAsTicketShopTicket(ItemStack traincartsTicketItem) {
         Ticket traincartsTicket = getTicketFromItem(traincartsTicketItem);
+        if (traincartsTicket == null) return null;
         String ticketName = traincartsTicket.getName();
         return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, ticketName, null);
     }
