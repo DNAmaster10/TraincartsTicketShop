@@ -13,7 +13,8 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 
 public class OpenGuiCommandHandler extends AsyncCommandHandler {
     private Player player;
-    private Integer guiId;
+    private GuiAccessor guiAccessor;
+
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player
@@ -49,11 +50,10 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         //Example command: /traincartsticketshop gui open <gui_name>
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check the gui exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(player, args[2]);
             return false;
         }
@@ -63,6 +63,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Create a new gui
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
         ShopGui gui = new ShopGui(guiId, player);
 
         //Create a new gui session

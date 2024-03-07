@@ -16,7 +16,7 @@ public class GuiCache {
 
     public void initialize() throws QueryException {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        List<GuiDatabaseObject> guis = guiAccessor.getGuis();
+        List<GuiDatabaseObject> guis = guiAccessor.getGuisFromDatabase();
         for (GuiDatabaseObject gui : guis) {
             guiNames.add(gui.name());
             idGuiMap.put(gui.id(), gui);
@@ -35,6 +35,9 @@ public class GuiCache {
         return gui.ownerUuid().equalsIgnoreCase(uuid);
     }
 
+    public GuiDatabaseObject getGuiById(int id) {
+        return idGuiMap.get(id);
+    }
     public int getGuiIdByName(String name) {
         //TODO maybe we could return a gui database object instead of getting id and then info?
         GuiDatabaseObject gui = nameGuiMap.get(name);

@@ -12,7 +12,7 @@ public interface GuiAccessor {
     boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException;
     boolean playerCanEdit(int guiId, String uuid) throws QueryException;
 
-    List<GuiDatabaseObject> getGuis() throws QueryException;
+    List<GuiDatabaseObject> getGuisFromDatabase() throws QueryException;
     Integer getGuiIdByName(String name) throws QueryException;
     String getGuiNameById(int id) throws QueryException;
     int getHighestPageNumber(int guiId) throws QueryException;

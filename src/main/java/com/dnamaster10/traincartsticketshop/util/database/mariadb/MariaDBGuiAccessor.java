@@ -3,77 +3,36 @@ package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.caches.GuiCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAccessor {
 
-    public boolean checkGuiByName(String name) throws QueryException {
-        //returns true if the gui with the given name exists in database
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE name=?");
-            statement.setString(1, name);
-            ResultSet result = statement.executeQuery();
-            int total = 0;
-            while (result.next()) {
-                total = result.getInt(1);
-            }
-            return total > 0;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+    public boolean checkGuiByName(String name) {
+        return getGuiCache().checkGuiByName(name);
     }
-    public boolean checkGuiById(int id) throws QueryException {
-        //Returns true if the gui with the given name exists in database
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=?");
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            int total = 0;
-            while (result.next()) {
-                total = result.getInt(1);
-            }
-            return total > 0;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+    public boolean checkGuiById(int id) {
+        return getGuiCache().checkGuiById(id);
     }
     public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException {
-        //Returns true if uuid owns gui
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM guis WHERE id=? AND owner_uuid=?");
-            statement.setInt(1, guiId);
-            statement.setString(2, ownerUuid);
-            ResultSet guiResult = statement.executeQuery();
-            boolean isOwner = false;
-            if (guiResult.next()) {
-                isOwner = guiResult.getInt(1) > 0;
-            }
-            return isOwner;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+       return getGuiCache().checkGuiOwnerByUuid(guiId, ownerUuid);
     }
     public boolean playerCanEdit(int guiId, String uuid) throws QueryException {
         //Returns true if player is either an owner of a gui or a listed editor
-        if (checkGuiOwnerByUuid(guiId, uuid)) return true;
+        if (getGuiCache().checkGuiOwnerByUuid(guiId, uuid)) return true;
         GuiEditorsAccessor guiEditorsAccessor = AccessorFactory.getGuiEditorsAccessor();
         return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
     }
 
-    public List<GuiDatabaseObject> getGuis() throws QueryException {
-        //Returns a list of all guis
+    public List<GuiDatabaseObject> getGuisFromDatabase() throws QueryException {
+        //Returns a list of all guis from database
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT id,name,display_name,owner_uuid, FROM guis");
+            PreparedStatement statement = connection.prepareStatement("SELECT id,name,display_name,owner_uuid FROM guis");
             ResultSet result = statement.executeQuery();
             List<GuiDatabaseObject> guis = new ArrayList<>();
             while (result.next()) {
@@ -92,33 +51,11 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     }
     public Integer getGuiIdByName(String name) throws QueryException {
         //Returns gui id from name
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT id FROM guis WHERE name=?");
-            statement.setString(1, name);
-            ResultSet result = statement.executeQuery();
-            Integer id = null;
-            while (result.next()) {
-                id = result.getInt(1);
-            }
-            return id;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+        return getGuiCache().getGuiIdByName(name);
     }
     public String getGuiNameById(int id) throws QueryException {
         //Returns gui name from id
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT name FROM guis WHERE id=?");
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            String name = null;
-            while (result.next()) {
-                name = result.getString("name");
-            }
-            return name;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+        return getGuiCache().getGuiNameById(id);
     }
     public int getHighestPageNumber(int guiId) throws QueryException {
         //Returns the total pages for this gui
@@ -152,18 +89,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         }
     }
     public String getDisplayNameById(int guiId) throws QueryException {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT display_name FROM guis WHERE id=?");
-            statement.setInt(1, guiId);
-            ResultSet result = statement.executeQuery();
-            String displayName = null;
-            if (result.next()) {
-                displayName = result.getString("display_name");
-            }
-            return displayName;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+        return getGuiCache().getDisplayNameById(guiId);
     }
     public String getOwnerUsername(int guiId) throws QueryException {
         try (Connection connection = getConnection()) {
@@ -194,7 +120,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
-        GuiCache.updateGuiName(guiId, newName);
+        getGuiCache().updateGuiName(guiId, newName);
     }
     public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws ModificationException {
         //Updates a gui display name
@@ -207,7 +133,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
-        GuiCache.updateGuiDisplayName(guiId, colouredDisplayName);
+        getGuiCache().updateGuiDisplayName(guiId, colouredDisplayName);
     }
     public void updateGuiOwner(int guiId, String uuid) throws ModificationException {
         //Changes the owner of the gui to another player
@@ -219,20 +145,33 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
-        GuiCache.updateGuiOwner(guiId, uuid);
+        getGuiCache().updateGuiOwner(guiId, uuid);
     }
     public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
         //Registers a new GUI in the database
+        Integer guiId = null;
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setString(2, colouredDisplayName);
             statement.setString(3, rawDisplayName);
             statement.setString(4, ownerUuid);
             statement.executeUpdate();
+
+            //Get the inserted ID
+            ResultSet result = statement.getGeneratedKeys();
+            if (result.next()) {
+                guiId = (int) result.getLong(1);
+            }
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+
+        if (guiId == null) return;
+
+        GuiDatabaseObject newGui = new GuiDatabaseObject(guiId, name, colouredDisplayName, ownerUuid);
+        getGuiCache().addGui(newGui);
     }
     public void insertPage(int guiId, int currentPage) throws ModificationException {
         //Inserts a page above the current page
@@ -266,6 +205,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+        getGuiCache().deleteGuiById(id);
     }
     public void deletePage(int guiId, int page) throws ModificationException {
         //Deletes the given page from a gui. Deletes tickets and links too.

@@ -50,8 +50,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui ID and check that the gui exists
-        guiId = guiAccessor.getGuiIdByName(args[3]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[3])) {
             returnGuiNotFoundError(sender, args[3]);
             return false;
         }
