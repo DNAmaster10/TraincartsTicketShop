@@ -92,6 +92,9 @@ public class EditGui extends MultipageGui {
             getPlayer().sendMessage(ChatColor.RED + "Someone else is already editing that gui");
             closeInventory();
             return;
+        } else if (editor == null) {
+            //Register the editor
+            getPlugin().getGuiManager().addEditGui(getGuiId(), getPlayer());
         }
         //Proceed to open
         if (pages.containsKey(getPageNumber())) {
