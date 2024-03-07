@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.StringJoiner;
 
 public class LinkCreateCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop link create <linked_gui_name> <display_name>
+    //Example command: /tshop link create <linked gui name> <optional display name>
     private String colouredDisplayName;
     private Player player;
     private GuiAccessor guiAccessor;
@@ -31,8 +31,8 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
             return false;
         }
         //Check syntax
-        if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop link create <linked_gui_name> <display_name>");
+        if (args.length < 3) {
+            returnMissingArgumentsError(player, "/tshop link create <linked gui name> <optional display name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
@@ -40,13 +40,19 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        for (int i = 3; i < args.length; i++) {
-            stringJoiner.add(args[i]);
+        //Build display name
+        String rawDisplayName = null;
+        if (args.length > 3) {
+            StringJoiner stringJoiner = new StringJoiner(" ");
+            for (int i = 3; i < args.length; i++) {
+                stringJoiner.add(args[i]);
+            }
+            colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+            rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+        } else {
+            colouredDisplayName = args[2];
+            rawDisplayName = args[2];
         }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
-
         if (rawDisplayName.length() > 25) {
             returnError(player, "Link display names cannot be more than 25 characters in length");
             return false;

@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.StringJoiner;
 
 public class TicketCreateCommandHandler extends SyncCommandHandler {
-    //Example command: /tshop ticket create <tc_ticket_name> <display_name>
+    //Example command: /tshop ticket create <tc ticket name> <optional display name>
     private String colouredDisplayName;
     private Player player;
     @Override
@@ -29,17 +29,24 @@ public class TicketCreateCommandHandler extends SyncCommandHandler {
         }
 
         //Check syntax
-        if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop ticket create <tc ticket name> <display name>");
+        if (args.length < 3) {
+            returnMissingArgumentsError(player, "/tshop ticket create <tc ticket name> <optional display name>");
             return false;
         }
 
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        for (int i = 3; i < args.length; i++) {
-            stringJoiner.add(args[i]);
+        //Build display name
+        String rawDisplayName = null;
+        if (args.length > 3) {
+            StringJoiner stringJoiner = new StringJoiner(" ");
+            for (int i = 3; i < args.length; i++) {
+                stringJoiner.add(args[i]);
+            }
+            colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+            rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+        } else {
+            colouredDisplayName = args[2];
+            rawDisplayName = args[2];
         }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.isBlank()) {
             returnError(player, "Ticket names cannot be less than 1 character in length");

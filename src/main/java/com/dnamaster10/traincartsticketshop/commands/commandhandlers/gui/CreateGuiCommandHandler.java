@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.StringJoiner;
 
 public class CreateGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui create <gui name> <display name>
+    //Example command: /traincartsticketshop gui create <gui name> <optional display name>
 
     //Used to store the display name since spaces can be entered here
     private String rawDisplayName;
@@ -35,8 +35,8 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
 
 
         //Check syntax
-        if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop gui create <gui name> <display name>");
+        if (args.length < 3) {
+            returnMissingArgumentsError(player, "/tshop gui create <gui name> <optional display name>");
             return false;
         }
         if (args[2].length() > 20) {
@@ -53,12 +53,17 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
         }
 
         //Build display name
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        for (int i = 3; i < args.length; i++) {
-            stringJoiner.add(args[i]);
+        if (args.length > 3) {
+            StringJoiner stringJoiner = new StringJoiner(" ");
+            for (int i = 3; i < args.length; i++) {
+                stringJoiner.add(args[i]);
+            }
+            colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+            rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+        } else {
+            colouredDisplayName = args[2];
+            rawDisplayName = args[2];
         }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         //Check display name
         if (rawDisplayName.length() > 25) {
