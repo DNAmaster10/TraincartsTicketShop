@@ -21,7 +21,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
     @Override
     public void open() {
         if (pages.containsKey(getPageNumber())) {
-            openPage(pages.get(getPageNumber()));
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> openPage(pages.get(getPageNumber())), 1L);
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -34,7 +34,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
                 return;
             }
             pages.put(getPageNumber(), newPage);
-            openPage(newPage);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> openPage(newPage), 1L);
         });
     }
     private void openPage(Button[] page) {
@@ -48,7 +48,8 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
         String buttonType = getButtonType(clickedItem);
         if (buttonType == null) return;
 
-        getPlayer().setItemOnCursor(null);
+        removeCursorItem();
+
         switch (buttonType) {
             case "ticket" -> {
                 GuiUtils.handleTicketItemPurchase(clickedItem, getPlayer());
@@ -76,6 +77,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
     protected void search() {
         SearchSelectGui gui = new SearchSelectGui(getGuiId(), getPlayer());
         getSession().addGui(gui);
-        gui.open();
+        removeCursorItem();
+        Bukkit.getScheduler().runTaskLater(getPlugin(), gui::open, 1L);
     }
 }

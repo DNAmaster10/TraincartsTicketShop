@@ -46,7 +46,7 @@ public class SearchSelectGui extends Gui {
         if (buttonType == null) return;
 
         //Remove cursor item since it is a button
-        getPlayer().setItemOnCursor(null);
+        removeCursorItem();
         switch (buttonType) {
             case "search_tickets" -> searchTickets();
             case "search_links" -> searchLinks();

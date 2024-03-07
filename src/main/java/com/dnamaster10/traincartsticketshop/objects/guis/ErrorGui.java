@@ -32,7 +32,7 @@ public class ErrorGui extends Gui {
         if (buttonType == null) {
             return;
         }
-        getPlayer().setItemOnCursor(null);
+        removeCursorItem();
         if (buttonType.equals("error")) {
             getPlayer().closeInventory();
         }

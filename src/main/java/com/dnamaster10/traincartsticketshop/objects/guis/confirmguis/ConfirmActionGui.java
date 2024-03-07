@@ -25,7 +25,7 @@ public abstract class ConfirmActionGui extends Gui {
             return;
         }
         //Remove item from cursor since it is a button
-        getPlayer().setItemOnCursor(null);
+        removeCursorItem();
         switch (buttonType) {
             case "back" -> back();
             case "cancel" -> getPlayer().closeInventory();

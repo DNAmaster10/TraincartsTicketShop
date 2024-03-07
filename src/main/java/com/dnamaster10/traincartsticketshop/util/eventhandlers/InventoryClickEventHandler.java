@@ -24,7 +24,7 @@ public class InventoryClickEventHandler implements Listener {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
 
-        //TODO probs shouldn't be a runlater task.
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getGuiManager().handleInventoryClick(event, item), 1L);
+        getPlugin().getGuiManager().handleInventoryClick(event, item);
+        //Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getGuiManager().handleInventoryClick(event, item), 1L);
     }
 }

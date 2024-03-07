@@ -28,6 +28,9 @@ public abstract class Gui {
     private Player player;
     private String displayName;
 
+    protected void removeCursorItem() {
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setItemOnCursor(null), 1L);
+    }
     protected void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
@@ -61,6 +64,7 @@ public abstract class Gui {
         currentSession.back();
     }
     protected void removeCursorItemAndClose() {
+        //TODO might need to be removed
         //Removes item on cursor and closes inventory at the same time
         player.setItemOnCursor(null);
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);

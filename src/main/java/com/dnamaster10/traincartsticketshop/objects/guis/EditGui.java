@@ -133,7 +133,8 @@ public class EditGui extends MultipageGui {
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addInventory(event.getClickedInventory());
         Button[] page = pageBuilder.getPage();
-        getPlayer().setItemOnCursor(null);
+
+        removeCursorItem();
 
         //Now run asynchronous to save the inventory
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
