@@ -19,6 +19,7 @@ import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonTyp
 public class SearchSelectGui extends Gui {
     //The gui which will be searched
     private final int searchGuiId;
+
     @Override
     public void open() {
         generate();
@@ -28,9 +29,7 @@ public class SearchSelectGui extends Gui {
         //Build gui and add to inventory
         PageBuilder pageBuilder = new PageBuilder();
 
-        if (getSession().checkBack()) {
-            pageBuilder.addBackButton();
-        }
+        if (getSession().checkBack()) pageBuilder.addBackButton();
 
         SimpleItemButton ticketSearchButton = new SimpleItemButton("search_tickets", Material.PAPER, "Search Tickets");
         pageBuilder.addButton(12, ticketSearchButton);
@@ -44,9 +43,8 @@ public class SearchSelectGui extends Gui {
     @Override
     public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
         String buttonType = getButtonType(clickedItem);
-        if (buttonType == null) {
-            return;
-        }
+        if (buttonType == null) return;
+
         //Remove cursor item since it is a button
         getPlayer().setItemOnCursor(null);
         switch (buttonType) {

@@ -5,33 +5,42 @@ import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.Pla
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayerCache {
-    private static final HashMap<String, PlayerDatabaseObject> usernamePlayerMap = new HashMap<>();
-    private static final HashMap<String, PlayerDatabaseObject> uuidPlayerMap = new HashMap<>();
+    List<String> usernames = new CopyOnWriteArrayList<>();
+    ConcurrentHashMap<String, PlayerDatabaseObject> uuidPlayerMap = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, PlayerDatabaseObject> usernamePlayerMap = new ConcurrentHashMap<>();
 
-    public static void initialize() throws QueryException {
+    public void initialize() throws QueryException {
         PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
-
-        List<PlayerDatabaseObject> players = playerAccessor.getAllPlayers();
+        List<PlayerDatabaseObject> players = playerAccessor.getAllPlayersFromDatabase();
         for (PlayerDatabaseObject player : players) {
+            usernames.add(player.username());
+            uuidPlayerMap.put(player.uuid().toLowerCase(), player);
             usernamePlayerMap.put(player.username().toLowerCase(), player);
-            uuidPlayerMap.put(player.uuid(), player);
         }
     }
 
-    public static boolean checkPlayerByUsername(String username) {
+    public boolean checkPlayerByUsername(String username) {
         return usernamePlayerMap.containsKey(username.toLowerCase());
     }
 
-    public static PlayerDatabaseObject getPlayerByUsername(String username) {
+    public PlayerDatabaseObject getPlayerByUsername(String username) {
         return usernamePlayerMap.get(username.toLowerCase());
     }
 
-    public static void updatePlayer(PlayerDatabaseObject player) {
-        uuidPlayerMap.put(player.uuid(), player);
-        usernamePlayerMap.put(player.username().toLowerCase(), player);
+    public void updatePlayer(String username, String uuid) {
+        if (!usernames.contains(username)) {
+            usernames.add(username);
+        }
+        PlayerDatabaseObject newPlayer = new PlayerDatabaseObject(
+                username,
+                uuid
+        );
+        uuidPlayerMap.put(uuid.toLowerCase(), newPlayer);
+        usernamePlayerMap.put(username.toLowerCase(), newPlayer);
     }
 }

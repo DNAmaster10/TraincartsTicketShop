@@ -19,9 +19,9 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor list <gui_name> <optional page number>
 
     private GuiEditorsAccessor editorsAccessor;
-    private Integer guiId;
-    private Integer pageNumber;
-    private Integer totalPages;
+    private int guiId;
+    private int pageNumber;
+    private int totalPages;
 
     private static final int playersPerPage = 5;
     @Override
@@ -71,11 +71,11 @@ public class ListEditorsCommandHandler extends AsyncCommandHandler {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check that it exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Check permissions with owner access
         if (sender instanceof Player p) {

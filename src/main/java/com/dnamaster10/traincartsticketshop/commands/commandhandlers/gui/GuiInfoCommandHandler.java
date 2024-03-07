@@ -15,7 +15,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui checkInfo <gui name>
 
     GuiAccessor guiAccessor;
-    Integer guiId;
+    int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions
@@ -47,17 +47,19 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        //Check gui exists
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
+        //TODO needs changing
         //Fetch info
         String guiName = guiAccessor.getGuiNameById(guiId);
         String owner = guiAccessor.getOwnerUsername(guiId);

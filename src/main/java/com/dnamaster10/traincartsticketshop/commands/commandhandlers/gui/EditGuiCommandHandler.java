@@ -12,8 +12,9 @@ import org.bukkit.entity.Player;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class EditGuiCommandHandler extends AsyncCommandHandler {
+    //Example command: /tshop gui edit <gui name>
     private Player player;
-    private Integer guiId;
+    private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player and permissions
@@ -51,11 +52,11 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check that it exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(player, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Check that player is owner or editor of gui
         if (!player.hasPermission("traincartsticketshop.admin.gui.edit")) {

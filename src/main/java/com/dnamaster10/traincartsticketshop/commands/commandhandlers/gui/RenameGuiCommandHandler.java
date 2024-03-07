@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
     private GuiAccessor guiAccessor;
-    private Integer guiId;
+    private int guiId;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -60,11 +60,11 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui ID and check that it exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //If sender is player, check that player is an editor of that gui if they don't have admin perms
         if (sender instanceof Player p) {

@@ -2,13 +2,12 @@ package com.dnamaster10.traincartsticketshop;
 
 import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
 import com.dnamaster10.traincartsticketshop.commands.TabCompleter;
-import com.dnamaster10.traincartsticketshop.util.ConfigUtil;
+import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
-import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -47,7 +46,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
 
         // Update config stuff if needed
         try {
-            ConfigUtil.migrateIfNeeded(getConfig(), this);
+            ConfigUtils.migrateIfNeeded(getConfig(), this);
         } catch (IOException e) {
             getLogger().severe("Failed to update config values");
             e.printStackTrace();
@@ -68,7 +67,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //Initialize database caches
         try {
             DatabaseAccessor dbAccessor = new DatabaseAccessor();
-            dbAccessor.getGuiCache().initialize();
+            dbAccessor.initializeCaches();
         } catch (QueryException e) {
             plugin.handleSqlException(e);
             getPlugin().disable();

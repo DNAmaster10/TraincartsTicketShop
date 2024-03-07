@@ -15,23 +15,12 @@ import java.util.List;
 
 public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements PlayerAccessor {
 
-    public boolean checkPlayerByUsername(String username) throws QueryException {
+    public boolean checkPlayerByUsername(String username) {
         //Returns true if a player with the given username exists in database. Case-insensitive
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE username=?");
-            statement.setString(1, username);
-            ResultSet result = statement.executeQuery();
-            int total = 0;
-            while (result.next()) {
-                total = result.getInt(1);
-            }
-            return total > 0;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+        return getPlayerCache().checkPlayerByUsername(username);
     }
 
-    public List<PlayerDatabaseObject> getAllPlayers() throws QueryException {
+    public List<PlayerDatabaseObject> getAllPlayersFromDatabase() throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players");
             ResultSet result = statement.executeQuery();
@@ -45,12 +34,12 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
         }
     }
 
-    public PlayerDatabaseObject getPlayerByUsername(String name) {
+    public PlayerDatabaseObject getPlayerByUsername(String username) {
         //Returns player database object from username. Case-insensitive
-        return PlayerCache.getPlayerByUsername(name);
+        return getPlayerCache().getPlayerByUsername(username);
     }
 
-    public void updatePlayer(String name, String uuid) throws ModificationException {
+    public void updatePlayer(String username, String uuid) throws ModificationException {
         //Updates or inserts a player into the players table.
         //The last_join column is used in the event that a player changes their username.
         //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most
@@ -63,15 +52,15 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
                         username=VALUES(username),
                         last_join=VALUES(last_join)
                     """);
-            statement.setString(1, name);
+            statement.setString(1, username);
             statement.setString(2, uuid);
             statement.setLong(3, System.currentTimeMillis());
             statement.executeUpdate();
 
             //Update database cache
-            PlayerCache.updatePlayer(new PlayerDatabaseObject(name, uuid));
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
+        getPlayerCache().updatePlayer(username, uuid);
     }
 }

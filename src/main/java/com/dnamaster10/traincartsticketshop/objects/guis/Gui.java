@@ -20,20 +20,16 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST
 
 public abstract class Gui {
     //The inventory currently open within this gui
+    public abstract void open();
+    public abstract void handleClick(InventoryClickEvent event, ItemStack clickedItem);
+
     private Inventory inventory;
     private int guiId;
     private Player player;
     private String displayName;
-    public abstract void open();
-    public abstract void handleClick(InventoryClickEvent event, ItemStack clickedItem);
-    public Inventory getInventory() {
-        return this.inventory;
-    }
+
     protected void setInventory(Inventory inventory) {
         this.inventory = inventory;
-    }
-    public int getGuiId() {
-        return this.guiId;
     }
     protected void setGuiId(int id) {
         this.guiId = id;
@@ -50,6 +46,10 @@ public abstract class Gui {
     protected void setPlayer(Player p) {
         player = p;
     }
+    protected void closeInventory() {Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);}
+    protected Session getSession() {
+        return getPlugin().getGuiManager().getSession(getPlayer());
+    }
     protected void back() {
         getPlayer().setItemOnCursor(null);
         //Check there is a previous gui
@@ -65,17 +65,10 @@ public abstract class Gui {
         player.setItemOnCursor(null);
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);
     }
-    protected void closeInventory() {
-        //Closed the inventory the player has open
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.closeInventory(), 1L);
-    }
     protected void openErrorGui(String errorMessage) {
         ErrorGui errorGui = new ErrorGui(errorMessage, player);
         player.setItemOnCursor(null);
         errorGui.open();
-    }
-    protected Session getSession() {
-        return getPlugin().getGuiManager().getSession(getPlayer());
     }
     protected void link(ItemStack link) {
         //Get button info
@@ -108,5 +101,12 @@ public abstract class Gui {
             getSession().addGui(newGui);
             newGui.open();
         });
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+    public int getGuiId() {
+        return this.guiId;
     }
 }

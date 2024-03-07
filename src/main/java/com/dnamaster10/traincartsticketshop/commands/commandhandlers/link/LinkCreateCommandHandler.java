@@ -16,7 +16,7 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop link create <linked_gui_name> <display_name>
     private String colouredDisplayName;
     private Player player;
-    private Integer guiId;
+    private GuiAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player and permissions
@@ -65,12 +65,11 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Check that the gui exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
-            returnGuiNotFoundError(player, args[2]);
+        if (!guiAccessor.checkGuiByName(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
@@ -79,6 +78,9 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
+        //Get gui ID
+        int guiId = guiAccessor.getGuiIdByName(args[2]);
+
         //Create the link
         Link link = new Link(guiId, 0, colouredDisplayName);
 

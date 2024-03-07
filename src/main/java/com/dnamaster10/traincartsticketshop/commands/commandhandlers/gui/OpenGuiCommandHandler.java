@@ -52,7 +52,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
         //Example command: /traincartsticketshop gui open <gui_name>
         guiAccessor = AccessorFactory.getGuiAccessor();
 
-        //Get the guiID and check the gui exists
+        //Check the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(player, args[2]);
             return false;

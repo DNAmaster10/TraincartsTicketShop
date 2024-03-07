@@ -16,7 +16,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiAccessor guiAccessor;
-    private Integer guiId;
+    private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions and if player
@@ -49,11 +49,11 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui ID and check gui exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //If sender is player, and they don't have admin transfer rights, check they are owner
         if (sender instanceof Player p) {

@@ -16,7 +16,7 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class DeleteGuiCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop gui delete <gui_name>
     private GuiAccessor guiAccessor;
-    private Integer guiId;
+    private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions if player
@@ -48,12 +48,14 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
-        //Get the gui id and check the gui exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        //Check gui exists
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+
+        //Get the guiId
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //If sender is player, check they are owner
         if (sender instanceof Player p) {

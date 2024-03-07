@@ -28,8 +28,9 @@ public class Players {
             }
         }
 
-        //Check database cache
-        if (PlayerCache.checkPlayerByUsername(username)) return PlayerCache.getPlayerByUsername(username);
+        //Check database
+        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
+        if (playerAccessor.checkPlayerByUsername(username)) return playerAccessor.getPlayerByUsername(username);
 
         //Finally, if the player has not been found in any of the above places, get them from the Mojang API
         //The Mojang API is limited to 600 requests per 10 minutes. As a result, if this is run too frequently, it will
@@ -40,7 +41,6 @@ public class Players {
             String[] playerInfo = apiAccessor.getPlayerFromUsername(username);
 
             //Register the player in the database to save future API requests
-            PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
             playerAccessor.updatePlayer(playerInfo[0], playerInfo[1]);
             return new PlayerDatabaseObject(playerInfo[0], playerInfo[1]);
         } catch (IOException e) {

@@ -68,11 +68,11 @@ public class SetGuiDisplayNameCommandHandler extends AsyncCommandHandler {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui id and check that it exists
-        guiId = guiAccessor.getGuiIdByName(args[2]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //If sender is player, check that player is an editor of that gui
         if (sender instanceof Player p) {

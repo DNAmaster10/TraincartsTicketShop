@@ -16,7 +16,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor remove <player_name> <gui_name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiEditorsAccessor editorsAccessor;
-    private Integer guiId;
+    private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender perms
@@ -48,11 +48,11 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check that the gui exists
-        guiId = guiAccessor.getGuiIdByName(args[3]);
-        if (guiId == null) {
+        if (!guiAccessor.checkGuiByName(args[3])) {
             returnGuiNotFoundError(sender, args[3]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[3]);
 
         //If player, check that they own the gui
         if (sender instanceof Player p) {

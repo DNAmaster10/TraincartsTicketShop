@@ -9,7 +9,7 @@ import java.util.List;
 public interface PlayerAccessor {
     boolean checkPlayerByUsername(String username) throws QueryException;
 
-    List<PlayerDatabaseObject> getAllPlayers() throws QueryException;
+    List<PlayerDatabaseObject> getAllPlayersFromDatabase() throws QueryException;
     PlayerDatabaseObject getPlayerByUsername(String username) throws QueryException;
     void updatePlayer(String name, String uuid) throws ModificationException;
 }

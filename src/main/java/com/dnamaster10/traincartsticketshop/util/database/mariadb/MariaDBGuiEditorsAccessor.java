@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiEditorsDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MariaDBGuiEditorsAccessor extends MariaDBDatabaseAccessor implements GuiEditorsAccessor {
@@ -25,6 +27,27 @@ public class MariaDBGuiEditorsAccessor extends MariaDBDatabaseAccessor implement
                 isEditor = result.getInt(1) > 0;
             }
             return isEditor;
+        } catch (SQLException e) {
+            throw new QueryException(e);
+        }
+    }
+
+    public HashMap<Integer, GuiEditorsDatabaseObject> getAllGuiEditorsFromDatabase() throws QueryException {
+        try (Connection connection = getConnection()) {
+            //Get list of editor UUIDs
+            PreparedStatement statement = connection.prepareStatement("SELECT gui_id,editor_uuid FROM guieditors");
+            ResultSet result = statement.executeQuery();
+            HashMap<Integer, GuiEditorsDatabaseObject> guiEditors = new HashMap<>();
+            while (result.next()) {
+                int guiId = result.getInt("gui_id");
+                String uuid = result.getString("editor_uuid");
+                if (!guiEditors.containsKey(guiId)) {
+                    guiEditors.put(guiId, new GuiEditorsDatabaseObject(guiId, new ArrayList<>()));
+                }
+                //Add the editor
+                guiEditors.get(guiId).editorUuids().add(uuid);
+            }
+            return guiEditors;
         } catch (SQLException e) {
             throw new QueryException(e);
         }
