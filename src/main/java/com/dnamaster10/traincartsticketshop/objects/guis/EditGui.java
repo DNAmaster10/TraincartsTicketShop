@@ -40,6 +40,7 @@ public class EditGui extends MultipageGui {
         setPageNumber(page);
         setPlayer(player);
         setTotalPages(guiAccessor.getHighestPageNumber(guiId));
+        if (getTotalPages() <= getPageNumber() + 1) setTotalPages(getPageNumber() + 1);
     }
     public EditGui(int guiId, Player player) throws QueryException {
         this(guiId, 0, player);
@@ -60,7 +61,7 @@ public class EditGui extends MultipageGui {
 
     private Button[] getNewPage() throws QueryException {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
+        //setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
 
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
@@ -80,6 +81,7 @@ public class EditGui extends MultipageGui {
         return pageBuilder.getPage();
     }
     private void openPage(Button[] page) {
+        getPlugin().getLogger().severe("Num: " + getTotalPages());
         int totalPageNum = getTotalPages();
         if (totalPageNum > getMaxPages()) totalPageNum = getMaxPages();
         String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + totalPageNum + ")";
@@ -168,6 +170,7 @@ public class EditGui extends MultipageGui {
     protected void nextPage() {
         if (getPageNumber() + 1 > getMaxPages()) return;
         setPageNumber(getPageNumber() + 1);
+        if (getPageNumber() + 1 >= getTotalPages()) setTotalPages(getPageNumber() + 1);
         open();
     }
 
