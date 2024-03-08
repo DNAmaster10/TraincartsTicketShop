@@ -80,7 +80,9 @@ public class EditGui extends MultipageGui {
         return pageBuilder.getPage();
     }
     private void openPage(Button[] page) {
-        String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + getTotalPages() + ")";
+        int totalPageNum = getTotalPages();
+        if (totalPageNum > getMaxPages()) totalPageNum = getMaxPages();
+        String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + totalPageNum + ")";
         InventoryBuilder inventoryBuilder = new InventoryBuilder(page, pageText);
         setInventory(inventoryBuilder.getInventory());
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(getInventory()), 1L);
