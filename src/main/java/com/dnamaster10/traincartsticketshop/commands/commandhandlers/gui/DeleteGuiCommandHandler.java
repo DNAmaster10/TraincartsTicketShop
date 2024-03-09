@@ -53,7 +53,6 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-
         //Get the guiId
         guiId = guiAccessor.getGuiIdByName(args[2]);
 

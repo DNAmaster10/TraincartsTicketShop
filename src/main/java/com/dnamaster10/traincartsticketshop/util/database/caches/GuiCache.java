@@ -42,7 +42,7 @@ public class GuiCache {
     }
     public int getGuiIdByName(String name) {
         //TODO maybe we could return a gui database object instead of getting id and then info?
-        GuiDatabaseObject gui = nameGuiMap.get(name);
+        GuiDatabaseObject gui = nameGuiMap.get(name.toLowerCase());
         return gui.id();
     }
     public String getGuiNameById(int id) {
@@ -69,7 +69,7 @@ public class GuiCache {
         nameGuiMap.remove(oldGui.name());
 
         guiNames.add(newName);
-        nameGuiMap.put(newName, newGui);
+        nameGuiMap.put(newName.toLowerCase(), newGui);
         idGuiMap.put(oldGui.id(), newGui);
     }
     public void updateGuiDisplayName(int id, String displayName) {
@@ -80,7 +80,7 @@ public class GuiCache {
                 displayName,
                 oldGui.ownerUuid()
         );
-        nameGuiMap.put(oldGui.name(), newGui);
+        nameGuiMap.put(oldGui.name().toLowerCase(), newGui);
         idGuiMap.put(id, newGui);
     }
     public void updateGuiOwner(int id, String uuid) {
@@ -91,18 +91,18 @@ public class GuiCache {
                 oldGui.displayName(),
                 uuid
         );
-        nameGuiMap.put(oldGui.name(), newGui);
+        nameGuiMap.put(oldGui.name().toLowerCase(), newGui);
         idGuiMap.put(id, newGui);
     }
     public void addGui(GuiDatabaseObject gui) {
         guiNames.add(gui.name());
-        nameGuiMap.put(gui.name(), gui);
+        nameGuiMap.put(gui.name().toLowerCase(), gui);
         idGuiMap.put(gui.id(), gui);
     }
     public void deleteGuiById(int id) {
         GuiDatabaseObject gui = idGuiMap.get(id);
         guiNames.remove(gui.name());
-        nameGuiMap.remove(gui.name());
+        nameGuiMap.remove(gui.name().toLowerCase());
         idGuiMap.remove(id);
     }
 
