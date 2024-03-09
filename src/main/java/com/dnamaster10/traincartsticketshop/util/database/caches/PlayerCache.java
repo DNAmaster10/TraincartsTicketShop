@@ -4,7 +4,9 @@ import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import org.bukkit.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,6 +32,9 @@ public class PlayerCache {
 
     public PlayerDatabaseObject getPlayerByUsername(String username) {
         return usernamePlayerMap.get(username.toLowerCase());
+    }
+    public List<String> getPartialUsernameMatches(String inputString) {
+        return StringUtil.copyPartialMatches(inputString, usernames, new ArrayList<>());
     }
 
     public void updatePlayer(String username, String uuid) {

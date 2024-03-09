@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -9,7 +8,10 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiTabCompleter extends SubCommandCompleter {
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
+public class GuiTabCompleter extends ArgumentCompleter {
+    //Example command: /tshop gui <arg1>
     private static final List<String> ARGS1;
     static {
         ARGS1 = new ArrayList<>();
@@ -28,16 +30,15 @@ public class GuiTabCompleter extends SubCommandCompleter {
         ARGS1.add("transfer");
     }
 
-    @Override
-    protected boolean checkPermission(Player p, String command) {
+    private boolean checkPermission(Player p, String command) {
         return p.hasPermission("traincartsticketshop.gui." + command.toLowerCase()) || p.hasPermission("traincartsticketshop.admin.gui." + command.toLowerCase());
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> getCompletions(CommandSender sender, String[] args) {
         //Check that sub-command hasn't already been entered
         if (args.length > 2) {
-            return handleArgumentCompleter(sender, args);
+            return getNextArgumentCompletions(sender, args);
         }
         //Return sub-command matches
         List<String> subCommands = StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
@@ -52,17 +53,32 @@ public class GuiTabCompleter extends SubCommandCompleter {
         return subCommands;
     }
 
-    private List<String> getPartialGuiNameMatches(String argument) {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        return guiAccessor.getPartialNameMatches(argument);
-    }
-
     @Override
-    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
-        if (sender instanceof Player p && !checkPermission(p, args[1])) return new ArrayList<>();
-        switch (args[1]) {
-            case "info", "delete", "open", "edit", "rename", "setDisplayName", "transfer" -> {
-                return getPartialGuiNameMatches(args[2]);
+    protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
+        switch (args[1].toLowerCase()) {
+            case "delete" -> {
+                return new GuiDeleteTabCompleter().getCompletions(sender, args);
+            }
+            case "edit" -> {
+                return new GuiEditTabCompleter().getCompletions(sender, args);
+            }
+            case "info" -> {
+                return new GuiInfoTabCompleter().getCompletions(sender, args);
+            }
+            case "open" -> {
+                return new GuiOpenTabCompleter().getCompletions(sender, args);
+            }
+            case "removeeditor" -> {
+                return new GuiRemoveEditorTabCompleter().getCompletions(sender, args);
+            }
+            case "rename" -> {
+                return new GuiRenameTabCompleter().getCompletions(sender, args);
+            }
+            case "setdisplayname" -> {
+                return new GuiSetDisplayNameTabCompleter().getCompletions(sender, args);
+            }
+            case "transfer" -> {
+                return new GuiTransferTabCompleter().getCompletions(sender, args);
             }
         }
         return new ArrayList<>();

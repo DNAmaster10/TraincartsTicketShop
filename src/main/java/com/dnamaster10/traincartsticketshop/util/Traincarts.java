@@ -1,8 +1,14 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.bergerkiller.bukkit.tc.tickets.Ticket;
+import com.bergerkiller.bukkit.tc.tickets.TicketStore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.bergerkiller.bukkit.tc.tickets.TicketStore.*;
 
@@ -26,5 +32,13 @@ public class Traincarts {
 
         ItemStack item = ticket.createItem(p);
         p.getInventory().addItem(item);
+    }
+    private static List<String> getTicketNames() {
+        return TicketStore.getAll().stream()
+                .map(Ticket::getName)
+                .collect(Collectors.toList());
+    }
+    public static List<String> getPartialTicketNameCompletions(String inputString) {
+        return StringUtil.copyPartialMatches(inputString, getTicketNames(), new ArrayList<>());
     }
 }

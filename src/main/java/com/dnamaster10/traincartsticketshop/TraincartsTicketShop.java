@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop;
 
 import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
-import com.dnamaster10.traincartsticketshop.commands.TabCompleter;
+import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
@@ -77,7 +77,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
 
         //Register tab completers
-        Objects.requireNonNull(getCommand("traincartsticketshop")).setTabCompleter(new TabCompleter());
+        Objects.requireNonNull(getCommand("traincartsticketshop")).setTabCompleter(new MainTabCompleter());
 
         //Register gui manager
         this.guiManager = new GuiManager();

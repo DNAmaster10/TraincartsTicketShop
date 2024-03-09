@@ -11,5 +11,6 @@ public interface PlayerAccessor {
 
     List<PlayerDatabaseObject> getAllPlayersFromDatabase() throws QueryException;
     PlayerDatabaseObject getPlayerByUsername(String username) throws QueryException;
+    List<String> getPartialUsernameMatches(String inputString);
     void updatePlayer(String name, String uuid) throws ModificationException;
 }

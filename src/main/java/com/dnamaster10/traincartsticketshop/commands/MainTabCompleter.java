@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCompleter implements org.bukkit.command.TabCompleter {
+public class MainTabCompleter implements org.bukkit.command.TabCompleter {
     private static final List<String> ARGS0;
     static {
         ARGS0 = new ArrayList<>();
@@ -18,6 +18,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         ARGS0.add("ticket");
         ARGS0.add("link");
     }
+
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -29,13 +30,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         //Select an appropriate tab completer for the given sub-command
         switch (args[0].toLowerCase()) {
             case "gui" -> {
-                return new GuiTabCompleter().onTabComplete(commandSender, args);
+                return new GuiTabCompleter().getCompletions(commandSender, args);
             }
             case "ticket" -> {
-                return new TicketTabCompleter().onTabComplete(commandSender, args);
+                return new TicketTabCompleter().getCompletions(commandSender, args);
             }
             case "link" -> {
-                return new LinkTabCompleter().onTabComplete(commandSender, args);
+                return new LinkTabCompleter().getCompletions(commandSender, args);
             }
         }
         return null;

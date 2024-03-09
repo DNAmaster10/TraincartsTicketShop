@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
+import com.dnamaster10.traincartsticketshop.commands.tabcompleters.link.LinkCreateTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import org.bukkit.command.CommandSender;
@@ -9,7 +10,7 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinkTabCompleter extends SubCommandCompleter {
+public class LinkTabCompleter extends ArgumentCompleter {
     private static final List<String> ARGS1;
     static {
         ARGS1 = new ArrayList<>();
@@ -18,16 +19,15 @@ public class LinkTabCompleter extends SubCommandCompleter {
         ARGS1.add("setDestinationPage");
     }
 
-    @Override
-    protected boolean checkPermission(Player p, String command) {
+    private boolean checkPermission(Player p, String command) {
         return p.hasPermission("traincartsticketshop.link." + command.toLowerCase());
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> getCompletions(CommandSender sender, String[] args) {
         //If sub-command has already been entered, return final args
         if (args.length > 2) {
-            return null;
+            return getNextArgumentCompletions(sender, args);
         }
         //Get sub-command matches
         List<String> subCommands = StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
@@ -43,18 +43,12 @@ public class LinkTabCompleter extends SubCommandCompleter {
     }
 
     @Override
-    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
-        switch (args[1]) {
+    protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
+        switch (args[1].toLowerCase()) {
             case "create" -> {
-                return onCreateCompleter(sender, args);
+                return new LinkCreateTabCompleter().getCompletions(sender, args);
             }
         }
         return new ArrayList<>();
-    }
-
-    private List<String> onCreateCompleter(CommandSender sender, String[] args) {
-        if (sender instanceof Player p && !checkPermission(p, args[1])) return new ArrayList<>();
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        return guiAccessor.getPartialNameMatches(args[2]);
     }
 }

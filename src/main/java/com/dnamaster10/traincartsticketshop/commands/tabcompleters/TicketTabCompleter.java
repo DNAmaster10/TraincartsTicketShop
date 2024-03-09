@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
+import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ticket.TicketCreateTabCompleter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -7,7 +8,7 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketTabCompleter extends SubCommandCompleter {
+public class TicketTabCompleter extends ArgumentCompleter {
     private static final List<String> ARGS1;
     static {
         ARGS1 = new ArrayList<>();
@@ -16,15 +17,14 @@ public class TicketTabCompleter extends SubCommandCompleter {
         ARGS1.add("setTraincartsTicket");
     }
 
-    @Override
-    protected boolean checkPermission(Player p, String command) {
+    private boolean checkPermission(Player p, String command) {
         //Returns boolean indicating whether a player has permission
         //to run the specific sub-command
         return p.hasPermission("traincartsticketshop.ticket." + command.toLowerCase());
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> getCompletions(CommandSender sender, String[] args) {
         //Check that sub-command hasn't already been entered
         if (args.length > 2) {
             return null;
@@ -43,7 +43,12 @@ public class TicketTabCompleter extends SubCommandCompleter {
     }
 
     @Override
-    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
-        return null;
+    protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
+        switch (args[1].toLowerCase()) {
+            case "create" -> {
+                return new TicketCreateTabCompleter().getCompletions(sender, args);
+            }
+        }
+        return new ArrayList<>();
     }
 }

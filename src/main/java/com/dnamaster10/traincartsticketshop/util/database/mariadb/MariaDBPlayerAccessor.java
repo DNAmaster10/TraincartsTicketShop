@@ -38,6 +38,9 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
         //Returns player database object from username. Case-insensitive
         return getPlayerCache().getPlayerByUsername(username);
     }
+    public List<String> getPartialUsernameMatches(String inputString) {
+        return getPlayerCache().getPartialUsernameMatches(inputString);
+    }
 
     public void updatePlayer(String username, String uuid) throws ModificationException {
         //Updates or inserts a player into the players table.
