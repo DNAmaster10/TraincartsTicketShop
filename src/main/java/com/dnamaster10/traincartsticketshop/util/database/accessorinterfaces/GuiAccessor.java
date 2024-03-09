@@ -18,6 +18,7 @@ public interface GuiAccessor {
     int getHighestPageNumber(int guiId) throws QueryException;
     String getDisplayNameById(int guiId) throws QueryException;
     String getOwnerUsername(int guiID) throws QueryException;
+    List<String> getPartialNameMatches(String match);
 
     void updateGuiName(int guiId, String newName) throws ModificationException;
     void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws ModificationException;

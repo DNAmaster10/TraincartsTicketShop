@@ -41,4 +41,9 @@ public class TicketTabCompleter extends SubCommandCompleter {
         subCommands.removeIf(s -> !checkPermission((Player) sender, s));
         return subCommands;
     }
+
+    @Override
+    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
+        return null;
+    }
 }

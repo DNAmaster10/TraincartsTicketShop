@@ -4,7 +4,9 @@ import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import org.bukkit.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,6 +52,9 @@ public class GuiCache {
     public String getDisplayNameById(int id) {
         GuiDatabaseObject gui = idGuiMap.get(id);
         return gui.displayName();
+    }
+    public List<String> getPartialNameMatches(String inputString) {
+        return StringUtil.copyPartialMatches(inputString, guiNames, new ArrayList<>());
     }
 
     public void updateGuiName(int id, String newName) {

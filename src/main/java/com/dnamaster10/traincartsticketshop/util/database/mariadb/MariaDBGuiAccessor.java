@@ -110,6 +110,10 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             throw new QueryException(e);
         }
     }
+    public List<String> getPartialNameMatches(String argument) {
+        return getGuiCache().getPartialNameMatches(argument);
+    }
+
     public void updateGuiName(int guiId, String newName) throws ModificationException {
         //Renames a gui in the database
         try (Connection connection = getConnection()) {

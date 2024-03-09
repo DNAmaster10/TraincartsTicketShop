@@ -1,8 +1,11 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,7 @@ public class GuiTabCompleter extends SubCommandCompleter {
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         //Check that sub-command hasn't already been entered
         if (args.length > 2) {
-            return null;
+            return handleArgumentCompleter(sender, args);
         }
         //Return sub-command matches
         List<String> subCommands = StringUtil.copyPartialMatches(args[1], ARGS1, new ArrayList<>());
@@ -47,5 +50,21 @@ public class GuiTabCompleter extends SubCommandCompleter {
         //Else, check permissions for all sub-commands. Remove sub-command if player has no permission to use it
         subCommands.removeIf(s -> !checkPermission((Player) sender, s));
         return subCommands;
+    }
+
+    private List<String> getPartialGuiNameMatches(String argument) {
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        return guiAccessor.getPartialNameMatches(argument);
+    }
+
+    @Override
+    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
+        if (sender instanceof Player p && !checkPermission(p, args[1])) return new ArrayList<>();
+        switch (args[1]) {
+            case "info", "delete", "open", "edit", "rename", "setDisplayName", "transfer" -> {
+                return getPartialGuiNameMatches(args[2]);
+            }
+        }
+        return new ArrayList<>();
     }
 }

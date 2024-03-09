@@ -1,5 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
+import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -38,5 +40,21 @@ public class LinkTabCompleter extends SubCommandCompleter {
         //Else check permissions
         subCommands.removeIf(s -> !checkPermission((Player) sender, s));
         return subCommands;
+    }
+
+    @Override
+    protected List<String> handleArgumentCompleter(CommandSender sender, String[] args) {
+        switch (args[1]) {
+            case "create" -> {
+                return onCreateCompleter(sender, args);
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private List<String> onCreateCompleter(CommandSender sender, String[] args) {
+        if (sender instanceof Player p && !checkPermission(p, args[1])) return new ArrayList<>();
+        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        return guiAccessor.getPartialNameMatches(args[2]);
     }
 }
