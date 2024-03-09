@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.commands;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.RemoveEditorCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.*;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.AddEditorCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.ListEditorsCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDisplayNameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDestinationPageCommandHandler;
@@ -41,7 +40,6 @@ public class CommandDispatcher implements CommandExecutor {
                     case "create" -> new CreateGuiCommandHandler().handle(sender, args);
                     case "delete" -> new DeleteGuiCommandHandler().handle(sender, args);
                     case "edit" -> new EditGuiCommandHandler().handle(sender, args);
-                    case "listeditors" -> new ListEditorsCommandHandler().handle(sender, args);
                     case "open" -> new OpenGuiCommandHandler().handle(sender, args);
                     case "removeeditor" -> new RemoveEditorCommandHandler().handle(sender, args);
                     case "rename" -> new RenameGuiCommandHandler().handle(sender, args);

@@ -106,27 +106,4 @@ public class GuiCache {
         idGuiMap.remove(id);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

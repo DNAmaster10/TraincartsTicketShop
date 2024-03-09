@@ -5,13 +5,13 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface GuiEditorsAccessor {
     boolean checkGuiEditorByUuid(int guiId, String uuid) throws QueryException;
 
     HashMap<Integer, GuiEditorsDatabaseObject> getAllGuiEditorsFromDatabase() throws QueryException;
-    int getTotalEditors(int guiId) throws QueryException;
-    String[] getEditorUsernames(int guiId, int startIndex, int limit) throws QueryException;
+    List<String> getEditorUsernames(int guiId, int startIndex, int limit) throws QueryException;
 
 
     void addGuiEditor(int guiId, String uuid) throws ModificationException;

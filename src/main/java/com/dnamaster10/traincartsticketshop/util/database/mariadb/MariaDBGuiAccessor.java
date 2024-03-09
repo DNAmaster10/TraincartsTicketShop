@@ -1,8 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -22,11 +20,10 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException {
        return getGuiCache().checkGuiOwnerByUuid(guiId, ownerUuid);
     }
-    public boolean playerCanEdit(int guiId, String uuid) throws QueryException {
+    public boolean playerCanEdit(int guiId, String uuid) {
         //Returns true if player is either an owner of a gui or a listed editor
         if (getGuiCache().checkGuiOwnerByUuid(guiId, uuid)) return true;
-        GuiEditorsAccessor guiEditorsAccessor = AccessorFactory.getGuiEditorsAccessor();
-        return guiEditorsAccessor.checkGuiEditorByUuid(guiId, uuid);
+        return getGuiEditorsCache().checkGuiEditorByUuid(guiId, uuid);
     }
 
     public List<GuiDatabaseObject> getGuisFromDatabase() throws QueryException {
@@ -91,24 +88,9 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     public String getDisplayNameById(int guiId) throws QueryException {
         return getGuiCache().getDisplayNameById(guiId);
     }
-    public String getOwnerUsername(int guiId) throws QueryException {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("""
-                    SELECT players.username
-                    FROM guis
-                    INNER JOIN players ON guis.owner_uuid=players.uuid
-                    WHERE guis.id=?
-                    """);
-            statement.setInt(1, guiId);
-            ResultSet result = statement.executeQuery();
-            String ownerUsername = null;
-            if (result.next()) {
-                ownerUsername = result.getString(1);
-            }
-            return ownerUsername;
-        } catch (SQLException e) {
-            throw new QueryException(e);
-        }
+    public String getOwnerUsername(int guiId) {
+        String uuid = getGuiCache().getGuiById(guiId).ownerUuid();
+        return getPlayerCache().getPlayerByUuid(uuid).username();
     }
     public List<String> getPartialNameMatches(String argument) {
         return getGuiCache().getPartialNameMatches(argument);
@@ -210,6 +192,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             throw new ModificationException(e);
         }
         getGuiCache().deleteGuiById(id);
+        getGuiEditorsCache().removeGui(id);
     }
     public void deletePage(int guiId, int page) throws ModificationException {
         //Deletes the given page from a gui. Deletes tickets and links too.

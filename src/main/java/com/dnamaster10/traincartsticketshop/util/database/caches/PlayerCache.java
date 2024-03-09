@@ -33,6 +33,9 @@ public class PlayerCache {
     public PlayerDatabaseObject getPlayerByUsername(String username) {
         return usernamePlayerMap.get(username.toLowerCase());
     }
+    public PlayerDatabaseObject getPlayerByUuid(String uuid) {
+        return uuidPlayerMap.get(uuid);
+    }
     public List<String> getPartialUsernameMatches(String inputString) {
         return StringUtil.copyPartialMatches(inputString, usernames, new ArrayList<>());
     }
