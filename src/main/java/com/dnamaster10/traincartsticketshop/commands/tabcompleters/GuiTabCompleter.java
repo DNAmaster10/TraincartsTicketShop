@@ -56,6 +56,9 @@ public class GuiTabCompleter extends ArgumentCompleter {
     @Override
     protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
         switch (args[1].toLowerCase()) {
+            case "addeditor" -> {
+                return new GuiAddEditorTabCompleter().getCompletions(sender, args);
+            }
             case "delete" -> {
                 return new GuiDeleteTabCompleter().getCompletions(sender, args);
             }

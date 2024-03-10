@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class RemoveEditorCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop editor remove <player_name> <gui_name>
+    //Example command: /tshop editor remove <gui name> <player name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiEditorsAccessor editorsAccessor;
     private int guiId;
@@ -29,15 +29,15 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui removeEditor <player username> <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui removeEditor <gui name> <username>");
             return false;
         }
         if (args.length > 4) {
             returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
-        if (!checkGuiNameSyntax(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
         return true;
@@ -48,11 +48,11 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the guiID and check that the gui exists
-        if (!guiAccessor.checkGuiByName(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!guiAccessor.checkGuiByName(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[3]);
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //If player, check that they own the gui
         if (sender instanceof Player p) {
@@ -65,16 +65,16 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
         }
 
        //Check that editor is a valid username and that they are a registered editor of the gui
-        editorDatabaseObject = Players.getPlayerByUsername(args[2]);
+        editorDatabaseObject = Players.getPlayerByUsername(args[3]);
         if (editorDatabaseObject == null) {
-            returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
+            returnError(sender, "No player with the username \"" + args[3] + "\" could be found");
             return false;
         }
 
         editorsAccessor = AccessorFactory.getGuiEditorsAccessor();
         //Check that the editor exists in the editors table
         if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.uuid())) {
-            returnError(sender, "Player \"" + editorDatabaseObject.username() + "\" is not a registered editor for gui \"" + args[3] + "\"");
+            returnError(sender, "Player \"" + editorDatabaseObject.username() + "\" is not a registered editor for gui \"" + args[2] + "\"");
             return false;
         }
         return true;
@@ -84,6 +84,6 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         //Remove the editor
         editorsAccessor.removeGuiEditor(guiId, editorDatabaseObject.uuid());
-        sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.username() + "\" is no longer an editor of gui \"" + args[3] + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.username() + "\" is no longer an editor of gui \"" + args[2] + "\"");
     }
 }

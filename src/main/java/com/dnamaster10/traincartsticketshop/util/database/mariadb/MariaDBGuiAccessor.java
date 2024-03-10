@@ -17,7 +17,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     public boolean checkGuiById(int id) {
         return getGuiCache().checkGuiById(id);
     }
-    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) throws QueryException {
+    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) {
        return getGuiCache().checkGuiOwnerByUuid(guiId, ownerUuid);
     }
     public boolean playerCanEdit(int guiId, String uuid) {
@@ -46,11 +46,11 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             throw new QueryException(e);
         }
     }
-    public Integer getGuiIdByName(String name) throws QueryException {
+    public Integer getGuiIdByName(String name) {
         //Returns gui id from name
         return getGuiCache().getGuiIdByName(name);
     }
-    public String getGuiNameById(int id) throws QueryException {
+    public String getGuiNameById(int id) {
         //Returns gui name from id
         return getGuiCache().getGuiNameById(id);
     }
@@ -85,7 +85,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
             throw new QueryException(e);
         }
     }
-    public String getDisplayNameById(int guiId) throws QueryException {
+    public String getDisplayNameById(int guiId) {
         return getGuiCache().getDisplayNameById(guiId);
     }
     public String getOwnerUsername(int guiId) {
@@ -94,6 +94,21 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
     }
     public List<String> getPartialNameMatches(String argument) {
         return getGuiCache().getPartialNameMatches(argument);
+    }
+    public List<GuiDatabaseObject> getGuisOwnedBy(String uuid) {
+        return getGuiCache().getGuisOwnedBy(uuid);
+    }
+    public List<GuiDatabaseObject> getGuisEditableBy(String uuid) {
+        //Returns a list of guis which a player is able to edit. Note that this includes both guis the player owns
+        //and also guis the player is a registered editor of. The GuiEditorAccessor must be used to *only* get guis
+        //which a player is a registered editor of.
+        List<GuiDatabaseObject> ownedGuis = getGuisOwnedBy(uuid);
+        List<GuiDatabaseObject> editorGuis = getGuiEditorsCache().getGuisEditableByEditor(uuid);
+        ownedGuis.addAll(editorGuis);
+        return ownedGuis;
+    }
+    public GuiDatabaseObject getGuiById(int guiId) {
+        return getGuiCache().getGuiById(guiId);
     }
 
     public void updateGuiName(int guiId, String newName) throws ModificationException {
@@ -133,6 +148,7 @@ public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAc
         }
         getGuiCache().updateGuiOwner(guiId, uuid);
     }
+
     public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
         //Registers a new GUI in the database
         Integer guiId = null;

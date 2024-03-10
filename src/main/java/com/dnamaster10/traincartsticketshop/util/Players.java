@@ -3,17 +3,15 @@ package com.dnamaster10.traincartsticketshop.util;
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
 public class Players {
     //Contains utility methods for players
-    public static PlayerDatabaseObject getPlayerByUsername(String username) throws QueryException, ModificationException {
+    public static PlayerDatabaseObject getPlayerByUsername(String username) throws ModificationException {
         //Takes in a username, and returns either null if the player doesn't exist
         //Or returns the corrected player username.
         //First checks online players, then the database, and then the Mojang api as a final fallback

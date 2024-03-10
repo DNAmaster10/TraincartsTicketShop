@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;

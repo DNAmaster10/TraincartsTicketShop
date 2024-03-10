@@ -81,7 +81,6 @@ public class EditGui extends MultipageGui {
         return pageBuilder.getPage();
     }
     private void openPage(Button[] page) {
-        getPlugin().getLogger().severe("Num: " + getTotalPages());
         int totalPageNum = getTotalPages();
         if (totalPageNum > getMaxPages()) totalPageNum = getMaxPages();
         String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + totalPageNum + ")";

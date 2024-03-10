@@ -11,10 +11,10 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiEditTabCompleter extends ArgumentCompleter {
-    //Example command: /tshop gui edit <gui name>
+public class GuiAddEditorTabCompleter extends ArgumentCompleter {
+    //Example command: /tshop gui removeEditor <gui name> <username>
     private boolean checkPermissions(Player player) {
-        return player.hasPermission("traincartsticketshop.gui.edit") || player.hasPermission("traincartsticketshop.admin.gui.edit");
+        return player.hasPermission("traincartsticketshop.gui.addeditor") || player.hasPermission("traincartsticketshop.admin.gui.addeditor");
     }
 
     @Override
@@ -23,19 +23,18 @@ public class GuiEditTabCompleter extends ArgumentCompleter {
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.edit")) {
-            //Get all guis
+        if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.addeditor")) {
             return guiAccessor.getPartialNameMatches(args[2]);
         }
 
-        //Get guis editable by this player
-        List<GuiDatabaseObject> editableGuis = guiAccessor.getGuisEditableBy(player.getUniqueId().toString());
-        List<String> editableGuiNames = editableGuis.stream().map(GuiDatabaseObject::name).toList();
-        return StringUtil.copyPartialMatches(args[2], editableGuiNames, new ArrayList<>());
+        //Get guis owned by this sender
+        List<GuiDatabaseObject> ownedGuis = guiAccessor.getGuisOwnedBy(player.getUniqueId().toString());
+        List<String> ownedGuiNames = ownedGuis.stream().map(GuiDatabaseObject::name).toList();
+        return StringUtil.copyPartialMatches(args[2], ownedGuiNames, new ArrayList<>());
     }
 
     @Override
     protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
-        return new ArrayList<>();
+        return null;
     }
 }

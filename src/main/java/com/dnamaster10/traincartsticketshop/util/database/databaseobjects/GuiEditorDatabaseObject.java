@@ -2,7 +2,7 @@ package com.dnamaster10.traincartsticketshop.util.database.databaseobjects;
 
 import java.util.List;
 
-public record GuiEditorsDatabaseObject(
+public record GuiEditorDatabaseObject(
         int guiId,
-        List<String> editorUuids
+        String editorUuid
 ) {}

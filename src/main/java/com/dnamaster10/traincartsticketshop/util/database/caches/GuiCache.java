@@ -15,6 +15,7 @@ public class GuiCache {
     List<String> guiNames = new CopyOnWriteArrayList<>();
     ConcurrentHashMap<Integer, GuiDatabaseObject> idGuiMap = new ConcurrentHashMap<>();
     ConcurrentHashMap<String, GuiDatabaseObject> nameGuiMap = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, List<GuiDatabaseObject>> ownerGuiMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
@@ -23,6 +24,12 @@ public class GuiCache {
             guiNames.add(gui.name());
             idGuiMap.put(gui.id(), gui);
             nameGuiMap.put(gui.name().toLowerCase(), gui);
+            if (ownerGuiMap.containsKey(gui.ownerUuid())) ownerGuiMap.get(gui.ownerUuid()).add(gui);
+            else {
+                List<GuiDatabaseObject> ownedGuis = new ArrayList<>();
+                ownedGuis.add(gui);
+                ownerGuiMap.put(gui.ownerUuid(), ownedGuis);
+            }
         }
     }
 
@@ -56,54 +63,59 @@ public class GuiCache {
     public List<String> getPartialNameMatches(String inputString) {
         return StringUtil.copyPartialMatches(inputString, guiNames, new ArrayList<>());
     }
+    public List<GuiDatabaseObject> getGuisOwnedBy(String uuid) {
+        if (!ownerGuiMap.containsKey(uuid)) return new ArrayList<>();
+        return ownerGuiMap.get(uuid);
+    }
 
     public void updateGuiName(int id, String newName) {
-        GuiDatabaseObject oldGui = idGuiMap.get(id);
-        GuiDatabaseObject newGui = new GuiDatabaseObject(
-                oldGui.id(),
-                newName,
-                oldGui.displayName(),
-                oldGui.ownerUuid()
-        );
-        guiNames.remove(oldGui.name());
-        nameGuiMap.remove(oldGui.name());
-
+        GuiDatabaseObject gui = idGuiMap.get(id);
+        String oldName = gui.name();
+        gui.setName(newName);
+        guiNames.remove(oldName);
         guiNames.add(newName);
-        nameGuiMap.put(newName.toLowerCase(), newGui);
-        idGuiMap.put(oldGui.id(), newGui);
+        nameGuiMap.remove(oldName.toLowerCase());
+        nameGuiMap.put(newName.toLowerCase(), gui);
+
     }
     public void updateGuiDisplayName(int id, String displayName) {
-        GuiDatabaseObject oldGui = idGuiMap.get(id);
-        GuiDatabaseObject newGui = new GuiDatabaseObject(
-                oldGui.id(),
-                oldGui.name(),
-                displayName,
-                oldGui.ownerUuid()
-        );
-        nameGuiMap.put(oldGui.name().toLowerCase(), newGui);
-        idGuiMap.put(id, newGui);
+        idGuiMap.get(id).setDisplayName(displayName);
     }
     public void updateGuiOwner(int id, String uuid) {
-        GuiDatabaseObject oldGui = idGuiMap.get(id);
-        GuiDatabaseObject newGui = new GuiDatabaseObject(
-                oldGui.id(),
-                oldGui.name(),
-                oldGui.displayName(),
-                uuid
-        );
-        nameGuiMap.put(oldGui.name().toLowerCase(), newGui);
-        idGuiMap.put(id, newGui);
+        GuiDatabaseObject gui = idGuiMap.get(id);
+        String oldOwner = gui.ownerUuid();
+
+        List<GuiDatabaseObject> oldOwnerGuis = ownerGuiMap.get(oldOwner);
+        oldOwnerGuis.remove(gui);
+        if (oldOwnerGuis.isEmpty()) ownerGuiMap.remove(oldOwner);
+
+        gui.setOwnerUuid(uuid);
+
+        if (!ownerGuiMap.containsKey(uuid)) ownerGuiMap.put(uuid, new ArrayList<>());
+        List<GuiDatabaseObject> newOwnerGuis = ownerGuiMap.get(uuid);
+        newOwnerGuis.add(gui);
     }
     public void addGui(GuiDatabaseObject gui) {
         guiNames.add(gui.name());
         nameGuiMap.put(gui.name().toLowerCase(), gui);
         idGuiMap.put(gui.id(), gui);
+
+        if (ownerGuiMap.containsKey(gui.ownerUuid())) ownerGuiMap.get(gui.ownerUuid()).add(gui);
+        else {
+            List<GuiDatabaseObject> ownerGuis = new ArrayList<>();
+            ownerGuis.add(gui);
+            ownerGuiMap.put(gui.ownerUuid(), ownerGuis);
+        }
     }
     public void deleteGuiById(int id) {
         GuiDatabaseObject gui = idGuiMap.get(id);
         guiNames.remove(gui.name());
         nameGuiMap.remove(gui.name().toLowerCase());
         idGuiMap.remove(id);
+
+        List<GuiDatabaseObject> ownerGuis = ownerGuiMap.get(gui.ownerUuid());
+        ownerGuis.remove(gui);
+        if (ownerGuis.isEmpty()) ownerGuiMap.remove(gui.ownerUuid());
     }
 
 }

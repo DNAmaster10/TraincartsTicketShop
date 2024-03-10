@@ -7,17 +7,16 @@ import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.Gui
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AddEditorCommandHandler extends AsyncCommandHandler {
-    //Command example: /traincartsticketshop editor add <player_name> <gui_name>
+    //Command example: /tshop gui addEditor <gui name> <player>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
     private GuiEditorsAccessor editorsAccessor;
-    private Integer guiId;
+    private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //If player check perms
@@ -30,15 +29,15 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui addEditor <player username> <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui addEditor <gui name> <player>");
             return false;
         }
         if (args.length > 4) {
             returnInvalidSubCommandError(sender, args[4]);
             return false;
         }
-        if (!checkGuiNameSyntax(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
@@ -46,14 +45,15 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException, ModificationException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException {
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
 
         //Get the gui ID and check that the gui exists
-        if (!guiAccessor.checkGuiByName(args[3])) {
-            returnGuiNotFoundError(sender, args[3]);
+        if (!guiAccessor.checkGuiByName(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
             return false;
         }
+        guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Check player is owner
         if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.admin.gui.addeditor")) {
@@ -64,9 +64,9 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
         }
 
         //Check the editor username is a valid username
-        playerDatabaseObject = Players.getPlayerByUsername(args[2]);
+        playerDatabaseObject = Players.getPlayerByUsername(args[3]);
         if (playerDatabaseObject == null) {
-            returnError(sender, "No player with the username \"" + args[2] + "\" could be found");
+            returnError(sender, "No player with the username \"" + args[3] + "\" could be found");
             return false;
         }
 
@@ -86,8 +86,8 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws QueryException, ModificationException {
+    protected void execute(CommandSender sender, String[] args) throws ModificationException {
         editorsAccessor.addGuiEditor(guiId, playerDatabaseObject.uuid());
-        sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.username() + "\" was registered as an editor for gui \"" + args[3] + "\"");
+        sender.sendMessage(ChatColor.GREEN + "Player \"" + playerDatabaseObject.username() + "\" was registered as an editor for gui \"" + args[2] + "\"");
     }
 }

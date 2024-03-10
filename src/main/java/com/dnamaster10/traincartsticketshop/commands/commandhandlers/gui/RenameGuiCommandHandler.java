@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui rename old_name new_name
+    //TODO should probably only be renameable by the owner
     private GuiAccessor guiAccessor;
     private int guiId;
 
