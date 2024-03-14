@@ -4,6 +4,8 @@ import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,8 +62,14 @@ public class Session {
         return guis.size() > 1;
     }
 
-    public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
-        guis.peek().handleClick(event, clickedItem);
+    public void handleInventoryClick(InventoryClickEvent event) {
+        if (!(guis.peek() instanceof EditGui)) event.setCancelled(true);
+        guis.peek().handleClick(event);
+    }
+
+    public void handleInventoryDrag(InventoryDragEvent event) {
+        if (!(guis.peek() instanceof EditGui)) event.setCancelled(true);
+        else ((EditGui) guis.peek()).handleDrag(event);
     }
 
     public void handleInventoryClose() {

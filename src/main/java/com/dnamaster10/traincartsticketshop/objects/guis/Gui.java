@@ -8,6 +8,7 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +22,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST
 public abstract class Gui {
     //The inventory currently open within this gui
     public abstract void open();
-    public abstract void handleClick(InventoryClickEvent event, ItemStack clickedItem);
+    public abstract void handleClick(InventoryClickEvent event);
 
     private Inventory inventory;
     private int guiId;

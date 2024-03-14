@@ -6,7 +6,9 @@ import com.dnamaster10.traincartsticketshop.objects.guis.SearchSelectGui;
 import com.dnamaster10.traincartsticketshop.util.GuiUtils;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -44,11 +46,10 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(getInventory()), 1L);
     }
     @Override
-    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+    public void handleClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
         String buttonType = getButtonType(clickedItem);
         if (buttonType == null) return;
-
-        removeCursorItem();
 
         switch (buttonType) {
             case "ticket" -> {

@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
@@ -41,7 +42,8 @@ public class SearchSelectGui extends Gui {
     }
 
     @Override
-    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+    public void handleClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
         String buttonType = getButtonType(clickedItem);
         if (buttonType == null) return;
 

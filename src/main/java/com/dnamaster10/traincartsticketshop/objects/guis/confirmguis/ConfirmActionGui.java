@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
@@ -19,11 +20,10 @@ public abstract class ConfirmActionGui extends Gui {
     protected abstract void generate();
 
     @Override
-    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+    public void handleClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
         String buttonType = getButtonType(clickedItem);
-        if (buttonType == null) {
-            return;
-        }
+        if (buttonType == null) return;
         //Remove item from cursor since it is a button
         removeCursorItem();
         switch (buttonType) {

@@ -6,6 +6,8 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
+import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
+import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
@@ -16,13 +18,15 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.GREEN_PLUS;
@@ -120,21 +124,103 @@ public class EditGui extends MultipageGui {
         });
     }
 
-    @Override
-    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
-        String buttonType = getButtonType(clickedItem);
-        if (buttonType == null) return;
-        switch (buttonType) {
-            case "next_page", "prev_page", "delete_page", "insert_page" -> handleButtonClick(event, buttonType);
+    public void handleDrag(InventoryDragEvent event) {
+        Set<Integer> slots = event.getRawSlots();
+
+        //Check that player hasn't tried to put items in the wrong place
+        for (int slot : slots) {
+            if (slot < 54 && slot >= 45) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
+        //Check that items being added are valid
+        if (!event.getNewItems().entrySet().iterator().hasNext()) {
+            event.setCancelled(true);
+            return;
+        }
+        Map.Entry<Integer, ItemStack> entry = event.getNewItems().entrySet().iterator().next();
+        ItemStack addedItem = entry.getValue();
+        String buttonType = getButtonType(addedItem);
+        if (buttonType == null) {
+            if (!Traincarts.isTraincartsTicket(addedItem)) {
+                event.setCancelled(true);
+                return;
+            }
+            //Item is a traincarts ticket, get ticket shop ticket from that
+            Ticket convertedTicket = Traincarts.getAsTicketShopTicket(addedItem);
+            if (convertedTicket == null) {
+                event.setCancelled(true);
+                return;
+            }
+            final ItemStack conertedItem = convertedTicket.getItemStack();
+
+            //Convert the items
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+                for (int slot : slots) {
+                    if (slot < 45) {
+                        event.getInventory().setItem(slot, conertedItem);
+                    }
+                }
+                ((Player) event.getWhoClicked()).updateInventory();
+            }, 1L);
+        } else if (!buttonType.equals("link") && !buttonType.equals("ticket")) {
+            //Item is invalid
+            getPlugin().getLogger().severe("Was cancelled 4!");
+            event.setCancelled(true);
+        }
     }
-    private void handleButtonClick(InventoryClickEvent event, String buttonType) {
+
+    @Override
+    public void handleClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
+        String buttonType = getButtonType(clickedItem);
+        if (buttonType != null) {
+            switch (buttonType) {
+                case "next_page", "prev_page", "delete_page", "insert_page" -> {
+                    event.setCancelled(true);
+                    handleButtonClick(event, buttonType);
+                    return;
+                }
+            }
+        }
+        //Player has not clicked a button, handle as if they are placing into or removing item from gui
+        if (event.getRawSlot() >= 45 && event.getRawSlot() < 54) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) {
+            return;
+        }
+        ItemStack addedItem = event.getCursor();
+        String addedButtonType = ButtonUtils.getButtonType(addedItem);
+        if (addedButtonType != null) {
+            if (addedButtonType.equals("link") || addedButtonType.equals("ticket")) {
+                return;
+            }
+            event.setCancelled(true);
+            return;
+        }
+        //Added item is not a ticket shop item
+        if (!Traincarts.isTraincartsTicket(addedItem)) {
+            event.setCancelled(true);
+            return;
+        }
+        Ticket convertedTicket = Traincarts.getAsTicketShopTicket(addedItem);
+        if (convertedTicket == null) {
+            event.setCancelled(true);
+            return;
+        }
+        event.getWhoClicked().setItemOnCursor(convertedTicket.getItemStack());
+    }
+    private void handleButtonClick(InventoryInteractEvent event, String buttonType) {
         wasClosed = false;
 
         //Save the current page
         PageBuilder pageBuilder = new PageBuilder();
-        pageBuilder.addInventory(event.getClickedInventory());
+        pageBuilder.addInventory(event.getInventory());
         Button[] page = pageBuilder.getPage();
 
         removeCursorItem();

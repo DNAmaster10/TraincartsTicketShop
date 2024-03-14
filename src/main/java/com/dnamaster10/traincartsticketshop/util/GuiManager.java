@@ -1,9 +1,9 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -13,6 +13,15 @@ public class GuiManager {
     private final HashMap<Player, Session> sessions = new HashMap<>();
     //A hashmap containing all guis which are currently being edited
     private final HashMap<Integer, Player> openEditGuis = new HashMap<>();
+    public boolean hasGuiOpen(Player p) {
+        Session session = getSession(p);
+        if (session == null) return false;
+        InventoryView inventoryView = p.getOpenInventory();
+        Inventory topInventory = inventoryView.getTopInventory();
+        if (topInventory.getType() != InventoryType.CHEST) return false;
+        return session.isGuiInventory(topInventory);
+
+    }
     private boolean isGuiInventory(Inventory inventory, Player player) {
         //Returns true if the given inventory is within a session
         Session session = getSession(player);
@@ -41,13 +50,19 @@ public class GuiManager {
         //Returns the player who is editing a gui
         return openEditGuis.get(guiId);
     }
-    public void handleInventoryClick(InventoryClickEvent event, ItemStack clickedItem) {
+    public void handleInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Session session = getSession(player);
+        if (session == null) return;
 
-        if (session == null || !isGuiInventory(event.getClickedInventory(), player)) return;
+        session.handleInventoryClick(event);
+    }
+    public void handleInventoryDrag(InventoryDragEvent event) {
+        Player player = (Player)  event.getWhoClicked();
+        Session session = getSession(player);
+        if (session == null) return;
 
-        session.handleInventoryClick(event, clickedItem);
+        session.handleInventoryDrag(event);
     }
     public void handleInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;

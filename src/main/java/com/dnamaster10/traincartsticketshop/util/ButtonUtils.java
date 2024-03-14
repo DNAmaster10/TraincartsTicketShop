@@ -14,16 +14,13 @@ public class ButtonUtils {
     public static String getButtonType(ItemStack button) {
         //Returns the button type from a given item
         //First check if item is a button
-        if (!button.hasItemMeta()) {
-            return null;
-        }
+        if (button == null || !button.hasItemMeta()) return null;
+
         ItemMeta meta = button.getItemMeta();
         assert meta != null;
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
 
-        if (!dataContainer.has(BUTTON_TYPE, PersistentDataType.STRING)) {
-            return null;
-        }
+        if (!dataContainer.has(BUTTON_TYPE, PersistentDataType.STRING)) return null;
 
         return dataContainer.get(BUTTON_TYPE, PersistentDataType.STRING);
     }

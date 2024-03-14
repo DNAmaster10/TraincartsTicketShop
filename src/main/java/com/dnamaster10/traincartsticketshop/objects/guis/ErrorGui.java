@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -27,11 +28,10 @@ public class ErrorGui extends Gui {
     }
 
     @Override
-    public void handleClick(InventoryClickEvent event, ItemStack clickedItem) {
+    public void handleClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
         String buttonType = getButtonType(clickedItem);
-        if (buttonType == null) {
-            return;
-        }
+        if (buttonType == null) return;
         removeCursorItem();
         if (buttonType.equals("error")) {
             getPlayer().closeInventory();
