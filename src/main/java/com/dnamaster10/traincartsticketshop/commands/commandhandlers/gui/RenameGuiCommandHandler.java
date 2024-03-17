@@ -9,41 +9,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class RenameGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui rename old_name new_name
-    //TODO should probably only be renameable by the owner
-    private GuiAccessor guiAccessor;
-    private int guiId;
+import java.util.StringJoiner;
 
+public class RenameGuiCommandHandler extends AsyncCommandHandler {
+    //Example command: /traincartsticketshop gui setdisplayname <gui name> <gui display name>
+    private String rawDisplayName;
+    private String colouredDisplayName;
+    private GuiAccessor guiAccessor;
+    private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check syntax
-        if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui rename <old name> <new name>");
-            return false;
-        }
-        if (args.length > 4) {
-            returnInvalidSubCommandError(sender, args[4]);
-            return false;
-        }
-        if (args[3].length() > 20) {
-            returnError(sender, "Gui names cannot be more than 20 characters in length");
-            return false;
-        }
-        if (args[3].length() < 3) {
-            returnError(sender, "Gui names cannot be less than 3 characters in length");
-            return false;
-        }
-        //Check syntax of old gui name to save on database calls
-        if (!checkGuiNameSyntax(args[2])) {
-            returnGuiNotFoundError(sender, args[2]);
-            return false;
-        }
-        if (!checkStringFormat(args[3])) {
-            returnError(sender, "Gui names can only contain letters Aa - Zz, numbers, underscores and dashes");
-            return false;
-        }
-
         //Check permissions
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.gui.rename") && !p.hasPermission("traincartsticketshop.admin.gui.rename")) {
@@ -52,7 +27,38 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
             }
         }
 
-        //If all checks have passed, return true
+        //Check syntax
+        if (args.length < 4) {
+            returnMissingArgumentsError(sender, "/tshop rename <gui id> <new name>");
+            return false;
+        }
+
+        //Check gui name to save on database calls
+        if (!checkGuiNameSyntax(args[2])) {
+            returnGuiNotFoundError(sender, args[2]);
+            return false;
+        }
+
+        //Build display name
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = 3; i < args.length; i++) {
+            stringJoiner.add(args[i]);
+        }
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+
+        if (rawDisplayName.length() > 25) {
+            returnError(sender, "Gui names cannot be more than 20 characters in length");
+            return false;
+        }
+        if (rawDisplayName.isBlank()) {
+            returnError(sender, "Gui names cannot be less than 1 character in length");
+            return false;
+        }
+        if (colouredDisplayName.length() > 100) {
+            returnError(sender, "Too many colours used in name");
+            return false;
+        }
         return true;
     }
 
@@ -60,14 +66,14 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         guiAccessor = AccessorFactory.getGuiAccessor();
 
-        //Get the gui ID and check that it exists
+        //Get the gui id and check that it exists
         if (!guiAccessor.checkGuiByName(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
         guiId = guiAccessor.getGuiIdByName(args[2]);
 
-        //If sender is player, check that player is an editor of that gui if they don't have admin perms
+        //If sender is player, check that player is an editor of that gui
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.rename")) {
                 if (!guiAccessor.playerCanEdit(guiId, p.getUniqueId().toString())) {
@@ -77,17 +83,12 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
             }
         }
 
-        //Check that the new gui name doesn't already exist
-        if (guiAccessor.checkGuiByName(args[3])) {
-            returnError(sender, "A gui with name \"" + args[3] + "\" already exists");
-            return false;
-        }
         return true;
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
-        guiAccessor.updateGuiName(guiId, args[3]);
-        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was successfully renamed to \"" + args[3] + "\"");
+        guiAccessor.updateGuiDisplayName(guiId, colouredDisplayName, rawDisplayName);
+        sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s name was changed to \"" + colouredDisplayName + "\"");
     }
 }

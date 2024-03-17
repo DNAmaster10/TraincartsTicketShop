@@ -74,11 +74,11 @@ public class GuiTabCompleter extends ArgumentCompleter {
             case "removeeditor" -> {
                 return new GuiRemoveEditorTabCompleter().getCompletions(sender, args);
             }
+            case "setid" -> {
+                return new GuiSetIdCompleter().getCompletions(sender, args);
+            }
             case "rename" -> {
                 return new GuiRenameTabCompleter().getCompletions(sender, args);
-            }
-            case "setdisplayname" -> {
-                return new GuiSetDisplayNameTabCompleter().getCompletions(sender, args);
             }
             case "transfer" -> {
                 return new GuiTransferTabCompleter().getCompletions(sender, args);

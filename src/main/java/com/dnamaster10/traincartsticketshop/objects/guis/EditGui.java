@@ -64,9 +64,6 @@ public class EditGui extends MultipageGui {
     }
 
     private Button[] getNewPage() throws QueryException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        //setTotalPages(guiAccessor.getHighestPageNumber(getGuiId()));
-
         PageBuilder pageBuilder = new PageBuilder();
         pageBuilder.addTicketsFromDatabase(getGuiId(), getPageNumber());
         pageBuilder.addLinksFromDatabase(getGuiId(), getPageNumber());

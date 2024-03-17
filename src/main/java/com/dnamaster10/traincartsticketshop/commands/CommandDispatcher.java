@@ -4,11 +4,11 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.RemoveE
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.*;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.AddEditorCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkCreateCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDisplayNameCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkRenameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDestinationPageCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.OpenGuiCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketCreateCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetDisplayNameCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketRenameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -42,8 +42,8 @@ public class CommandDispatcher implements CommandExecutor {
                     case "edit" -> new EditGuiCommandHandler().handle(sender, args);
                     case "open" -> new OpenGuiCommandHandler().handle(sender, args);
                     case "removeeditor" -> new RemoveEditorCommandHandler().handle(sender, args);
+                    case "setid" -> new SetGuiIdCommandHandler().handle(sender, args);
                     case "rename" -> new RenameGuiCommandHandler().handle(sender, args);
-                    case "setdisplayname" -> new SetGuiDisplayNameCommandHandler().handle(sender, args);
                     case "searchlinks" -> new SearchLinksCommandHandler().handle(sender, args);
                     case "searchtickets" -> new SearchTicketsCommandHandler().handle(sender, args);
                     case "transfer" -> new TransferGuiCommandHandler().handle(sender, args);
@@ -54,7 +54,7 @@ public class CommandDispatcher implements CommandExecutor {
             case "ticket" -> {
                 switch (args[1].toLowerCase()) {
                     case "create" -> new TicketCreateCommandHandler().handle(sender, args);
-                    case "setdisplayname" -> new TicketSetDisplayNameCommandHandler().handle(sender, args);
+                    case "rename" -> new TicketRenameCommandHandler().handle(sender, args);
                     case "settraincartsticket" -> new TicketSetTraincartsTicket().handle(sender, args);
 
                     default -> returnInvalidSubCommandError(sender, args[1]);
@@ -63,7 +63,7 @@ public class CommandDispatcher implements CommandExecutor {
             case "link" -> {
                 switch (args[1].toLowerCase()) {
                     case "create" -> new LinkCreateCommandHandler().handle(sender, args);
-                    case "setdisplayname" -> new LinkSetDisplayNameCommandHandler().handle(sender, args);
+                    case "rename" -> new LinkRenameCommandHandler().handle(sender, args);
                     case "setdestinationpage" -> new LinkSetDestinationPageCommandHandler().handle(sender, args);
 
                     default -> returnInvalidSubCommandError(sender, args[1]);

@@ -10,13 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MariaDBGuiAccessor extends MariaDBDatabaseAccessor implements GuiAccessor {
-
+    /**
+     * Returns true if a gui with the given name exists. Case-insensitive
+     *
+     * @param name A gui name
+     * @return Returns boolean
+     * */
     public boolean checkGuiByName(String name) {
         return getGuiCache().checkGuiByName(name);
     }
+    /**
+     * Returns true if a gui with the given ID exists
+     *
+     * @param id A gui ID
+     * @return Returns boolean
+     * */
     public boolean checkGuiById(int id) {
         return getGuiCache().checkGuiById(id);
     }
+    /**
+     * Returns true if the given gui is owned by the given player
+     *
+     * @param guiId A gui ID
+     * @param ownerUuid A String UUID of the player to check
+     * @return Returns a boolean
+     * */
     public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) {
        return getGuiCache().checkGuiOwnerByUuid(guiId, ownerUuid);
     }

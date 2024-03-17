@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiRenameTabCompleter extends ArgumentCompleter {
-    //Example command: /tshop gui rename <gui name> <new name>
+    //Example command: /tshop gui setDisplayName <gui name> <new display name>
     private boolean checkPermissions(Player player) {
         return player.hasPermission("traincartsticketshop.gui.rename") || player.hasPermission("traincartsticketshop.admin.gui.rename");
     }
-
     @Override
     public List<String> getCompletions(CommandSender sender, String[] args) {
         if (sender instanceof Player p && !checkPermissions(p)) return new ArrayList<>();

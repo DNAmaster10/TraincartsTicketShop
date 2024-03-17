@@ -11,18 +11,19 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSetDisplayNameTabCompleter extends ArgumentCompleter {
-    //Example command: /tshop gui setDisplayName <gui name> <new display name>
+public class GuiSetIdCompleter extends ArgumentCompleter {
+    //Example command: /tshop gui rename <gui name> <new name>
     private boolean checkPermissions(Player player) {
-        return player.hasPermission("traincartsticketshop.gui.setdisplayname") || player.hasPermission("traincartsticketshop.admin.gui.setdisplayname");
+        return player.hasPermission("traincartsticketshop.gui.setid") || player.hasPermission("traincartsticketshop.admin.gui.setid");
     }
+
     @Override
     public List<String> getCompletions(CommandSender sender, String[] args) {
         if (sender instanceof Player p && !checkPermissions(p)) return new ArrayList<>();
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
         GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.setdisplayname")) {
+        if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.setid")) {
             return guiAccessor.getPartialNameMatches(args[2]);
         }
 

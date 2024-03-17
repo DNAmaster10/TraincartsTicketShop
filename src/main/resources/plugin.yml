@@ -40,8 +40,8 @@ permissions:
   traincartsticketshop.gui.search.links:
     description: Allows a player to search links
     default: false
-  traincartsticketshop.gui.setdisplayname:
-    description: Allows a gui display name to be changed
+  traincartsticketshop.gui.setid:
+    description: Allows a gui ID to be changed
     default: false
   traincartsticketshop.gui.delete:
     description: Allows deleting of guis
@@ -68,8 +68,8 @@ permissions:
   traincartsticketshop.admin.gui.rename:
     description: Allows player to rename a gui even if they do not have edit perms
     default: false
-  traincartsticketshop.admin.gui.setdisplayname:
-    description: Allows player to set display name for a gui even if they do not have edit perms
+  traincartsticketshop.admin.gui.setid:
+    description: Allows player to set the ID for a gui even if they do not have edit perms
     default: false
   traincartsticketshop.admin.gui.transfer:
     description: Allows player to transfer gui even if they are not the owner
@@ -78,7 +78,7 @@ permissions:
   traincartsticketshop.ticket.create:
     description: Allows the creation of TraincartsTicketShop tickets
     default: false
-  traincartsticketshop.ticket.setdisplayname:
+  traincartsticketshop.ticket.rename:
     description: Allows player to rename a held ticket
     default: false
   traincartsticketshop.ticket.settraincartsticket:
@@ -91,7 +91,7 @@ permissions:
   traincartsticketshop.link.create:
     description: Allows player to create gui link item
     default: false
-  traincartsticketshop.link.setdisplayname:
+  traincartsticketshop.link.rename:
     description: Allows player to rename a link item
     default: false
   traincartsticketshop.link.setdestinationpage:
