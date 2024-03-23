@@ -26,7 +26,7 @@ public class GuiTabCompleter extends ArgumentCompleter {
         ARGS1.add("rename");
         ARGS1.add("searchLinks");
         ARGS1.add("searchTickets");
-        ARGS1.add("setDisplayName");
+        ARGS1.add("setId");
         ARGS1.add("transfer");
     }
 

@@ -9,6 +9,8 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class TicketTabCompleter extends ArgumentCompleter {
     private static final List<String> ARGS1;
     static {
@@ -29,7 +31,7 @@ public class TicketTabCompleter extends ArgumentCompleter {
     public List<String> getCompletions(CommandSender sender, String[] args) {
         //Check that sub-command hasn't already been entered
         if (args.length > 2) {
-            return null;
+            return getNextArgumentCompletions(sender, args);
         }
 
         List<String> subCommands = StringUtil.copyPartialMatches(args[1].toLowerCase(), ARGS1, new ArrayList<>());
