@@ -9,6 +9,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSe
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.OpenGuiCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketRenameCommandHandler;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetPurchaseMessageCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -56,6 +57,7 @@ public class CommandDispatcher implements CommandExecutor {
                     case "create" -> new TicketCreateCommandHandler().handle(sender, args);
                     case "rename" -> new TicketRenameCommandHandler().handle(sender, args);
                     case "settraincartsticket" -> new TicketSetTraincartsTicket().handle(sender, args);
+                    case "setpurchasemessage" -> new TicketSetPurchaseMessageCommandHandler().handle(sender, args);
 
                     default -> returnInvalidSubCommandError(sender, args[1]);
                 }

@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ticket.TicketCreateTabCompleter;
+import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ticket.TicketSetTraincartsTicketTabCompleter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -13,8 +14,9 @@ public class TicketTabCompleter extends ArgumentCompleter {
     static {
         ARGS1 = new ArrayList<>();
         ARGS1.add("create");
-        ARGS1.add("setDisplayName");
+        ARGS1.add("rename");
         ARGS1.add("setTraincartsTicket");
+        ARGS1.add("setPurchaseMessage");
     }
 
     private boolean checkPermission(Player p, String command) {
@@ -47,6 +49,12 @@ public class TicketTabCompleter extends ArgumentCompleter {
         switch (args[1].toLowerCase()) {
             case "create" -> {
                 return new TicketCreateTabCompleter().getCompletions(sender, args);
+            }
+            case "settraincartsticket" -> {
+                return new TicketSetTraincartsTicketTabCompleter().getCompletions(sender, args);
+            }
+            case "rename", "setpurchasemessage" -> {
+                return new ArrayList<>();
             }
         }
         return new ArrayList<>();

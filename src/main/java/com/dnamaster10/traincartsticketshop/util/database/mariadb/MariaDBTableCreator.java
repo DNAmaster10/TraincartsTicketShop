@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 public class MariaDBTableCreator extends MariaDBDatabaseAccessor implements TableCreator {
 
+    @Override
     public void createTables() throws ModificationException {
         //TODO Need to define an index for display names
         try (Connection connection = getConnection()) {

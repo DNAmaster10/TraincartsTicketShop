@@ -33,7 +33,7 @@ public class ConfigUtils {
                     if (!line.contains(":") || !split[0].trim().equals(split[0])) continue;
                     oldMultilineStartValue = split[0];
                     oldConfigMultilineOptions.put(oldMultilineStartValue, new HashMap<>());
-                } else if (!oldMultilineStartValue.equals("") && !split[0].startsWith(split[0].trim()))
+                } else if (!oldMultilineStartValue.isEmpty() && !split[0].startsWith(split[0].trim()))
                     oldConfigMultilineOptions.get(oldMultilineStartValue).put(split[0], split[1].trim());
                 else oldConfigMap.put(split[0], String.join(":", Arrays.copyOfRange(split, 1, split.length)).trim());
             }
