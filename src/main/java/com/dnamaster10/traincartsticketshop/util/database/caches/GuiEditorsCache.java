@@ -10,6 +10,7 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.Player
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -78,7 +79,7 @@ public class GuiEditorsCache {
 
     public void removeGuiEditor(String uuid, int guiId) {
         guiIdEditorsMap.get(guiId).remove(uuid);
-        editorGuisMap.get(uuid).remove(guiId);
+        editorGuisMap.get(uuid).remove(Integer.valueOf(guiId));
     }
     public void removeGui(int guiId) {
         if (!guiIdEditorsMap.containsKey(guiId)) return;
@@ -88,7 +89,7 @@ public class GuiEditorsCache {
         for (String uuid : editors) {
             if (!editorGuisMap.containsKey(uuid)) continue;
             List<Integer> guis = editorGuisMap.get(uuid);
-            guis.remove(guiId);
+            guis.remove(Integer.valueOf(guiId));
             if (guis.isEmpty()) editorGuisMap.remove(uuid);
         }
     }
