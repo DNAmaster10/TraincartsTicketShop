@@ -1,9 +1,9 @@
-package com.dnamaster10.traincartsticketshop.util.database.mariadb;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.PlayerDatabaseAccessor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements PlayerAccessor {
-
-    private static
-
+public class MariaPlayerAccessor extends MariaDatabaseAccessor implements PlayerDatabaseAccessor {
     @Override
-    public List<PlayerDatabaseObject> getAllPlayersFromDatabase() throws QueryException {
+    public List<PlayerDatabaseObject> getAllPlayers() throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT username,uuid FROM players");
             ResultSet result = statement.executeQuery();
@@ -31,24 +28,16 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
         }
     }
 
-    public PlayerDatabaseObject getPlayerByUsername(String username) {
-        //Returns player database object from username. Case-insensitive
-        return getPlayerCache().getPlayerByUsername(username);
-    }
-    public PlayerDatabaseObject getPlayerByUuid(String uuid) {
-        //Return player database object from uuid
-        return getPlayerCache().getPlayerByUuid(uuid);
-    }
-    public List<String> getPartialUsernameMatches(String inputString) {
-        return getPlayerCache().getPartialUsernameMatches(inputString);
-    }
-
+    @Override
     public void updatePlayer(String username, String uuid) throws ModificationException {
-        //Updates or inserts a player into the players table.
-        //The last_join column is used in the event that a player changes their username.
-        //When selecting UUID from username, if there are duplicate usernames, the plugin will favour the most
-        //recently joined player.
         try (Connection connection = getConnection()) {
+            /*
+            * Updates or inserts a player into the players table.
+            * The last_join column is used in the event that a player changes their username.
+            * When selecting UUID from username, if there are duplicate usernames, will favour the most recent
+            * time in this column.
+            * */
+
             PreparedStatement statement = connection.prepareStatement("""
                     INSERT INTO players (username, uuid, last_join)
                     VALUES (?, ?, ?)
@@ -60,11 +49,8 @@ public class MariaDBPlayerAccessor extends MariaDBDatabaseAccessor implements Pl
             statement.setString(2, uuid);
             statement.setLong(3, System.currentTimeMillis());
             statement.executeUpdate();
-
-            //Update database cache
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
-        getPlayerCache().updatePlayer(username, uuid);
     }
 }
