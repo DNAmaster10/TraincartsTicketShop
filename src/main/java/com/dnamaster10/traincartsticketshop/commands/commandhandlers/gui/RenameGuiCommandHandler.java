@@ -1,10 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +14,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui setdisplayname <gui name> <gui display name>
     private String rawDisplayName;
     private String colouredDisplayName;
-    private GuiAccessor guiAccessor;
+    private GuiDataAccessor guiAccessor;
     private Integer guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -64,7 +63,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = new GuiDataAccessor();
 
         //Get the gui id and check that it exists
         if (!guiAccessor.checkGuiByName(args[2])) {

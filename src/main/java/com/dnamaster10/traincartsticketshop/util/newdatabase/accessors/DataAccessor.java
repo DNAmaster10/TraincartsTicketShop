@@ -11,8 +11,8 @@ public class DataAccessor {
     private static final GuiEditorsCache guiEditorsCache = new GuiEditorsCache();
 
     public void initializeCaches() throws QueryException {
-        guiCache.initialize();
         playerCache.initialize();
+        guiCache.initialize();
         guiEditorsCache.initialize();
     }
 

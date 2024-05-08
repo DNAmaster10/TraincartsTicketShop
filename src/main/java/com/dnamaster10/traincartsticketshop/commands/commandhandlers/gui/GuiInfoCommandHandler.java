@@ -6,6 +6,9 @@ import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.Gui
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.LinkDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.TicketDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +17,7 @@ import net.md_5.bungee.api.chat.*;
 public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui info <gui name>
 
-    GuiAccessor guiAccessor;
+    GuiDataAccessor guiAccessor;
     int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -45,7 +48,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = new GuiDataAccessor();
 
         //Check gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -65,8 +68,8 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
         String owner = guiAccessor.getOwnerUsername(guiId);
         int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
 
-        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
-        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
+        TicketDataAccessor ticketAccessor = new TicketDataAccessor();
+        LinkDataAccessor linkAccessor = new LinkDataAccessor();
 
         int totalTickets = ticketAccessor.getTotalTickets(guiId);
         int totalLinks = linkAccessor.getTotalLinks(guiId);

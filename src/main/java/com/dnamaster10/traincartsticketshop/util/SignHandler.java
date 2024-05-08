@@ -1,9 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -85,7 +84,7 @@ public class SignHandler {
         //Handle sign click async from here. True will be returned beforehand to cancel the sign edit event.
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+                GuiDataAccessor guiAccessor = new GuiDataAccessor();
                 if (!guiAccessor.checkGuiByName(guiName)) {
                     event.getPlayer().sendMessage(ChatColor.RED + "No gui with name \"" + guiName + "\" exists");
                     return;

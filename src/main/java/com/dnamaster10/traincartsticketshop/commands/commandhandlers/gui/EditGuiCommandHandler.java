@@ -3,9 +3,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -49,7 +48,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         //Example command: /traincartsticketshop gui edit <gui_name>
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
 
         //Get the guiID and check that it exists
         if (!guiAccessor.checkGuiByName(args[2])) {

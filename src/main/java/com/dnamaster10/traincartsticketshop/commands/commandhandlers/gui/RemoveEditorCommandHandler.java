@@ -2,9 +2,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiEditorsDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -15,7 +14,7 @@ import org.bukkit.entity.Player;
 public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor remove <gui name> <player name>
     private PlayerDatabaseObject editorDatabaseObject;
-    private GuiEditorsAccessor editorsAccessor;
+    private GuiEditorsDataAccessor editorsAccessor;
     private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -45,7 +44,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException, ModificationException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
 
         //Get the guiID and check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -71,7 +70,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        editorsAccessor = AccessorFactory.getGuiEditorsAccessor();
+        editorsAccessor = new GuiEditorsDataAccessor();
         //Check that the editor exists in the editors table
         if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.uuid())) {
             returnError(sender, "Player \"" + editorDatabaseObject.username() + "\" is not a registered editor for gui \"" + args[2] + "\"");

@@ -3,9 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -36,7 +35,7 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
     protected void confirmAction() {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+                GuiDataAccessor guiAccessor = new GuiDataAccessor();
                 guiAccessor.deletePage(deleteGuiId, deleteGuiPage);
             } catch (ModificationException e) {
                 getPlugin().handleSqlException(getPlayer(), e);

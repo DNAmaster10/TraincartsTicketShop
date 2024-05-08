@@ -1,15 +1,12 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class GuiOpenTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui open <gui name>
@@ -18,7 +15,7 @@ public class GuiOpenTabCompleter extends ArgumentCompleter {
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
         if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.gui.open")) return new ArrayList<>();
 
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         return guiAccessor.getPartialNameMatches(args[2]);
     }
 

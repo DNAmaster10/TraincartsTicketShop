@@ -3,9 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.TicketDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
@@ -16,21 +15,21 @@ public class TicketSearchGui extends MultipagePurchasableGui {
     private final int totalSearchResults;
 
     public TicketSearchGui(int searchGuiId, String searchTerm, int page, Player player) throws QueryException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
+        TicketDataAccessor ticketAccessor = new TicketDataAccessor();
 
         this.searchGuiId = searchGuiId;
         this.searchTerm = searchTerm;
         this.totalSearchResults = ticketAccessor.getTotalTicketSearchResults(searchGuiId, searchTerm);
         setPageNumber(page);
         setPlayer(player);
-        setDisplayName("Searching: " + guiAccessor.getDisplayNameById(searchGuiId));
+        setDisplayName("Searching: " + guiAccessor.getDisplayName(searchGuiId));
         setTotalPages(Utilities.getPageCount(totalSearchResults, 45));
     }
 
     @Override
     protected Button[] getNewPage() throws QueryException {
-        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
+        TicketDataAccessor ticketAccessor = new TicketDataAccessor();
         PageBuilder pageBuilder = new PageBuilder();
 
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.searchTickets(searchGuiId, getPageNumber() * 45, searchTerm);

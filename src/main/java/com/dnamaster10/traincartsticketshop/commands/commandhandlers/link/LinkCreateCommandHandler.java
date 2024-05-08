@@ -2,9 +2,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.link;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,7 +15,7 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop link create <linked gui name> <optional display name>
     private String colouredDisplayName;
     private Player player;
-    private GuiAccessor guiAccessor;
+    private GuiDataAccessor guiAccessor;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player and permissions
@@ -71,7 +70,7 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
-        guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = new GuiDataAccessor();
 
         //Check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {

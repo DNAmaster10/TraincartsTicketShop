@@ -1,8 +1,6 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.link.LinkCreateTabCompleter;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;

@@ -1,10 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +16,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     //Used to store the display name since spaces can be entered here
     private String rawDisplayName;
     private String colouredDisplayName;
-    private GuiAccessor guiAccessor;
+    private GuiDataAccessor guiAccessor;
     private Player player;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -86,7 +85,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
         String guiName = args[2];
-        guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = new GuiDataAccessor();
 
         //Check gui doesn't already exist
         if (guiAccessor.checkGuiByName(guiName)) {

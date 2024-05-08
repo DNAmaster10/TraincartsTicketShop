@@ -2,13 +2,11 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -93,7 +91,7 @@ public abstract class Gui {
             //Get and check info from database
             ShopGui newGui;
             try {
-                GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+                GuiDataAccessor guiAccessor = new GuiDataAccessor();
                 if (!guiAccessor.checkGuiById(linkedGuiId)) {
                     return;
                 }

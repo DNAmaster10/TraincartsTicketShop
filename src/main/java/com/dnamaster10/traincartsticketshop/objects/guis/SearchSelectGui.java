@@ -1,9 +1,8 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleItemButton;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -11,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
@@ -57,7 +55,7 @@ public class SearchSelectGui extends Gui {
     }
     private String getGuiName() throws QueryException {
         //Returns the name of the gui which is being searched from the id
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         return guiAccessor.getGuiNameById(searchGuiId);
     }
     private void guiDeletedOrMoved() {

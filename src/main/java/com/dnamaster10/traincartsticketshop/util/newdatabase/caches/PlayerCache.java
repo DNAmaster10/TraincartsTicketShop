@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.caches;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.util.StringUtil;
@@ -17,7 +16,7 @@ public class PlayerCache {
     ConcurrentHashMap<String, PlayerDatabaseObject> usernamePlayerMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
-        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
+        PlayerDataAccessor playerAccessor = new PlayerDataAccessor();
         List<PlayerDatabaseObject> players = playerAccessor.getAllPlayersFromDatabase();
         for (PlayerDatabaseObject player : players) {
             usernames.add(player.username());

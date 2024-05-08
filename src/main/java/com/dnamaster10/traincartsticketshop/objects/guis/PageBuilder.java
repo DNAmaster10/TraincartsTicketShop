@@ -3,9 +3,8 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.LinkDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.TicketDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -97,13 +96,13 @@ public class PageBuilder {
     }
     public void addTicketsFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches tickets from database and adds their buttons to the gui
-        TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
+        TicketDataAccessor ticketAccessor = new TicketDataAccessor();
         TicketDatabaseObject[] ticketDatabaseObjects = ticketAccessor.getTickets(guiId, pageNumber);
         addTickets(ticketDatabaseObjects);
     }
     public void addLinksFromDatabase(int guiId, int pageNumber) throws QueryException {
         //Fetches links from the database and adds their buttons to the gui
-        LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
+        LinkDataAccessor linkAccessor = new LinkDataAccessor();
         LinkDatabaseObject[] linkDatabaseObjects = linkAccessor.getLinksByGuiId(guiId, pageNumber);
         addLinks(linkDatabaseObjects);
     }

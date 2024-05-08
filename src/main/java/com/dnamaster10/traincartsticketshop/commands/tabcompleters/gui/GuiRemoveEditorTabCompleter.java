@@ -1,9 +1,8 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiEditorsDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public class GuiRemoveEditorTabCompleter extends ArgumentCompleter {
         if (sender instanceof Player p && !checkPermissions(p)) return new ArrayList<>();
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.removeeditor")) {
             return guiAccessor.getPartialNameMatches(args[2]);
         }
@@ -36,14 +35,14 @@ public class GuiRemoveEditorTabCompleter extends ArgumentCompleter {
 
     @Override
     protected List<String> getNextArgumentCompletions(CommandSender sender, String[] args) {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         if (!guiAccessor.checkGuiByName(args[2])) return new ArrayList<>();
         int guiId = guiAccessor.getGuiIdByName(args[2]);
         if (sender instanceof Player player && !player.hasPermission("traincartsticketshop.admin.gui.removeeditor")) {
             if (!guiAccessor.checkGuiOwnerByUuid(guiId, player.getUniqueId().toString())) return new ArrayList<>();
         }
 
-        GuiEditorsAccessor guiEditorsAccessor = AccessorFactory.getGuiEditorsAccessor();
+        GuiEditorsDataAccessor guiEditorsAccessor = new GuiEditorsDataAccessor();
         List<String> editors = guiEditorsAccessor.getEditorUsernames(guiId);
         return StringUtil.copyPartialMatches(args[3], editors, new ArrayList<>());
     }

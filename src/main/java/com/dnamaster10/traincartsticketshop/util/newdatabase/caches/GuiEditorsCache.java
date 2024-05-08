@@ -1,9 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.caches;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiEditorsDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiEditorDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
@@ -18,7 +17,7 @@ public class GuiEditorsCache {
     ConcurrentHashMap<String, List<Integer>> editorGuisMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
-        GuiEditorsAccessor editorsAccessor = AccessorFactory.getGuiEditorsAccessor();
+        GuiEditorsDataAccessor editorsAccessor = new GuiEditorsDataAccessor();
         List<GuiEditorDatabaseObject> editors = editorsAccessor.getAllGuiEditorsFromDatabase();
         for (GuiEditorDatabaseObject editor : editors) {
             if (!guiIdEditorsMap.containsKey(editor.guiId())) guiIdEditorsMap.put(editor.guiId(), new ArrayList<>());
@@ -37,7 +36,7 @@ public class GuiEditorsCache {
     public List<String> getEditorUsernamesForGui(int id) {
         if (!guiIdEditorsMap.containsKey(id)) return new ArrayList<>();
         List<String> usernames = new ArrayList<>();
-        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
+        PlayerDataAccessor playerAccessor = new PlayerDataAccessor();
         for (String uuid : guiIdEditorsMap.get(id)) {
             PlayerDatabaseObject player = playerAccessor.getPlayerByUuid(uuid);
             usernames.add(player.username());
@@ -48,7 +47,7 @@ public class GuiEditorsCache {
         //Returns a list of guis where a player is registered as an editor.
         if (!editorGuisMap.containsKey(uuid)) return new ArrayList<>();
         List<GuiDatabaseObject> guis = new ArrayList<>();
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         for (int guiId : editorGuisMap.get(uuid)) {
             GuiDatabaseObject gui = guiAccessor.getGuiById(guiId);
             guis.add(gui);

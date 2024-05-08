@@ -9,8 +9,6 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class TicketTabCompleter extends ArgumentCompleter {
     private static final List<String> ARGS1;
     static {

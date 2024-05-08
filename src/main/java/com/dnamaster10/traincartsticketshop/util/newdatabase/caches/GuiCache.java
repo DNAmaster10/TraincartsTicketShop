@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.caches;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.util.StringUtil;
@@ -18,7 +17,7 @@ public class GuiCache {
     ConcurrentHashMap<String, List<GuiDatabaseObject>> ownerGuiMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         List<GuiDatabaseObject> guis = guiAccessor.getGuisFromDatabase();
         for (GuiDatabaseObject gui : guis) {
             guiNames.add(gui.name());

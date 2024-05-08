@@ -8,10 +8,9 @@ import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPage
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.LinkAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TicketAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.LinkDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.TicketDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
@@ -37,8 +36,8 @@ public class EditGui extends MultipageGui {
     private final HashMap<Integer, Button[]> pages = new HashMap<>();
 
     public EditGui(int guiId, int page, Player player) throws QueryException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
-        setDisplayName("Editing: " + guiAccessor.getDisplayNameById(guiId));
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
+        setDisplayName("Editing: " + guiAccessor.getDisplayName(guiId));
         setGuiId(guiId);
         setPageNumber(page);
         setPlayer(player);
@@ -268,7 +267,7 @@ public class EditGui extends MultipageGui {
             return;
         }
         try {
-            GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+            GuiDataAccessor guiAccessor = new GuiDataAccessor();
             guiAccessor.insertPage(getGuiId(), getPageNumber());
             open();
         } catch (ModificationException e) {
@@ -294,8 +293,8 @@ public class EditGui extends MultipageGui {
             if (button instanceof Link link) links.add(link.getAsDatabaseObject(slot));
         }
         try {
-            TicketAccessor ticketAccessor = AccessorFactory.getTicketAccessor();
-            LinkAccessor linkAccessor = AccessorFactory.getLinkAccessor();
+            TicketDataAccessor ticketAccessor = new TicketDataAccessor();
+            LinkDataAccessor linkAccessor = new LinkDataAccessor();
 
             ticketAccessor.saveTicketPage(getGuiId(), getPageNumber(), tickets);
             linkAccessor.saveLinkPage(getGuiId(), getPageNumber(), links);

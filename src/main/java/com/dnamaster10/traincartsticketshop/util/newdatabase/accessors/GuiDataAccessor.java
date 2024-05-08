@@ -46,20 +46,25 @@ public class GuiDataAccessor extends DataAccessor {
     public List<String> getPartialNameMatches(String argument) {
         return getGuiCache().getPartialNameMatches(argument);
     }
-    public List<GuiDatabaseObject> getGuisOwnerBy(String uuid) {
+    public List<GuiDatabaseObject> getGuisOwnedBy(String uuid) {
         return getGuiCache().getGuisOwnedBy(uuid);
     }
     public List<GuiDatabaseObject> getGuisEditableBy(String uuid) {
         //Returns a list of guis which a player is able to edit. Note that this includes both guis the player owns
         //and also guis the player is a registered editor of. The GuiEditorAccessor must be used to *only* get guis
         //which a player is a registered editor of.
-        List<GuiDatabaseObject> ownedGuis = getGuisOwnerBy(uuid);
+        List<GuiDatabaseObject> ownedGuis = getGuisOwnedBy(uuid);
         List<GuiDatabaseObject> editorGuis = getGuiEditorsCache().getGuisEditableByEditor(uuid);
         ownedGuis.addAll(editorGuis);
         return ownedGuis;
     }
     public GuiDatabaseObject getGuiById(int guiId) {
         return getGuiCache().getGuiById(guiId);
+    }
+
+    public void updateGuiName(int guiId, String newName) throws ModificationException{
+        guiDatabaseAccessor.updateGuiName(guiId, newName);
+        getGuiCache().updateGuiName(guiId, newName);
     }
 
     public void updateGuiDisplayName(int guiId, String colouredDisplayName, String rawDisplayName) throws ModificationException {

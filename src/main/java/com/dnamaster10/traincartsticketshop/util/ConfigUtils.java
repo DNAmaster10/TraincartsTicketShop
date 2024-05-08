@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class ConfigUtils {
     public static void migrateIfNeeded(FileConfiguration oldConfig, Plugin plugin) throws IOException {
         if (!Objects.equals(oldConfig.getString("ConfigVersion"), plugin.getDescription().getVersion()) || plugin.getDescription().getVersion().contains("SNAPSHOT")) {
@@ -40,7 +42,10 @@ public class ConfigUtils {
             oldConfigReader.close();
 
             //load new config
-            oldConfigFile.delete();
+            if (!oldConfigFile.delete()) {
+                getPlugin().getLogger().severe("Error loading new config file!");
+                getPlugin().disable();
+            }
             plugin.saveDefaultConfig();
 
             File newConfigFile = new File(plugin.getDataFolder(), "config.yml");

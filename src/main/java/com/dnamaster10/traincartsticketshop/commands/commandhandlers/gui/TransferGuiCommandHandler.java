@@ -2,8 +2,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -14,7 +13,7 @@ import org.bukkit.entity.Player;
 public class TransferGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui name> <player>
     PlayerDatabaseObject otherPlayer;
-    private GuiAccessor guiAccessor;
+    private GuiDataAccessor guiAccessor;
     private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -45,7 +44,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException, QueryException {
-        guiAccessor = AccessorFactory.getGuiAccessor();
+        guiAccessor = new GuiDataAccessor();
 
         //Get the gui ID and check gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {

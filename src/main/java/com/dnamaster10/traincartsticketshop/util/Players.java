@@ -1,8 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.entity.Player;
@@ -27,7 +26,7 @@ public class Players {
         }
 
         //Check database
-        PlayerAccessor playerAccessor = AccessorFactory.getPlayerAccessor();
+        PlayerDataAccessor playerAccessor = new PlayerDataAccessor();
         if (playerAccessor.checkPlayerByUsername(username)) return playerAccessor.getPlayerByUsername(username);
 
         //Finally, if the player has not been found in any of the above places, get them from the Mojang API

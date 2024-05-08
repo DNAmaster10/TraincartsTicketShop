@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.eventhandlers;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,7 @@ public class PlayerJoinEventHandler implements Listener {
         //Update player in database
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                PlayerAccessor accessor = AccessorFactory.getPlayerAccessor();
+                PlayerDataAccessor accessor = new PlayerDataAccessor();
                 Player p = event.getPlayer();
                 accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
             } catch (ModificationException e) {

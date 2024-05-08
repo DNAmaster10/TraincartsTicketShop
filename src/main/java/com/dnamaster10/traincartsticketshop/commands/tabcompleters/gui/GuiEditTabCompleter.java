@@ -1,8 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ public class GuiEditTabCompleter extends ArgumentCompleter {
         if (sender instanceof Player p && !checkPermissions(p)) return new ArrayList<>();
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         if (!(sender instanceof Player player) || player.hasPermission("traincartsticketshop.admin.gui.edit")) {
             //Get all guis
             return guiAccessor.getPartialNameMatches(args[2]);

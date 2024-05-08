@@ -1,8 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.link;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,7 +15,7 @@ public class LinkCreateTabCompleter extends ArgumentCompleter {
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
         if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.link.create")) return new ArrayList<>();
 
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
         return guiAccessor.getPartialNameMatches(args[2]);
     }
 
