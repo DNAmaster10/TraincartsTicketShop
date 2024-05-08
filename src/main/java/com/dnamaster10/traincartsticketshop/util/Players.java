@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.util;
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.entity.Player;
 

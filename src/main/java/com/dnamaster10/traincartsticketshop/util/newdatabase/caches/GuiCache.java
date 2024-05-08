@@ -1,8 +1,8 @@
-package com.dnamaster10.traincartsticketshop.util.database.caches;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.caches;
 
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.util.StringUtil;
 

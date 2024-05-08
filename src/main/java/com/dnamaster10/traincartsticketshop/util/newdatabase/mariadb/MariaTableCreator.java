@@ -1,17 +1,15 @@
-package com.dnamaster10.traincartsticketshop.util.database.mariadb;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.DatabaseTableCreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class MariaDBTableCreator extends MariaDBDatabaseAccessor implements TableCreator {
-
+public class MariaTableCreator extends MariaDatabaseAccessor implements DatabaseTableCreator {
     @Override
     public void createTables() throws ModificationException {
-        //TODO Need to define an index for display names
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
             statement = connection.prepareStatement("""

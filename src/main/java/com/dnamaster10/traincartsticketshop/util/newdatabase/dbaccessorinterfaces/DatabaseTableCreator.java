@@ -1,7 +1,7 @@
-package com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces;
 
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 
-public interface TableCreator {
+public interface DatabaseTableCreator {
     void createTables() throws ModificationException;
 }

@@ -1,15 +1,13 @@
-package com.dnamaster10.traincartsticketshop.util.database.sqlite;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite;
 
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.DatabaseTableCreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements TableCreator {
-
-
+public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements DatabaseTableCreator {
     @Override
     public void createTables() throws ModificationException {
         try (Connection connection = getConnection()) {

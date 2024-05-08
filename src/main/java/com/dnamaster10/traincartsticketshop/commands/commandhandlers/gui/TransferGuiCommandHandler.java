@@ -4,8 +4,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncComman
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.mariadb.MariaDBGuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;

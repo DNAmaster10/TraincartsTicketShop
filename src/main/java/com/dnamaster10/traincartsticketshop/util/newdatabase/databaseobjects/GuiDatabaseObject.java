@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.util.database.databaseobjects;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects;
 
 public class GuiDatabaseObject {
     public GuiDatabaseObject(int id, String name, String displayName, String ownerUuid) {

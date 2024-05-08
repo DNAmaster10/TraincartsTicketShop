@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.util.database.databaseobjects;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects;
 
 public record LinkDatabaseObject (
         int slot,

@@ -1,14 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase;
 
-import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.GuiDatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.GuiEditorsDatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.PlayerDatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaGuiDatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaGuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaPlayerAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLiteGuiDatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLiteGuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLitePlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.*;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.*;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.*;
 
 import java.util.Objects;
 
@@ -74,5 +68,41 @@ public class DatabaseAccessorFactory {
             }
         }
         return new SQLiteGuiDatabaseAccessor();
+    }
+
+    public static LinksDatabaseAccessor getLinksDatabaseAccessor() {
+        switch (databaseType) {
+            case MARIA -> {
+                return new MariaLinksAccessor();
+            }
+            case SQLITE -> {
+                return new SQLiteLinksAccessor();
+            }
+        }
+        return new SQLiteLinksAccessor();
+    }
+
+    public static TicketsDatabaseAccessor getTicketDatabaseAccessor() {
+        switch (databaseType) {
+            case MARIA -> {
+                return new MariaTicketAccessor();
+            }
+            case SQLITE -> {
+                return new SQLiteTicketAccessor();
+            }
+        }
+        return new SQLiteTicketAccessor();
+    }
+
+    public static DatabaseTableCreator getDatabaseTableCreator() {
+        switch (databaseType) {
+            case MARIA -> {
+                return new MariaTableCreator();
+            }
+            case SQLITE -> {
+                return new SQLiteTableCreator();
+            }
+        }
+        return new SQLiteTableCreator();
     }
 }

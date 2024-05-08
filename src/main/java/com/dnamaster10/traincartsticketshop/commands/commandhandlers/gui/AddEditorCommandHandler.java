@@ -2,10 +2,9 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.GuiEditorsAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiEditorsDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
     //Command example: /tshop gui addEditor <gui name> <player>
     //This is computed during the async check, so is stored here to be used later in the execute method.
     private PlayerDatabaseObject playerDatabaseObject;
-    private GuiEditorsAccessor editorsAccessor;
+    private GuiEditorsDataAccessor editorsAccessor;
     private int guiId;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -46,7 +45,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException {
-        GuiAccessor guiAccessor = AccessorFactory.getGuiAccessor();
+        GuiDataAccessor guiAccessor = new GuiDataAccessor();
 
         //Get the gui ID and check that the gui exists
         if (!guiAccessor.checkGuiByName(args[2])) {
@@ -76,7 +75,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        editorsAccessor = AccessorFactory.getGuiEditorsAccessor();
+        editorsAccessor = new GuiEditorsDataAccessor();
         //Check that the player isn't already an editor
         if (editorsAccessor.checkGuiEditorByUuid(guiId, playerDatabaseObject.uuid())) {
             returnError(sender, "Player \"" + playerDatabaseObject.username() + "\" is already an editor of that gui");

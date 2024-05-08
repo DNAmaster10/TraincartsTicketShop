@@ -5,12 +5,11 @@ import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.TableCreator;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.DatabaseAccessorFactory;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.DataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
@@ -52,22 +51,17 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
             e.printStackTrace();
         }
 
-        //Configure database
-
-        //Create tables in database
+        //Create database tables
         try {
-            TableCreator tableCreator = AccessorFactory.getTableCreator();
-            tableCreator.createTables();
-        }
-        catch (ModificationException e) {
+            DatabaseAccessorFactory.getDatabaseTableCreator().createTables();
+        } catch (ModificationException e) {
             //Disable plugin if failed
             plugin.handleSqlException(e);
         }
 
         //Initialize database caches
         try {
-            DatabaseAccessor dbAccessor = new DatabaseAccessor();
-            dbAccessor.initializeCaches();
+            new DataAccessor().initializeCaches();
         } catch (QueryException e) {
             plugin.handleSqlException(e);
             getPlugin().disable();

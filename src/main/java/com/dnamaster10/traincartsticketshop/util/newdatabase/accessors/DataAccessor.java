@@ -1,8 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.accessors;
 
-import com.dnamaster10.traincartsticketshop.util.database.caches.GuiCache;
-import com.dnamaster10.traincartsticketshop.util.database.caches.GuiEditorsCache;
-import com.dnamaster10.traincartsticketshop.util.database.caches.PlayerCache;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.caches.GuiCache;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.caches.GuiEditorsCache;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.caches.PlayerCache;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
 public class DataAccessor {

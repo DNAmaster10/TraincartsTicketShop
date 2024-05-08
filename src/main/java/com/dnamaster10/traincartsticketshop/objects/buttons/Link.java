@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.objects.buttons;
 
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.LinkDatabaseObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

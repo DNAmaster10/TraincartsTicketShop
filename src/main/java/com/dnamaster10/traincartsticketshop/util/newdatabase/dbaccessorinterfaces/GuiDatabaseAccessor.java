@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces;
 
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 

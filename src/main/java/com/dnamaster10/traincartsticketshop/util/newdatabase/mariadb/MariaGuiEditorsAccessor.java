@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb;
 
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiEditorDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.GuiEditorDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.GuiEditorsDatabaseAccessor;
