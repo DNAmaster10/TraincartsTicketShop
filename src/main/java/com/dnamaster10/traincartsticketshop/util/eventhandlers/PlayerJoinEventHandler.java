@@ -1,7 +1,5 @@
 package com.dnamaster10.traincartsticketshop.util.eventhandlers;
 
-import com.dnamaster10.traincartsticketshop.util.database.AccessorFactory;
-import com.dnamaster10.traincartsticketshop.util.database.accessorinterfaces.PlayerAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
 import org.bukkit.Bukkit;

@@ -40,7 +40,7 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
         }
 
         //Build display name
-        String rawDisplayName = null;
+        String rawDisplayName;
         if (args.length > 3) {
             StringJoiner stringJoiner = new StringJoiner(" ");
             for (int i = 3; i < args.length; i++) {

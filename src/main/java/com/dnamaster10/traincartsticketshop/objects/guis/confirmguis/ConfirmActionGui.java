@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 import com.dnamaster10.traincartsticketshop.objects.guis.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
