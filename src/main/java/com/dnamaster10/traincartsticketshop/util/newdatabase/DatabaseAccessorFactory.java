@@ -6,6 +6,7 @@ import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterface
 import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaGuiDatabaseAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaGuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb.MariaPlayerAccessor;
+import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLiteGuiDatabaseAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLiteGuiEditorsAccessor;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite.SQLitePlayerAccessor;
 
@@ -68,6 +69,10 @@ public class DatabaseAccessorFactory {
             case MARIA -> {
                 return new MariaGuiDatabaseAccessor();
             }
+            case SQLITE -> {
+                return new SQLiteGuiDatabaseAccessor();
+            }
         }
+        return new SQLiteGuiDatabaseAccessor();
     }
 }

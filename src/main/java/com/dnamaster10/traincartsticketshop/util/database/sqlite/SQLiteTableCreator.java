@@ -39,6 +39,8 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements TableC
                     """);
             statement.execute();
 
+            //Note that here we've had to remove the unique constraints on the following two tables.
+            //This is because SQLite does not support ORDER by within an UPDATE statement.
             //Tickets Table
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS tickets (
@@ -50,10 +52,13 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements TableC
                         display_name TEXT,
                         raw_display_name TEXT,
                         purchase_message TEXT,
-                        UNIQUE (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
                     )
+                    """);
+            statement.execute();
+            statement = connection.prepareStatement("""
+                    CREATE INDEX IF NOT EXISTS idx_tickets_gui_page_slot ON tickets (gui_id, page, slot)
                     """);
             statement.execute();
 
@@ -68,10 +73,13 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements TableC
                         linked_gui_page INTEGER DEFAULT 0,
                         display_name TEXT,
                         raw_display_name TEXT,
-                        UNIQUE (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
                     )
+                    """);
+            statement.execute();
+            statement = connection.prepareStatement("""
+                    CREATE INDEX IF NOT EXISTS idx_links_gui_page_slot ON links (gui_id, page, slot)
                     """);
             statement.execute();
 

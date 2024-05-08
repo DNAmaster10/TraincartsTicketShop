@@ -1,16 +1,18 @@
-package com.dnamaster10.traincartsticketshop.util.newdatabase.mariadb;
+package com.dnamaster10.traincartsticketshop.util.newdatabase.sqlite;
 
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.newdatabase.dbaccessorinterfaces.GuiDatabaseAccessor;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements GuiDatabaseAccessor {
-
+public class SQLiteGuiDatabaseAccessor extends SQLiteDatabaseAccessor implements GuiDatabaseAccessor {
     @Override
     public List<GuiDatabaseObject> getGuisFromDatabase() throws QueryException {
         try (Connection connection = getConnection()) {
@@ -46,10 +48,10 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
             statement = connection.prepareStatement("SELECT MAX(page) FROM links WHERE gui_id=?");
             statement.setInt(1, guiId);
             ResultSet linksResult = statement.executeQuery();
-            int linksPages = 0;
-            if (linksResult.next()) linksPages = linksResult.getInt(1);
+            int linksPage = 0;
+            if (linksResult.next()) linksPage = linksResult.getInt(1);
 
-            if (linksPages > maxPage) maxPage = linksPages;
+            if (linksPage > maxPage) maxPage = linksPage;
 
             return maxPage;
         } catch (SQLException e) {
@@ -99,16 +101,15 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
         Integer guiId = null;
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setString(2, colouredDisplayName);
             statement.setString(3, rawDisplayName);
             statement.setString(4, ownerUuid);
             statement.executeUpdate();
 
-            //Get the inserted ID
             ResultSet result = statement.getGeneratedKeys();
-            if (result.next()) guiId = (int) result.getLong(1);
+            if (result.next()) guiId = result.getInt(1);
 
         } catch (SQLException e) {
             throw new ModificationException(e);
@@ -118,23 +119,23 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
 
     @Override
     public void insertPage(int guiId, int currentPage) throws ModificationException {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement;
 
-            //Note that order by is required here to avoid duplicate composite key errors as the query works up the page number
-            //as opposed to down.
-
-            //Increment tickets page
-            statement = connection.prepareStatement("UPDATE tickets SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
+            statement = connection.prepareStatement("""
+                    UPDATE tickets SET page = page + 1 WHERE gui_id = ? AND page >= ?
+                    """);
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
 
-            //Increment links page
-            statement = connection.prepareStatement("UPDATE links SET page = page + 1 WHERE gui_id=? AND page >= ? ORDER BY page DESC");
+            statement = connection.prepareStatement("""
+                    UPDATE links SET page = page + 1 WHERE gui_id = ? AND page >= ?
+                    """);
             statement.setInt(1, guiId);
             statement.setInt(2, currentPage);
             statement.executeUpdate();
+
         } catch (SQLException e) {
             throw new ModificationException(e);
         }
@@ -156,7 +157,6 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
         try (Connection connection = getConnection()) {
             PreparedStatement statement;
 
-            //Remove page items
             statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
@@ -167,14 +167,12 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            //Decrement item pages for items above this page
-            //Note that ORDER BY is required to prevent duplicate key error
-            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
+            statement = connection.prepareStatement("UPDATE tickets SET page = page - 1 WHERE gui_id=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE links SET page = page - 1 WHERE gui_id=? AND page > ? ORDER BY page ASC");
+            statement = connection.prepareStatement("UPDATE links SET page = page - 1 WHERE gui_id=? AND page > 1");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
