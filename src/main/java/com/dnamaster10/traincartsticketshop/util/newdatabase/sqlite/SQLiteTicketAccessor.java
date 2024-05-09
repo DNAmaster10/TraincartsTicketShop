@@ -114,7 +114,7 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
 
             //Add new items
             statement = connection.prepareStatement("""
-                    INSERT INTO links
+                    INSERT INTO tickets
                     (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """);
