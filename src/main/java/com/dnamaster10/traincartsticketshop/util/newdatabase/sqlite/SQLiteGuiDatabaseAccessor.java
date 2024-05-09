@@ -172,7 +172,7 @@ public class SQLiteGuiDatabaseAccessor extends SQLiteDatabaseAccessor implements
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("UPDATE links SET page = page - 1 WHERE gui_id=? AND page > 1");
+            statement = connection.prepareStatement("UPDATE links SET page = page - 1 WHERE gui_id=? AND page > ?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
