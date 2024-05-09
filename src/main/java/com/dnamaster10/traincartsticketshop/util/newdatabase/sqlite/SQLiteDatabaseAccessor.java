@@ -12,8 +12,9 @@ public class SQLiteDatabaseAccessor {
     private static final String url;
 
     static {
-        String name = getPlugin().getConfig().getString("database.name");
-        url = "jdbc:sqlite:" + getPlugin().getDataFolder() + name + ".db";
+        String name = getPlugin().getConfig().getString("database.database");
+        String path = getPlugin().getDataFolder() + "/" + name + ".db";
+        url = "jdbc:sqlite:" + path;
     }
 
     public Connection getConnection() throws QueryException {

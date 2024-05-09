@@ -31,14 +31,7 @@ public class SQLitePlayerAccessor extends SQLiteDatabaseAccessor implements Play
     @Override
     public void updatePlayer(String username, String uuid) throws ModificationException {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("""
-                    INSERT INTO players (username, uuid, last_join)
-                    VALUES (?, ?, ?)
-                    ON CONFLICT(uuid)
-                    DO UPDATE SET
-                        username = exclude.username,
-                        last_join = exclude.last_join
-                    """);
+            PreparedStatement statement = connection.prepareStatement("INSERT OR REPLACE INTO players (username, uuid, last_join) VALUES (?, ?, ?);");
             statement.setString(1, username);
             statement.setString(2, uuid);
             statement.setLong(3, System.currentTimeMillis());
