@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.link;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

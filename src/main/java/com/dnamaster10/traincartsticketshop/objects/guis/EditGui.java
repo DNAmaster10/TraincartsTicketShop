@@ -8,11 +8,11 @@ import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPage
 import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.LinkDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.TicketDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.LinkDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.TicketDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.LinkDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.TicketDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;

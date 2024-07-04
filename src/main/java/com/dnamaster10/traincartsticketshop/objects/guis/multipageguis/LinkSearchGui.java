@@ -3,9 +3,9 @@ package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.GuiDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.LinkDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.LinkDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.LinkDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.entity.Player;
 

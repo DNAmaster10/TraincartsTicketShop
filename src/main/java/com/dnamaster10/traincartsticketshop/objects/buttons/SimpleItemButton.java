@@ -12,6 +12,7 @@ public class SimpleItemButton extends Button {
     private final String buttonType;
     private final Material material;
     private final String displayText;
+
     @Override
     public ItemStack getItemStack() {
         ItemStack item = new ItemStack(material, 1);
@@ -24,6 +25,7 @@ public class SimpleItemButton extends Button {
 
         return item;
     }
+
     public SimpleItemButton(String buttonType, Material material, String displayText) {
         this.buttonType = buttonType;
         this.material = material;
