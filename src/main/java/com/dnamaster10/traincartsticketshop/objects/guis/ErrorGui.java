@@ -23,7 +23,7 @@ public class ErrorGui extends Gui {
         SimpleHeadButton errorButton = new SimpleHeadButton("error", RED_CROSS, errorText);
         pageBuilder.addButton(22, errorButton);
 
-        setInventory(new InventoryBuilder(pageBuilder.getPage(), "Error").getInventory());
+        setInventory(new InventoryBuilder(new GuiHolder(this), pageBuilder.getPage(), "Error").getInventory());
     }
 
     @Override

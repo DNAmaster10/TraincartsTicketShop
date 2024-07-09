@@ -1,14 +1,13 @@
 package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
+import com.dnamaster10.traincartsticketshop.objects.guis.GuiHolder;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.SearchSelectGui;
 import com.dnamaster10.traincartsticketshop.util.GuiUtils;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
     @Override
     public void open() {
         if (pages.containsKey(getPageNumber())) {
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> openPage(pages.get(getPageNumber())), 1L);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> openPage(pages.get(getPageNumber())));
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
@@ -36,12 +35,12 @@ public abstract class MultipagePurchasableGui extends MultipageGui {
                 return;
             }
             pages.put(getPageNumber(), newPage);
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> openPage(newPage), 1L);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> openPage(newPage));
         });
     }
     private void openPage(Button[] page) {
         String pageText = "(" + (getPageNumber() + 1) + "/" + (getTotalPages() + 1) + ")";
-        InventoryBuilder inventoryBuilder = new InventoryBuilder(page, getDisplayName() + " " + pageText);
+        InventoryBuilder inventoryBuilder = new InventoryBuilder(new GuiHolder(this), page, getDisplayName() + " " + pageText);
         setInventory(inventoryBuilder.getInventory());
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(getInventory()), 1L);
     }

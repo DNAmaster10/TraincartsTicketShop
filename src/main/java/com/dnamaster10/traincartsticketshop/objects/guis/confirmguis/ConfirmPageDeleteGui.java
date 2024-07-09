@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.objects.guis.confirmguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
+import com.dnamaster10.traincartsticketshop.objects.guis.GuiHolder;
 import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
@@ -29,7 +30,7 @@ public class ConfirmPageDeleteGui extends ConfirmActionGui {
         SimpleHeadButton deletePageButton = new SimpleHeadButton("confirm_action", RED_CROSS, "Delete Page");
         builder.addButton(22, deletePageButton);
 
-        setInventory(new InventoryBuilder(builder.getPage(), getDisplayName()).getInventory());
+        setInventory(new InventoryBuilder(new GuiHolder(this), builder.getPage(), getDisplayName()).getInventory());
     }
     @Override
     protected void confirmAction() {

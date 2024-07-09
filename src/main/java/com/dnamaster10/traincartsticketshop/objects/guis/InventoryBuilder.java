@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class InventoryBuilder {
     //TODO possible change to inventory.setStorageContents(ItemStack[] items)
@@ -12,9 +13,9 @@ public class InventoryBuilder {
     public Inventory getInventory() {
         return this.inventory;
     }
-    public InventoryBuilder(Button[] buttons, String displayName) {
+    public InventoryBuilder(InventoryHolder holder, Button[] buttons, String displayName) {
         //Create the inventory object
-        inventory = Bukkit.createInventory(null, 54, displayName);
+        inventory = Bukkit.createInventory(holder, 54, displayName);
 
         //Add page contents to the inventory
         for (int slot = 0; slot < 54; slot++) {

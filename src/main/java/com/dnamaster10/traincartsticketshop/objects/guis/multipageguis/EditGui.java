@@ -1,11 +1,13 @@
-package com.dnamaster10.traincartsticketshop.objects.guis;
+package com.dnamaster10.traincartsticketshop.objects.guis.multipageguis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
+import com.dnamaster10.traincartsticketshop.objects.guis.GuiHolder;
+import com.dnamaster10.traincartsticketshop.objects.guis.InventoryBuilder;
+import com.dnamaster10.traincartsticketshop.objects.guis.PageBuilder;
 import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmPageDeleteGui;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.MultipageGui;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -83,7 +85,7 @@ public class EditGui extends MultipageGui {
         int totalPageNum = getTotalPages();
         if (totalPageNum > getMaxPages()) totalPageNum = getMaxPages();
         String pageText = "Editing: " + getDisplayName() + "(" + (getPageNumber() + 1) + "/" + totalPageNum + ")";
-        InventoryBuilder inventoryBuilder = new InventoryBuilder(page, pageText);
+        InventoryBuilder inventoryBuilder = new InventoryBuilder(new GuiHolder(this), page, pageText);
         setInventory(inventoryBuilder.getInventory());
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlayer().openInventory(getInventory()), 1L);
     }
@@ -149,20 +151,19 @@ public class EditGui extends MultipageGui {
                 event.setCancelled(true);
                 return;
             }
-            final ItemStack conertedItem = convertedTicket.getItemStack();
+            final ItemStack convertedItem = convertedTicket.getItemStack();
 
             //Convert the items
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
                 for (int slot : slots) {
                     if (slot < 45) {
-                        event.getInventory().setItem(slot, conertedItem);
+                        event.getInventory().setItem(slot, convertedItem);
                     }
                 }
                 ((Player) event.getWhoClicked()).updateInventory();
             }, 1L);
         } else if (!buttonType.equals("link") && !buttonType.equals("ticket")) {
             //Item is invalid
-            getPlugin().getLogger().severe("Was cancelled 4!");
             event.setCancelled(true);
         }
     }

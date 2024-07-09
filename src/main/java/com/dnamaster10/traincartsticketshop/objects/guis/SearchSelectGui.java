@@ -36,7 +36,7 @@ public class SearchSelectGui extends Gui {
         SimpleItemButton linkSearchbutton = new SimpleItemButton("search_links", Material.ENCHANTED_BOOK, "Search Links");
         pageBuilder.addButton(14, linkSearchbutton);
 
-        setInventory(new InventoryBuilder(pageBuilder.getPage(), getDisplayName()).getInventory());
+        setInventory(new InventoryBuilder(new GuiHolder(this), pageBuilder.getPage(), getDisplayName()).getInventory());
     }
 
     @Override
