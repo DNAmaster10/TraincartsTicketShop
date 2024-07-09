@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class SQLiteLinksAccessor extends SQLiteDatabaseAccessor implements LinksDatabaseAccessor {
     @Override
     public LinkDatabaseObject[] getLinksByGuiId(int guiId, int page) throws QueryException {
@@ -90,33 +92,41 @@ public class SQLiteLinksAccessor extends SQLiteDatabaseAccessor implements Links
     @Override
     public void saveLinkPage(int guiId, int page, List<LinkDatabaseObject> links) throws ModificationException {
         try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
+
             //Delete existing page
             PreparedStatement statement = connection.prepareStatement("DELETE FROM links WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            if (links.isEmpty()) return;
+            if (!links.isEmpty()) {
+                //Add new items
+                statement = connection.prepareStatement("""
+                        INSERT INTO links
+                        (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        """);
+                for (LinkDatabaseObject link : links) {
+                    statement.setInt(1, guiId);
+                    statement.setInt(2, page);
+                    statement.setInt(3, link.slot());
+                    statement.setInt(4, link.linkedGuiId());
+                    statement.setInt(5, link.linkedGuiPage());
+                    statement.setString(6, link.colouredDisplayName());
+                    statement.setString(7, link.rawDisplayName());
 
-            //Add new items
-            statement = connection.prepareStatement("""
-                    INSERT INTO links
-                    (gui_id, page, slot, linked_gui_id, linked_gui_page, display_name, raw_display_name)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """);
-            for (LinkDatabaseObject link : links) {
-                statement.setInt(1, guiId);
-                statement.setInt(2, page);
-                statement.setInt(3, link.slot());
-                statement.setInt(4, link.linkedGuiId());
-                statement.setInt(5, link.linkedGuiPage());
-                statement.setString(6, link.colouredDisplayName());
-                statement.setString(7, link.rawDisplayName());
-
-                statement.addBatch();
+                    statement.addBatch();
+                }
+                statement.executeBatch();
             }
-            statement.executeBatch();
+            connection.commit();
         } catch (SQLException e) {
+            try (Connection connection = getConnection()) {
+                connection.rollback();
+            } catch (SQLException re) {
+                getPlugin().getLogger().severe("Rollback failed: " + re);
+            }
             throw new ModificationException(e);
         }
     }

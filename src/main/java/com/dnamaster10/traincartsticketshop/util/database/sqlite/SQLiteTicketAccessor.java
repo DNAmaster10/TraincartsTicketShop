@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements TicketsDatabaseAccessor {
 
     @Override
@@ -105,32 +107,42 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
     @Override
     public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws ModificationException {
         try (Connection connection = getConnection()) {
+            //Disable autocommit for SQLite performance reasons
+            connection.setAutoCommit(false);
+
             PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
             statement.setInt(1, guiId);
             statement.setInt(2, page);
             statement.executeUpdate();
 
-            if (tickets.isEmpty()) return;
+            if (!tickets.isEmpty()) {
+                //Add new items
+                statement = connection.prepareStatement("""
+                        INSERT INTO tickets
+                        (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        """);
+                for (TicketDatabaseObject ticket : tickets) {
+                    statement.setInt(1, guiId);
+                    statement.setInt(2, page);
+                    statement.setInt(3, ticket.slot());
+                    statement.setString(4, ticket.tcName());
+                    statement.setString(5, ticket.colouredDisplayName());
+                    statement.setString(6, ticket.rawDisplayName());
+                    statement.setString(7, ticket.purchaseMessage());
 
-            //Add new items
-            statement = connection.prepareStatement("""
-                    INSERT INTO tickets
-                    (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """);
-            for (TicketDatabaseObject ticket : tickets) {
-                statement.setInt(1, guiId);
-                statement.setInt(2, page);
-                statement.setInt(3, ticket.slot());
-                statement.setString(4, ticket.tcName());
-                statement.setString(5, ticket.colouredDisplayName());
-                statement.setString(6, ticket.rawDisplayName());
-                statement.setString(7, ticket.purchaseMessage());
-
-                statement.addBatch();
+                    statement.addBatch();
+                }
+                statement.executeBatch();
             }
-            statement.executeBatch();
+
+            connection.commit();
         } catch (SQLException e) {
+            try (Connection connection = getConnection()) {
+                connection.rollback();
+            } catch (SQLException re) {
+                getPlugin().getLogger().severe("Rollback failed: " + re);
+            }
             throw new ModificationException(e);
         }
     }
