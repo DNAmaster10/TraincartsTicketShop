@@ -97,6 +97,9 @@ permissions:
   traincartsticketshop.link.setdestinationpage:
     description: Allows a player to set a destination page for a link
     default: false
+  traincartsticketshop.updatenotifications:
+    description: Whether the player should receive notifications on join about new versions of TraincartsTicketShop
+    default: op
 
 commands:
   traincartsticketshop:

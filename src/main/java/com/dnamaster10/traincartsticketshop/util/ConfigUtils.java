@@ -66,11 +66,11 @@ public class ConfigUtils {
                 } else if (oldConfigMap.containsKey(split[0])) {
                     split[1] = oldConfigMap.get(split[0]);
                     newConfigLines.set(newConfigLines.size() - 1, split[0] + ": " + split[1]);
-                    plugin.getLogger().info("Migrated config option " + split[0] + " with value " + split[1]);
+                    plugin.getLogger().info("Migrated config option " + split[0]);
                 } else if (oldConfigMultilineOptions.containsKey(newMultilineStartValue) && oldConfigMultilineOptions.get(newMultilineStartValue).containsKey(split[0])) {
                     split[1] = oldConfigMultilineOptions.get(newMultilineStartValue).get(split[0]);
                     newConfigLines.set(newConfigLines.size() - 1, split[0] + ": " + split[1]);
-                    plugin.getLogger().info("Migrated nested config option " + split[0].trim() + " in " + newMultilineStartValue + " with value " + split[1]);
+                    plugin.getLogger().info("Migrated nested config option " + split[0].trim() + " in " + newMultilineStartValue);
                 }
             }
             final String newConfig = String.join(System.lineSeparator(), newConfigLines);
