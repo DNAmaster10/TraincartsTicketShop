@@ -4,7 +4,7 @@
   <groupId>com.dnamaster10</groupId>
   <artifactId>traincartsticketshop</artifactId>
   <name>TraincartsTicketShop</name>
-  <version>1.1.200</version>
+  <version>0.1.1-SNAPSHOT</version>
   <build>
     <resources>
       <resource>
