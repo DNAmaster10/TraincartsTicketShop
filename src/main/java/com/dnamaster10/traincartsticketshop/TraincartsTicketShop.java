@@ -5,12 +5,14 @@ import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
+import com.dnamaster10.traincartsticketshop.util.UpdateChecker;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.DataAccessor;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +35,12 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
     public static TraincartsTicketShop getPlugin() {
         return plugin;
     }
+
+    private boolean updateAvailable;
+    public boolean isUpdateAvailable() {
+        return this.updateAvailable;
+    }
+
     @Override
     public void onEnable() {
         //Get plugin
@@ -67,6 +75,13 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
             getPlugin().disable();
         }
 
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            UpdateChecker updateChecker = new UpdateChecker("DNAmaster10/TraincartsTicketShop", this);
+            this.updateAvailable = updateChecker.checkIfUpdateAvailable();
+            if (this.updateAvailable) this.getLogger().info("A new version of TraincartsTicketShop is available! Download it from here: https://github.com/DNAmaster10/TraincartsTicketShop/releases");
+            else this.getLogger().info("No new release found.");
+        });
+
         //Register the "traincartsticketshop" command
         Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
 
@@ -83,7 +98,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new InventoryCloseEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new InventoryClickEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new InventoryDragEventHandler(), plugin);
-        getServer().getPluginManager().registerEvents(new PlayerJoinEventHandler(), plugin);
+        getServer().getPluginManager().registerEvents(new PlayerJoinEventHandler(plugin), plugin);
         getServer().getPluginManager().registerEvents(new PlayerQuitEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventHandler(), plugin);
 
