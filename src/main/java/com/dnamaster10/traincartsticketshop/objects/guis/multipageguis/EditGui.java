@@ -187,16 +187,12 @@ public class EditGui extends MultipageGui {
             return;
         }
 
-        if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) {
-            return;
-        }
+        if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) return;
+
         ItemStack addedItem = event.getCursor();
         String addedButtonType = ButtonUtils.getButtonType(addedItem);
         if (addedButtonType != null) {
-            if (addedButtonType.equals("link") || addedButtonType.equals("ticket")) {
-                return;
-            }
-            event.setCancelled(true);
+            if (!addedButtonType.equals("link") && !addedButtonType.equals("ticket")) event.setCancelled(true);
             return;
         }
         //Added item is not a ticket shop item

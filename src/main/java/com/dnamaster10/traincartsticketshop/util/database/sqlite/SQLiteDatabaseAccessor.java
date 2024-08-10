@@ -2,9 +2,7 @@ package com.dnamaster10.traincartsticketshop.util.database.sqlite;
 
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
@@ -18,8 +16,30 @@ public class SQLiteDatabaseAccessor {
     }
 
     public Connection getConnection() throws QueryException {
+        Connection connection;
         try {
-            return DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url);
+
+            //Set Pragma optimizations
+            PreparedStatement statement;
+
+            statement = connection.prepareStatement("PRAGMA journal_mode=WAL");
+            statement.execute();
+            statement.close();
+
+            statement = connection.prepareStatement("PRAGMA synchronous = normal");
+            statement.execute();
+            statement.close();
+
+            statement = connection.prepareStatement("PRAGMA temp_store = memory");
+            statement.execute();
+            statement.close();
+
+            statement = connection.prepareStatement("PRAGMA mmap_size = 30000000000");
+            statement.execute();
+            statement.close();
+
+            return connection;
         } catch (SQLException e) {
             throw new QueryException(e);
         }
