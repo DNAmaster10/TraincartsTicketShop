@@ -10,6 +10,7 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.DataAccessor;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
@@ -86,6 +87,10 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PlayerJoinEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerQuitEventHandler(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventHandler(), plugin);
+
+        //Register BStats metrics class
+        int pluginId = 23289;
+        Metrics metrics = new Metrics(this, pluginId);
 
         plugin.getLogger().info("TraincartsTicketShop has finished loading!");
     }
