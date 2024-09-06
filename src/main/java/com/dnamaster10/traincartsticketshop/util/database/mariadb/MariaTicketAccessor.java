@@ -106,7 +106,7 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
     public void saveTicketPage(int guiId, int page, List<TicketDatabaseObject> tickets) throws ModificationException {
         try (Connection connection = getConnection()) {
             if (tickets.isEmpty()) {
-                PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND pages=?");
+                PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE gui_id=? AND page=?");
                 statement.setInt(1, guiId);
                 statement.setInt(2, page);
                 statement.executeUpdate();
@@ -128,7 +128,7 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
             }
             statement.executeUpdate();
 
-            PreparedStatement statement1 = connection.prepareStatement("""
+            statement = connection.prepareStatement("""
                     INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
