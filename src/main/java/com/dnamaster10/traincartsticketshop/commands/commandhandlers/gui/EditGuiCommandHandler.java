@@ -69,11 +69,11 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
-        //Create the new gui
-        EditGui gui = new EditGui(player, guiId);
-
         //Open a new gui session
         Session session = getPlugin().getGuiManager().getNewSession(player);
+
+        //Create the new gui
+        EditGui gui = new EditGui(player, guiId);
 
         //Register the gui
         session.addGui(gui);

@@ -70,14 +70,14 @@ public class SearchTicketsCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
+        //Open a new gui session for the player
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
         //Get the new gui id
         int guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create new gui
         TicketSearchGui gui = new TicketSearchGui(player, guiId, searchTerm);
-
-        //Open a new gui session for the player
-        Session session = getPlugin().getGuiManager().getNewSession(player);
 
         //Register the new gui
         session.addGui(gui);

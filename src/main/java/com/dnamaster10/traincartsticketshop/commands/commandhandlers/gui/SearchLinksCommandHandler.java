@@ -70,14 +70,14 @@ public class SearchLinksCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
+        //Open a new session
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
         //Get the search gui id
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the search gui
         LinkSearchGui gui = new LinkSearchGui(player, searchGuiId, searchTerm);
-
-        //Open a new session
-        Session session = getPlugin().getGuiManager().getNewSession(player);
 
         //Register the new gui
         session.addGui(gui);

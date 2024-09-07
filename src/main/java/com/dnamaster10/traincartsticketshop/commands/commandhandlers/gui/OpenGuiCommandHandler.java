@@ -61,12 +61,12 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
+        //Create a new gui session
+        Session session = getPlugin().getGuiManager().getNewSession(player);
+
         //Create a new gui
         int guiId = guiAccessor.getGuiIdByName(args[2]);
         ShopGui gui = new ShopGui(player, guiId);
-
-        //Create a new gui session
-        Session session = getPlugin().getGuiManager().getNewSession(player);
 
         //Register the new gui
         session.addGui(gui);
