@@ -57,17 +57,15 @@ public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickH
                 if (!session.checkBack()) return;
                 session.back();
             }
-            case "confirm_action" -> {
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-                    try {
-                        GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
-                        guiDataAccessor.deletePage(guiId, pageNumber);
-                    } catch (ModificationException e) {
-                        getPlugin().handleSqlException(player, e);
-                    }
-                    getPlugin().getGuiManager().getSession(player).back();
-                });
-            }
+            case "confirm_action" -> Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+                try {
+                    GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
+                    guiDataAccessor.deletePage(guiId, pageNumber);
+                } catch (ModificationException e) {
+                    getPlugin().handleSqlException(player, e);
+                }
+                getPlugin().getGuiManager().getSession(player).back();
+            });
         }
     }
 

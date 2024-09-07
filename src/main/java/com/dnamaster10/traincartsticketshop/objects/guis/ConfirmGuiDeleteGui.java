@@ -59,17 +59,15 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
                 if (!session.checkBack()) return;
                 session.back();
             }
-            case "confirm_action" -> {
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-                    try {
-                        GuiDataAccessor guiAccessor = new GuiDataAccessor();
-                        guiAccessor.deleteGuiById(deleteGuiId);
-                    } catch (ModificationException e) {
-                        getPlugin().handleSqlException(e);
-                    }
-                    Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1L);
-                });
-            }
+            case "confirm_action" -> Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+                try {
+                    GuiDataAccessor guiAccessor = new GuiDataAccessor();
+                    guiAccessor.deleteGuiById(deleteGuiId);
+                } catch (ModificationException e) {
+                    getPlugin().handleSqlException(e);
+                }
+                Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1L);
+            });
         }
     }
 

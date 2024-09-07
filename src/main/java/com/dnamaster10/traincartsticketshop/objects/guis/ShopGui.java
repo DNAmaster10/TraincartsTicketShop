@@ -102,7 +102,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
                 session.back();
             }
             case "search" -> {
-                SearchSelectGui searchSelectGui = new SearchSelectGui(player, guiId);;
+                SearchSelectGui searchSelectGui = new SearchSelectGui(player, guiId);
                 searchSelectGui.open();
             }
             case "link" -> linkGui(clickedItem, player);
