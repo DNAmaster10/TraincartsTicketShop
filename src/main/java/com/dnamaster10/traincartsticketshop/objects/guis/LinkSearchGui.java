@@ -85,7 +85,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
         switch (buttonType) {
             case "link" -> linkGui(clickedItem, player);
             case "prev_page" -> prevPage();
-            case "next_pave" -> nextPage();
+            case "next_page" -> nextPage();
             //TODO add back button support for search guis
             case "back" -> {
                 Session session = getPlugin().getGuiManager().getSession(player);

@@ -88,7 +88,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
                 Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
             }
             case "prev_page" -> prevPage();
-            case "next_pave" -> nextPage();
+            case "next_page" -> nextPage();
             //TODO add back support for search guis
             case "back" -> {
                 Session session = getPlugin().getGuiManager().getSession(player);
