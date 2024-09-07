@@ -50,7 +50,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + pageNumber + 1 + "/" + totalPages + ")");
+        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + totalPages + ")");
 
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
         try {
@@ -109,6 +109,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(nextPageNumber).getAsInventory(this);
         open();
@@ -128,6 +129,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(prevPageNumber).getAsInventory(this);
         open();

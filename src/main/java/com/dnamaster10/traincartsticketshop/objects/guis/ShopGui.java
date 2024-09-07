@@ -54,7 +54,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + pageNumber + 1 + "/" + maxPage + 1 + ")");
+        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + (maxPage + 1) + ")");
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
@@ -122,6 +122,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(nextPageNumber).getAsInventory(this);
         open();
@@ -141,6 +142,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(prevPageNumber).getAsInventory(this);
         open();

@@ -50,7 +50,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + pageNumber + 1 + "/" + totalPages + ")");
+        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + totalPages + ")");
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         try {
@@ -113,6 +113,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(nextPageNumber).getAsInventory(this);
         open();
@@ -132,6 +133,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
                 inventory = newPage.getAsInventory(this);
                 open();
             });
+            return;
         }
         inventory = pageManager.getPage(prevPageNumber).getAsInventory(this);
         open();

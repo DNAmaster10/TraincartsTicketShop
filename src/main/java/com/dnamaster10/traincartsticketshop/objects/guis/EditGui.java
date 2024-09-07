@@ -45,7 +45,8 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     private int maxPage;
     private String displayName;
     private Inventory inventory;
-    private boolean cancelCloseEvent = false;
+    private boolean cancelSaveMessage = false;
+    private boolean cancelSave = false;
 
     public EditGui(Player player, int guiId, int pageNumber) {
         this.player = player;
@@ -99,7 +100,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + pageNumber + 1 + "/" + maxPage + 1 + ")");
+        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + (maxPage + 1) + ")");
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
@@ -151,10 +152,11 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         String addedButtonType = ButtonUtils.getButtonType(addedItem);
         if (addedButtonType != null) {
             if (!addedButtonType.equals("link") && !addedButtonType.equals("ticket")) event.setCancelled(true);
+            inventory = event.getView().getTopInventory();
             return;
         }
 
-        if (Traincarts.isTraincartsTicket(addedItem)) {
+        if (!Traincarts.isTraincartsTicket(addedItem)) {
             event.setCancelled(true);
             return;
         }
@@ -165,6 +167,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             return;
         }
         event.getWhoClicked().setItemOnCursor(convertedTicket.getItemStack());
+        inventory = event.getView().getTopInventory();
     }
 
     @Override
@@ -209,19 +212,23 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         } else if (!buttonType.equals("link") && !buttonType.equals("ticket")) {
             event.setCancelled(true);
         }
+        inventory = event.getView().getTopInventory();
     }
 
     private void deletePage() {
         savePage();
+        cancelSave = true;
+        cancelSaveMessage = true;
         pageManager.clearCache();
         ConfirmPageDeleteGui pageDeleteGui = new ConfirmPageDeleteGui(player, guiId, pageManager.getCurrentPageNumber());
         getPlugin().getGuiManager().getSession(player).addGui(pageDeleteGui);
-        cancelCloseEvent = true;
         pageDeleteGui.open();
     }
 
     private void insertPage() {
         savePage();
+        cancelSave = true;
+        cancelSaveMessage = true;
         pageManager.clearCache();
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         try {
@@ -230,7 +237,6 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             getPlugin().handleSqlException(e);
             Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
         }
-        cancelCloseEvent = true;
         open();
     }
 
@@ -240,14 +246,18 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         List<LinkDatabaseObject> links = new ArrayList<>();
 
         Page newPage = new Page();
-        newPage.addInventory(inventory);
-        pageManager.addPage(pageManager.getCurrentPageNumber(), newPage);
-
-        for (int slot = 0; slot < pageManager.getCurrentPageNumber() - 9; slot++) {
-            Button button = newPage.getPage()[slot];
-            if (button instanceof Ticket ticket) tickets.add(ticket.getAsDatabaseObject(slot));
-            if (button instanceof Link link) links.add(link.getAsDatabaseObject(slot));
+        newPage.setDisplayName(displayName + " (" + (pageManager.getCurrentPageNumber() + 1) + "/" + (maxPage + 1) + ")");
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            ItemStack item = inventory.getItem(slot);
+            if (item == null) continue;
+            String buttonType = getButtonType(item);
+            if (buttonType == null) continue;
+            Button button = ButtonUtils.getNewButton(buttonType, item);
+            if (button instanceof Ticket t) tickets.add(t.getAsDatabaseObject(slot));
+            if (button instanceof Link l) links.add(l.getAsDatabaseObject(slot));
+            newPage.addButton(slot, button);
         }
+        getPlugin().getLogger().severe("Total Tickets: " + tickets.size());
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
@@ -259,33 +269,45 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             getPlugin().handleSqlException(e);
             Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
         }
+
+        pageManager.addPage(pageManager.getCurrentPageNumber(), newPage);
     }
     @Override
     public void handleClose() {
-        if (cancelCloseEvent) {
-            cancelCloseEvent = false;
+        if (cancelSave) {
+            cancelSave = false;
+            cancelSaveMessage = false;
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             savePage();
-            player.sendMessage(ChatColor.GREEN + "Your changes have been saved!");
+            if (cancelSaveMessage) {
+                cancelSaveMessage = false;
+            } else {
+                player.sendMessage(ChatColor.GREEN + "Your changes have been saved!");
+            }
         });
     }
 
     @Override
     public void nextPage() {
         if (pageManager.getCurrentPageNumber() + 1 >= getPlugin().getConfig().getInt("MaxPagesPerGui")) return;
+        savePage();
+        cancelSaveMessage = true;
+        cancelSave = true;
         pageManager.setCurrentPageNumber(pageManager.getCurrentPageNumber() + 1);
         if (pageManager.getCurrentPageNumber() > maxPage) maxPage = pageManager.getCurrentPageNumber();
-        cancelCloseEvent = true;
         open();
     }
 
     @Override
     public void prevPage() {
         if (pageManager.getCurrentPageNumber() - 1 < 0) return;
+        savePage();
+        cancelSaveMessage = true;
+        cancelSave = true;
         pageManager.setCurrentPageNumber(pageManager.getCurrentPageNumber() - 1);
-        cancelCloseEvent = true;
+        cancelSaveMessage = true;
         open();
     }
 
