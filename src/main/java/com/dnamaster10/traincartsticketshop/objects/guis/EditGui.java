@@ -209,7 +209,6 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
                         event.getInventory().setItem(slot, convertedItem);
                     }
                 }
-                ((Player) event.getWhoClicked()).updateInventory();
             }, 1L);
         } else if (!buttonType.equals("link") && !buttonType.equals("ticket")) {
             event.setCancelled(true);
