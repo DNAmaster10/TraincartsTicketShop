@@ -14,10 +14,12 @@ public class Ticket extends Button {
     private final String tcTicketName;
     private final String displayName;
     private final String purchaseMessage;
+
     public TicketDatabaseObject getAsDatabaseObject(int slot) {
         String rawDisplayName = ChatColor.stripColor(displayName);
         return new TicketDatabaseObject(slot, tcTicketName, displayName, rawDisplayName, purchaseMessage);
     }
+
     @Override
     public ItemStack getItemStack() {
         ItemStack item = new ItemStack(Material.PAPER, 1);
@@ -35,9 +37,16 @@ public class Ticket extends Button {
         item.setItemMeta(meta);
         return item;
     }
+
     public Ticket(String tcName, String displayName, String purchaseMessage) {
         this.tcTicketName = tcName;
         this.displayName = displayName;
         this.purchaseMessage = purchaseMessage;
+    }
+
+    public Ticket(TicketDatabaseObject ticket) {
+        tcTicketName = ticket.tcName();
+        displayName = ticket.colouredDisplayName();
+        purchaseMessage = ticket.purchaseMessage();
     }
 }

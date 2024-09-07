@@ -1,29 +1,33 @@
 package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
+import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-
-import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
+import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
-public class ErrorGui extends Gui {
-    //Used when an error occurs building a gui (Such as if the gui was deleted while a player was using it)
-    private final String errorText;
-    @Override
-    public void open() {
-        generate();
-        getPlayer().openInventory(getInventory());
-    }
-    protected void generate() {
-        PageBuilder pageBuilder = new PageBuilder();
+public class ErrorGui extends Gui implements InventoryHolder, ClickHandler {
+    private final Inventory inventory;
+    private final Player player;
 
-        SimpleHeadButton errorButton = new SimpleHeadButton("error", RED_CROSS, errorText);
-        pageBuilder.addButton(22, errorButton);
+    public ErrorGui(Player player, String errorMessage) {
+        this.player = player;
 
-        setInventory(new InventoryBuilder(new GuiHolder(this), pageBuilder.getPage(), "Error").getInventory());
+        Page page = new Page();
+        page.setDisplayName("Error");
+
+        SimpleHeadButton errorButton = new SimpleHeadButton("error", RED_CROSS, errorMessage);
+        page.addButton(22, errorButton);
+
+        inventory = page.getAsInventory(this);
     }
 
     @Override
@@ -31,13 +35,19 @@ public class ErrorGui extends Gui {
         ItemStack clickedItem = event.getCurrentItem();
         String buttonType = getButtonType(clickedItem);
         if (buttonType == null) return;
-        removeCursorItem();
+        player.setItemOnCursor(null);
         if (buttonType.equals("error")) {
-            getPlayer().closeInventory();
+            Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1L);
         }
     }
-    public ErrorGui(String errorMessage, Player p) {
-        this.errorText = errorMessage;
-        setPlayer(p);
+
+    @Override
+    public void open() {
+        Bukkit.getScheduler().runTask(getPlugin(), () -> player.openInventory(inventory));
+    }
+
+    @Override
+    public @NotNull Inventory getInventory() {
+        return inventory;
     }
 }

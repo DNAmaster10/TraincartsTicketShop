@@ -12,11 +12,11 @@ DisableOnDatabaseModificationException: true
 
 SignIdentifier: [tshop]
 
+MaxPagesPerGui: 50
+
 # Advanced Configuration Options
 
 MaxStoredGuisPerPlayer: 50
-
-MaxPagesPerGui: 50
 
 # No touch please
 ConfigVersion: ${project.version}

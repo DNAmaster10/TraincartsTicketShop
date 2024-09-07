@@ -1,5 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util;
 
+import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -7,8 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.PURCHASE_MESSAGE;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.TC_TICKET_NAME;
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class GuiUtils {
     public static void handleTicketItemPurchase(ItemStack ticketItem, Player player) {
@@ -42,5 +45,23 @@ public class GuiUtils {
             player.sendMessage("");
         }
 
+    }
+    public static void linkGui(ItemStack linkItem, Player player) {
+        ItemMeta meta = linkItem.getItemMeta();
+        if (meta == null) return;
+
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        Integer linkedGuiId = dataContainer.get(DEST_GUI_ID, PersistentDataType.INTEGER);
+        Integer linkedGuiPage = dataContainer.get(DEST_GUI_PAGE, PersistentDataType.INTEGER);
+
+        if (linkedGuiId == null || linkedGuiPage == null) return;
+
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
+            if (!guiDataAccessor.checkGuiById(linkedGuiId)) return;
+            ShopGui shopGui = new ShopGui(player, linkedGuiId, linkedGuiPage);
+            getPlugin().getGuiManager().getSession(player).addGui(shopGui);
+            shopGui.open();
+        });
     }
 }

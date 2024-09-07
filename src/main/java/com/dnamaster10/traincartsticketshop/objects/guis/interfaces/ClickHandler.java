@@ -1,7 +1,7 @@
-package com.dnamaster10.traincartsticketshop.objects.guis2.interfaces;
+package com.dnamaster10.traincartsticketshop.objects.guis.interfaces;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public interface Clickable {
+public interface ClickHandler {
     void handleClick(InventoryClickEvent event);
 }

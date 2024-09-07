@@ -11,7 +11,7 @@ import java.util.List;
 public class LinkDataAccessor extends DataAccessor {
     LinksDatabaseAccessor linksDatabaseAccessor = DatabaseAccessorFactory.getLinksDatabaseAccessor();
 
-    public LinkDatabaseObject[] getLinksByGuiId(int guiId, int page) throws QueryException {
+    public LinkDatabaseObject[] getLinks(int guiId, int page) throws QueryException {
         return linksDatabaseAccessor.getLinksByGuiId(guiId, page);
     }
 

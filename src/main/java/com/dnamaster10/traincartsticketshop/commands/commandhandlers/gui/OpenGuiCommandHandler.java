@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -63,7 +63,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Create a new gui
         int guiId = guiAccessor.getGuiIdByName(args[2]);
-        ShopGui gui = new ShopGui(guiId, player);
+        ShopGui gui = new ShopGui(player, guiId);
 
         //Create a new gui session
         Session session = getPlugin().getGuiManager().getNewSession(player);

@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util;
 
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.ShopGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.Bukkit;
@@ -86,7 +86,7 @@ public class SignHandler {
                 Player player = event.getPlayer();
 
                 //Create the new gui
-                ShopGui shopGui = new ShopGui(guiId, page, player);
+                ShopGui shopGui = new ShopGui(player, guiId, page);
 
                 //Create a new session
                 Session session = getPlugin().getGuiManager().getNewSession(player);

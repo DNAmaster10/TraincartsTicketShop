@@ -37,4 +37,10 @@ public class Link extends Button {
         this.linkedGuiId = linkedGuiId;
         this.linkedGuiPage = linkedGuiPage;
     }
+
+    public Link(LinkDatabaseObject link) {
+        displayName = link.colouredDisplayName();
+        linkedGuiId = link.linkedGuiId();
+        linkedGuiPage = link.linkedGuiPage();
+    }
 }

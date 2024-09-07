@@ -10,13 +10,6 @@ public class Utilities {
         }
     }
 
-    /**
-     * Returns the minimum amount of pages that would be needed to hold the given number of elements.
-     *
-     * @param elementCount the amount of elements needed
-     * @param pageSize the maximum number of elements a singe page can hold
-     * @return page count
-     * */
     public static int getPageCount(int elementCount, int pageSize) {
         //Returns the minimum amount of pages that would be required to hold given elements
         return (int) Math.ceil((double) elementCount / pageSize);

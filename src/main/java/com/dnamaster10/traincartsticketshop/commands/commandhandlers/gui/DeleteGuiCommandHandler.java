@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.guis.confirmguis.ConfirmGuiDeleteGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.ConfirmGuiDeleteGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -69,9 +69,9 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
-        if (sender instanceof Player p) {
-            ConfirmGuiDeleteGui newGui = new ConfirmGuiDeleteGui(guiId, p);
-            Session session = getPlugin().getGuiManager().getNewSession(p);
+        if (sender instanceof Player player) {
+            ConfirmGuiDeleteGui newGui = new ConfirmGuiDeleteGui(player, guiId);
+            Session session = getPlugin().getGuiManager().getNewSession(player);
             session.addGui(newGui);
             newGui.open();
             return;

@@ -1,9 +1,8 @@
-package com.dnamaster10.traincartsticketshop.objects.guis2;
+package com.dnamaster10.traincartsticketshop.objects.guis;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
-import com.dnamaster10.traincartsticketshop.objects.guis2.interfaces.Clickable;
-import com.dnamaster10.traincartsticketshop.objects.guis2.interfaces.Openable;
+import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
@@ -19,30 +18,28 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
-public class ConfirmGuiDeleteGui implements InventoryHolder, Clickable, Openable {
-    //Gui used for when someone wants to delete a gui.
+public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickHandler {
+    //Gui used for when someone wants to delete a page within a gui
     private final Player player;
-    private final int deleteGuiId;
+    private final int guiId;
+    private final int pageNumber;
     private final Inventory inventory;
 
-    public ConfirmGuiDeleteGui(Player player, int guiToDeleteId) {
-        deleteGuiId = guiToDeleteId;
+    public ConfirmPageDeleteGui(Player player, int guiId, int pageNumber) {
         this.player = player;
+        this.guiId = guiId;
+        this.pageNumber = pageNumber;
         Page page = new Page();
 
-        page.setDisplayName(ChatColor.RED + "Confirm Gui Deletion");
+        page.setDisplayName(ChatColor.RED + "Confirm Page Deletion");
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();
         }
-        SimpleHeadButton deleteGuiButton = new SimpleHeadButton("confirm_action", HeadData.HeadType.RED_CROSS, "Delete Gui");
-        page.addButton(22, deleteGuiButton);
+
+        SimpleHeadButton deletePageButton = new SimpleHeadButton("confirm_action", HeadData.HeadType.RED_CROSS, "Delete Page");
+        page.addButton(22, deletePageButton);
 
         inventory = page.getAsInventory(this);
-    }
-
-    @Override
-    public @NotNull Inventory getInventory() {
-        return inventory;
     }
 
     @Override
@@ -61,12 +58,12 @@ public class ConfirmGuiDeleteGui implements InventoryHolder, Clickable, Openable
             case "confirm_action" -> {
                 Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
                     try {
-                        GuiDataAccessor guiAccessor = new GuiDataAccessor();
-                        guiAccessor.deleteGuiById(deleteGuiId);
+                        GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
+                        guiDataAccessor.deletePage(guiId, pageNumber);
                     } catch (ModificationException e) {
-                        getPlugin().handleSqlException(e);
+                        getPlugin().handleSqlException(player, e);
                     }
-                    Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1L);
+                    getPlugin().getGuiManager().getSession(player).back();
                 });
             }
         }
@@ -75,5 +72,10 @@ public class ConfirmGuiDeleteGui implements InventoryHolder, Clickable, Openable
     @Override
     public void open() {
         Bukkit.getScheduler().runTask(getPlugin(), () -> player.openInventory(inventory));
+    }
+
+    @Override
+    public @NotNull Inventory getInventory() {
+        return inventory;
     }
 }

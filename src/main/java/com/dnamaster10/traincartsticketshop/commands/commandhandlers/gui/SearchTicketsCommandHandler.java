@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
-import com.dnamaster10.traincartsticketshop.objects.guis.multipageguis.TicketSearchGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.TicketSearchGui;
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -74,7 +74,7 @@ public class SearchTicketsCommandHandler extends AsyncCommandHandler {
         int guiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create new gui
-        TicketSearchGui gui = new TicketSearchGui(guiId, searchTerm, 0, player);
+        TicketSearchGui gui = new TicketSearchGui(player, guiId, searchTerm);
 
         //Open a new gui session for the player
         Session session = getPlugin().getGuiManager().getNewSession(player);
