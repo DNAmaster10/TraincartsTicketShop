@@ -257,7 +257,6 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             if (button instanceof Link l) links.add(l.getAsDatabaseObject(slot));
             newPage.addButton(slot, button);
         }
-        getPlugin().getLogger().severe("Total Tickets: " + tickets.size());
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();

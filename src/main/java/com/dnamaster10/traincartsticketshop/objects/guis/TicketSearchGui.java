@@ -98,44 +98,33 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
         }
     }
 
-    //TODO possibly merge following two methods into "setPage()" method.
     @Override
     public void nextPage() {
         int currentPageNumber = pageManager.getCurrentPageNumber();
         if (currentPageNumber + 1 >= totalPages) return;
-        int nextPageNumber = currentPageNumber + 1;
-        pageManager.setCurrentPageNumber(nextPageNumber);
-        if (!pageManager.hasPage(nextPageNumber)) {
-            Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-                Page newPage = getNewPage(nextPageNumber);
-                if (newPage == null) return;
-                pageManager.addPage(nextPageNumber, newPage);
-                inventory = newPage.getAsInventory(this);
-                open();
-            });
-            return;
-        }
-        inventory = pageManager.getPage(nextPageNumber).getAsInventory(this);
-        open();
+        setPageNumber(currentPageNumber + 1);
     }
 
     @Override
     public void prevPage() {
         int currentPageNumber = pageManager.getCurrentPageNumber();
         if (currentPageNumber <= 0) return;
-        int prevPageNumber = currentPageNumber - 1;
-        pageManager.setCurrentPageNumber(prevPageNumber);
-        if (!pageManager.hasPage(prevPageNumber)) {
+        setPageNumber(currentPageNumber - 1);
+    }
+
+    private void setPageNumber(int pageNumber) {
+        pageManager.setCurrentPageNumber(pageNumber);
+        if (!pageManager.hasPage(pageNumber)) {
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-                Page newPage = getNewPage(prevPageNumber);
+                Page newPage = getNewPage(pageNumber);
                 if (newPage == null) return;
-                pageManager.addPage(prevPageNumber, newPage);
+                pageManager.addPage(pageNumber, newPage);
                 inventory = newPage.getAsInventory(this);
                 open();
             });
             return;
         }
-        inventory = pageManager.getPage(prevPageNumber).getAsInventory(this);
+        inventory = pageManager.getPage(pageNumber).getAsInventory(this);
         open();
     }
 
