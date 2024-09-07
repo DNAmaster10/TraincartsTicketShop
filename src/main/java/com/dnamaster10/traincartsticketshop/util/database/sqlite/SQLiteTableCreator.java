@@ -38,7 +38,7 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements Databa
             statement.execute();
 
             //Note that here we've had to remove the unique constraints on the following two tables.
-            //This is because SQLite does not support ORDER by within an UPDATE statement.
+            //This is because SQLite does not support ORDER BY within an UPDATE statement.
             //Tickets Table
             statement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS tickets (

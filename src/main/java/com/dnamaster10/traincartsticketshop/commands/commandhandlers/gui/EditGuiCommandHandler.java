@@ -2,7 +2,6 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
-import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
@@ -70,13 +69,10 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Open a new gui session
-        Session session = getPlugin().getGuiManager().getNewSession(player);
+        getPlugin().getGuiManager().openNewSession(player);
 
         //Create the new gui
         EditGui gui = new EditGui(player, guiId);
-
-        //Register the gui
-        session.addGui(gui);
 
         //Open the new gui
         gui.open();

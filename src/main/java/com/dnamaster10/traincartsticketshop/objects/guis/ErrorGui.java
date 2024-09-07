@@ -15,6 +15,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
 public class ErrorGui extends Gui implements InventoryHolder, ClickHandler {
+    //TODO may be possible to completely remove this GUI type
     private final Inventory inventory;
     private final Player player;
 

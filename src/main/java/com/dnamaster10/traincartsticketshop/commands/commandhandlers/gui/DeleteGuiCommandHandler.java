@@ -70,9 +70,8 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         if (sender instanceof Player player) {
+            getPlugin().getGuiManager().getSession(player);
             ConfirmGuiDeleteGui newGui = new ConfirmGuiDeleteGui(player, guiId);
-            Session session = getPlugin().getGuiManager().getNewSession(player);
-            session.addGui(newGui);
             newGui.open();
             return;
         }

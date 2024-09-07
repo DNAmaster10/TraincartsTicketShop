@@ -2,7 +2,6 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.LinkSearchGui;
-import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
@@ -71,16 +70,13 @@ public class SearchLinksCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
         //Open a new session
-        Session session = getPlugin().getGuiManager().getNewSession(player);
+        getPlugin().getGuiManager().openNewSession(player);
 
         //Get the search gui id
         int searchGuiId = guiAccessor.getGuiIdByName(args[2]);
 
         //Create the search gui
         LinkSearchGui gui = new LinkSearchGui(player, searchGuiId, searchTerm);
-
-        //Register the new gui
-        session.addGui(gui);
 
         //Open the new gui
         gui.open();

@@ -86,13 +86,10 @@ public class SignHandler {
                 Player player = event.getPlayer();
 
                 //Create a new session
-                Session session = getPlugin().getGuiManager().getNewSession(player);
+                getPlugin().getGuiManager().openNewSession(player);
 
                 //Create the new gui
                 ShopGui shopGui = new ShopGui(player, guiId, page);
-
-                //Register the new gui
-                session.addGui(shopGui);
 
                 //Open the gui
                 shopGui.open();

@@ -13,11 +13,10 @@ public class GuiManager {
     public Session getSession(Player player) {
         return sessions.get(player);
     }
-    public Session getNewSession(Player player) {
+    public void openNewSession(Player player) {
         //Creates a new session, removes a player's old session, and returns the new session
         Session newSession = new Session(player);
         sessions.put(player, newSession);
-        return newSession;
     }
     public void closeSession(Player player) {
         sessions.remove(player);

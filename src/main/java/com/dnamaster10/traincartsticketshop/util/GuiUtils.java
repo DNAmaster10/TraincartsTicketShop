@@ -60,7 +60,6 @@ public class GuiUtils {
             GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
             if (!guiDataAccessor.checkGuiById(linkedGuiId)) return;
             ShopGui shopGui = new ShopGui(player, linkedGuiId, linkedGuiPage);
-            getPlugin().getGuiManager().getSession(player).addGui(shopGui);
             shopGui.open();
         });
     }

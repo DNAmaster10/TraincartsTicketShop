@@ -33,6 +33,8 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
         this.guiId = guiId;
         this.searchTerm = searchTerm;
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
 

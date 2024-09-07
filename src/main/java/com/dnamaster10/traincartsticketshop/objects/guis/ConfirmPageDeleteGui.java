@@ -29,8 +29,10 @@ public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickH
         this.player = player;
         this.guiId = guiId;
         this.pageNumber = pageNumber;
-        Page page = new Page();
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
+        Page page = new Page();
         page.setDisplayName(ChatColor.RED + "Confirm Page Deletion");
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();

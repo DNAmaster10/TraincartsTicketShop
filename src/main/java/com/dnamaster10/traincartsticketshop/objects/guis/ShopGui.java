@@ -35,6 +35,8 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
         this.guiId = guiId;
         this.pageManager = new PageManager(pageNumber);
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         try {
             displayName = guiDataAccessor.getDisplayName(guiId);
@@ -100,8 +102,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
                 session.back();
             }
             case "search" -> {
-                SearchSelectGui searchSelectGui = new SearchSelectGui(player, guiId);
-                getPlugin().getGuiManager().getSession(player).addGui(searchSelectGui);
+                SearchSelectGui searchSelectGui = new SearchSelectGui(player, guiId);;
                 searchSelectGui.open();
             }
             case "link" -> linkGui(clickedItem, player);

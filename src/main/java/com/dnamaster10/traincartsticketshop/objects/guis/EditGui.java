@@ -45,13 +45,15 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     private int maxPage;
     private String displayName;
     private Inventory inventory;
-    private boolean cancelSaveMessage = false;
     private boolean cancelSave = false;
+    private boolean cancelSaveMessage = false;
 
     public EditGui(Player player, int guiId, int pageNumber) {
         this.player = player;
         this.guiId = guiId;
         this.pageManager = new PageManager(pageNumber);
+
+        getPlugin().getGuiManager().getSession(player).addGui(this);
 
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         if (!guiDataAccessor.checkGuiById(guiId)) {
@@ -216,12 +218,10 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     }
 
     private void deletePage() {
-        savePage();
-        cancelSave = true;
+        //Note that save does not need to be called here since it is handled in the close event, as a new gui is being opened.
         cancelSaveMessage = true;
         pageManager.clearCache();
         ConfirmPageDeleteGui pageDeleteGui = new ConfirmPageDeleteGui(player, guiId, pageManager.getCurrentPageNumber());
-        getPlugin().getGuiManager().getSession(player).addGui(pageDeleteGui);
         pageDeleteGui.open();
     }
 
@@ -280,10 +280,10 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             savePage();
-            if (cancelSaveMessage) {
-                cancelSaveMessage = false;
-            } else {
+            getPlugin().getGuiManager().removeEditGui(guiId);
+            if (!cancelSaveMessage) {
                 player.sendMessage(ChatColor.GREEN + "Your changes have been saved!");
+                cancelSaveMessage = false;
             }
         });
     }
@@ -292,8 +292,8 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     public void nextPage() {
         if (pageManager.getCurrentPageNumber() + 1 >= getPlugin().getConfig().getInt("MaxPagesPerGui")) return;
         savePage();
-        cancelSaveMessage = true;
         cancelSave = true;
+        cancelSaveMessage = true;
         pageManager.setCurrentPageNumber(pageManager.getCurrentPageNumber() + 1);
         if (pageManager.getCurrentPageNumber() > maxPage) maxPage = pageManager.getCurrentPageNumber();
         open();
@@ -303,10 +303,9 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     public void prevPage() {
         if (pageManager.getCurrentPageNumber() - 1 < 0) return;
         savePage();
-        cancelSaveMessage = true;
         cancelSave = true;
-        pageManager.setCurrentPageNumber(pageManager.getCurrentPageNumber() - 1);
         cancelSaveMessage = true;
+        pageManager.setCurrentPageNumber(pageManager.getCurrentPageNumber() - 1);
         open();
     }
 

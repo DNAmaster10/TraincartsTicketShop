@@ -27,8 +27,10 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
     public ConfirmGuiDeleteGui(Player player, int guiToDeleteId) {
         deleteGuiId = guiToDeleteId;
         this.player = player;
-        Page page = new Page();
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
+        Page page = new Page();
         page.setDisplayName(ChatColor.RED + "Confirm Gui Deletion");
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();

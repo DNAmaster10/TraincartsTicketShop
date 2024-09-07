@@ -28,7 +28,10 @@ public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandle
         this.player = player;
         this.guiId = searchGuiId;
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
         Page page = new Page();
+        page.setDisplayName("Select search type");
 
         if (getPlugin().getGuiManager().getSession(player).checkBack()) page.addBackButton();
 

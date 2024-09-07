@@ -33,6 +33,8 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
         this.guiId = guiId;
         this.searchTerm = searchTerm;
 
+        getPlugin().getGuiManager().getSession(player).addGui(this);
+
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
 
