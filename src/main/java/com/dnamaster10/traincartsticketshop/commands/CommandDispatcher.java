@@ -1,12 +1,9 @@
 package com.dnamaster10.traincartsticketshop.commands;
 
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.RemoveEditorCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.*;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.AddEditorCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkRenameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDestinationPageCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.OpenGuiCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketRenameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetPurchaseMessageCommandHandler;

@@ -9,5 +9,6 @@ public class InventoryMoveItemEventHandler implements Listener {
     @EventHandler
     void onItemMove(InventoryMoveItemEvent event) {
         //Placeholder for potentially fixing issue
+        //TODO This
     }
 }

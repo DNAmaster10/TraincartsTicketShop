@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.objects.guis;
 import java.util.HashMap;
 
 public class PageManager {
-    private HashMap<Integer, Page> pages = new HashMap<>();
+    private final HashMap<Integer, Page> pages = new HashMap<>();
     private int currentPageNumber;
 
     public PageManager(int startingPage) {

@@ -8,8 +8,6 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
-
 public class GuiTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui <arg1>
     private static final List<String> ARGS1;

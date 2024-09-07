@@ -1,6 +1,5 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers;
 
-import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -28,7 +27,6 @@ public abstract class CommandHandler {
         }
     }
     protected void returnGuiNotFoundError(CommandSender sender, String guiName) {
-        //Returns a "No gui with name "x" exists error to the sender
         returnError(sender, "No gui with the name \"" + guiName + "\" exists");
     }
     protected void returnWrongItemError(CommandSender sender, String correctItem) {
