@@ -106,7 +106,9 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         if (e instanceof QueryException) {
             return;
         }
-        disable();
+        if (plugin.getConfig().getBoolean("DisableOnDatabaseModificationException")) {
+            disable();
+        }
     }
     public void handleSqlException(CommandSender sender, SQLException e) {
         sender.sendMessage(ChatColor.RED + "A database error occurred. Check server logs for more info");

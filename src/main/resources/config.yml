@@ -8,7 +8,11 @@ database:
   user: admin
   password: password
 
+DisableOnDatabaseModificationException: true
+
 SignIdentifier: [tshop]
+
+# Advanced Configuration Options
 
 MaxStoredGuisPerPlayer: 50
 
