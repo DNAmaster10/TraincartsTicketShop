@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.StringJoiner;
 
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui setdisplayname <gui name> <gui display name>
+    //Example command: /tshop gui rename <gui ID> <gui display name>
     private String rawDisplayName;
     private String colouredDisplayName;
     private GuiDataAccessor guiAccessor;
@@ -28,22 +28,15 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop rename <gui id> <new name>");
+            returnMissingArgumentsError(sender, "/tshop gui rename <gui ID> <new name>");
             return false;
         }
-
-        //Check gui name to save on database calls
         if (!checkGuiNameSyntax(args[2])) {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
 
-        //Build display name
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        for (int i = 3; i < args.length; i++) {
-            stringJoiner.add(args[i]);
-        }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', args[3]);
         rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {

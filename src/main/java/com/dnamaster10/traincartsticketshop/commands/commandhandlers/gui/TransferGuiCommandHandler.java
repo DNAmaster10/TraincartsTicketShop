@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TransferGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui transfer <gui name> <player>
+    //Example command: /traincartsticketshop gui transfer <gui ID> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiDataAccessor guiAccessor;
     private int guiId;
@@ -31,7 +31,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
             return false;
         }
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui transfer <gui name> <player>");
+            returnMissingArgumentsError(sender, "/tshop gui transfer <gui ID> <player>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class RemoveEditorCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop editor remove <gui name> <player name>
+    //Example command: /tshop editor remove <gui ID> <player name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiEditorsDataAccessor editorsAccessor;
     private int guiId;
@@ -28,7 +28,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui removeEditor <gui name> <username>");
+            returnMissingArgumentsError(sender, "/tshop gui removeEditor <gui ID> <username>");
             return false;
         }
         if (args.length > 4) {

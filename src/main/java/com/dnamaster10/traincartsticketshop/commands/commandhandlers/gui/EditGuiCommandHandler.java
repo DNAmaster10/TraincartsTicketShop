@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class EditGuiCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop gui edit <gui name>
+    //Example command: /tshop gui edit <gui ID>
     private Player player;
     private int guiId;
     @Override
@@ -29,7 +29,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 3)  {
-            returnMissingArgumentsError(player, "/tshop gui edit <gui name>");
+            returnMissingArgumentsError(player, "/tshop gui edit <gui ID>");
             return false;
         }
         if (args.length > 3) {

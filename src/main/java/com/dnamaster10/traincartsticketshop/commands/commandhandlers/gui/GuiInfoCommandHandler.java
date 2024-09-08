@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.*;
 
 public class GuiInfoCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop gui info <gui name>
+    //Example command: /tshop gui info <gui ID>
 
     GuiDataAccessor guiAccessor;
     int guiId;
@@ -27,7 +27,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(sender, "/tshop gui info <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui info <gui ID>");
             return false;
         }
         if (args.length > 3) {

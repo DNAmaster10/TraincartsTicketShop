@@ -11,8 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AddEditorCommandHandler extends AsyncCommandHandler {
-    //Command example: /tshop gui addEditor <gui name> <player>
-    //This is computed during the async check, so is stored here to be used later in the execute method.
+    //Command example: /tshop gui addEditor <gui ID> <player>
     private PlayerDatabaseObject playerDatabaseObject;
     private GuiEditorsDataAccessor editorsAccessor;
     private int guiId;
@@ -28,7 +27,7 @@ public class AddEditorCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(sender, "/tshop gui addEditor <gui name> <player>");
+            returnMissingArgumentsError(sender, "/tshop gui addEditor <gui ID> <player>");
             return false;
         }
         if (args.length > 4) {

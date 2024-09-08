@@ -30,7 +30,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(sender, "/tshop gui open <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui open <gui ID>");
             return false;
         }
         if (args.length > 3) {

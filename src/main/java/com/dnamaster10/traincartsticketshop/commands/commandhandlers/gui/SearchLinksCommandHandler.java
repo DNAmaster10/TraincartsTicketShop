@@ -12,7 +12,7 @@ import java.util.StringJoiner;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class SearchLinksCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui searchLinks <gui name> <search term>
+    //Example command: /traincartsticketshop gui searchLinks <gui ID> <search term>
     private String searchTerm;
     private GuiDataAccessor guiAccessor;
     private Player player;
@@ -32,7 +32,7 @@ public class SearchLinksCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop gui searchLinks <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchLinks <gui ID> <search term>");
             return false;
         }
         //Check gui name
@@ -50,7 +50,7 @@ public class SearchLinksCommandHandler extends AsyncCommandHandler {
             return false;
         }
         if (searchTerm.isBlank()) {
-            returnError(player, "Search terms cannot be less than 1 character in length");
+            returnError(player, "Search term cannot be less than 1 character in length");
             return false;
         }
         return true;

@@ -12,7 +12,7 @@ import java.util.StringJoiner;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class SearchTicketsCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui searchTickets <gui name> <search term>
+    //Example command: /traincartsticketshop gui searchTickets <gui ID> <search term>
     private String searchTerm;
     private GuiDataAccessor guiAccessor;
     private Player player;
@@ -32,7 +32,7 @@ public class SearchTicketsCommandHandler extends AsyncCommandHandler {
 
         //Check syntax
         if (args.length < 4) {
-            returnMissingArgumentsError(player, "/tshop gui searchTickets <gui name> <search term>");
+            returnMissingArgumentsError(player, "/tshop gui searchTickets <gui ID> <search term>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {

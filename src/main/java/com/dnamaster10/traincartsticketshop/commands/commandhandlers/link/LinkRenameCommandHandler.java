@@ -36,13 +36,12 @@ public class LinkRenameCommandHandler extends SyncCommandHandler {
             returnMissingArgumentsError(player, "/tshop link rename <name>");
             return false;
         }
-
-        //Build display name
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        for (int i = 2; i < args.length; i++) {
-            stringJoiner.add(args[i]);
+        if (args.length > 3) {
+            returnInvalidSubCommandError(player, args[3]);
+            return false;
         }
-        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
+
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', args[2]);
         String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
 
         if (rawDisplayName.length() > 25) {

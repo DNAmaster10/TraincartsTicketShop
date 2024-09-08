@@ -40,8 +40,8 @@ public class LinkSetDestinationPageCommandHandler extends SyncCommandHandler {
             returnInvalidSubCommandError(player, args[3]);
             return false;
         }
-        if (!Utilities.isInt(args[2])) {
-            returnError(player, "Page number must be a valid integer");
+        if (!Utilities.isInt(args[2]) || Integer.parseInt(args[2]) < 1) {
+            returnError(player, "Page number must be a positive integer");
             return false;
         }
 

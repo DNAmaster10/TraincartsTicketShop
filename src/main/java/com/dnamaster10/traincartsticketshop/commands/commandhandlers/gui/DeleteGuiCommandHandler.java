@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class DeleteGuiCommandHandler extends AsyncCommandHandler {
-    //Command example: /traincartsticketshop gui delete <gui_name>
+    //Command example: /traincartsticketshop gui delete <gui ID>
     private GuiDataAccessor guiAccessor;
     private int guiId;
     @Override
@@ -31,7 +31,7 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
             return false;
         }
         if (args.length < 3) {
-            returnMissingArgumentsError(sender, "/tshop gui delete <gui name>");
+            returnMissingArgumentsError(sender, "/tshop gui delete <gui ID>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
@@ -58,7 +58,7 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.delete")) {
                 if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
-                    returnError(p, "You must be the owner of the gui in order to delete it");
+                    returnError(p, "You must own the gui in order to delete it");
                     return false;
                 }
             }

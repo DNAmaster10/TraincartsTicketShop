@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -9,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetGuiIdCommandHandler extends AsyncCommandHandler {
-    //Example command: /traincartsticketshop gui rename old_name new_name
+    //Example command: /traincartsticketshop gui setId <old ID> <new ID>
     //TODO should probably only be renameable by the owner
     private GuiDataAccessor guiAccessor;
     private int guiId;
@@ -38,7 +39,7 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        if (!checkStringFormat(args[3])) {
+        if (Utilities.checkSpecialCharacters(args[3])) {
             returnError(sender, "Gui IDs can only contain letters Aa - Zz, numbers, underscores and dashes");
             return false;
         }

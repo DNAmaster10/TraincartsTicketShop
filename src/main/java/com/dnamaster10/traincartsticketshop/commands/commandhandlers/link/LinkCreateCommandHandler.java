@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.StringJoiner;
 
 public class LinkCreateCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop link create <linked gui name> <optional display name>
+    //Example command: /tshop link create <linked gui ID> <optional display name>
     private String colouredDisplayName;
     private Player player;
     private GuiDataAccessor guiAccessor;
@@ -31,7 +31,7 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
         }
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(player, "/tshop link create <linked gui name> <optional display name>");
+            returnMissingArgumentsError(player, "/tshop link create <linked gui ID> <optional display name>");
             return false;
         }
         if (!checkGuiNameSyntax(args[2])) {
@@ -39,19 +39,11 @@ public class LinkCreateCommandHandler extends AsyncCommandHandler {
             return false;
         }
 
-        //Build display name
-        String rawDisplayName;
-        if (args.length > 3) {
-            StringJoiner stringJoiner = new StringJoiner(" ");
-            for (int i = 3; i < args.length; i++) {
-                stringJoiner.add(args[i]);
-            }
-            colouredDisplayName = ChatColor.translateAlternateColorCodes('&', stringJoiner.toString());
-            rawDisplayName = ChatColor.stripColor(colouredDisplayName);
-        } else {
-            colouredDisplayName = args[2];
-            rawDisplayName = args[2];
-        }
+        if (args.length > 3) colouredDisplayName = args[3];
+        else colouredDisplayName = args[2];
+        colouredDisplayName = ChatColor.translateAlternateColorCodes('&', colouredDisplayName);
+        String rawDisplayName = ChatColor.stripColor(colouredDisplayName);
+
         if (rawDisplayName.length() > 25) {
             returnError(player, "Link display names cannot be more than 25 characters in length");
             return false;
