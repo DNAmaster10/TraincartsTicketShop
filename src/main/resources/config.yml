@@ -8,8 +8,6 @@ database:
   user: admin
   password: password
 
-DisableOnDatabaseModificationException: true
-
 SignIdentifier: [tshop]
 
 MaxPagesPerGui: 50
@@ -17,6 +15,8 @@ MaxPagesPerGui: 50
 # Advanced Configuration Options
 
 MaxStoredGuisPerPlayer: 50
+
+DisableOnDatabaseModificationException: true
 
 # No touch please
 ConfigVersion: ${project.version}

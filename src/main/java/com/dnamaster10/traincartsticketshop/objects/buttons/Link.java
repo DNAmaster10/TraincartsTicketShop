@@ -14,10 +14,12 @@ public class Link extends Button {
     private final String displayName;
     private final int linkedGuiId;
     private final int linkedGuiPage;
+
     public LinkDatabaseObject getAsDatabaseObject(int slot) {
         String rawDisplayName = ChatColor.stripColor(displayName);
         return new LinkDatabaseObject(slot, linkedGuiId, linkedGuiPage, displayName, rawDisplayName);
     }
+
     public ItemStack getItemStack() {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta meta = item.getItemMeta();
@@ -32,6 +34,7 @@ public class Link extends Button {
         item.setItemMeta(meta);
         return item;
     }
+
     public Link(int linkedGuiId, int linkedGuiPage, String displayName) {
         this.displayName = displayName;
         this.linkedGuiId = linkedGuiId;
