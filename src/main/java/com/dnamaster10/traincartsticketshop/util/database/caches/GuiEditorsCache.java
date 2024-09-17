@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Holds caches of information relating to Gui editors. Should only be accessed via a GuiEditorsDataAccessor
+ * @see com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor
+ */
 public class GuiEditorsCache {
     ConcurrentHashMap<Integer, List<String>> guiIdEditorsMap = new ConcurrentHashMap<>();
     ConcurrentHashMap<String, List<Integer>> editorGuisMap = new ConcurrentHashMap<>();

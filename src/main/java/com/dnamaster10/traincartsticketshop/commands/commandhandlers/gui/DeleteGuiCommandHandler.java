@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * The command handler for the /tshop gui delete command handler.
+ */
 public class DeleteGuiCommandHandler extends AsyncCommandHandler {
     //Command example: /traincartsticketshop gui delete <gui ID>
     private GuiDataAccessor guiAccessor;
@@ -76,7 +79,7 @@ public class DeleteGuiCommandHandler extends AsyncCommandHandler {
         }
         //If sender isn't a player, we don't need to bother with a confirm action gui.
         //Delete the gui.
-        guiAccessor.deleteGuiById(guiId);
+        guiAccessor.deleteGui(guiId);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was deleted");
     }
 }

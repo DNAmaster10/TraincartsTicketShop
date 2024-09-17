@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Holds caches of information relating to Guis. Should only be accessed via a GuiDataAccessor
+ * @see com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor
+ */
 public class GuiCache {
     List<String> guiNames = new CopyOnWriteArrayList<>();
     ConcurrentHashMap<Integer, GuiDatabaseObject> idGuiMap = new ConcurrentHashMap<>();

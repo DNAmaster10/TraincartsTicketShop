@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Holds caches of information relating to players. Should only be accessed via a PlayerDataAccessor
+ * @see com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor
+ */
 public class PlayerCache {
     List<String> usernames = new CopyOnWriteArrayList<>();
     ConcurrentHashMap<String, PlayerDatabaseObject> uuidPlayerMap = new ConcurrentHashMap<>();

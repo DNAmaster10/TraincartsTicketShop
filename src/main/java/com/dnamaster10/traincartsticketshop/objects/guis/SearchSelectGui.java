@@ -19,11 +19,18 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * A Gui used to select the type of search to perform, such as searching tickets or links.
+ */
 public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandler {
     private final Player player;
     private final int guiId;
     private final Inventory inventory;
 
+    /**
+     * @param player The player who will open this Gui
+     * @param searchGuiId The ID of the Gui to search
+     */
     public SearchSelectGui(Player player, int searchGuiId) {
         this.player = player;
         this.guiId = searchGuiId;

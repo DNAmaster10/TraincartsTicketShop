@@ -10,6 +10,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui rename command.
+ */
 public class GuiRenameTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui setDisplayName <gui name> <new display name>
     private boolean checkPermissions(Player player) {

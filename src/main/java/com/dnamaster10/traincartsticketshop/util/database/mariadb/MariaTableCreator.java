@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces.DatabaseTableCreator;
+import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces.DatabaseTableCreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

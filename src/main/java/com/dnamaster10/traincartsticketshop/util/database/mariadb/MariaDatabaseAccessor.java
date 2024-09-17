@@ -9,6 +9,9 @@ import java.sql.SQLException;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * Holds information about the MariaDB database, such as the host name and port.
+ */
 public class MariaDatabaseAccessor {
     private static final HikariDataSource dataSource;
     static {
@@ -29,6 +32,10 @@ public class MariaDatabaseAccessor {
         dataSource = new HikariDataSource(config);
     }
 
+    /**
+     * @return A new Connection object for the MariaDB database
+     * @throws QueryException Thrown if an error occurs opening the connection
+     */
     public Connection getConnection() throws QueryException {
         //Returns a new connection to the database
         try {

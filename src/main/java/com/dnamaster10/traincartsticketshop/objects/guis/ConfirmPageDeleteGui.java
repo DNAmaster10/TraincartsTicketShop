@@ -18,6 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * A Gui which prompts the player to confirm whether they want to delete a page within a Gui.
+ */
 public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickHandler {
     //Gui used for when someone wants to delete a page within a gui
     private final Player player;
@@ -25,6 +28,11 @@ public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickH
     private final int pageNumber;
     private final Inventory inventory;
 
+    /**
+     * @param player The player who will use the Gui
+     * @param guiId The ID of the gui which should have a page deleted
+     * @param pageNumber The page number which should be deleted
+     */
     public ConfirmPageDeleteGui(Player player, int guiId, int pageNumber) {
         this.player = player;
         this.guiId = guiId;

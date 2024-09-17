@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.database.sqlite;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces.PlayerDatabaseAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces.PlayerDatabaseAccessor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

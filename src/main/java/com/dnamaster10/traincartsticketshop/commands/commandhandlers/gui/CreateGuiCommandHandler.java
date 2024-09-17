@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 
 import java.util.StringJoiner;
 
+/**
+ * The command handler for the /tshop gui create command.
+ */
 public class CreateGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui create <gui name> <optional name>
 

@@ -10,6 +10,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer for the /tshop gui delete command.
+ */
 public class GuiDeleteTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui delete <gui name>
     private boolean checkPermissions(Player player) {

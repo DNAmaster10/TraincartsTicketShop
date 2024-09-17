@@ -11,6 +11,9 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * The command handler for the /tshop link setDisplayName command.
+ */
 public class LinkRenameCommandHandler extends SyncCommandHandler {
     //Example command: /tshop link setDisplayName <display name>
 

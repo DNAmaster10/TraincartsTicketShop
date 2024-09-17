@@ -11,6 +11,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui removeEditor command.
+ */
 public class GuiRemoveEditorTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui removeEditor <gui name> <username>
     private boolean checkPermissions(Player player) {

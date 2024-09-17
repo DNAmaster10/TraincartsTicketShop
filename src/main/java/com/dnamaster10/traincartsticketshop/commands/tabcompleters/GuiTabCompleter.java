@@ -8,6 +8,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The top level argument completer for all Gui related commands.
+ */
 public class GuiTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui <arg1>
     private static final List<String> ARGS1;

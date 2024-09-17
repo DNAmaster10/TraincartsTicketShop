@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces;
+package com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces;
 
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;

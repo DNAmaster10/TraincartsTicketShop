@@ -11,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.StringJoiner;
 
+/**
+ * The command for the /tshop link create command.
+ */
 public class LinkCreateCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop link create <linked gui ID> <optional display name>
     private String colouredDisplayName;

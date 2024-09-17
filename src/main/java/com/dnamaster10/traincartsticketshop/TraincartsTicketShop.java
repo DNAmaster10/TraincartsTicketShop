@@ -23,17 +23,32 @@ import java.util.Objects;
 
 public final class TraincartsTicketShop extends JavaPlugin implements Listener {
     public static TraincartsTicketShop plugin;
+
     private GuiManager guiManager;
+    /**
+     * @return The gui manager currently in use.
+     * @see GuiManager
+     */
     public GuiManager getGuiManager() {
         return this.guiManager;
     }
+
     private SignHandler signHandler;
+    /**
+     * @return The sign handler current in use.
+     * @see SignHandler
+     */
     public SignHandler getSignHandler() {
         return this.signHandler;
     }
+
+    /**
+     * @return This class instance
+     */
     public static TraincartsTicketShop getPlugin() {
         return plugin;
     }
+
     @Override
     public void onEnable() {
         //Get plugin
@@ -99,6 +114,14 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
+    /**
+     * Called to handle any database exceptions.
+     *
+     * @param e The SQLException
+     * @see ModificationException
+     * @see QueryException
+     */
     public void handleSqlException(SQLException e) {
         //If the exception was only a query, report it. If it altered the database, disable the plugin too as a failsafe.
         plugin.getLogger().severe("A database error occurred: " + e);
@@ -110,10 +133,25 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
             disable();
         }
     }
+
+    /**
+     * Called to handle any database exceptions.
+     * Will also return a short message to the sender indicating that an error occurred.
+     *
+     * @param sender The CommandSender
+     * @param e The SQLException
+     * @see ModificationException
+     * @see QueryException
+     */
     public void handleSqlException(CommandSender sender, SQLException e) {
         sender.sendMessage(ChatColor.RED + "A database error occurred. Check server logs for more info");
         handleSqlException(e);
     }
+
+    /**
+     * Disables the plugin. Note that EditGuis do not need to be saved here, as shutting down the server also triggers
+     * the inventory close event, automatically saving all changes.
+     */
     public void disable() {
         //Disables the plugin. For use when a severe error occurs
         plugin.getLogger().info("Disabling TraincartsTicketShop...");

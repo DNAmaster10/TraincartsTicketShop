@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 
 import java.util.StringJoiner;
 
+/**
+ * The command handler for the /tshop gui rename command.
+ */
 public class RenameGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui rename <gui ID> <gui display name>
     private String rawDisplayName;

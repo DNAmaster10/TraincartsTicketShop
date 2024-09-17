@@ -10,6 +10,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui setId command.
+ */
 public class GuiSetIdCompleter extends ArgumentCompleter {
     //Example command: /tshop gui rename <gui name> <new name>
     private boolean checkPermissions(Player player) {

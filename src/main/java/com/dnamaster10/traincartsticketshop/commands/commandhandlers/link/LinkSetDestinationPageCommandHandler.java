@@ -13,6 +13,9 @@ import org.bukkit.persistence.PersistentDataType;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.DEST_GUI_PAGE;
 
+/**
+ * The command handler for the /tshop link setDestinationPage command.
+ */
 public class LinkSetDestinationPageCommandHandler extends SyncCommandHandler {
     //Example command: /traincartsticketshop link setDestinationPage <destination page>
     private Player player;

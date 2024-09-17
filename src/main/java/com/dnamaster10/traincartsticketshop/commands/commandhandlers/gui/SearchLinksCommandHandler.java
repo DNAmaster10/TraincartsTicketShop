@@ -11,6 +11,9 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * The command handler for the /tshop gui searchLinks command.
+ */
 public class SearchLinksCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui searchLinks <gui ID> <search term>
     private String searchTerm;

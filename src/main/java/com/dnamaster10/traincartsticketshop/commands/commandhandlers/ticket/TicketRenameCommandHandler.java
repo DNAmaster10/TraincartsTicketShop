@@ -11,6 +11,9 @@ import java.util.StringJoiner;
 
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * The command handler for the /tshop ticket rename command.
+ */
 public class TicketRenameCommandHandler extends SyncCommandHandler {
     //Example command: /tshop ticket rename <new_name>
     private String colouredDisplayName;

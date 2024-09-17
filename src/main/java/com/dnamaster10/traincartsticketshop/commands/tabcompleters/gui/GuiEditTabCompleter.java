@@ -10,6 +10,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui edit command.
+ */
 public class GuiEditTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui edit <gui name>
     private boolean checkPermissions(Player player) {

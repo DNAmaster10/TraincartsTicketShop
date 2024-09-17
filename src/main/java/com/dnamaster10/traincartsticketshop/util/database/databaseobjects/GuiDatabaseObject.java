@@ -1,5 +1,8 @@
 package com.dnamaster10.traincartsticketshop.util.database.databaseobjects;
 
+/**
+ * Holds information pertaining to a specific Gui.
+ */
 public class GuiDatabaseObject {
     public GuiDatabaseObject(int id, String name, String displayName, String ownerUuid) {
         this.id = id;

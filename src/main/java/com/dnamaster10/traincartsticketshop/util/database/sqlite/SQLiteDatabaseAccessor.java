@@ -6,6 +6,9 @@ import java.sql.*;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * Holds information about the SQLite database, such as the file name.
+ */
 public class SQLiteDatabaseAccessor {
     private static final String url;
 

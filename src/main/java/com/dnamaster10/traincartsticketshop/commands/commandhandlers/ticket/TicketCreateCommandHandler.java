@@ -14,6 +14,9 @@ import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The command handler for the /tshop ticket create comand.
+ */
 public class TicketCreateCommandHandler extends SyncCommandHandler {
     //Example command: /tshop ticket create <tc ticket name> <optional display name>
     private String colouredDisplayName;

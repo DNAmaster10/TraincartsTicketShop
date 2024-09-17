@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui info command
+ */
 public class GuiInfoTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui info <gui name>
     @Override

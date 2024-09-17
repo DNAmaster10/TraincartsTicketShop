@@ -12,6 +12,9 @@ import org.bukkit.persistence.PersistentDataType;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.PURCHASE_MESSAGE;
 
+/**
+ * The command handler for the /tshop ticket setPurchaseMessage command.
+ */
 public class TicketSetPurchaseMessageCommandHandler extends SyncCommandHandler {
     //Example command: /tshop ticket setPurchaseMessage <message>
     private Player player;

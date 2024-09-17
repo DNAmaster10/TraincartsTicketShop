@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * The command handler for the /tshop gui edit command.
+ */
 public class EditGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui edit <gui ID>
     private Player player;

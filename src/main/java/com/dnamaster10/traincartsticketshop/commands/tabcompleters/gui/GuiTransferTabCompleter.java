@@ -10,6 +10,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop gui transfer command.
+ */
 public class GuiTransferTabCompleter extends ArgumentCompleter {
     //Example command: /tshop gui transfer <gui name> <player name>
     private boolean checkPermissions(Player player) {

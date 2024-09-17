@@ -22,6 +22,9 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.util.GuiUtils.linkGui;
 
+/**
+ * A Gui which is used for browsing a ticket shop.
+ */
 public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pageable {
     private final int guiId;
     private final PageManager pageManager;
@@ -30,6 +33,11 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
     private String displayName;
     private Inventory inventory;
 
+    /**
+     * @param player The player who will be opening the Gui
+     * @param guiId The ID of the Gui to open
+     * @param pageNumber The page number to open the Shop Gui at
+     */
     public ShopGui(Player player, int guiId, int pageNumber) {
         this.player = player;
         this.guiId = guiId;
@@ -50,6 +58,12 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
         inventory = pageManager.getPage(pageNumber).getAsInventory(this);
     }
 
+    /**
+     * Defaults to the first page of the Shop Gui.
+     *
+     * @param player The player who will be opening the Gui
+     * @param guiId The ID of the Gui to open
+     */
     public ShopGui(Player player, int guiId) {
         this(player, guiId, 0);
     }

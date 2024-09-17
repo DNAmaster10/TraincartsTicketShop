@@ -9,6 +9,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * The command handler for the /tshop gui setId command.
+ */
 public class SetGuiIdCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui setId <old ID> <new ID>
     //TODO should probably only be renameable by the owner

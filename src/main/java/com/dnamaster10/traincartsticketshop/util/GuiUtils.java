@@ -14,6 +14,12 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class GuiUtils {
+    /**
+     * Handles a ticket purchase.
+     *
+     * @param ticketItem The Ticket Shop Ticket ItemStack
+     * @param player The player making the purchase
+     */
     public static void handleTicketItemPurchase(ItemStack ticketItem, Player player) {
         ItemMeta meta = ticketItem.getItemMeta();
         if (meta == null) {
@@ -46,6 +52,13 @@ public class GuiUtils {
         }
 
     }
+
+    /**
+     * Handles a link between two Guis.
+     *
+     * @param linkItem The link ItemStack which is being handled
+     * @param player The player who is being linked
+     */
     public static void linkGui(ItemStack linkItem, Player player) {
         ItemMeta meta = linkItem.getItemMeta();
         if (meta == null) return;

@@ -25,6 +25,11 @@ public class Session {
         }
     }
 
+    /**
+     * Adds a gui to the player's Gui Stack.
+     *
+     * @param gui The Gui to be added to the stack
+     */
     public void addGui(Gui gui) {
         guis.push(gui);
         if (guis.size() > maxGuis) {
@@ -32,6 +37,9 @@ public class Session {
         }
     }
 
+    /**
+     * Closes the current open Gui, and opens the previous Gui on the Gui Stack.
+     */
     public void back() {
         if (guis.size() <= 1) {
             owner.closeInventory();
@@ -42,6 +50,11 @@ public class Session {
         previousGui.open();
     }
 
+    /**
+     * Checks whether going back is possible.
+     *
+     * @return True if it's possible to go back
+     */
     public boolean checkBack() {
         return guis.size() > 1;
     }

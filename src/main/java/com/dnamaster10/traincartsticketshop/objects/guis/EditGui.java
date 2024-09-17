@@ -38,6 +38,10 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType.RED_CROSS;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * A Gui which allows items to be removed, added, etc.
+ * Used as the basic editor for a ticket shop.
+ */
 public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragHandler, Pageable, CloseHandler {
     private final Player player;
     private final int guiId;
@@ -48,6 +52,11 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     private boolean cancelSave = false;
     private boolean cancelSaveMessage = false;
 
+    /**
+     * @param player The player who will be editing the Gui
+     * @param guiId The ID of the Gui which will be edited
+     * @param pageNumber The page to open the EditGui at
+     */
     public EditGui(Player player, int guiId, int pageNumber) {
         this.player = player;
         this.guiId = guiId;
@@ -72,6 +81,10 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         inventory = pageManager.getPage(pageNumber).getAsInventory(this);
     }
 
+    /**
+     * @param player The player who will be editing the Gui
+     * @param guiId The ID of the Gui which will be edited
+     */
     public EditGui(Player player, int guiId) {
         this(player, guiId, 0);
     }

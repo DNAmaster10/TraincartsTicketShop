@@ -9,6 +9,9 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The top level argument completer for all ticket related commands.
+ */
 public class TicketTabCompleter extends ArgumentCompleter {
     private static final List<String> ARGS1;
     static {

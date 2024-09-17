@@ -10,6 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.*;
 
+/**
+ * The command handler for the /tshop gui info command.
+ */
 public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui info <gui ID>
 

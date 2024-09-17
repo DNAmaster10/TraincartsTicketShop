@@ -18,12 +18,19 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * A Gui which prompts the player to confirm whether they want to delete a Gui.
+ */
 public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHandler {
     //Gui used for when someone wants to delete a gui.
     private final Player player;
     private final int deleteGuiId;
     private final Inventory inventory;
 
+    /**
+     * @param player The player who will use the Gui
+     * @param guiToDeleteId The ID of the gui which should be deleted
+     */
     public ConfirmGuiDeleteGui(Player player, int guiToDeleteId) {
         deleteGuiId = guiToDeleteId;
         this.player = player;
@@ -62,7 +69,7 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
             case "confirm_action" -> Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
                 try {
                     GuiDataAccessor guiAccessor = new GuiDataAccessor();
-                    guiAccessor.deleteGuiById(deleteGuiId);
+                    guiAccessor.deleteGui(deleteGuiId);
                 } catch (ModificationException e) {
                     getPlugin().handleSqlException(e);
                 }

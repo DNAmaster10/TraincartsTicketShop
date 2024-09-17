@@ -10,6 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * The command handler for the /tshop gui addEditor command.
+ */
 public class AddEditorCommandHandler extends AsyncCommandHandler {
     //Command example: /tshop gui addEditor <gui ID> <player>
     private PlayerDatabaseObject playerDatabaseObject;

@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.database.mariadb;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces.LinksDatabaseAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces.LinksDatabaseAccessor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

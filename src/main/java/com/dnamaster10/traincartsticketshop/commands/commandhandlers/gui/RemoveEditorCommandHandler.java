@@ -11,8 +11,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * The command handler for the /tshop gui removeEditor command
+ */
 public class RemoveEditorCommandHandler extends AsyncCommandHandler {
-    //Example command: /tshop editor remove <gui ID> <player name>
+    //Example command: /tshop editor removeEditor <gui ID> <player name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiEditorsDataAccessor editorsAccessor;
     private int guiId;

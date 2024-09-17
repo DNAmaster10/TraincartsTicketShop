@@ -15,14 +15,32 @@ import static com.bergerkiller.bukkit.tc.tickets.TicketStore.*;
 public class Traincarts {
     //Contains methods which interact or involve the traincarts plugin
 
+    /**
+     * Checks if the ticket is present in Traincarts.
+     *
+     * @param name Name of the ticket to check
+     * @return True if the ticket was found
+     */
     public static boolean checkTicket(String name) {
         return getTicket(name) != null;
     }
 
+    /**
+     * Checks whether an item is a Traincarts ticket.
+     *
+     * @param item Item to check
+     * @return True if the item is a Traincarts ticket
+     */
     public static boolean isTraincartsTicket(ItemStack item) {
         return isTicketItem(item);
     }
 
+    /**
+     * Converts a Traincarts ticket item into a Ticket Shop ticket item.
+     *
+     * @param traincartsTicketItem Traincarts ticket ItemStack
+     * @return Ticket Shop Ticket ItemStack
+     */
     public static com.dnamaster10.traincartsticketshop.objects.buttons.Ticket getAsTicketShopTicket(ItemStack traincartsTicketItem) {
         Ticket traincartsTicket = getTicketFromItem(traincartsTicketItem);
         if (traincartsTicket == null) return null;
@@ -30,13 +48,24 @@ public class Traincarts {
         return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, ticketName, null);
     }
 
-    public static void giveTicketItem(String tcName, Player p) {
+    /**
+     * Gives a Traincarts ticket to the specified player.
+     *
+     * @param tcName The name of the Traincarts ticket
+     * @param player The player to give the ticket to
+     */
+    public static void giveTicketItem(String tcName, Player player) {
         Ticket ticket = getTicket(tcName);
 
-        ItemStack item = ticket.createItem(p);
-        p.getInventory().addItem(item);
+        ItemStack item = ticket.createItem(player);
+        player.getInventory().addItem(item);
     }
 
+    /**
+     * Gets a list of all Traincarts ticket names.
+     *
+     * @return A List of Strings of all Traincarts tickets
+     */
     private static List<String> getTicketNames() {
         return TicketStore.getAll().stream()
                 .map(Ticket::getName)

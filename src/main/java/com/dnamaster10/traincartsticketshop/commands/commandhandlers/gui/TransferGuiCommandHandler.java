@@ -10,6 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * The command handler for the /tshop gui transfer command.
+ */
 public class TransferGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui ID> <player>
     PlayerDatabaseObject otherPlayer;

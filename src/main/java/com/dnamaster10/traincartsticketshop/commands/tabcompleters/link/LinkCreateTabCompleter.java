@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The argument completer used for the /tshop link create command.
+ */
 public class LinkCreateTabCompleter extends ArgumentCompleter {
     //Example command: /tshop link create <gui name> <optional display name>
     @Override

@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.util.database;
 
-import com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces.*;
+import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces.*;
 import com.dnamaster10.traincartsticketshop.util.database.mariadb.*;
 import com.dnamaster10.traincartsticketshop.util.database.sqlite.*;
 
@@ -8,6 +8,9 @@ import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * Used for deciding which methods should be called and how they should be called, depending on the database type being used, e.g. MariaDB vs SQLite.
+ */
 public class DatabaseAccessorFactory {
     enum DatabaseType {
         MARIA,

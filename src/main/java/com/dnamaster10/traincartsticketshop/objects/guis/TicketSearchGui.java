@@ -19,6 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
+/**
+ * A Gui used to search the tickets within a shop.
+ *
+ * @see Pageable
+ */
 public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandler, Pageable {
     private final int guiId;
     private final PageManager pageManager = new PageManager(0);
@@ -28,6 +33,11 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
     private String displayName;
     private Inventory inventory;
 
+    /**
+     * @param player The player who will open the Gui
+     * @param guiId The ID of the Gui to search
+     * @param searchTerm The search term to be searched
+     */
     public TicketSearchGui(Player player, int guiId, String searchTerm) {
         this.player = player;
         this.guiId = guiId;

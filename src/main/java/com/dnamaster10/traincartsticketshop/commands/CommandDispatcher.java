@@ -14,6 +14,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Contains the top-level method used to send all commands.
+ */
 public class CommandDispatcher implements CommandExecutor {
     private void returnError(CommandSender sender, String error) {
         sender.sendMessage(ChatColor.RED + error);
@@ -21,6 +24,16 @@ public class CommandDispatcher implements CommandExecutor {
     private void returnInvalidSubCommandError(CommandSender sender, String argument) {
         returnError(sender, "Invalid sub-command \"" + argument + "\"");
     }
+
+    /**
+     * The method used to send all commands. Checks arguments to determine which CommandHandler should be used.
+     *
+     * @param sender The CommandSender
+     * @param command The command
+     * @param label The label
+     * @param args The command arguments
+     * @return True
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Check that a sub-command was provided

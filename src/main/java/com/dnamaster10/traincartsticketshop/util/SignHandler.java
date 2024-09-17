@@ -51,6 +51,12 @@ public class SignHandler {
         return nameLine;
     }
 
+    /**
+     * Handles a sign click.
+     *
+     * @param event The PlayerInteractEvent to be handled
+     * @return Returns true if the event should be cancelled
+     */
     public boolean handleSignClickEvent(PlayerInteractEvent event) {
         // Clicked block here will always be a sign as this is checked from the PlayerInteractEvent handler
         if (event.getPlayer().isSneaking()) {

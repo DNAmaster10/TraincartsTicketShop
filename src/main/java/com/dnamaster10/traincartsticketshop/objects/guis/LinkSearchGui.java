@@ -19,6 +19,9 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 import static com.dnamaster10.traincartsticketshop.util.GuiUtils.linkGui;
 
+/**
+ * A Gui used to search the links within a shop.
+ */
 public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler, Pageable {
     private final int guiId;
     private final PageManager pageManager = new PageManager(0);
@@ -28,6 +31,11 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
     private String displayName;
     private Inventory inventory;
 
+    /**
+     * @param player The player who will open the Gui
+     * @param guiId The ID of the Gui to search
+     * @param searchTerm The search term to be searched
+     */
     public LinkSearchGui(Player player, int guiId, String searchTerm) {
         this.player = player;
         this.guiId = guiId;

@@ -3,7 +3,7 @@ package com.dnamaster10.traincartsticketshop.util.database.sqlite;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import com.dnamaster10.traincartsticketshop.util.database.dbaccessorinterfaces.GuiDatabaseAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterfaces.GuiDatabaseAccessor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -142,7 +142,7 @@ public class SQLiteGuiDatabaseAccessor extends SQLiteDatabaseAccessor implements
     }
 
     @Override
-    public void deleteGuiById(int guiId) throws ModificationException {
+    public void deleteGui(int guiId) throws ModificationException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM guis WHERE id=?");
             statement.setInt(1, guiId);

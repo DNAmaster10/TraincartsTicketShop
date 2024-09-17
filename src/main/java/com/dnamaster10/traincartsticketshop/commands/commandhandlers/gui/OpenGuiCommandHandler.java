@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
+/**
+ * The command handler for the /shop gui open command.
+ */
 public class OpenGuiCommandHandler extends AsyncCommandHandler {
     private Player player;
     private GuiDataAccessor guiAccessor;
