@@ -116,6 +116,16 @@ public class GuiDataAccessor extends DataAccessor {
     }
 
     /**
+     * Gets the UUID of the owner of the specified Gui.
+     *
+     * @param guiId Gui ID
+     * @return The UUID of the owner
+     */
+    public String getOwnerUuid(int guiId) {
+        return getGuiCache().getGuiById(guiId).ownerUuid();
+    }
+
+    /**
      * Gets a list of Gui names which at least partially match the input string.
      *
      * @param argument Partial match String
