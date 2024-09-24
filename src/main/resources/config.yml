@@ -10,6 +10,8 @@ database:
 
 SignIdentifier: [tshop]
 
+PurchaseMessage: You purchased a ticket!
+
 MaxPagesPerGui: 50
 
 # Advanced Configuration Options

@@ -14,6 +14,8 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class GuiUtils {
+    private static final String DEFAULT_PURCHASE_MESSAGE = getPlugin().getConfig().getString("PurchaseMessage");
+
     /**
      * Handles a ticket purchase.
      *
@@ -44,7 +46,7 @@ public class GuiUtils {
 
         //Handle purchase
         Traincarts.giveTicketItem(tcName, player);
-        player.sendMessage(ChatColor.GREEN + "You purchased a ticket!");
+        player.sendMessage(ChatColor.GREEN + DEFAULT_PURCHASE_MESSAGE);
         if (purchaseMessage != null) {
             player.sendMessage("");
             player.sendMessage(ChatColor.AQUA + purchaseMessage);
