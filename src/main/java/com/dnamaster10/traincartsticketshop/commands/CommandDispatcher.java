@@ -4,10 +4,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui.*;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkCreateCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkRenameCommandHandler;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.link.LinkSetDestinationPageCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketCreateCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketRenameCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetPurchaseMessageCommandHandler;
-import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.TicketSetTraincartsTicket;
+import com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,6 +62,7 @@ public class CommandDispatcher implements CommandExecutor {
             case "ticket" -> {
                 switch (args[1].toLowerCase()) {
                     case "create" -> new TicketCreateCommandHandler().handle(sender, args);
+                    case "removepurchasemessage" -> new TicketRemovePurchaseMessageCommandHandler().handle(sender, args);
                     case "rename" -> new TicketRenameCommandHandler().handle(sender, args);
                     case "settraincartsticket" -> new TicketSetTraincartsTicket().handle(sender, args);
                     case "setpurchasemessage" -> new TicketSetPurchaseMessageCommandHandler().handle(sender, args);
