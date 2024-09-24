@@ -50,8 +50,10 @@ public class GuiCache {
     public GuiDatabaseObject getGuiById(int id) {
         return idGuiMap.get(id);
     }
+    public GuiDatabaseObject getGuiByName(String name) {
+        return nameGuiMap.get(name);
+    }
     public int getGuiIdByName(String name) {
-        //TODO maybe we could return a gui database object instead of getting id and then info?
         GuiDatabaseObject gui = nameGuiMap.get(name.toLowerCase());
         return gui.id();
     }

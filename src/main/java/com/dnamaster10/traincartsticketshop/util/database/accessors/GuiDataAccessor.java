@@ -171,6 +171,16 @@ public class GuiDataAccessor extends DataAccessor {
     }
 
     /**
+     * Gets a gui from a Gui name
+     *
+     * @param name Gui name
+     * @return The GuiDatabaseObject for the Gui
+     */
+    public GuiDatabaseObject getGuiByName(String name) {
+        return getGuiCache().getGuiByName(name);
+    }
+
+    /**
      * Updates the name of a Gui in the database.
      *
      * @param guiId The ID for the Gui

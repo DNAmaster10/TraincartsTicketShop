@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -16,7 +17,7 @@ import org.bukkit.entity.Player;
 public class SetGuiIdCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui setId <old ID> <new ID>
     private GuiDataAccessor guiAccessor;
-    private int guiId;
+    private GuiDatabaseObject gui;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
@@ -68,12 +69,12 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         //If sender is player, check that player is an editor of that gui if they don't have admin perms
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.setid")) {
-                if (!guiAccessor.getOwnerUuid(guiId).equals(p.getUniqueId().toString())) {
+                if (!gui.ownerUuid().equalsIgnoreCase(p.getUniqueId().toString())) {
                     returnError(sender, "You must be the owner of a Gui to change its ID.");
                     return false;
                 }
@@ -90,7 +91,7 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
-        guiAccessor.updateGuiName(guiId, args[3]);
+        guiAccessor.updateGuiName(gui.id(), args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s ID was successfully changed to \"" + args[3] + "\"");
     }
 }

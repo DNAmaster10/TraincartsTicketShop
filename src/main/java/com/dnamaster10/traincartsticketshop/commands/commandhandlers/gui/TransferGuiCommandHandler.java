@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -17,7 +18,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /traincartsticketshop gui transfer <gui ID> <player>
     PlayerDatabaseObject otherPlayer;
     private GuiDataAccessor guiAccessor;
-    private int guiId;
+    private GuiDatabaseObject gui;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions and if player
@@ -54,12 +55,12 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         //If sender is player, and they don't have admin transfer rights, check they are owner
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.transfer")) {
-                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
+                if (!gui.ownerUuid().equalsIgnoreCase(p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -78,7 +79,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         //Transfer the gui
-        guiAccessor.updateGuiOwner(guiId, otherPlayer.uuid());
+        guiAccessor.updateGuiOwner(gui.id(), otherPlayer.uuid());
 
         //If the new owner is registered as an editor, remove them
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.username());

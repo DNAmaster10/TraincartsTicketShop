@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,7 @@ import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugi
 public class EditGuiCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui edit <gui ID>
     private Player player;
-    private int guiId;
+    private GuiDatabaseObject gui;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender is player and permissions
@@ -57,11 +58,11 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(player, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         //Check that player is owner or editor of gui
         if (!player.hasPermission("traincartsticketshop.admin.gui.edit")) {
-            if (!guiAccessor.playerCanEdit(guiId, player.getUniqueId().toString())) {
+            if (!guiAccessor.playerCanEdit(gui.id(), player.getUniqueId().toString())) {
                 returnError(player, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
                 return false;
             }
@@ -75,9 +76,9 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
         getPlugin().getGuiManager().openNewSession(player);
 
         //Create the new gui
-        EditGui gui = new EditGui(player, guiId);
+        EditGui editGui = new EditGui(player, gui.id());
 
         //Open the new gui
-        gui.open();
+        editGui.open();
     }
 }

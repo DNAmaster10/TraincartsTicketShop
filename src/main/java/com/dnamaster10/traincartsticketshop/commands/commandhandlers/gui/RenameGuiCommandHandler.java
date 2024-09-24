@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -18,7 +19,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     private String rawDisplayName;
     private String colouredDisplayName;
     private GuiDataAccessor guiAccessor;
-    private Integer guiId;
+    private GuiDatabaseObject gui;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions
@@ -66,12 +67,12 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         //If sender is player, check that player is an editor of that gui
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.rename")) {
-                if (!guiAccessor.playerCanEdit(guiId, p.getUniqueId().toString())) {
+                if (!guiAccessor.playerCanEdit(gui.id(), p.getUniqueId().toString())) {
                     returnError(sender, "You do not have permission to edit that gui. Request that the owner adds you as an editor before making any changes");
                     return false;
                 }
@@ -83,7 +84,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
-        guiAccessor.updateGuiDisplayName(guiId, colouredDisplayName, rawDisplayName);
+        guiAccessor.updateGuiDisplayName(gui.id(), colouredDisplayName, rawDisplayName);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s name was changed to \"" + colouredDisplayName + "\"");
     }
 }

@@ -81,7 +81,7 @@ public class Utilities {
     private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
 
     /**
-     * Checks true if the input String contains any characters other than Aa - Zz, numbers, underscores and dashes.
+     * Checks if the input String contains any characters other than Aa - Zz, numbers, underscores and dashes.
      *
      * @param input Input String
      * @return True if special characters are present

@@ -4,6 +4,7 @@ import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncComman
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -18,7 +19,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop editor removeEditor <gui ID> <player name>
     private PlayerDatabaseObject editorDatabaseObject;
     private GuiEditorsDataAccessor editorsAccessor;
-    private int guiId;
+    private GuiDatabaseObject gui;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check sender perms
@@ -54,12 +55,12 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         //If player, check that they own the gui
         if (sender instanceof Player p) {
             if (!p.hasPermission("traincartsticketshop.admin.gui.removeEditor")) {
-                if (!guiAccessor.checkGuiOwnerByUuid(guiId, p.getUniqueId().toString())) {
+                if (!gui.ownerUuid().equalsIgnoreCase(p.getUniqueId().toString())) {
                     returnError(sender, "You do not own that gui");
                     return false;
                 }
@@ -75,7 +76,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
 
         editorsAccessor = new GuiEditorsDataAccessor();
         //Check that the editor exists in the editors table
-        if (!editorsAccessor.checkGuiEditorByUuid(guiId, editorDatabaseObject.uuid())) {
+        if (!editorsAccessor.checkGuiEditorByUuid(gui.id(), editorDatabaseObject.uuid())) {
             returnError(sender, "Player \"" + editorDatabaseObject.username() + "\" is not a registered editor for gui \"" + args[2] + "\"");
             return false;
         }
@@ -85,7 +86,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         //Remove the editor
-        editorsAccessor.removeGuiEditor(guiId, editorDatabaseObject.uuid());
+        editorsAccessor.removeGuiEditor(gui.id(), editorDatabaseObject.uuid());
         sender.sendMessage(ChatColor.GREEN + "Player \"" + editorDatabaseObject.username() + "\" is no longer an editor of gui \"" + args[2] + "\"");
     }
 }

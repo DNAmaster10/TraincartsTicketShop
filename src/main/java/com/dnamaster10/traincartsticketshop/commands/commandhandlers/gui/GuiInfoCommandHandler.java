@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.LinkDataAccessor;
@@ -17,7 +18,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     //Example command: /tshop gui info <gui ID>
 
     GuiDataAccessor guiAccessor;
-    int guiId;
+    GuiDatabaseObject gui;
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
         //Check permissions
@@ -54,7 +55,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
             returnGuiNotFoundError(sender, args[2]);
             return false;
         }
-        guiId = guiAccessor.getGuiIdByName(args[2]);
+        gui = guiAccessor.getGuiByName(args[2]);
 
         return true;
     }
@@ -63,22 +64,20 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     protected void execute(CommandSender sender, String[] args) throws QueryException {
         //TODO needs changing
         //Fetch info
-        String guiName = guiAccessor.getGuiNameById(guiId);
-        String owner = guiAccessor.getOwnerUsername(guiId);
-        int totalPages = guiAccessor.getHighestPageNumber(guiId) + 1;
+        int totalPages = guiAccessor.getHighestPageNumber(gui.id()) + 1;
 
         TicketDataAccessor ticketAccessor = new TicketDataAccessor();
         LinkDataAccessor linkAccessor = new LinkDataAccessor();
 
-        int totalTickets = ticketAccessor.getTotalTickets(guiId);
-        int totalLinks = linkAccessor.getTotalLinks(guiId);
+        int totalTickets = ticketAccessor.getTotalTickets(gui.id());
+        int totalLinks = linkAccessor.getTotalLinks(gui.id());
 
         //Send info to player
         TextComponent line;
-        line = new TextComponent(ChatColor.AQUA + "Info for gui \"" + guiName + "\":");
+        line = new TextComponent(ChatColor.AQUA + "Info for gui \"" + gui.name() + "\":");
         sender.spigot().sendMessage(line);
 
-        line = new TextComponent(ChatColor.WHITE + "| Owner: " + owner);
+        line = new TextComponent(ChatColor.WHITE + "| Owner: " + guiAccessor.getOwnerUsername(gui.id()));
         sender.spigot().sendMessage(line);
         line = new TextComponent(ChatColor.WHITE + "| Pages: " + totalPages);
         sender.spigot().sendMessage(line);
