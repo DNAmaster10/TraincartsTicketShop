@@ -51,7 +51,7 @@ public class GuiCache {
         return idGuiMap.get(id);
     }
     public GuiDatabaseObject getGuiByName(String name) {
-        return nameGuiMap.get(name);
+        return nameGuiMap.get(name.toLowerCase());
     }
     public int getGuiIdByName(String name) {
         GuiDatabaseObject gui = nameGuiMap.get(name.toLowerCase());
