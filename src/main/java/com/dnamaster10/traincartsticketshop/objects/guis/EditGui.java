@@ -49,6 +49,10 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     private int maxPage;
     private String displayName;
     private Inventory inventory;
+
+    //The variable "asyncTaskRunning" is used to ensure that no actions can be performed while the contents of the
+    //inventory are being saved to the database.
+    private boolean asyncTaskRunning = false;
     private boolean cancelSave = false;
     private boolean cancelSaveMessage = false;
 
@@ -145,6 +149,8 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         String buttonType = getButtonType(clickedItem);
         if (buttonType != null && !buttonType.equals("ticket") && !buttonType.equals("link")) {
             event.setCancelled(true);
+            if (asyncTaskRunning) return;
+            else asyncTaskRunning = true;
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
                 switch (buttonType) {
                     case "next_page" -> nextPage();
@@ -152,6 +158,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
                     case "delete_page" -> deletePage();
                     case "insert_page" -> insertPage();
                 }
+                asyncTaskRunning = false;
             });
             return;
         }
