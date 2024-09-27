@@ -113,6 +113,6 @@ public abstract class CommandHandler {
      * @see com.dnamaster10.traincartsticketshop.util.Utilities#checkSpecialCharacters(String);
      */
     protected boolean checkGuiNameSyntax(String input) {
-        return input.length() > 3 && input.length() < 20 && !Utilities.checkSpecialCharacters(input);
+        return !input.isEmpty() && input.length() < 20 && !Utilities.checkSpecialCharacters(input);
     }
 }

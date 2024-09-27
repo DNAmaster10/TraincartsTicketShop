@@ -34,7 +34,7 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
             returnError(sender, "Gui IDs cannot be more than 20 characters in length");
             return false;
         }
-        if (args[3].length() < 3) {
+        if (args[3].isBlank()) {
             returnError(sender, "Gui IDs cannot be less than 3 characters in length");
             return false;
         }

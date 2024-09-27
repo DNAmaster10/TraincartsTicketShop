@@ -51,10 +51,12 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
             returnError(player, "Gui IDs cannot be more than 20 characters in length");
             return false;
         }
-        if (args[2].length() < 3) {
-            returnError(player, "Gui IDs cannot be less than 3 characters in length");
+
+        if (args[2].isBlank()) {
+            returnError(player, "Gui IDs must be at least 1 character in length");
             return false;
         }
+
         if (Utilities.checkSpecialCharacters(args[2])) {
             returnError(player, "Gui IDs can only contain characters Aa to Zz, numbers, underscores, and dashes");
             return false;
