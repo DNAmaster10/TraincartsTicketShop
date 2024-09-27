@@ -42,6 +42,10 @@ public class SQLiteDatabaseAccessor {
             statement.execute();
             statement.close();
 
+            statement = connection.prepareStatement("PRAGMA foreign_keys = ON");
+            statement.execute();
+            statement.close();
+
             return connection;
         } catch (SQLException e) {
             throw new QueryException(e);
