@@ -73,6 +73,7 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
                 } catch (ModificationException e) {
                     getPlugin().handleSqlException(e);
                 }
+                player.sendMessage(ChatColor.GREEN + "Successfully deleted Gui");
                 Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1L);
             });
         }
