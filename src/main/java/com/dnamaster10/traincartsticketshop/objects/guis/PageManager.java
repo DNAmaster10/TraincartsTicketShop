@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @see com.dnamaster10.traincartsticketshop.objects.guis.interfaces.Pageable
  */
 public class PageManager {
-    private final HashMap<Integer, Page> pages = new HashMap<>();
+    private HashMap<Integer, Page> pages = new HashMap<>();
     private int currentPageNumber;
 
     /**
@@ -54,7 +54,7 @@ public class PageManager {
      * Clears all cached pages from the page manager.
      */
     public void clearCache() {
-        pages.clear();
+        pages = new HashMap<>();
     }
 
     /**

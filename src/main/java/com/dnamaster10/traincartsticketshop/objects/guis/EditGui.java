@@ -237,7 +237,8 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     }
 
     private void deletePage() {
-        //Note that save does not need to be called here since it is handled in the close event, as a new gui is being opened.
+        savePage();
+        cancelSave = true;
         cancelSaveMessage = true;
         pageManager.clearCache();
         ConfirmPageDeleteGui pageDeleteGui = new ConfirmPageDeleteGui(player, guiId, pageManager.getCurrentPageNumber());

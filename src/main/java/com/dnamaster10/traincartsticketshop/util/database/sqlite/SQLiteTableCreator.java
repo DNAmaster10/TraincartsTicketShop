@@ -32,7 +32,6 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements Databa
                         display_name TEXT,
                         raw_display_name TEXT,
                         FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
-                            ON DELETE SET NULL
                     )
                     """);
             statement.execute();
