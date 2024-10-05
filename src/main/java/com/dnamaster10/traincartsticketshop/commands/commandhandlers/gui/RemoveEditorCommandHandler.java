@@ -7,7 +7,6 @@ import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDa
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public class RemoveEditorCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException, ModificationException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException {
         GuiDataAccessor guiAccessor = new GuiDataAccessor();
 
         //Get the guiID and check that the gui exists

@@ -15,9 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor
  */
 public class PlayerCache {
-    List<String> usernames = new CopyOnWriteArrayList<>();
-    ConcurrentHashMap<String, PlayerDatabaseObject> uuidPlayerMap = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String, PlayerDatabaseObject> usernamePlayerMap = new ConcurrentHashMap<>();
+    final List<String> usernames = new CopyOnWriteArrayList<>();
+    final ConcurrentHashMap<String, PlayerDatabaseObject> uuidPlayerMap = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<String, PlayerDatabaseObject> usernamePlayerMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
         PlayerDataAccessor playerAccessor = new PlayerDataAccessor();

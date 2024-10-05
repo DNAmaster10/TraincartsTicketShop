@@ -15,10 +15,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor
  */
 public class GuiCache {
-    List<String> guiNames = new CopyOnWriteArrayList<>();
-    ConcurrentHashMap<Integer, GuiDatabaseObject> idGuiMap = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String, GuiDatabaseObject> nameGuiMap = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String, List<GuiDatabaseObject>> ownerGuiMap = new ConcurrentHashMap<>();
+    final List<String> guiNames = new CopyOnWriteArrayList<>();
+    final ConcurrentHashMap<Integer, GuiDatabaseObject> idGuiMap = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<String, GuiDatabaseObject> nameGuiMap = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<String, List<GuiDatabaseObject>> ownerGuiMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
         GuiDataAccessor guiAccessor = new GuiDataAccessor();

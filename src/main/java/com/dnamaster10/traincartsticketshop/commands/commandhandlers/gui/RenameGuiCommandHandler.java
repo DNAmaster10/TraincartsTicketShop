@@ -3,13 +3,10 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.StringJoiner;
 
 /**
  * The command handler for the /tshop gui rename command.
@@ -59,7 +56,7 @@ public class RenameGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         guiAccessor = new GuiDataAccessor();
 
         //Get the gui id and check that it exists

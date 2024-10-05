@@ -6,7 +6,6 @@ import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAcces
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException, QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) throws ModificationException {
         guiAccessor = new GuiDataAccessor();
 
         //Get the gui ID and check gui exists

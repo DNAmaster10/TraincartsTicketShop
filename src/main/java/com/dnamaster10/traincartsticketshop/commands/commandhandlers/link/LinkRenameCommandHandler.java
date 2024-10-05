@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.StringJoiner;
-
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
 /**

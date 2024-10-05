@@ -35,7 +35,6 @@ public class MariaGuiEditorsAccessor extends MariaDatabaseAccessor implements Gu
     @Override
     public void addGuiEditor(int guiId, String uuid) throws ModificationException {
         try (Connection connection = getConnection()) {
-            //TODO Maybe use a composite key here?
             PreparedStatement statement = connection.prepareStatement( """
                     INSERT IGNORE INTO guieditors (gui_id, editor_uuid)
                     VALUES (?, ?)

@@ -47,7 +47,7 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         guiAccessor = new GuiDataAccessor();
 
         //Check gui exists
@@ -62,7 +62,6 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws QueryException {
-        //TODO needs changing
         //Fetch info
         int totalPages = guiAccessor.getHighestPageNumber(gui.id()) + 1;
 

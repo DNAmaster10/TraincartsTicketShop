@@ -50,7 +50,7 @@ public class ButtonUtils {
         String displayName = meta.getDisplayName();
 
         switch (buttonType) {
-            //TODO maybe move each of these into their own method?
+            //TODO maybe move each of these into their own method when more buttons are added?
             case "ticket" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
                 if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {

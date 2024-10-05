@@ -2,7 +2,6 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,7 +48,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         //Example command: /traincartsticketshop gui open <gui_name>
         guiAccessor = new GuiDataAccessor();
 
@@ -62,7 +61,7 @@ public class OpenGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws QueryException {
+    protected void execute(CommandSender sender, String[] args) {
         //Create a new gui session
         getPlugin().getGuiManager().openNewSession(player);
 

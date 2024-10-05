@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,7 +48,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         //Example command: /traincartsticketshop gui edit <gui_name>
         GuiDataAccessor guiAccessor = new GuiDataAccessor();
 
@@ -71,7 +70,7 @@ public class EditGuiCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) throws QueryException {
+    protected void execute(CommandSender sender, String[] args) {
         //Open a new gui session
         getPlugin().getGuiManager().openNewSession(player);
 

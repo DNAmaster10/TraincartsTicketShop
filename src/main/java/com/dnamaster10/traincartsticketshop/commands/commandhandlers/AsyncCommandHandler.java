@@ -6,8 +6,6 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 /**

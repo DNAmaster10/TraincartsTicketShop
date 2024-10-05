@@ -2,10 +2,8 @@ package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
-import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -61,7 +59,7 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
     }
 
     @Override
-    protected boolean checkAsync(CommandSender sender, String[] args) throws QueryException {
+    protected boolean checkAsync(CommandSender sender, String[] args) {
         guiAccessor = new GuiDataAccessor();
 
         //Get the gui ID and check that it exists

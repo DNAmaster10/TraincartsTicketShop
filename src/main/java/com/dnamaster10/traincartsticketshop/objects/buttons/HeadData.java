@@ -77,7 +77,7 @@ public class HeadData {
     /**
      * Gets the HeadType from a head ItemStack.
      *
-     * @param item
+     * @param item The item stack of the item to get the head type from
      * @return The HeadType. Returns null if the ItemStack is not a valid HeadType
      */
     public static HeadType getHeadTypeFromItem(ItemStack item) {

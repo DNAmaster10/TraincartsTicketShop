@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor
  */
 public class GuiEditorsCache {
-    ConcurrentHashMap<Integer, List<String>> guiIdEditorsMap = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String, List<Integer>> editorGuisMap = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<Integer, List<String>> guiIdEditorsMap = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<String, List<Integer>> editorGuisMap = new ConcurrentHashMap<>();
 
     public void initialize() throws QueryException {
         GuiEditorsDataAccessor editorsAccessor = new GuiEditorsDataAccessor();
