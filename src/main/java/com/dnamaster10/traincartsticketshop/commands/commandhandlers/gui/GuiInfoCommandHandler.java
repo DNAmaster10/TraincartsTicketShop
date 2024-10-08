@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -10,6 +11,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.*;
+
+import java.util.List;
 
 /**
  * The command handler for the /tshop gui info command.
@@ -67,7 +70,9 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
 
         TicketDataAccessor ticketAccessor = new TicketDataAccessor();
         LinkDataAccessor linkAccessor = new LinkDataAccessor();
+        GuiEditorsDataAccessor guiEditorsDataAccessor = new GuiEditorsDataAccessor();
 
+        List<String> guiEditors = guiEditorsDataAccessor.getEditorUsernames(gui.id());
         int totalTickets = ticketAccessor.getTotalTickets(gui.id());
         int totalLinks = linkAccessor.getTotalLinks(gui.id());
 
@@ -83,6 +88,8 @@ public class GuiInfoCommandHandler extends AsyncCommandHandler {
         line = new TextComponent(ChatColor.WHITE + "| Tickets: " + totalTickets);
         sender.spigot().sendMessage(line);
         line = new TextComponent(ChatColor.WHITE + "| Links: " + totalLinks);
+        sender.spigot().sendMessage(line);
+        line = new TextComponent(ChatColor.WHITE + "| Editors: " + String.join(",", guiEditors));
         sender.spigot().sendMessage(line);
     }
 }
