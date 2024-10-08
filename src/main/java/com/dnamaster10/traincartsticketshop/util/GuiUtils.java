@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -74,7 +75,18 @@ public class GuiUtils {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
             if (!guiDataAccessor.checkGuiById(linkedGuiId)) return;
-            ShopGui shopGui = new ShopGui(player, linkedGuiId, linkedGuiPage);
+            int goalPage = linkedGuiPage;
+            if (goalPage > 0) {
+                try {
+                    if (guiDataAccessor.getHighestPageNumber(linkedGuiId) < goalPage) {
+                        goalPage = 0;
+                    }
+                } catch (QueryException e) {
+                    getPlugin().handleSqlException(player, e);
+                    return;
+                }
+            }
+            ShopGui shopGui = new ShopGui(player, linkedGuiId, goalPage);
             shopGui.open();
         });
     }
