@@ -21,7 +21,6 @@ public class GuiTabCompleter extends ArgumentCompleter {
         ARGS1.add("create");
         ARGS1.add("delete");
         ARGS1.add("edit");
-        ARGS1.add("listEditors");
         ARGS1.add("open");
         ARGS1.add("removeEditor");
         ARGS1.add("rename");

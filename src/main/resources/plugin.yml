@@ -22,9 +22,6 @@ permissions:
   traincartsticketshop.gui.edit:
     description: Allows editing guis
     default: false
-  traincartsticketshop.gui.listeditors:
-    descriptions: Allows player to view the editors of guis they own
-    default: false
   traincartsticketshop.gui.open:
     description: Allows player to open a gui
     default: false
@@ -58,9 +55,6 @@ permissions:
     default: false
   traincartsticketshop.admin.gui.edit:
     description: Allows player to edit a gui even if they do not have edit perms
-    default: false
-  traincartsticketshop.admin.gui.listeditors:
-    description: Allows player to view editors for guis they don't own
     default: false
   traincartsticketshop.admin.gui.removeeditor:
     description: Allows player to remove editors from guis they don't own
