@@ -86,7 +86,7 @@ public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandle
 
         TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search tickets<<<");
         message2.setBold(true);
-        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchTickets " + guiName + " "));
+        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tshop gui searchTickets " + guiName + " "));
 
         player.spigot().sendMessage(message1);
         player.spigot().sendMessage(message2);
@@ -108,7 +108,7 @@ public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandle
 
         TextComponent message2 = new TextComponent(ChatColor.AQUA + "| >>>Click me to search links<<<");
         message2.setBold(true);
-        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/traincartsticketshop gui searchLinks " + guiName + " "));
+        message2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tshop gui searchLinks " + guiName + " "));
 
         player.spigot().sendMessage(message1);
         player.spigot().sendMessage(message2);
