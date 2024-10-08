@@ -44,7 +44,7 @@ public class LinkSetDestinationPageCommandHandler extends SyncCommandHandler {
             return false;
         }
         if (!Utilities.isInt(args[2]) || Integer.parseInt(args[2]) < 1) {
-            returnError(player, "Page number must be a positive integer");
+            returnError(player, "Page number must be a positive integer more than or equal to 1");
             return false;
         }
 
