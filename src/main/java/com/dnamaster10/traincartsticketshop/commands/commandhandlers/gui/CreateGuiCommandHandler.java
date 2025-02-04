@@ -35,7 +35,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
         }
 
         //Check syntax
-        if (args.length < 2) {
+        if (args.length < 3) {
             returnMissingArgumentsError(player, "/tshop gui create <gui ID> <optional name>");
             return false;
         }

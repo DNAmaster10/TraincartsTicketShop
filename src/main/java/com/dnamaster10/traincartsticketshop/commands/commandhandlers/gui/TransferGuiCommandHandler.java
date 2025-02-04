@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.AsyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.objects.guis.ConfirmGuiTransferGui;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
@@ -9,6 +10,8 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 /**
  * The command handler for the /tshop gui transfer command.
@@ -77,10 +80,15 @@ public class TransferGuiCommandHandler extends AsyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
+        if (sender instanceof Player p) {
+            getPlugin().getGuiManager().openNewSession(p);
+            ConfirmGuiTransferGui newGui = new ConfirmGuiTransferGui(p, gui.id(), otherPlayer.uuid());
+            newGui.open();
+            return;
+        }
+
         //Transfer the gui
         guiAccessor.updateGuiOwner(gui.id(), otherPlayer.uuid());
-
-        //If the new owner is registered as an editor, remove them
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\" was transferred to " + otherPlayer.username());
     }
 }
