@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop;
 import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
 import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
+import com.dnamaster10.traincartsticketshop.util.Economy;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
@@ -14,6 +15,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -48,6 +50,13 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
     public static TraincartsTicketShop getPlugin() {
         return plugin;
     }
+
+    private Economy economy = null;
+
+    /**
+     * @return The economy class
+     */
+    public Economy getEconomy() {return economy;}
 
     @Override
     public void onEnable() {
@@ -107,6 +116,11 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         int pluginId = 23289;
         Metrics metrics = new Metrics(this, pluginId);
 
+        //Register economy
+        if (!loadEconomy()) {
+            getLogger().info("No economy plugin was found. Economy features will be disabled.");
+        }
+
         plugin.getLogger().info("TraincartsTicketShop has finished loading!");
     }
 
@@ -156,5 +170,13 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //Disables the plugin. For use when a severe error occurs
         plugin.getLogger().info("Disabling TraincartsTicketShop...");
         plugin.getServer().getPluginManager().disablePlugin(this);
+    }
+
+    private boolean loadEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) return false;
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) return false;
+        economy = rsp.getProvider();
+        return true;
     }
 }

@@ -6,7 +6,10 @@ authors: [ DNAmaster10, Dinty1 ]
 description: Allows players to create ticket shop GUIs for the TrainCarts plugin
 database: true
 prefix: TraincartsTicketShop
-depend: [Train_Carts]
+depend:
+  - Train_Carts
+softdepend:
+  - Vault
 website: https://github.com/DNAmaster10/TraincartsTicketShop
 
 permissions:

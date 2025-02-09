@@ -71,6 +71,10 @@
           <id>MG-Dev Jenkins CI Maven Repository</id>
           <url>https://ci.mg-dev.eu/plugin/repository/everything</url>
       </repository>
+      <repository>
+          <id>jitpack.io</id>
+          <url>https://jitpack.io</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -89,7 +93,7 @@
       <dependency>
           <groupId>org.mariadb.jdbc</groupId>
           <artifactId>mariadb-java-client</artifactId>
-          <version>LATEST</version>
+          <version>3.5.1</version>
       </dependency>
       <dependency>
           <groupId>org.xerial</groupId>
@@ -99,7 +103,7 @@
       <dependency>
           <groupId>org.jetbrains</groupId>
           <artifactId>annotations</artifactId>
-          <version>RELEASE</version>
+          <version>LATEST</version>
           <scope>compile</scope>
       </dependency>
       <dependency>
@@ -117,6 +121,12 @@
           <artifactId>bstats-bukkit</artifactId>
           <version>3.0.2</version>
           <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.github.MilkBowl</groupId>
+          <artifactId>VaultAPI</artifactId>
+          <version>1.7.1</version>
+          <scope>provided</scope>
       </dependency>
   </dependencies>
 

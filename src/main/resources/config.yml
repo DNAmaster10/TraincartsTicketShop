@@ -14,6 +14,16 @@ PurchaseMessage: You purchased a ticket!
 
 MaxPagesPerGui: 50
 
+# Economy
+UseEconomy: true
+EconomyMode: default
+
+AllowCustomTicketPrices: true
+
+DefaultTicketPrice: 1.0
+MinTicketPrice: 0.0
+MaxTicketPrice: 10.0
+
 # Advanced Configuration Options
 
 MaxStoredGuisPerPlayer: 50
