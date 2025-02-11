@@ -91,6 +91,8 @@ public class SetGuiIdCommandHandler extends AsyncCommandHandler {
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         guiAccessor.updateGuiName(gui.id(), args[3]);
         sender.sendMessage(ChatColor.GREEN + "Gui \"" + args[2] + "\"'s ID was successfully changed to \"" + args[3] + "\"");
-        sender.sendMessage(ChatColor.YELLOW + "Warning: Guis with IDs longer than 15 characters in length may not fit on a sign");
+        if (args[2].length() >= 15) {
+            sender.sendMessage(ChatColor.YELLOW + "Warning: Guis with IDs longer than 15 characters in length may not fit on a sign");
+        }
     }
 }
