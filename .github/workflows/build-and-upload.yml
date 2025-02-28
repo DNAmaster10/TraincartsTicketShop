@@ -30,8 +30,11 @@ jobs:
           path: target/traincartsticketshop*.jar
       - name: Find file name
         run: |
-          filename=$(ls -d target/traincartsticketshop-*)
-          echo filename=$filename >> "$GITHUB_ENV"
+          BUILD_NUMBER=${{ github.run_number }}
+          filename=$(ls target/traincartsticketshop-*-SNAPSHOT.jar)
+          new_filename=${filename//-SNAPSHOT.jar/}-${BUILD_NUMBER}.jar
+          mv "$filename" "$new_filename"
+          echo "filename=$new_filename" >> "$GITHUB_ENV"
       - name: Delete old prerelease
         uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
