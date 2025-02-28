@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import org.bukkit.command.CommandSender;
@@ -31,7 +32,9 @@ public class GuiRenameTabCompleter extends ArgumentCompleter {
         //Get guis editable by this player
         List<GuiDatabaseObject> editableGuis = guiAccessor.getGuisEditableBy(player.getUniqueId().toString());
         List<String> editableGuiNames = editableGuis.stream().map(GuiDatabaseObject::name).toList();
-        return StringUtil.copyPartialMatches(args[2], editableGuiNames, new ArrayList<>());
+        List<String> partialNameMatches = StringUtil.copyPartialMatches(args[2], editableGuiNames, new ArrayList<>());
+        Utilities.quoteSpacedStrings(partialNameMatches);
+        return partialNameMatches;
     }
 
     @Override

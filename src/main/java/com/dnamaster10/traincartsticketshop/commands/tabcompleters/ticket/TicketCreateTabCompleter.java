@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.commands.tabcompleters.ticket;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,9 @@ public class TicketCreateTabCompleter extends ArgumentCompleter {
         if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.ticket.create")) return new ArrayList<>();
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
-        return Traincarts.getPartialTicketNameCompletions(args[2]);
+        List<String> partialNameCompletions = Traincarts.getPartialTicketNameCompletions(args[2]);
+        Utilities.quoteSpacedStrings(partialNameCompletions);
+        return partialNameCompletions;
     }
 
     @Override

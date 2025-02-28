@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.tabcompleters.gui;
 
 import com.dnamaster10.traincartsticketshop.commands.tabcompleters.ArgumentCompleter;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,9 @@ public class GuiTransferTabCompleter extends ArgumentCompleter {
         //Return only guis this player owns
         List<GuiDatabaseObject> ownedGuis = guiAccessor.getGuisOwnedBy(player.getUniqueId().toString());
         List<String> ownedGuiNames = ownedGuis.stream().map(GuiDatabaseObject::name).toList();
-        return StringUtil.copyPartialMatches(args[2], ownedGuiNames, new ArrayList<>());
+        List<String> partialNameMatches = StringUtil.copyPartialMatches(args[2], ownedGuiNames, new ArrayList<>());
+        Utilities.quoteSpacedStrings(partialNameMatches);
+        return partialNameMatches;
     }
 
     @Override

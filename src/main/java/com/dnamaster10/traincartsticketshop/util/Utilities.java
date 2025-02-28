@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utilities {
@@ -89,5 +90,17 @@ public class Utilities {
     public static boolean checkSpecialCharacters(String input) {
         //Returns true if string contains characters other than Aa-Zz, dashes, numbers, and underscores.
         return !STRING_PATTERN.matcher(input).matches();
+    }
+
+    /**
+     * Takes a list of strings and surrounds any strings in the list which contain white space with double quotes.
+     *
+     * @param input List to change
+     */
+    public static void quoteSpacedStrings(List<String> input) {
+        for (int i = 0; i < input.size(); i++) {
+            String word = input.get(i);
+            if (word.contains(" ")) input.set(i, "\"" + word + "\"");
+        }
     }
 }
