@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+
 /**
  * The command handler for the /tshop ticket create comand.
  */
@@ -78,8 +80,10 @@ public class TicketCreateCommandHandler extends SyncCommandHandler {
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
+        double defaultPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+
         //Create the ticket object
-        Ticket ticket = new Ticket(ticketName, colouredDisplayName, "");
+        Ticket ticket = new Ticket(ticketName, colouredDisplayName, "", defaultPrice);
 
         //Give the ticket to the player
         ItemStack ticketItem = ticket.getItemStack();

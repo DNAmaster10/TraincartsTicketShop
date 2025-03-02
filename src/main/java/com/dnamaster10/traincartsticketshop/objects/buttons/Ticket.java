@@ -17,6 +17,7 @@ public class Ticket extends Button {
     private final String tcTicketName;
     private final String displayName;
     private final String purchaseMessage;
+    private final double price;
 
     /**
      * Gets the ticket as a TicketDatabaseObject
@@ -27,7 +28,7 @@ public class Ticket extends Button {
      */
     public TicketDatabaseObject getAsDatabaseObject(int slot) {
         String rawDisplayName = ChatColor.stripColor(displayName);
-        return new TicketDatabaseObject(slot, tcTicketName, displayName, rawDisplayName, purchaseMessage);
+        return new TicketDatabaseObject(slot, tcTicketName, displayName, rawDisplayName, purchaseMessage, price);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class Ticket extends Button {
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(BUTTON_TYPE, PersistentDataType.STRING, "ticket");
         dataContainer.set(TC_TICKET_NAME, PersistentDataType.STRING, this.tcTicketName);
+        dataContainer.set(PRICE, PersistentDataType.DOUBLE, this.price);
         if (purchaseMessage != null) {
             dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, this.purchaseMessage);
         }
@@ -53,10 +55,11 @@ public class Ticket extends Button {
      * @param displayName The colour formatted display name for this ticket
      * @param purchaseMessage The message to be displayed when the ticket is purchased
      */
-    public Ticket(String tcName, String displayName, String purchaseMessage) {
+    public Ticket(String tcName, String displayName, String purchaseMessage, double price) {
         this.tcTicketName = tcName;
         this.displayName = displayName;
         this.purchaseMessage = purchaseMessage;
+        this.price = price;
     }
 
     /**
@@ -69,5 +72,6 @@ public class Ticket extends Button {
         tcTicketName = ticket.tcName();
         displayName = ticket.colouredDisplayName();
         purchaseMessage = ticket.purchaseMessage();
+        price = ticket.price();
     }
 }

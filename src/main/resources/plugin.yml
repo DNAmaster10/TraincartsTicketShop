@@ -86,6 +86,9 @@ permissions:
   traincartsticketshop.ticket.setpurchasemessage:
     description: Allows a player to set the purchase message for a ticket
     default: false
+  traincartsticketshop.ticket.setprice:
+    description: Allows a player to set the price for a ticket
+    default: false
 
   traincartsticketshop.link.create:
     description: Allows player to create gui link item

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.bergerkiller.bukkit.tc.tickets.TicketStore.*;
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
 public class Traincarts {
     //Contains methods which interact or involve the traincarts plugin
@@ -45,7 +46,8 @@ public class Traincarts {
         Ticket traincartsTicket = getTicketFromItem(traincartsTicketItem);
         if (traincartsTicket == null) return null;
         String ticketName = traincartsTicket.getName();
-        return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, ticketName, null);
+        double defaultPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+        return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, ticketName, null, defaultPrice);
     }
 
     /**

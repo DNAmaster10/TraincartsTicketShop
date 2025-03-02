@@ -18,7 +18,7 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
     public TicketDatabaseObject[] getTickets(int guiId, int page) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT slot, tc_name, display_name, raw_display_name, purchase_message
+                    SELECT slot, tc_name, display_name, raw_display_name, purchase_message, price
                     FROM tickets
                     WHERE gui_id=? AND page=?
                     """);
@@ -32,7 +32,8 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
                         result.getString("tc_name"),
                         result.getString("display_name"),
                         result.getString("raw_display_name"),
-                        result.getString("purchase_message")
+                        result.getString("purchase_message"),
+                        result.getDouble("price")
                 ));
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
@@ -45,7 +46,7 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
     public TicketDatabaseObject[] searchTickets(int guiId, int offset, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT tc_name, display_name, raw_display_name, purchase_message
+                    SELECT tc_name, display_name, raw_display_name, purchase_message, price
                     FROM tickets WHERE gui_id=? AND raw_display_name LIKE ?
                     ORDER BY raw_display_name LIMIT 45 OFFSET ?
                     """);
@@ -61,7 +62,8 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
                         result.getString("tc_name"),
                         result.getString("display_name"),
                         result.getString("raw_display_name"),
-                        result.getString("purchase_message")
+                        result.getString("purchase_message"),
+                        result.getDouble("price")
                 ));
                 i++;
             }
@@ -129,13 +131,14 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
             statement.executeUpdate();
 
             statement = connection.prepareStatement("""
-                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO tickets (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message, price)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
                         tc_name=VALUES(tc_name),
                         display_name=VALUES(display_name),
                         raw_display_name=VALUES(raw_display_name),
-                        purchase_message=VALUES(purchase_message)
+                        purchase_message=VALUES(purchase_message),
+                        price=VALUES(price)
                     """);
             for (TicketDatabaseObject ticket : tickets) {
                 statement.setInt(1, guiId);
@@ -145,6 +148,7 @@ public class MariaTicketAccessor extends MariaDatabaseAccessor implements Ticket
                 statement.setString(5, ticket.colouredDisplayName());
                 statement.setString(6, ticket.rawDisplayName());
                 statement.setString(7, ticket.purchaseMessage());
+                statement.setDouble(8, ticket.price());
 
                 statement.addBatch();
             }

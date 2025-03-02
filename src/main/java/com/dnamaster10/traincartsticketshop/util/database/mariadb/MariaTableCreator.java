@@ -86,6 +86,12 @@ public class MariaTableCreator extends MariaDatabaseAccessor implements Database
                     """);
             statement.execute();
 
+            //TODO work on database changes for this, also SQLite implementation!
+            statement = connection.prepareStatement("""
+                    ALTER TABLE tickets ADD COLUMN IF NOT EXISTS price FLOAT UNSIGNED;
+                    """);
+            statement.execute();
+
         } catch (SQLException e) {
             throw new ModificationException(e);
         }

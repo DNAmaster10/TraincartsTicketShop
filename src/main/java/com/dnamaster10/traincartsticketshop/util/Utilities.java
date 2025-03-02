@@ -21,6 +21,21 @@ public class Utilities {
     }
 
     /**
+     * Returns true if the passed string can be parsed as a double.
+     *
+     * @param value Input String
+     * @return Boolean indicating whether the String can be parsed as a double
+     */
+    public static boolean isDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
      * Returns the minimum number of pages required to contain the specified number of elements.
      *
      * @param elementCount The number of elements

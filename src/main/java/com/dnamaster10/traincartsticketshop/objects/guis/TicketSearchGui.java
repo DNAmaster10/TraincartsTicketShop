@@ -96,7 +96,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
 
         switch (buttonType) {
             case "ticket" -> {
-                GuiUtils.handleTicketItemPurchase(clickedItem, player);
+                GuiUtils.handleTicketItemPurchase(clickedItem, player, guiId);
                 Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
             }
             case "prev_page" -> prevPage();

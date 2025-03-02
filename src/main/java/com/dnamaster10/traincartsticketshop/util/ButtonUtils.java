@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class ButtonUtils {
@@ -60,10 +61,16 @@ public class ButtonUtils {
                 if (tcTicketName == null) {
                     return null;
                 }
+
                 String purchaseMessage = null;
                 if (dataContainer.has(PURCHASE_MESSAGE, PersistentDataType.STRING)) purchaseMessage = dataContainer.get(PURCHASE_MESSAGE, PersistentDataType.STRING);
                 if (purchaseMessage == null || purchaseMessage.isBlank()) purchaseMessage = "";
-                return new Ticket(tcTicketName, displayName, purchaseMessage);
+
+                Double price = null;
+                if (dataContainer.has(PRICE, PersistentDataType.DOUBLE)) price = dataContainer.get(PRICE, PersistentDataType.DOUBLE);
+                if (price == null) price = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+
+                return new Ticket(tcTicketName, displayName, purchaseMessage, price);
             }
             case "link" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();

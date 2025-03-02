@@ -49,6 +49,7 @@ public class SQLiteTableCreator extends SQLiteDatabaseAccessor implements Databa
                         display_name TEXT,
                         raw_display_name TEXT,
                         purchase_message TEXT,
+                        price REAL,
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
                     )

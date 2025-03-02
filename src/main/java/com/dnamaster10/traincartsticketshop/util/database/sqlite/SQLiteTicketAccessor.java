@@ -20,7 +20,7 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
     public TicketDatabaseObject[] getTickets(int guiId, int page) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT slot, tc_name, display_name, raw_display_name, purchase_message
+                    SELECT slot, tc_name, display_name, raw_display_name, purchase_message, price
                     FROM tickets
                     WHERE gui_id=? AND page=?
                     """);
@@ -34,7 +34,8 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
                         result.getString("tc_name"),
                         result.getString("display_name"),
                         result.getString("raw_display_name"),
-                        result.getString("purchase_message")
+                        result.getString("purchase_message"),
+                        result.getDouble("price")
                 ));
             }
             return ticketList.toArray(TicketDatabaseObject[]::new);
@@ -47,7 +48,7 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
     public TicketDatabaseObject[] searchTickets(int guiId, int offset, String searchTerm) throws QueryException {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT tc_name, display_name, raw_display_name, purchase_message
+                    SELECT tc_name, display_name, raw_display_name, purchase_message, price
                     FROM tickets WHERE gui_id=? AND raw_display_name LIKE ?
                     ORDER BY raw_display_name LIMIT 45 OFFSET ?
                     """);
@@ -63,7 +64,8 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
                         result.getString("tc_name"),
                         result.getString("display_name"),
                         result.getString("raw_display_name"),
-                        result.getString("purchase_message")
+                        result.getString("purchase_message"),
+                        result.getDouble("price")
                 ));
                 i++;
             }
@@ -119,8 +121,8 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
                 //Add new items
                 statement = connection.prepareStatement("""
                         INSERT INTO tickets
-                        (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message)
-                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        (gui_id, page, slot, tc_name, display_name, raw_display_name, purchase_message, price)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                         """);
                 for (TicketDatabaseObject ticket : tickets) {
                     statement.setInt(1, guiId);
@@ -130,6 +132,7 @@ public class SQLiteTicketAccessor extends SQLiteDatabaseAccessor implements Tick
                     statement.setString(5, ticket.colouredDisplayName());
                     statement.setString(6, ticket.rawDisplayName());
                     statement.setString(7, ticket.purchaseMessage());
+                    statement.setDouble(8, ticket.price());
 
                     statement.addBatch();
                 }

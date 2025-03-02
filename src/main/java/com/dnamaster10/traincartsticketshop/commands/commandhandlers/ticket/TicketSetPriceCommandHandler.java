@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.commands.commandhandlers.ticket;
 
 import com.dnamaster10.traincartsticketshop.commands.commandhandlers.SyncCommandHandler;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,50 +10,66 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
+import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.PRICE;
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
-import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.PURCHASE_MESSAGE;
 
-/**
- * The command handler for the /tshop ticket setPurchaseMessage command.
- */
-public class TicketSetPurchaseMessageCommandHandler extends SyncCommandHandler {
-    //Example command: /tshop ticket setPurchaseMessage <message>
+public class TicketSetPriceCommandHandler extends SyncCommandHandler {
+    //Example command: /tshop ticket setPrice <price>
     private Player player;
-    private String colouredDisplayText;
     private ItemStack ticket;
 
     @Override
     protected boolean checkSync(CommandSender sender, String[] args) {
-        //Check that sender is a player
-        if (!(sender instanceof Player)) {
+        //Check sender is a player
+        if (!(sender instanceof  Player)) {
             returnOnlyPlayersExecuteError(sender);
             return false;
         }
         player = (Player) sender;
 
-        if (!player.hasPermission("traincartsticketshop.ticket.setpurchasemessage")) {
+        if (!player.hasPermission("traincartsticketshop.ticket.setprice")) {
             returnInsufficientPermissionsError(player);
+            return false;
+        }
+
+        //Check config
+        if (!getPlugin().getConfig().getBoolean("AllowCustomTicketPrices")) {
+            returnError(player, "Custom ticket prices are disabled in the config.");
             return false;
         }
 
         //Check syntax
         if (args.length < 3) {
-            returnMissingArgumentsError(player, "/tshop ticket setPurchaseMessage <message>");
+            returnMissingArgumentsError(player, "/tshop ticket setPrice <price>");
             return false;
         }
         if (args.length > 3) {
             returnInvalidSubCommandError(player, args[3]);
             return false;
         }
-
-        colouredDisplayText = ChatColor.translateAlternateColorCodes('&', args[2]);
-
-        if (colouredDisplayText.length() > 500) {
-            returnError(player, "Purchase messages cannot be more than 500 characters in length");
+        if (!Utilities.isDouble(args[2])) {
+            returnError(player, "Ticket prices must be numeric");
             return false;
         }
-        if (colouredDisplayText.isBlank()) {
-            returnError(player, "Purchase messages cannot be blank");
+
+        double price = Double.parseDouble(args[2]);
+
+        //Check price
+        if (price < 0) {
+            returnError(player, "Ticket prices must be positive");
+            return false;
+        }
+
+        double minimum = getPlugin().getConfig().getDouble("MinTicketPrice");
+        double maximum = getPlugin().getConfig().getDouble("MaxTicketPrice");
+
+        if (price < minimum) {
+            returnError(player, "Ticket prices cannot be less than " + minimum);
+            return false;
+        }
+        if (price > maximum) {
+            returnError(player, "Ticket prices cannot be more than " + maximum);
             return false;
         }
 
@@ -72,8 +89,8 @@ public class TicketSetPurchaseMessageCommandHandler extends SyncCommandHandler {
         ItemMeta meta = ticket.getItemMeta();
         assert meta != null;
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-        dataContainer.set(PURCHASE_MESSAGE, PersistentDataType.STRING, colouredDisplayText);
+        dataContainer.set(PRICE, PersistentDataType.DOUBLE, Double.parseDouble(args[2]));
         ticket.setItemMeta(meta);
-        player.sendMessage(ChatColor.GREEN + "Held ticket's purchase message was set successfully");
+        player.sendMessage(ChatColor.GREEN + "Held ticket's price was set successfully");
     }
 }

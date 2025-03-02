@@ -15,4 +15,5 @@ public class DataKeys {
     public static final NamespacedKey TC_TICKET_NAME = new NamespacedKey(getPlugin(), "tc_ticket_name");
     public static final NamespacedKey HEAD_TYPE = new NamespacedKey(getPlugin(), "tc_ticket_name");
     public static final NamespacedKey PURCHASE_MESSAGE = new NamespacedKey(getPlugin(), "purchase_message");
+    public static final NamespacedKey PRICE = new NamespacedKey(getPlugin(), "price");
 }

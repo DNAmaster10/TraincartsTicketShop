@@ -3,19 +3,19 @@ package com.dnamaster10.traincartsticketshop;
 import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
 import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
-import com.dnamaster10.traincartsticketshop.util.Economy;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
+import com.dnamaster10.traincartsticketshop.util.VaultHook;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.DataAccessor;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -51,12 +51,14 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         return plugin;
     }
 
-    private Economy economy = null;
+    private VaultHook vaultHook;
 
     /**
-     * @return The economy class
+     * @return The Vault Hook
      */
-    public Economy getEconomy() {return economy;}
+    public VaultHook getVaultHook() {
+        return vaultHook;
+    }
 
     @Override
     public void onEnable() {
@@ -116,9 +118,44 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         int pluginId = 23289;
         Metrics metrics = new Metrics(this, pluginId);
 
-        //Register economy
-        if (!loadEconomy()) {
-            getLogger().info("No economy plugin was found. Economy features will be disabled.");
+        //Schedule economy load
+        this.vaultHook = new VaultHook();
+        if (getConfig().getBoolean("UseEconomy")) {
+            Bukkit.getScheduler().runTaskLater(this, () -> {
+                vaultHook.loadEconomy();
+            }, 1L);
+
+            //Check config values
+            double defaultPrice = getConfig().getDouble("DefaultTicketPrice");
+
+            if (defaultPrice < 0) {
+                getLogger().severe("The default ticket price cannot be negative.");
+                disable();
+            }
+
+            if (getConfig().getBoolean("AllowCustomTicketPrices")) {
+                double minimum = getConfig().getDouble("MinTicketPrice");
+                double maximum = getConfig().getDouble("MaxTicketPrice");
+
+                if (defaultPrice < minimum) {
+                    getLogger().severe("The default ticket price cannot be less than the minimum ticket price.");
+                    disable();
+                } else if (defaultPrice > maximum) {
+                    getLogger().severe("The default ticket price cannot be more than the maximum ticket price.");
+                    disable();
+                } else if (minimum < 0) {
+                    getLogger().severe("The minimum ticket price cannot be negative.");
+                    disable();
+                } else if (maximum < 0) {
+                    getLogger().severe("The maximum ticket price cannot be negative.");
+                    disable();
+                } else if (maximum < minimum) {
+                    getLogger().severe("The maximum ticket price cannot be less than the minimum ticket price.");
+                    disable();
+                }
+            }
+        } else {
+            getLogger().info("Economy support is disabled in the config, so economy features have been disabled.");
         }
 
         plugin.getLogger().info("TraincartsTicketShop has finished loading!");
@@ -170,13 +207,5 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //Disables the plugin. For use when a severe error occurs
         plugin.getLogger().info("Disabling TraincartsTicketShop...");
         plugin.getServer().getPluginManager().disablePlugin(this);
-    }
-
-    private boolean loadEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) return false;
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) return false;
-        economy = rsp.getProvider();
-        return true;
     }
 }

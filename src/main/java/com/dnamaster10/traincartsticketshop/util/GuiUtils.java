@@ -1,15 +1,20 @@
 package com.dnamaster10.traincartsticketshop.util;
 
+import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.Objects;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
@@ -23,7 +28,7 @@ public class GuiUtils {
      * @param ticketItem The Ticket Shop Ticket ItemStack
      * @param player The player making the purchase
      */
-    public static void handleTicketItemPurchase(ItemStack ticketItem, Player player) {
+    public static void handleTicketItemPurchase(ItemStack ticketItem, Player player, int guiId) {
         ItemMeta meta = ticketItem.getItemMeta();
         if (meta == null) {
             player.sendMessage(ChatColor.RED + "Ticket info is broken, failed to purchase ticket");
@@ -43,6 +48,68 @@ public class GuiUtils {
         if (dataContainer.has(PURCHASE_MESSAGE, PersistentDataType.STRING)) {
             purchaseMessage = dataContainer.get(PURCHASE_MESSAGE, PersistentDataType.STRING);
             if (purchaseMessage != null && purchaseMessage.isBlank()) purchaseMessage = null;
+        }
+
+        //TODO Revisit this code. Should negatives balances be allowed? How can we check that? Can this be made more readable?
+        //TODO Can we use EconomyResponse instead of checking negative balance?
+        //Handle economy checks
+        Double ticketPrice = 0.0;
+        boolean shouldTransact = false;
+        VaultHook vaultHook = getPlugin().getVaultHook();
+        if (getPlugin().getConfig().getBoolean("UseEconomy") && vaultHook.hasEconomy()) {
+
+            double defaultTicketPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+
+            //Check and correct ticket price
+            if (!getPlugin().getConfig().getBoolean("AllowCustomTicketPrices")) {
+                ticketPrice = defaultTicketPrice;
+            } else {
+                double minTicketPrice = getPlugin().getConfig().getDouble("MinTicketPrice");
+                double maxTicketPrice = getPlugin().getConfig().getDouble("MaxTicketPrice");
+
+                if (!dataContainer.has(PRICE, PersistentDataType.DOUBLE)) {
+                    ticketPrice = dataContainer.get(PRICE, PersistentDataType.DOUBLE);
+                    if (ticketPrice != null) {
+                        if (ticketPrice < minTicketPrice) ticketPrice = minTicketPrice;
+                        else if (ticketPrice > maxTicketPrice) ticketPrice = maxTicketPrice;
+                    }
+                    else {
+                        ticketPrice = defaultTicketPrice;
+                    }
+                } else {
+                    ticketPrice = defaultTicketPrice;
+                }
+            }
+
+            //Check if transaction is possible
+            double playerBalance = vaultHook.getBalance(player);
+            if (playerBalance - ticketPrice < 0) {
+                player.sendMessage(ChatColor.RED + "You can't afford that ticket!");
+                return;
+            }
+            shouldTransact = true;
+        }
+
+        //Handle transaction
+        if (shouldTransact && ticketPrice > 0d) {
+            EconomyResponse response = vaultHook.withdrawMoney(player, ticketPrice);
+            if (response.type == EconomyResponse.ResponseType.FAILURE) {
+                player.sendMessage(ChatColor.RED + response.errorMessage);
+                return;
+            }
+            player.sendMessage(ChatColor.YELLOW + (vaultHook.format(response.amount) + " has been taken from your account for purchasing a ticket!"));
+
+            if (Objects.equals(getPlugin().getConfig().getString("EconomyMode"), "guiOwners")) {
+                //Send money to gui owner as well.
+                //TODO does this need to be asynchronous?
+                final double transferAmount = ticketPrice;
+                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+                    GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
+                    String ownerUuid = guiDataAccessor.getOwnerUuid(guiId);
+                    Player guiOwner = Bukkit.getPlayer(ownerUuid);
+                    vaultHook.depositMoney(guiOwner, transferAmount);
+                });
+            }
         }
 
         //Handle purchase

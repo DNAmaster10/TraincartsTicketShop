@@ -14,5 +14,6 @@ public record TicketDatabaseObject (
         String tcName,
         String colouredDisplayName,
         String rawDisplayName,
-        String purchaseMessage
+        String purchaseMessage,
+        double price
 ) {}
