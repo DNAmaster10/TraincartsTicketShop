@@ -51,7 +51,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
             maxPage = guiDataAccessor.getHighestPageNumber(guiId);
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         }
         pageManager.addPage(pageNumber, getNewPage(pageNumber));
@@ -79,7 +79,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
             page.addFromLinkDatabaseObjects(linkDataAccessor.getLinks(guiId, pageNumber));
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return null;
         }
         if (pageNumber < maxPage) page.addNextPageButton();
@@ -106,7 +106,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
         switch (buttonType) {
             case "ticket" -> {
                 GuiUtils.handleTicketItemPurchase(clickedItem, player, guiId);
-                Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+                Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             }
             case "prev_page" -> prevPage();
             case "next_page" -> nextPage();

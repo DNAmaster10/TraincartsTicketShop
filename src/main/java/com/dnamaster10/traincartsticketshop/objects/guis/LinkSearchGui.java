@@ -51,7 +51,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
             displayName = "Searching: " + guiDataAccessor.getDisplayName(guiId);
         } catch (QueryException e) {
             getPlugin().handleSqlException(e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         }
         pageManager.addPage(0, getNewPage(0));
@@ -67,7 +67,7 @@ public class LinkSearchGui extends Gui implements InventoryHolder, ClickHandler,
             page.addFromLinkDatabaseObjects(linkDataAccessor.searchLinks(guiId, pageNumber * 45, searchTerm));
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return null;
         }
 

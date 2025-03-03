@@ -92,7 +92,7 @@ public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandle
         player.spigot().sendMessage(message2);
         player.spigot().sendMessage(message1);
 
-        Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+        Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
     }
 
     private void searchLinks() {
@@ -114,7 +114,7 @@ public class SearchSelectGui extends Gui implements InventoryHolder, ClickHandle
         player.spigot().sendMessage(message2);
         player.spigot().sendMessage(message1);
 
-        Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+        Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
     }
 
     @Override

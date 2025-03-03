@@ -71,7 +71,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         if (!guiDataAccessor.checkGuiById(guiId)) {
             player.sendMessage(ChatColor.RED + "Gui has been moved or deleted");
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         }
         try {
@@ -79,7 +79,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             maxPage = guiDataAccessor.getHighestPageNumber(guiId);
         } catch (QueryException e) {
             getPlugin().handleSqlException(e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
         }
         pageManager.addPage(pageNumber, getNewPage(pageNumber));
         inventory = pageManager.getPage(pageNumber).getAsInventory(this);
@@ -98,7 +98,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         Player editor = getPlugin().getGuiManager().getGuiEditor(guiId);
         if (editor != null && player.getUniqueId() != editor.getUniqueId()) {
             player.sendMessage(ChatColor.RED + "Someone else is already editing that gui");
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         } else if (editor == null) {
             //Register the editor
@@ -128,7 +128,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             page.addFromLinkDatabaseObjects(linkDataAccessor.getLinks(guiId, pageNumber));
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return null;
         }
         if (pageNumber + 1 < getPlugin().getConfig().getInt("MaxPagesPerGui")) page.addNextPageButton();
@@ -255,7 +255,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             guiDataAccessor.insertPage(guiId, pageManager.getCurrentPageNumber());
         } catch (ModificationException e) {
             getPlugin().handleSqlException(e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
         }
         open();
     }
@@ -286,7 +286,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             linkDataAccessor.saveLinkPage(guiId, pageManager.getCurrentPageNumber(), links);
         } catch (ModificationException e) {
             getPlugin().handleSqlException(e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
         }
 
         pageManager.addPage(pageManager.getCurrentPageNumber(), newPage);

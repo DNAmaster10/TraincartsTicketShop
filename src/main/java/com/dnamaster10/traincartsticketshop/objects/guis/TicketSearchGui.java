@@ -53,7 +53,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
             displayName = "Searching: " + guiDataAccessor.getDisplayName(guiId);
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         }
         pageManager.addPage(0, getNewPage(0));
@@ -69,7 +69,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
             page.addFromTicketDatabaseObjects(ticketDataAccessor.searchTickets(guiId, pageNumber * 45, searchTerm));
         } catch (QueryException e) {
             getPlugin().handleSqlException(player, e);
-            Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+            Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return null;
         }
 
@@ -97,7 +97,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
         switch (buttonType) {
             case "ticket" -> {
                 GuiUtils.handleTicketItemPurchase(clickedItem, player, guiId);
-                Bukkit.getScheduler().runTask(getPlugin(), player::closeInventory);
+                Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             }
             case "prev_page" -> prevPage();
             case "next_page" -> nextPage();
