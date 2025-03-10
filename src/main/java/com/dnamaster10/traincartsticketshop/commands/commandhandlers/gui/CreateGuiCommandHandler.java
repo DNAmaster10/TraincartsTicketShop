@@ -97,7 +97,7 @@ public class CreateGuiCommandHandler extends AsyncCommandHandler {
     @Override
     protected void execute(CommandSender sender, String[] args) throws ModificationException {
         //Runs the command
-        guiAccessor.addGui(args[2], colouredDisplayName, rawDisplayName, player.getUniqueId().toString());
+        guiAccessor.addGui(args[2], player.getUniqueId().toString());
         player.sendMessage(ChatColor.GREEN + "A gui with the ID \"" + args[2] + "\" was created");
         if (args[2].length() >= 15) {
             player.sendMessage(ChatColor.YELLOW + "Warning: Guis with IDs more than 15 characters in length may not fit on a sign");

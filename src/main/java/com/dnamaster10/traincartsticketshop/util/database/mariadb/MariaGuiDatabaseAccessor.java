@@ -95,14 +95,14 @@ public class MariaGuiDatabaseAccessor extends MariaDatabaseAccessor implements G
     }
 
     @Override
-    public Integer addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
+    public Integer addGui(String name, String ownerUuid) throws ModificationException {
         Integer guiId = null;
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO guis (name, display_name, raw_display_name, owner_uuid) VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
-            statement.setString(2, colouredDisplayName);
-            statement.setString(3, rawDisplayName);
+            statement.setString(2, name);
+            statement.setString(3, name);
             statement.setString(4, ownerUuid);
             statement.executeUpdate();
 

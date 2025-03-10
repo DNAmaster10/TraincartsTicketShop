@@ -68,6 +68,9 @@ public class GuiCache {
     public List<String> getPartialNameMatches(String inputString) {
         return StringUtil.copyPartialMatches(inputString, guiNames, new ArrayList<>());
     }
+    public List<String> getGuiNames() {
+        return new ArrayList<>(guiNames);
+    }
     public List<GuiDatabaseObject> getGuisOwnedBy(String uuid) {
         if (!ownerGuiMap.containsKey(uuid)) return new ArrayList<>();
         return ownerGuiMap.get(uuid);

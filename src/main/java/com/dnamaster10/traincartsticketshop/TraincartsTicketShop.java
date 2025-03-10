@@ -1,7 +1,6 @@
 package com.dnamaster10.traincartsticketshop;
 
-import com.dnamaster10.traincartsticketshop.commands.CommandDispatcher;
-import com.dnamaster10.traincartsticketshop.commands.MainTabCompleter;
+import com.dnamaster10.traincartsticketshop.brigadiertest.TicketShopCommands;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
@@ -11,6 +10,7 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.DatabaseAccessorFactory;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.DataAccessor;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,7 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Objects;
 
 
 public final class TraincartsTicketShop extends JavaPlugin implements Listener {
@@ -95,10 +94,13 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         }
 
         //Register the "traincartsticketshop" command
-        Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
+        //Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            commands.registrar().register(TicketShopCommands.getRootNode());
+        });
 
         //Register tab completers
-        Objects.requireNonNull(getCommand("traincartsticketshop")).setTabCompleter(new MainTabCompleter());
+        //Objects.requireNonNull(getCommand("traincartsticketshop")).setTabCompleter(new MainTabCompleter());
 
         //Register gui manager
         this.guiManager = new GuiManager();

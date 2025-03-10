@@ -1,5 +1,9 @@
 package com.dnamaster10.traincartsticketshop.util;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -117,5 +121,35 @@ public class Utilities {
             String word = input.get(i);
             if (word.contains(" ")) input.set(i, "\"" + word + "\"");
         }
+    }
+
+    /**
+     * Takes a raw String as input and applies colour formatting.
+     *
+     * @param input Raw string input
+     * @return Chat component with the colours applied
+     */
+    public static Component parseColour(String input) {
+        return MiniMessage.miniMessage().deserialize(input);
+    }
+
+    /**
+     * Takes a chat component and converts it to a String.
+     *
+     * @param component Component to convert
+     * @return Component converted to a String
+     */
+    public static String componentToString(Component component) {
+        return MiniMessage.miniMessage().serialize(component);
+    }
+
+    /**
+     * Takes a component and returns the raw text without chat formatting.
+     *
+     * @param component The component to strip
+     * @return The raw text contained within the component
+     */
+    public static String stripColour(Component component) {
+        return PlainTextComponentSerializer.plainText().serialize(component);
     }
 }

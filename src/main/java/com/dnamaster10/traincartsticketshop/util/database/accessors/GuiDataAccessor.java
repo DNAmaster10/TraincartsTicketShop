@@ -181,6 +181,15 @@ public class GuiDataAccessor extends DataAccessor {
     }
 
     /**
+     * Gets a list of all Gui names
+     *
+     * @return A list of all Gui names
+     */
+    public List<String> getGuiNames() {
+        return getGuiCache().getGuiNames();
+    }
+
+    /**
      * Updates the name of a Gui in the database.
      *
      * @param guiId The ID for the Gui
@@ -221,15 +230,13 @@ public class GuiDataAccessor extends DataAccessor {
      * Adds a new Gui to the database.
      *
      * @param name The name of the new Gui
-     * @param colouredDisplayName The colour formatted display name
-     * @param rawDisplayName The stripped display name
      * @param ownerUuid The UUID of the owner
      * @throws ModificationException Thrown if an error occurs modifying the database
      */
-    public void addGui(String name, String colouredDisplayName, String rawDisplayName, String ownerUuid) throws ModificationException {
-        Integer guiId = guiDatabaseAccessor.addGui(name, colouredDisplayName, rawDisplayName, ownerUuid);
+    public void addGui(String name, String ownerUuid) throws ModificationException {
+        Integer guiId = guiDatabaseAccessor.addGui(name, ownerUuid);
         if (guiId == null) return;
-        getGuiCache().addGui(new GuiDatabaseObject(guiId, name, colouredDisplayName, ownerUuid));
+        getGuiCache().addGui(new GuiDatabaseObject(guiId, name, name, ownerUuid));
     }
 
     /**
