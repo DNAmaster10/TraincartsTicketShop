@@ -40,9 +40,7 @@ public class GuiNameSuggestionProvider {
     }
 
     public static CompletableFuture<Suggestions> getAllSuggestions(CommandContext<CommandSourceStack> commandContext, SuggestionsBuilder suggestionsBuilder) throws CommandSyntaxException {
-        GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
-
-        return suggestionsBuilder.buildFuture();
+        return filterAllGuis(suggestionsBuilder);
     }
 
     //TODO Look at this further - What if it is an admin looking to delete a gui? They should still have all of them even without the edit permission.
