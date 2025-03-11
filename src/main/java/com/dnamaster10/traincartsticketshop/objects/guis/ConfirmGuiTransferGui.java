@@ -6,7 +6,11 @@ import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler
 import com.dnamaster10.traincartsticketshop.util.Session;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -65,16 +69,25 @@ public class ConfirmGuiTransferGui extends Gui implements InventoryHolder, Click
                 String username = "";
                 String guiName = "";
                 try {
-                    GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
-                    guiDataAccessor.updateGuiOwner(guiId, destPlayerUuid);
-                    guiName = guiDataAccessor.getGuiNameById(guiId);
+                    GuiDataAccessor guiAccessor = new GuiDataAccessor();
+                    PlayerDataAccessor playerAccessor = new PlayerDataAccessor();
 
-                    PlayerDataAccessor playerDataAccessor = new PlayerDataAccessor();
-                    username = playerDataAccessor.getPlayerByUuid(destPlayerUuid).username();
+                    GuiDatabaseObject gui = guiAccessor.getGuiById(guiId);
+                    if (gui.ownerUuid().equalsIgnoreCase(destPlayerUuid)) {
+                        Component component = MiniMessage.miniMessage().deserialize("<red>Player is already the owner of that Gui!");
+                        player.sendMessage(component);
+                        Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
+                        return;
+                    }
+
+                    guiAccessor.updateGuiOwner(guiId, destPlayerUuid);
+                    guiName = gui.name();
+                    username = playerAccessor.getPlayerByUuid(destPlayerUuid).username();
                 } catch (ModificationException e) {
                     getPlugin().handleSqlException(e);
                 }
-                player.sendMessage(ChatColor.RED + "Successfully transferred gui \"" + guiName + "\" to player " + username);
+                Component component = MiniMessage.miniMessage().deserialize("<green>Successfully transferred gui \"" + guiName + "\" to player " + username);
+                player.sendMessage(component);
             });
         }
     }
