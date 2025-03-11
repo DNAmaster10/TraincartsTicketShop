@@ -86,6 +86,8 @@ public class ConfirmGuiTransferGui extends Gui implements InventoryHolder, Click
                 } catch (ModificationException e) {
                     getPlugin().handleSqlException(e);
                 }
+
+                Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
                 Component component = MiniMessage.miniMessage().deserialize("<green>Successfully transferred gui \"" + guiName + "\" to player " + username);
                 player.sendMessage(component);
             });
