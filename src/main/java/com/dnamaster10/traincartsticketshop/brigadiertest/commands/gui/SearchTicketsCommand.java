@@ -1,8 +1,9 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
-import com.dnamaster10.traincartsticketshop.objects.guis.LinkSearchGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.TicketSearchGui;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -17,12 +18,11 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class SearchLinksCommand implements TicketShopCommand {
-
+public class SearchTicketsCommand implements TicketShopCommand {
     @Override
     public LiteralCommandNode<CommandSourceStack> getRootNode() {
-        return Commands.literal("searchLinks")
-                .requires(ctx -> ctx.getExecutor() instanceof Player player && player.hasPermission("traincartsticketshop.gui.search.links"))
+        return Commands.literal("searchTickets")
+                .requires(ctx -> ctx.getExecutor() instanceof Player player && player.hasPermission("traincartsticketshop.gui.search.tickets"))
                 .then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getAllSuggestions)
                         .then(Commands.argument("search term", StringArgumentType.string())
                                 .executes(this::execute))).build();
@@ -43,14 +43,14 @@ public class SearchLinksCommand implements TicketShopCommand {
             }
 
             if (searchTerm.length() > 25) {
-                Component component = MiniMessage.miniMessage().deserialize("<red>Search term cannot be longer than 25 characters in length");
+                Component component = MiniMessage.miniMessage().deserialize("<red>Search term cannot be longer than 25 characters in length.");
                 player.sendMessage(component);
                 return;
             }
 
             getPlugin().getGuiManager().openNewSession(player);
             int guiId = guiAccessor.getGuiByName(guiName).id();
-            LinkSearchGui gui = new LinkSearchGui(player, guiId, searchTerm);
+            TicketSearchGui gui = new TicketSearchGui(player, guiId, searchTerm);
             gui.open();
         });
         return Command.SINGLE_SUCCESS;

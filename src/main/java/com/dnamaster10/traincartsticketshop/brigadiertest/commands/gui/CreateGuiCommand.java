@@ -1,6 +1,7 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.mojang.brigadier.Command;
@@ -12,7 +13,6 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;

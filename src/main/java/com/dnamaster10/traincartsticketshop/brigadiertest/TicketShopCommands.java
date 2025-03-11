@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest;
 
-import com.dnamaster10.traincartsticketshop.brigadiertest.commands.*;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;

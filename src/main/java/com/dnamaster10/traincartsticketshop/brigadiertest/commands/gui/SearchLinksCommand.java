@@ -1,10 +1,10 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
-import com.dnamaster10.traincartsticketshop.objects.guis.EditGui;
+import com.dnamaster10.traincartsticketshop.objects.guis.LinkSearchGui;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -18,48 +18,41 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class EditGuiCommand implements TicketShopCommand {
+public class SearchLinksCommand implements TicketShopCommand {
+
     @Override
     public LiteralCommandNode<CommandSourceStack> getRootNode() {
-        return Commands.literal("edit")
-                .requires(ctx ->
-                        ctx.getExecutor() instanceof Player player
-                                && (player.hasPermission("traincartsticketshop.gui.edit")
-                                || player.hasPermission("traincartsticketshop.admin.gui.edit"))
-                )
-                .then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getEditSuggestions)
-                        .executes(this::execute)).build();
+        return Commands.literal("searchLinks")
+                .requires(ctx -> ctx.getExecutor() instanceof Player player && player.hasPermission("traincartsticketshop.gui.search.links"))
+                .then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getAllSuggestions)
+                        .then(Commands.argument("search term", StringArgumentType.string())
+                                .executes(this::execute))).build();
     }
 
     @Override
     public int execute(CommandContext<CommandSourceStack> ctx) {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             String guiName = StringArgumentType.getString(ctx, "id");
+            String searchTerm = StringArgumentType.getString(ctx, "search term");
             Player player = (Player) ctx.getSource().getExecutor();
 
-            if (player == null) return;
-
             GuiDataAccessor guiAccessor = new GuiDataAccessor();
-
             if (!guiAccessor.checkGuiByName(guiName)) {
                 Component component = MiniMessage.miniMessage().deserialize("<red>Gui \"" + guiName + "\" does not exist.");
                 player.sendMessage(component);
                 return;
             }
 
-            GuiDatabaseObject gui = guiAccessor.getGuiByName(guiName);
-
-            if (!player.hasPermission("traincartsticketshop.admin.gui.edit")) {
-                if (!guiAccessor.playerCanEdit(gui.id(), player.getUniqueId().toString())) {
-                    Component component = MiniMessage.miniMessage().deserialize("<red>You do not have permission to edit that Gui.");
-                    player.sendMessage(component);
-                    return;
-                }
+            if (searchTerm.length() > 25) {
+                Component component = MiniMessage.miniMessage().deserialize("<red>Search term cannot be longer than 25 characters in length");
+                player.sendMessage(component);
+                return;
             }
 
             getPlugin().getGuiManager().openNewSession(player);
-            EditGui editGui = new EditGui(player, gui.id());
-            editGui.open();
+            int guiId = guiAccessor.getGuiByName(guiName).id();
+            LinkSearchGui gui = new LinkSearchGui(player, guiId, searchTerm);
+            gui.open();
         });
         return Command.SINGLE_SUCCESS;
     }

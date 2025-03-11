@@ -1,6 +1,7 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor;

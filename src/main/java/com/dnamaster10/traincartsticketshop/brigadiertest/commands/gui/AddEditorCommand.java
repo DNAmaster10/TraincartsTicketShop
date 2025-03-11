@@ -1,7 +1,8 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.PlayerNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.PlayerNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.util.Players;
@@ -16,7 +17,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -24,17 +24,18 @@ import org.bukkit.entity.Player;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 
-public class RemoveGuiEditorCommand implements TicketShopCommand {
+public class AddEditorCommand implements TicketShopCommand {
     @Override
     public LiteralCommandNode<CommandSourceStack> getRootNode() {
-        return Commands.literal("removeEditor")
+        return Commands.literal("addEditor")
                 .requires(ctx -> {
                     if (ctx.getExecutor() instanceof Player player) {
-                        return player.hasPermission("traincartsticketshop.gui.removeeditor") || player.hasPermission("traincartsticketshop.admin.gui.removeeditor");
+                        return player.hasPermission("traincartsitcketshop.gui.addeditor") ||
+                                player.hasPermission("traincartsticketshop.admin.gui.addeditor");
                     }
                     return true;
-                }).then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getRemoveEditorSuggestions)
-                        .then(Commands.argument("player", new PlayerNameArgumentType()).suggests(PlayerNameSuggestionProvider::filterGuiEditorSuggestions)
+                }).then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getAddEditorSuggestions)
+                        .then(Commands.argument("player", new PlayerNameArgumentType()).suggests(PlayerNameSuggestionProvider::filterAllNameSuggestions)
                                 .executes(this::execute))).build();
     }
 
@@ -42,9 +43,10 @@ public class RemoveGuiEditorCommand implements TicketShopCommand {
     public int execute(CommandContext<CommandSourceStack> ctx) {
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             String guiName = StringArgumentType.getString(ctx, "id");
-            String editorName = StringArgumentType.getString(ctx, "player");
+            String username = StringArgumentType.getString(ctx, "player");
 
             GuiDataAccessor guiAccessor = new GuiDataAccessor();
+
             if (!guiAccessor.checkGuiByName(guiName)) {
                 Component component = MiniMessage.miniMessage().deserialize("<red>Gui \"" + guiName + "\" does not exist.");
                 ctx.getSource().getSender().sendMessage(component);
@@ -54,44 +56,50 @@ public class RemoveGuiEditorCommand implements TicketShopCommand {
             GuiDatabaseObject gui = guiAccessor.getGuiByName(guiName);
 
             if (ctx.getSource().getExecutor() instanceof Player player) {
-                if (!player.hasPermission("traincartsticketshop.admin.gui.removeeditor")) {
-                    if (!player.getUniqueId().toString().equalsIgnoreCase(gui.ownerUuid())) {
-                        Component component = MiniMessage.miniMessage().deserialize("<red>You do not own that Gui.");
+                if (!player.hasPermission("traincartsticketshop.admin.gui.addeditor")) {
+                    if (!gui.ownerUuid().equals(player.getUniqueId().toString())) {
+                        Component component = MiniMessage.miniMessage().deserialize("<red>You must be the owner of a Gui to add an editor.");
                         player.sendMessage(component);
                         return;
                     }
                 }
             }
 
-            GuiEditorsDataAccessor editorsAccessor = new GuiEditorsDataAccessor();
             PlayerDatabaseObject editor;
             try {
-                editor = Players.getPlayerByUsername(editorName);
+                editor = Players.getPlayerByUsername(username);
             } catch (ModificationException e) {
                 getPlugin().handleSqlException(e);
                 return;
             }
 
             if (editor == null) {
-                Component component = MiniMessage.miniMessage().deserialize("<red>Player \"" + editorName + "\" does not exist");
+                Component component = MiniMessage.miniMessage().deserialize("<red>Player \"" + username + "\" could not be found.");
                 ctx.getSource().getSender().sendMessage(component);
                 return;
             }
 
-            if (!editorsAccessor.checkGuiEditorByUuid(gui.id(), editor.uuid())) {
-                Component component = MiniMessage.miniMessage().deserialize("<red>Player \"" + editor.username() + "\" is not an editor of that gui.");
+            if (gui.ownerUuid().equalsIgnoreCase(editor.uuid())) {
+                Component component = MiniMessage.miniMessage().deserialize("<red>Player \"" + editor.username() + "\" already owns that Gui.");
+                ctx.getSource().getSender().sendMessage(component);
+                return;
+            }
+            GuiEditorsDataAccessor guiEditorsAccessor = new GuiEditorsDataAccessor();
+            if (guiEditorsAccessor.checkGuiEditorByUuid(gui.id(), editor.uuid())) {
+                Component component = MiniMessage.miniMessage().deserialize("<red>Player \"" + editor.username() + "\" is already an editor of that Gui.");
                 ctx.getSource().getSender().sendMessage(component);
                 return;
             }
 
             try {
-                editorsAccessor.removeGuiEditor(gui.id(), editor.uuid());
+                guiEditorsAccessor.addGuiEditor(gui.id(), editor.uuid());
             } catch (ModificationException e) {
                 getPlugin().handleSqlException(e);
                 return;
             }
 
-            ctx.getSource().getSender().sendMessage("<green>Player \"" + editor.username() + "\" was removed as an editor of Gui \"" + gui.name() + "\"");
+            Component component = MiniMessage.miniMessage().deserialize("<green>Player \"" + editor.username() + "\" has been added as an editor of \"" + gui.name() + "\"");
+            ctx.getSource().getSender().sendMessage(component);
         });
         return Command.SINGLE_SUCCESS;
     }
