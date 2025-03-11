@@ -98,7 +98,7 @@ public class Utilities {
         return result.toArray(String[]::new);
     }
 
-    private static final Pattern STRING_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
+    private static final Pattern PATTERN1 = Pattern.compile("^[a-zA-Z0-9_-]+$");
 
     /**
      * Checks if the input String contains any characters other than Aa - Zz, numbers, underscores and dashes.
@@ -108,7 +108,19 @@ public class Utilities {
      */
     public static boolean checkSpecialCharacters(String input) {
         //Returns true if string contains characters other than Aa-Zz, dashes, numbers, and underscores.
-        return !STRING_PATTERN.matcher(input).matches();
+        return !PATTERN1.matcher(input).matches();
+    }
+
+    private static final Pattern PATTERN2 = Pattern.compile("[a-zA-Z0-9_]+");
+
+    /**
+     * Checks that a string only contains letters, numbers, and underscores. Useful for username checks.
+     *
+     * @param input The String to check.
+     * @return True if no other characters are present.
+     */
+    public static boolean checkNumbersLettersUnderscores(String input) {
+        return PATTERN2.matcher(input).matches();
     }
 
     /**

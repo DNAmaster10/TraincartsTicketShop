@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.PlayerNameArgumentType;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.PlayerNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.util.Players;
@@ -33,7 +34,7 @@ public class RemoveGuiEditorCommand implements TicketShopCommand {
                     }
                     return true;
                 }).then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getRemoveEditorSuggestions)
-                        .then(Commands.argument("player", ArgumentTypes.player()).suggests(PlayerNameSuggestionProvider::filterGuiEditorSuggestions)
+                        .then(Commands.argument("player", new PlayerNameArgumentType()).suggests(PlayerNameSuggestionProvider::filterGuiEditorSuggestions)
                                 .executes(this::execute))).build();
     }
 

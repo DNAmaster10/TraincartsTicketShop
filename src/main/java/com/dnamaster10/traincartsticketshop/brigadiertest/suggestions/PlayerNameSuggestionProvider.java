@@ -2,6 +2,7 @@ package com.dnamaster10.traincartsticketshop.brigadiertest.suggestions;
 
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -23,6 +24,16 @@ public class PlayerNameSuggestionProvider {
         GuiEditorsDataAccessor editorsAccessor = new GuiEditorsDataAccessor();
         String remainingLowercase = builder.getRemainingLowerCase();
         editorsAccessor.getEditorUsernames(gui.id()).stream()
+                .filter(entry -> entry.toLowerCase().startsWith(remainingLowercase))
+                .forEach(builder::suggest);
+        return builder.buildFuture();
+    }
+
+    public static CompletableFuture<Suggestions> filterAllNameSuggestions(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+        PlayerDataAccessor playerDataAccessor = new PlayerDataAccessor();
+        String remainingLowercase = builder.getRemainingLowerCase();
+
+        playerDataAccessor.getUsernames().stream()
                 .filter(entry -> entry.toLowerCase().startsWith(remainingLowercase))
                 .forEach(builder::suggest);
         return builder.buildFuture();

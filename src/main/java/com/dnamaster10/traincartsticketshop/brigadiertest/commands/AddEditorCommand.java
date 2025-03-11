@@ -1,7 +1,9 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.PlayerNameArgumentType;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
+import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.PlayerNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiEditorsDataAccessor;
@@ -33,7 +35,7 @@ public class AddEditorCommand implements TicketShopCommand {
                     }
                     return true;
                 }).then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getAddEditorSuggestions)
-                        .then(Commands.argument("player", ArgumentTypes.player())
+                        .then(Commands.argument("player", new PlayerNameArgumentType()).suggests(PlayerNameSuggestionProvider::filterAllNameSuggestions)
                                 .executes(this::execute))).build();
     }
 

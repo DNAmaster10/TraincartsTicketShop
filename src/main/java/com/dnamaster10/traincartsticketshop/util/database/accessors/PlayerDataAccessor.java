@@ -52,13 +52,12 @@ public class PlayerDataAccessor extends DataAccessor {
     }
 
     /**
-     * Returns a list of usernames which partially match the input string.
+     * Gets a list of all usernames registered in the database
      *
-     * @param inputString The string to search for
-     * @return A list of usernames
+     * @return A list of all usernames in the database.
      */
-    public List<String> getPartialUsernameMatches(String inputString) {
-        return getPlayerCache().getPartialUsernameMatches(inputString);
+    public List<String> getUsernames() {
+        return getPlayerCache().getUsernames();
     }
 
     /**

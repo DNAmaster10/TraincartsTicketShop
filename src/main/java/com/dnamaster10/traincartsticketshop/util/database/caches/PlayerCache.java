@@ -39,8 +39,9 @@ public class PlayerCache {
     public PlayerDatabaseObject getPlayerByUuid(String uuid) {
         return uuidPlayerMap.get(uuid);
     }
-    public List<String> getPartialUsernameMatches(String inputString) {
-        return StringUtil.copyPartialMatches(inputString, usernames, new ArrayList<>());
+
+    public List<String> getUsernames() {
+        return new ArrayList<>(usernames);
     }
 
     public void updatePlayer(String username, String uuid) {

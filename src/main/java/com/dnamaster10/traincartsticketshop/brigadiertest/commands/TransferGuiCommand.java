@@ -1,7 +1,9 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest.commands;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.GuiNameArgumentType;
+import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.PlayerNameArgumentType;
 import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.GuiNameSuggestionProvider;
+import com.dnamaster10.traincartsticketshop.brigadiertest.suggestions.PlayerNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.objects.guis.ConfirmGuiTransferGui;
 import com.dnamaster10.traincartsticketshop.util.Players;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
@@ -11,10 +13,12 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -33,13 +37,12 @@ public class TransferGuiCommand implements TicketShopCommand {
                     }
                     return true;
                 }).then(Commands.argument("id", new GuiNameArgumentType()).suggests(GuiNameSuggestionProvider::getTransferSuggestions)
-                        .then(Commands.argument("player", ArgumentTypes.player())
+                        .then(Commands.argument("player", new PlayerNameArgumentType()).suggests(PlayerNameSuggestionProvider::filterAllNameSuggestions)
                                 .executes(this::execute))).build();
     }
 
     @Override
     public int execute(CommandContext<CommandSourceStack> ctx) {
-        //TODO Should we get all arguments outside of async?
         String guiName = StringArgumentType.getString(ctx, "id");
         String username = StringArgumentType.getString(ctx, "player");
 
