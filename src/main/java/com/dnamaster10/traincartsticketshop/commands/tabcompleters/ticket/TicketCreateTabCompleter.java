@@ -19,9 +19,9 @@ public class TicketCreateTabCompleter extends ArgumentCompleter {
         if (sender instanceof Player p && !p.hasPermission("traincartsticketshop.ticket.create")) return new ArrayList<>();
         if (args.length > 3) return getNextArgumentCompletions(sender, args);
 
-        List<String> partialNameCompletions = Traincarts.getPartialTicketNameCompletions(args[2]);
-        Utilities.quoteSpacedStrings(partialNameCompletions);
-        return partialNameCompletions;
+        //List<String> partialNameCompletions = Traincarts.getPartialTicketNameCompletions(args[2]);
+        //Utilities.quoteSpacedStrings(partialNameCompletions);
+        return null;
     }
 
     @Override

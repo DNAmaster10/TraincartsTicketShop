@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui.*;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.ticket.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -27,6 +28,12 @@ public class TicketShopCommands {
 
         //Register ticket commands
         LiteralArgumentBuilder<CommandSourceStack> ticket = Commands.literal("ticket");
+        ticket.then(new CreateTicketCommand().getRootNode());
+        ticket.then(new RemoveTicketPurchaseMessageCommand().getRootNode());
+        ticket.then(new RenameTicketCommand().getRootNode());
+        ticket.then(new SetTicketPriceCommand().getRootNode());
+        ticket.then(new SetTicketPurchaseMessageCommand().getRootNode());
+        ticket.then(new SetTraincartsTicketCommand().getRootNode());
 
         //Register link commands
         LiteralArgumentBuilder<CommandSourceStack> link = Commands.literal("link");

@@ -75,7 +75,9 @@ public class RenameGuiCommand implements TicketShopCommand {
                 return;
             }
 
-            Component message = MiniMessage.miniMessage().deserialize("<green>Successfully renamed Gui to \"" + component + "\"");
+            Component message = MiniMessage.miniMessage().deserialize("<green>Successfully renamed Gui to \"")
+                    .append(component)
+                    .append(MiniMessage.miniMessage().deserialize("<green>\""));
             ctx.getSource().getSender().sendMessage(message);
         });
         return Command.SINGLE_SUCCESS;
