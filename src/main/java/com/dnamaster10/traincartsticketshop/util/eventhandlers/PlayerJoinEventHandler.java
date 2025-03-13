@@ -18,7 +18,7 @@ public class PlayerJoinEventHandler implements Listener {
             try {
                 PlayerDataAccessor accessor = new PlayerDataAccessor();
                 Player p = event.getPlayer();
-                accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
+                accessor.updatePlayer(p.getName(), p.getUniqueId().toString());
             } catch (ModificationException e) {
                 getPlugin().handleSqlException(e);
             }

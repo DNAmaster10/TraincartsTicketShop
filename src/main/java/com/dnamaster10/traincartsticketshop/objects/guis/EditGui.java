@@ -10,6 +10,7 @@ import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.DragHandler;
 import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.Pageable;
 import com.dnamaster10.traincartsticketshop.util.ButtonUtils;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.LinkDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.TicketDataAccessor;
@@ -18,7 +19,6 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.Ticket
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -70,7 +70,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
 
         GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
         if (!guiDataAccessor.checkGuiById(guiId)) {
-            player.sendMessage(ChatColor.RED + "Gui has been moved or deleted");
+            player.sendMessage(Utilities.parseColour("<red>Gui has been moved or deleted!"));
             Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         }
@@ -97,7 +97,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
     public void open() {
         Player editor = getPlugin().getGuiManager().getGuiEditor(guiId);
         if (editor != null && player.getUniqueId() != editor.getUniqueId()) {
-            player.sendMessage(ChatColor.RED + "Someone else is already editing that gui");
+            player.sendMessage(Utilities.parseColour("<red>Someone else is already editing that Gui!"));
             Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             return;
         } else if (editor == null) {
@@ -119,7 +119,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + (maxPage + 1) + ")");
+        page.setDisplayName(Utilities.parseColour(displayName + " (" + (pageManager.getCurrentPageNumber() + 1) + "/" + (maxPage + 1) + ")"));
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();
@@ -168,7 +168,8 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             event.setCancelled(true);
             return;
         }
-        if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) return;
+        event.getCursor();
+        if (event.getCursor().getType() == Material.AIR) return;
 
         ItemStack addedItem = event.getCursor();
         String addedButtonType = ButtonUtils.getButtonType(addedItem);
@@ -266,7 +267,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
         List<LinkDatabaseObject> links = new ArrayList<>();
 
         Page newPage = new Page();
-        newPage.setDisplayName(displayName + " (" + (pageManager.getCurrentPageNumber() + 1) + "/" + (maxPage + 1) + ")");
+        newPage.setDisplayName(Utilities.parseColour(displayName + " (" + (pageManager.getCurrentPageNumber() + 1) + "/" + (maxPage + 1) + ")"));
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             ItemStack item = inventory.getItem(slot);
             if (item == null) continue;
@@ -302,7 +303,7 @@ public class EditGui extends Gui implements InventoryHolder, ClickHandler, DragH
             savePage();
             getPlugin().getGuiManager().removeEditGui(guiId);
             if (!cancelSaveMessage) {
-                player.sendMessage(ChatColor.GREEN + "Your changes have been saved!");
+                player.sendMessage(Utilities.parseColour("<green>Your changes have been saved!"));
                 cancelSaveMessage = false;
             }
         });

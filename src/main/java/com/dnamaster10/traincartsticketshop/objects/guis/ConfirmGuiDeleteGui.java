@@ -4,10 +4,10 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler;
 import com.dnamaster10.traincartsticketshop.util.Session;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -38,7 +38,7 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
         getPlugin().getGuiManager().getSession(player).addGui(this);
 
         Page page = new Page();
-        page.setDisplayName(ChatColor.RED + "Confirm Gui Deletion");
+        page.setDisplayName(Utilities.parseColour("<red>Confirm Gui deletion"));
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();
         }
@@ -73,7 +73,7 @@ public class ConfirmGuiDeleteGui extends Gui implements InventoryHolder, ClickHa
                 } catch (ModificationException e) {
                     getPlugin().handleSqlException(e);
                 }
-                player.sendMessage(ChatColor.GREEN + "Successfully deleted Gui");
+                player.sendMessage(Utilities.parseColour("<green>Successfully deleted Gui!"));
                 Bukkit.getScheduler().runTask(getPlugin(), () -> player.closeInventory());
             });
         }

@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.util.database.caches;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

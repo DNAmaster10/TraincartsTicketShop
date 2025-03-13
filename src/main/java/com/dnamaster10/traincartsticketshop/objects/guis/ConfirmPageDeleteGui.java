@@ -4,6 +4,7 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler;
 import com.dnamaster10.traincartsticketshop.util.Session;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.Bukkit;
@@ -41,7 +42,7 @@ public class ConfirmPageDeleteGui extends Gui implements InventoryHolder, ClickH
         getPlugin().getGuiManager().getSession(player).addGui(this);
 
         Page page = new Page();
-        page.setDisplayName(ChatColor.RED + "Confirm Page Deletion");
+        page.setDisplayName(Utilities.parseColour("<red>Confirm Page Deletion"));
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();
         }

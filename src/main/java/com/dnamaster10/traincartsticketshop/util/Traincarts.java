@@ -45,7 +45,7 @@ public class Traincarts {
         if (traincartsTicket == null) return null;
         String ticketName = traincartsTicket.getName();
         double defaultPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
-        return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, ticketName, null, defaultPrice);
+        return new com.dnamaster10.traincartsticketshop.objects.buttons.Ticket(ticketName, Utilities.parseColour(ticketName), null, defaultPrice);
     }
 
     /**

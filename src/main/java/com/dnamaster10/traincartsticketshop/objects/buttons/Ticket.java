@@ -1,6 +1,8 @@
 package com.dnamaster10.traincartsticketshop.objects.buttons;
 
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +17,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
  */
 public class Ticket extends Button {
     private final String tcTicketName;
-    private final String displayName;
+    private final Component displayName;
     private final String purchaseMessage;
     private final double price;
 
@@ -27,8 +29,9 @@ public class Ticket extends Button {
      * @see com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject
      */
     public TicketDatabaseObject getAsDatabaseObject(int slot) {
-        String rawDisplayName = ChatColor.stripColor(displayName);
-        return new TicketDatabaseObject(slot, tcTicketName, displayName, rawDisplayName, purchaseMessage, price);
+        String rawDisplayName = Utilities.stripColour(displayName);
+        String colouredDisplayName = Utilities.componentToString(displayName);
+        return new TicketDatabaseObject(slot, tcTicketName, colouredDisplayName, rawDisplayName, purchaseMessage, price);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class Ticket extends Button {
         ItemStack item = new ItemStack(Material.PAPER, 1);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(displayName);
+        meta.displayName(displayName);
 
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(BUTTON_TYPE, PersistentDataType.STRING, "ticket");
@@ -55,7 +58,7 @@ public class Ticket extends Button {
      * @param displayName The colour formatted display name for this ticket
      * @param purchaseMessage The message to be displayed when the ticket is purchased
      */
-    public Ticket(String tcName, String displayName, String purchaseMessage, double price) {
+    public Ticket(String tcName, Component displayName, String purchaseMessage, double price) {
         this.tcTicketName = tcName;
         this.displayName = displayName;
         this.purchaseMessage = purchaseMessage;
@@ -69,9 +72,9 @@ public class Ticket extends Button {
      * @see com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject
      */
     public Ticket(TicketDatabaseObject ticket) {
-        tcTicketName = ticket.tcName();
-        displayName = ticket.colouredDisplayName();
-        purchaseMessage = ticket.purchaseMessage();
-        price = ticket.price();
+        this.tcTicketName = ticket.tcName();
+        this.displayName = Utilities.parseColour(ticket.colouredDisplayName());
+        this.purchaseMessage = ticket.purchaseMessage();
+        this.price = ticket.price();
     }
 }

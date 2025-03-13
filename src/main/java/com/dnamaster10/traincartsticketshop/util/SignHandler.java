@@ -27,6 +27,7 @@ public class SignHandler {
     private static final String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
 
     boolean isGuiSign(SignSide side) {
+        //TODO Add config option for tshop line.
         if (signIdentifier == null || signIdentifier.isBlank()) return false;
         return ChatColor.stripColor(side.getLine(1)).contains(signIdentifier);
     }

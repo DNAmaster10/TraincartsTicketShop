@@ -62,7 +62,7 @@ public class TicketSearchGui extends Gui implements InventoryHolder, ClickHandle
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + totalPages + ")");
+        page.setDisplayName(Utilities.parseColour(displayName + " (" + (pageNumber + 1) + "/" + totalPages + ")"));
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         try {

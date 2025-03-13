@@ -4,6 +4,7 @@ import com.dnamaster10.traincartsticketshop.brigadier.argumenttypes.GuiNameArgum
 import com.dnamaster10.traincartsticketshop.brigadier.commands.TicketShopCommand;
 import com.dnamaster10.traincartsticketshop.brigadier.suggestions.GuiNameSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.mojang.brigadier.Command;
@@ -48,7 +49,7 @@ public class CreateLinkCommand implements TicketShopCommand {
 
             GuiDatabaseObject gui = guiAccessor.getGuiByName(guiName);
 
-            Link link = new Link(gui.id(), 0, guiName);
+            Link link = new Link(gui.id(), 0, Utilities.parseColour(guiName));
             ItemStack linkItem = link.getItemStack();
             executor.getInventory().addItem(linkItem);
         });

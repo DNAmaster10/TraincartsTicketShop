@@ -5,6 +5,7 @@ import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler
 import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.Pageable;
 import com.dnamaster10.traincartsticketshop.util.GuiUtils;
 import com.dnamaster10.traincartsticketshop.util.Session;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.LinkDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.TicketDataAccessor;
@@ -70,7 +71,7 @@ public class ShopGui extends Gui implements InventoryHolder, ClickHandler, Pagea
 
     private Page getNewPage(int pageNumber) {
         Page page = new Page();
-        page.setDisplayName(displayName + " (" + (pageNumber + 1) + "/" + (maxPage + 1) + ")");
+        page.setDisplayName(Utilities.parseColour(displayName + " (" + (pageNumber + 1) + "/" + (maxPage + 1) + ")"));
 
         TicketDataAccessor ticketDataAccessor = new TicketDataAccessor();
         LinkDataAccessor linkDataAccessor = new LinkDataAccessor();

@@ -1,6 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -48,7 +49,7 @@ public class ButtonUtils {
         }
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        String displayName = meta.getDisplayName();
+        Component displayName = meta.displayName();
 
         switch (buttonType) {
             //TODO maybe move each of these into their own method when more buttons are added?

@@ -1,10 +1,7 @@
 package com.dnamaster10.traincartsticketshop;
 
 import com.dnamaster10.traincartsticketshop.brigadier.TicketShopCommands;
-import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
-import com.dnamaster10.traincartsticketshop.util.GuiManager;
-import com.dnamaster10.traincartsticketshop.util.SignHandler;
-import com.dnamaster10.traincartsticketshop.util.VaultHook;
+import com.dnamaster10.traincartsticketshop.util.*;
 import com.dnamaster10.traincartsticketshop.util.eventhandlers.*;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
@@ -197,7 +194,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
      * @see QueryException
      */
     public void handleSqlException(CommandSender sender, SQLException e) {
-        sender.sendMessage(ChatColor.RED + "A database error occurred. Check server logs for more info");
+        sender.sendMessage(Utilities.parseColour("<red>A database error occurred. Check server logs for more info."));
         handleSqlException(e);
     }
 

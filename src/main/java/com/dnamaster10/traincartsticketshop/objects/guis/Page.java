@@ -4,8 +4,10 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.Button;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Link;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.TicketDatabaseObject;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -20,7 +22,7 @@ import static com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.Head
 public class Page {
     //Holds the contents of an inventory
     private final Button[] page = new Button[54];
-    private String displayName = "Inventory";
+    private Component displayName = Utilities.parseColour("Inventory");
 
     /**
      * Gets the contents of this page
@@ -35,10 +37,10 @@ public class Page {
     /**
      * Sets the display name to be used when the page is opened in an Inventory.
      *
-     * @param displayName The colour formatted display name
-     * @see Inventory
+     * @param displayName The display name
+     * @see Inventory The page as an inventory
      */
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(Component displayName) {
         this.displayName = displayName;
     }
 

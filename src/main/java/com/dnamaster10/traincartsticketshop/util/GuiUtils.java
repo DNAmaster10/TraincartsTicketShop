@@ -1,13 +1,10 @@
 package com.dnamaster10.traincartsticketshop.util;
 
-import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
 import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,17 +28,17 @@ public class GuiUtils {
     public static void handleTicketItemPurchase(ItemStack ticketItem, Player player, int guiId) {
         ItemMeta meta = ticketItem.getItemMeta();
         if (meta == null) {
-            player.sendMessage(ChatColor.RED + "Ticket info is broken, failed to purchase ticket");
+            player.sendMessage(Utilities.parseColour("<red>Ticket info is broken, failed to purchase ticket"));
             return;
         }
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
-            player.sendMessage(ChatColor.RED + "Ticket info is broken, failed to purchase ticket");
+            player.sendMessage(Utilities.parseColour("<red>Ticket info is broken, failed to purchase ticket"));
             return;
         }
         String tcName = dataContainer.get(TC_TICKET_NAME, PersistentDataType.STRING);
         if (tcName == null || !Traincarts.checkTicket(tcName)) {
-            player.sendMessage(ChatColor.RED + "Traincarts ticket \"" + tcName + "\" is invalid or has been deleted");
+            player.sendMessage(Utilities.parseColour("<red>Traincarts ticket \"" + tcName + "\" is invalid or has been deleted"));
             return;
         }
         String purchaseMessage = null;
@@ -84,7 +81,7 @@ public class GuiUtils {
             //Check if transaction is possible
             double playerBalance = vaultHook.getBalance(player);
             if (playerBalance - ticketPrice < 0) {
-                player.sendMessage(ChatColor.RED + "You can't afford that ticket!");
+                player.sendMessage(Utilities.parseColour("<red>You can't afford that ticket!"));
                 return;
             }
             shouldTransact = true;
@@ -94,10 +91,10 @@ public class GuiUtils {
         if (shouldTransact && ticketPrice > 0d) {
             EconomyResponse response = vaultHook.withdrawMoney(player, ticketPrice);
             if (response.type == EconomyResponse.ResponseType.FAILURE) {
-                player.sendMessage(ChatColor.RED + response.errorMessage);
+                player.sendMessage(Utilities.parseColour("<red>" + response.errorMessage));
                 return;
             }
-            player.sendMessage(ChatColor.YELLOW + (vaultHook.format(response.amount) + " has been taken from your account for purchasing a ticket!"));
+            player.sendMessage(Utilities.parseColour("<yellow>" + vaultHook.format(response.amount) + " has been taken from your account for purchasing a ticket!"));
 
             if (Objects.equals(getPlugin().getConfig().getString("EconomyMode"), "guiOwners")) {
                 //Send money to gui owner as well.
@@ -114,10 +111,10 @@ public class GuiUtils {
 
         //Handle purchase
         Traincarts.giveTicketItem(tcName, player);
-        player.sendMessage(ChatColor.GREEN + DEFAULT_PURCHASE_MESSAGE);
+        player.sendMessage(Utilities.parseColour("<green>" + DEFAULT_PURCHASE_MESSAGE));
         if (purchaseMessage != null) {
             player.sendMessage("");
-            player.sendMessage(ChatColor.AQUA + purchaseMessage);
+            player.sendMessage(Utilities.parseColour(purchaseMessage));
             player.sendMessage("");
         }
 

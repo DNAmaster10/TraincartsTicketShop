@@ -1,5 +1,7 @@
 package com.dnamaster10.traincartsticketshop.objects.buttons;
 
+import com.dnamaster10.traincartsticketshop.util.Utilities;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData.HeadType;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,14 +19,15 @@ public class SimpleHeadButton extends Button {
     //For simple buttons using a head
     private final String buttonType;
     private final HeadType headType;
-    private final String displayText;
+    private final Component displayName;
+
     @Override
     public ItemStack getItemStack() {
         ItemStack item = HeadData.getPlayerHeadItem(headType);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName(displayText);
+        meta.displayName(displayName);
         meta.getPersistentDataContainer().set(BUTTON_TYPE, PersistentDataType.STRING, buttonType);
         item.setItemMeta(meta);
 
@@ -34,11 +37,20 @@ public class SimpleHeadButton extends Button {
     /**
      * @param buttonType The button type
      * @param headType The head type
-     * @param displayText The coloured display text for the ItemStack
+     * @param displayName The display name for the button
      */
-    public SimpleHeadButton(String buttonType, HeadType headType, String displayText) {
+    public SimpleHeadButton(String buttonType, HeadType headType, Component displayName) {
         this.buttonType = buttonType;
         this.headType = headType;
-        this.displayText = displayText;
+        this.displayName = displayName;
+    }
+
+    /**
+     * @param buttonType The button type
+     * @param headType The head type
+     * @param displayName The display text for the button
+     */
+    public SimpleHeadButton(String buttonType, HeadType headType, String displayName) {
+        this(buttonType, headType, Utilities.parseColour(displayName));
     }
 }

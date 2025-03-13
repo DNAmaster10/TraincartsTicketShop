@@ -4,6 +4,7 @@ import com.dnamaster10.traincartsticketshop.brigadier.commands.TicketShopCommand
 import com.dnamaster10.traincartsticketshop.brigadier.suggestions.TraincartsTicketSuggestionProvider;
 import com.dnamaster10.traincartsticketshop.objects.buttons.Ticket;
 import com.dnamaster10.traincartsticketshop.util.Traincarts;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -40,7 +41,7 @@ public class CreateTicketCommand implements TicketShopCommand {
 
         double defaultPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
 
-        Ticket ticket = new Ticket(ticketName, ticketName, "", defaultPrice);
+        Ticket ticket = new Ticket(ticketName, Utilities.parseColour(ticketName), "", defaultPrice);
 
         ItemStack ticketItem = ticket.getItemStack();
         executor.getInventory().addItem(ticketItem);

@@ -7,6 +7,7 @@ import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationExceptio
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Players {
     //Contains utility methods for players
@@ -29,8 +30,8 @@ public class Players {
 
         //Check online players
         for (Player p : TraincartsTicketShop.getPlugin().getServer().getOnlinePlayers()) {
-            if (p.getDisplayName().equalsIgnoreCase(username)) {
-                return new PlayerDatabaseObject(p.getDisplayName(), p.getUniqueId().toString());
+            if (p.getName().equalsIgnoreCase(username)) {
+                return new PlayerDatabaseObject(p.getName(), p.getUniqueId().toString());
             }
         }
 
@@ -49,7 +50,7 @@ public class Players {
             //Register the player in the database to save future API requests
             playerAccessor.updatePlayer(playerInfo[0], playerInfo[1]);
             return new PlayerDatabaseObject(playerInfo[0], playerInfo[1]);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             return null;
         }
     }

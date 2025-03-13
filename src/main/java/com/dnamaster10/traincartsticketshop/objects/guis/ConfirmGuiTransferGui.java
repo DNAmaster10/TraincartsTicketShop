@@ -4,15 +4,14 @@ import com.dnamaster10.traincartsticketshop.objects.buttons.HeadData;
 import com.dnamaster10.traincartsticketshop.objects.buttons.SimpleHeadButton;
 import com.dnamaster10.traincartsticketshop.objects.guis.interfaces.ClickHandler;
 import com.dnamaster10.traincartsticketshop.util.Session;
+import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
-import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -38,7 +37,7 @@ public class ConfirmGuiTransferGui extends Gui implements InventoryHolder, Click
         getPlugin().getGuiManager().getSession(player).addGui(this);
 
         Page page = new Page();
-        page.setDisplayName(ChatColor.RED + "Confirm Gui Transfer");
+        page.setDisplayName(Utilities.parseColour("<red>Confirm Gui Transfer"));
         if (getPlugin().getGuiManager().getSession(player).checkBack()) {
             page.addBackButton();
         }

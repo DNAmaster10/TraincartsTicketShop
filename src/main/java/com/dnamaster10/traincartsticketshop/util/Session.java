@@ -33,7 +33,7 @@ public class Session {
     public void addGui(Gui gui) {
         guis.push(gui);
         if (guis.size() > maxGuis) {
-            guis.remove(0);
+            guis.removeFirst();
         }
     }
 
