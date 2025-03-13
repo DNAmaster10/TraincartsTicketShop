@@ -1,4 +1,4 @@
-package com.dnamaster10.traincartsticketshop.brigadiertest.commands.ticket;
+package com.dnamaster10.traincartsticketshop.brigadiertest.commands.link;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.argumenttypes.DisplayNameArgumentType;
 import com.dnamaster10.traincartsticketshop.brigadiertest.commands.TicketShopCommand;
@@ -17,12 +17,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import static com.dnamaster10.traincartsticketshop.util.ButtonUtils.getButtonType;
 
-public class RenameTicketCommand implements TicketShopCommand {
+public class RenameLinkCommand implements TicketShopCommand {
     @Override
     public LiteralCommandNode<CommandSourceStack> getRootNode() {
         return Commands.literal("rename")
                 .requires(ctx -> ctx.getExecutor() instanceof Player player &&
-                        player.hasPermission("traincartsticketshop.ticket.rename"))
+                        player.hasPermission("traincartsticketshop.link.rename"))
                 .then(Commands.argument("new name", new DisplayNameArgumentType())
                         .executes(this::execute)).build();
     }
@@ -33,22 +33,22 @@ public class RenameTicketCommand implements TicketShopCommand {
         Player executor = (Player) ctx.getSource().getExecutor();
         assert executor != null;
 
-        ItemStack ticket = executor.getInventory().getItemInMainHand();
-        String buttonType = getButtonType(ticket);
-        if (buttonType == null || !buttonType.equals("ticket")) {
-            Component component = MiniMessage.miniMessage().deserialize("<red>You must be holding a ticket to perform that action.");
+        ItemStack link = executor.getInventory().getItemInMainHand();
+        String buttonType = getButtonType(link);
+        if (buttonType == null || !buttonType.equals("link")) {
+            Component component = MiniMessage.miniMessage().deserialize("<red>You must be holding a link to perform that action.");
             executor.sendMessage(component);
             return Command.SINGLE_SUCCESS;
         }
 
         Component colouredName = Utilities.parseColour(newName);
 
-        ItemMeta meta = ticket.getItemMeta();
+        ItemMeta meta = link.getItemMeta();
         assert meta != null;
         meta.displayName(colouredName);
-        ticket.setItemMeta(meta);
+        link.setItemMeta(meta);
 
-        Component component = MiniMessage.miniMessage().deserialize("<green>Successfully renamed ticket!");
+        Component component = MiniMessage.miniMessage().deserialize("<green>Successfully renamed link!");
         executor.sendMessage(component);
 
         return Command.SINGLE_SUCCESS;
