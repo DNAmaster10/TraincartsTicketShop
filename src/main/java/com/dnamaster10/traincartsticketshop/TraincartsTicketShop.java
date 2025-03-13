@@ -1,6 +1,6 @@
 package com.dnamaster10.traincartsticketshop;
 
-import com.dnamaster10.traincartsticketshop.brigadiertest.TicketShopCommands;
+import com.dnamaster10.traincartsticketshop.brigadier.TicketShopCommands;
 import com.dnamaster10.traincartsticketshop.util.ConfigUtils;
 import com.dnamaster10.traincartsticketshop.util.GuiManager;
 import com.dnamaster10.traincartsticketshop.util.SignHandler;
