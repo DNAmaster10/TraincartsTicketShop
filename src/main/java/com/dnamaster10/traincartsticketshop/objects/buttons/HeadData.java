@@ -2,14 +2,16 @@ package com.dnamaster10.traincartsticketshop.objects.buttons;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -36,19 +38,20 @@ public class HeadData {
     }
 
     private static final UUID RANDOM_UUID = UUID.fromString("68f92a5b-8980-4e0c-a479-89e41ce1ada6");
-    private static PlayerProfile getProfile(HeadType type) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(RANDOM_UUID);
-        PlayerTextures textures = profile.getTextures();
+
+    private static OfflinePlayer getOfflinePlayer(HeadType type) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(RANDOM_UUID);
+        PlayerTextures textures = offlinePlayer.getPlayerProfile().getTextures();
         URL urlObject;
         try {
-            urlObject = new URL(type.url);
-        } catch (MalformedURLException e) {
-            getPlugin().getLogger().warning("An error occurred creating a player head within a GUI: " + e);
+            urlObject = new URI(type.url).toURL();
+        } catch (MalformedURLException | URISyntaxException e) {
+            getPlugin().getLogger().warning("An error occurred creating a player head withing a GUI: " + e);
             return null;
         }
         textures.setSkin(urlObject);
-        profile.setTextures(textures);
-        return profile;
+        offlinePlayer.getPlayerProfile().setTextures(textures);
+        return offlinePlayer;
     }
 
     /**
@@ -58,7 +61,7 @@ public class HeadData {
      * @return The head
      */
     public static ItemStack getPlayerHeadItem(HeadType type) {
-        PlayerProfile headProfile = getProfile(type);
+        OfflinePlayer headProfile = getOfflinePlayer(type);
         if (headProfile == null) {
             //If head creation failed, just return a potato
             return new ItemStack(Material.POTATO, 1);
@@ -68,7 +71,7 @@ public class HeadData {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         assert meta != null;
 
-        meta.setOwnerProfile(headProfile);
+        meta.setOwningPlayer(headProfile);
         meta.getPersistentDataContainer().set(HEAD_TYPE, PersistentDataType.STRING, type.toString());
         head.setItemMeta(meta);
         return head;
