@@ -1,6 +1,9 @@
 package com.dnamaster10.traincartsticketshop.brigadiertest;
 
 import com.dnamaster10.traincartsticketshop.brigadiertest.commands.gui.*;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.link.CreateLinkCommand;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.link.RenameLinkCommand;
+import com.dnamaster10.traincartsticketshop.brigadiertest.commands.link.SetLinkDestinationPage;
 import com.dnamaster10.traincartsticketshop.brigadiertest.commands.ticket.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -37,6 +40,9 @@ public class TicketShopCommands {
 
         //Register link commands
         LiteralArgumentBuilder<CommandSourceStack> link = Commands.literal("link");
+        link.then(new CreateLinkCommand().getRootNode());
+        link.then(new RenameLinkCommand().getRootNode());
+        link.then(new SetLinkDestinationPage().getRootNode());
 
         //Bind sub-commands to root command node
         command.then(gui);
