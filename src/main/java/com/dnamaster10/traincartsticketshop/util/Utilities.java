@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -49,53 +48,6 @@ public class Utilities {
     public static int getPageCount(int elementCount, int pageSize) {
         //Returns the minimum amount of pages that would be required to hold given elements
         return (int) Math.ceil((double) elementCount / pageSize);
-    }
-
-    /**
-     * Joins arguments within a String array surrounded by double quotes into a single array element.
-     *
-     * @param args Input array
-     * @return An array of Strings with elements surrounded by double quotes concatenated together
-     * */
-    public static String[] concatenateQuotedStrings(String[] args) {
-        ArrayList<String> result = new ArrayList<>();
-        StringBuilder inQuote = new StringBuilder();
-        StringBuilder outQuote = new StringBuilder();
-        boolean inQuotes = false;
-
-        for (String word : args) {
-            if (inQuotes) {
-                inQuote.append(' ');
-            } else if (!outQuote.isEmpty()){
-                result.add(outQuote.toString());
-                outQuote.setLength(0);
-            }
-            for (char character : word.toCharArray()) {
-                if (character == '"') {
-                    if (inQuotes) {
-                        result.add(inQuote.toString());
-                        inQuote.setLength(0);
-                        inQuotes = false;
-                    } else {
-                        if (!outQuote.isEmpty()) {
-                            result.add(outQuote.toString());
-                            outQuote.setLength(0);
-                        }
-                        inQuotes = true;
-                    }
-                } else {
-                    if (inQuotes) {
-                        inQuote.append(character);
-                    } else {
-                        outQuote.append(character);
-                    }
-                }
-            }
-        }
-        if (inQuotes && !inQuote.isEmpty()) result.add(inQuote.toString());
-        else if (!outQuote.isEmpty()) result.add(outQuote.toString());
-
-        return result.toArray(String[]::new);
     }
 
     private static final Pattern PATTERN1 = Pattern.compile("^[a-zA-Z0-9_-]+$");
