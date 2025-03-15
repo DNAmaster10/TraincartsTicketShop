@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.objects.buttons;
 import com.dnamaster10.traincartsticketshop.util.Utilities;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.LinkDatabaseObject;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

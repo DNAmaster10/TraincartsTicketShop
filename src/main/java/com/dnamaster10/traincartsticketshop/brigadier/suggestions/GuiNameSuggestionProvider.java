@@ -43,7 +43,6 @@ public class GuiNameSuggestionProvider {
         return filterAllGuis(suggestionsBuilder);
     }
 
-    //TODO Look at this further - What if it is an admin looking to delete a gui? They should still have all of them even without the edit permission.
     public static CompletableFuture<Suggestions> getEditSuggestions(CommandContext<CommandSourceStack> commandContext, SuggestionsBuilder suggestionsBuilder) throws CommandSyntaxException {
         if (!(commandContext.getSource().getExecutor() instanceof Player player)) return null;
         if (player.hasPermission("traincartsticketshop.admin.gui.edit")) return filterAllGuis(suggestionsBuilder);
@@ -57,6 +56,7 @@ public class GuiNameSuggestionProvider {
         if (player.hasPermission("traincartsticketshop.admin.gui.rename")) return filterAllGuis(suggestionsBuilder);
         if (!player.hasPermission("traincartsticketshop.gui.rename")) return null;
 
+        //TODO Should this filter by guis editable by instead?
         return filterGuisOwnedBy(player.getUniqueId().toString(), suggestionsBuilder);
     }
 

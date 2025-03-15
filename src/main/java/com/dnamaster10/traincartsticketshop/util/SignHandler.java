@@ -3,8 +3,8 @@ package com.dnamaster10.traincartsticketshop.util;
 import com.dnamaster10.traincartsticketshop.objects.guis.ShopGui;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
@@ -24,17 +24,21 @@ public class SignHandler {
     * Line 4: Test123
     * */
 
-    private static final String signIdentifier = getPlugin().getConfig().getString("SignIdentifier");
+    private static final String SIGN_IDENTIFIER = getPlugin().getConfig().getString("SignIdentifier");
+    private static final int SIGN_LINE = getPlugin().getConfig().getInt("IdentifierLine");
 
     boolean isGuiSign(SignSide side) {
         //TODO Add config option for tshop line.
-        if (signIdentifier == null || signIdentifier.isBlank()) return false;
-        return ChatColor.stripColor(side.getLine(1)).contains(signIdentifier);
+        if (SIGN_IDENTIFIER == null || SIGN_IDENTIFIER.isBlank()) return false;
+        Component line = side.line(SIGN_LINE);
+        String rawLine = Utilities.stripColour(line);
+        return rawLine.contains(SIGN_IDENTIFIER);
     }
 
     int getPage(SignSide side) {
         //Defaults to page 0 if none is specified
-        String[] args = ChatColor.stripColor(side.getLine(1)).split(" ");
+
+        String[] args = Utilities.stripColour(side.line(SIGN_LINE)).split(" ");
         if (args.length > 1) {
             if (Utilities.isInt(args[1])) {
                 //Page must be reduced by one to convert from a regular number to an index
@@ -45,7 +49,7 @@ public class SignHandler {
     }
 
     String getGuiName(SignSide side) {
-        String nameLine = ChatColor.stripColor(side.getLine(2));
+        String nameLine = Utilities.stripColour(side.line(SIGN_LINE + 1));
         if (nameLine.isBlank()) {
             return null;
         }
@@ -76,7 +80,7 @@ public class SignHandler {
             try {
                 GuiDataAccessor guiAccessor = new GuiDataAccessor();
                 if (!guiAccessor.checkGuiByName(guiName)) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "No gui with name \"" + guiName + "\" exists");
+                    event.getPlayer().sendMessage(Utilities.parseColour("<red>No Gui with the name \"" + guiName + "\" exists."));
                     return;
                 }
                 //Check the max page number. If the number on the sign is higher than the max pages in the gui, set the page to the highest possible page

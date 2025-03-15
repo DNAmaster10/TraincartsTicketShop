@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utilities {
