@@ -10,7 +10,6 @@ import com.dnamaster10.traincartsticketshop.util.database.accessors.DataAccessor
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -96,9 +94,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //Register commands
         List<String> aliases = new ArrayList<>();
         aliases.add("tshop");
-        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(TicketShopCommands.getRootNode(), "The root Ticket Shop command", aliases);
-        });
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(TicketShopCommands.getRootNode(), "The root Ticket Shop command", aliases));
 
         //Register gui manager
         this.guiManager = new GuiManager();
@@ -121,9 +117,7 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         //Schedule economy load
         this.vaultHook = new VaultHook();
         if (getConfig().getBoolean("UseEconomy")) {
-            Bukkit.getScheduler().runTaskLater(this, () -> {
-                vaultHook.loadEconomy();
-            }, 1L);
+            Bukkit.getScheduler().runTaskLater(this, () -> vaultHook.loadEconomy(), 1L);
 
             //Check config values
             double defaultPrice = getConfig().getDouble("DefaultTicketPrice");

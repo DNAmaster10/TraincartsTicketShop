@@ -30,7 +30,7 @@ public class PlayerNameArgumentType implements CustomArgumentType.Converted<Stri
     }
 
     @Override
-    public ArgumentType<String> getNativeType() {
+    public @NotNull ArgumentType<String> getNativeType() {
         return StringArgumentType.string();
     }
 }

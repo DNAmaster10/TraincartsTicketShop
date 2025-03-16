@@ -35,6 +35,7 @@ public class SearchLinksCommand implements TicketShopCommand {
             String guiName = StringArgumentType.getString(ctx, "id");
             String searchTerm = StringArgumentType.getString(ctx, "search term");
             Player player = (Player) ctx.getSource().getExecutor();
+            assert player != null;
 
             GuiDataAccessor guiAccessor = new GuiDataAccessor();
             if (!guiAccessor.checkGuiByName(guiName)) {

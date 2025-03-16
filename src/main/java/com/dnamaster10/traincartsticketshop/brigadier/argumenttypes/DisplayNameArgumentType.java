@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class DisplayNameArgumentType implements CustomArgumentType.Converted<String, String> {
 
     @Override
-    public String convert(@NotNull String nativeType) throws CommandSyntaxException {
+    public @NotNull String convert(@NotNull String nativeType) throws CommandSyntaxException {
         Component colouredComponent = Utilities.parseColour(nativeType);
         String rawText = Utilities.stripColour(colouredComponent);
 
@@ -30,7 +30,7 @@ public class DisplayNameArgumentType implements CustomArgumentType.Converted<Str
     }
 
     @Override
-    public ArgumentType<String> getNativeType() {
+    public @NotNull ArgumentType<String> getNativeType() {
         return StringArgumentType.string();
     }
 }

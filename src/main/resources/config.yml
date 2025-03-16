@@ -11,7 +11,7 @@ database:
 # The line of text which must be written on signs to recognise them as a ticket shop sign
 SignIdentifier: [tshop]
 
-# The line which the sign identifier should be written on. Ranges from 0 - 2.
+# The line which the sign identifier should be written on. Ranges from 0 to 2.
 IdentifierLine: 0
 
 # The default purchase message for when tickets are purchased

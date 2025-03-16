@@ -3,7 +3,6 @@ package com.dnamaster10.traincartsticketshop.util.database.caches;
 import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAccessor;
 import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.GuiDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
-import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +63,6 @@ public class GuiCache {
     public String getDisplayNameById(int id) {
         GuiDatabaseObject gui = idGuiMap.get(id);
         return gui.displayName();
-    }
-    public List<String> getPartialNameMatches(String inputString) {
-        return StringUtil.copyPartialMatches(inputString, guiNames, new ArrayList<>());
     }
     public List<String> getGuiNames() {
         return new ArrayList<>(guiNames);

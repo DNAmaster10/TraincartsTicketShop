@@ -32,17 +32,6 @@ public class GuiDataAccessor extends DataAccessor {
     }
 
     /**
-     * Checks whether the specified player owns the specified Gui
-     *
-     * @param guiId The ID of the Gui to check
-     * @param ownerUuid The UUID of the player
-     * @return True if the player owns the Gui
-     */
-    public boolean checkGuiOwnerByUuid(int guiId, String ownerUuid) {
-        return getGuiCache().checkGuiOwnerByUuid(guiId, ownerUuid);
-    }
-
-    /**
      * Returns true if the specified player has adequate permissions to edit the Gui
      * @param guiId The ID of the Gui to check
      * @param uuid The UUID of the player
@@ -123,16 +112,6 @@ public class GuiDataAccessor extends DataAccessor {
      */
     public String getOwnerUuid(int guiId) {
         return getGuiCache().getGuiById(guiId).ownerUuid();
-    }
-
-    /**
-     * Gets a list of Gui names which at least partially match the input string.
-     *
-     * @param argument Partial match String
-     * @return A list of Gui names
-     */
-    public List<String> getPartialNameMatches(String argument) {
-        return getGuiCache().getPartialNameMatches(argument);
     }
 
     /**

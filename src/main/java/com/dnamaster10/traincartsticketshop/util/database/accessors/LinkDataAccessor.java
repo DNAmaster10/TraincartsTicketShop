@@ -9,7 +9,7 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterf
 import java.util.List;
 
 public class LinkDataAccessor extends DataAccessor {
-    LinksDatabaseAccessor linksDatabaseAccessor = DatabaseAccessorFactory.getLinksDatabaseAccessor();
+    final LinksDatabaseAccessor linksDatabaseAccessor = DatabaseAccessorFactory.getLinksDatabaseAccessor();
 
     /**
      * Gets an array of links within a specific page within a Gui.

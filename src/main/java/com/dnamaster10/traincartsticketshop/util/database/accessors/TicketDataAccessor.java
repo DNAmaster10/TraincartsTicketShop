@@ -9,7 +9,7 @@ import com.dnamaster10.traincartsticketshop.util.database.databaseaccessorinterf
 import java.util.List;
 
 public class TicketDataAccessor extends DataAccessor {
-    TicketsDatabaseAccessor ticketsDatabaseAccessor = DatabaseAccessorFactory.getTicketDatabaseAccessor();
+    final TicketsDatabaseAccessor ticketsDatabaseAccessor = DatabaseAccessorFactory.getTicketDatabaseAccessor();
 
     /**
      * Gets an array of tickets within a specific page within a Gui.
