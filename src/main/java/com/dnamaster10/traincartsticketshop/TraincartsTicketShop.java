@@ -90,14 +90,10 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
             getPlugin().disable();
         }
 
-        //Register the "traincartsticketshop" command
-        //Objects.requireNonNull(getCommand("traincartsticketshop")).setExecutor(new CommandDispatcher());
+        //Register commands
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(TicketShopCommands.getRootNode());
         });
-
-        //Register tab completers
-        //Objects.requireNonNull(getCommand("traincartsticketshop")).setTabCompleter(new MainTabCompleter());
 
         //Register gui manager
         this.guiManager = new GuiManager();

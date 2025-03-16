@@ -1,5 +1,6 @@
 package com.dnamaster10.traincartsticketshop.objects.buttons;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -67,13 +68,22 @@ public class HeadData {
             return new ItemStack(Material.POTATO, 1);
         }
 
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        assert meta != null;
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        try {
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URI(type.url).toURL());
+            profile.setTextures(textures);
+        } catch (URISyntaxException | MalformedURLException e) {
+            getPlugin().getLogger().warning("An error occurred created a player head within a GUI: " + e);
+            return new ItemStack(Material.POTATO, 1);
+        }
 
-        meta.setOwningPlayer(headProfile);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setPlayerProfile(profile);
         meta.getPersistentDataContainer().set(HEAD_TYPE, PersistentDataType.STRING, type.toString());
         head.setItemMeta(meta);
+
         return head;
     }
 
