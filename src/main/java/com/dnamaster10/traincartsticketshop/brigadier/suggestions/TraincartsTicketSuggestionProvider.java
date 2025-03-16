@@ -14,7 +14,10 @@ public class TraincartsTicketSuggestionProvider {
         String remainingLowercase = builder.getRemainingLowerCase();
         Traincarts.getTicketNames().stream()
                 .filter(entry -> entry.toLowerCase().startsWith(remainingLowercase))
-                .forEach(builder::suggest);
+                .forEach(entry -> {
+                    if (entry.contains(" ")) builder.suggest("\"" + entry + "\"");
+                    builder.suggest(entry);
+                });
         return builder.buildFuture();
     }
 
