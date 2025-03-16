@@ -17,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 public final class TraincartsTicketShop extends JavaPlugin implements Listener {
@@ -91,8 +94,10 @@ public final class TraincartsTicketShop extends JavaPlugin implements Listener {
         }
 
         //Register commands
+        List<String> aliases = new ArrayList<>();
+        aliases.add("tshop");
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(TicketShopCommands.getRootNode());
+            commands.registrar().register(TicketShopCommands.getRootNode(), "The root Ticket Shop command", aliases);
         });
 
         //Register gui manager
