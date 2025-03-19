@@ -28,7 +28,6 @@ public class SignHandler {
     private static final int SIGN_LINE = getPlugin().getConfig().getInt("IdentifierLine");
 
     boolean isGuiSign(SignSide side) {
-        //TODO Add config option for tshop line.
         if (SIGN_IDENTIFIER == null || SIGN_IDENTIFIER.isBlank()) return false;
         Component line = side.line(SIGN_LINE);
         String rawLine = Utilities.stripColour(line);
