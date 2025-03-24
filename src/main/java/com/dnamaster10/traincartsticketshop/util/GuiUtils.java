@@ -5,6 +5,7 @@ import com.dnamaster10.traincartsticketshop.util.database.accessors.GuiDataAcces
 import com.dnamaster10.traincartsticketshop.util.exceptions.QueryException;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,6 +13,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
@@ -69,8 +71,7 @@ public class GuiUtils {
                     if (ticketPrice != null) {
                         if (ticketPrice < minTicketPrice) ticketPrice = minTicketPrice;
                         else if (ticketPrice > maxTicketPrice) ticketPrice = maxTicketPrice;
-                    }
-                    else {
+                    } else {
                         ticketPrice = defaultTicketPrice;
                     }
                 } else {
@@ -103,8 +104,10 @@ public class GuiUtils {
                 Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
                     GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
                     String ownerUuid = guiDataAccessor.getOwnerUuid(guiId);
-                    Player guiOwner = Bukkit.getPlayer(ownerUuid);
-                    vaultHook.depositMoney(guiOwner, transferAmount);
+                    Bukkit.getScheduler().runTask(getPlugin(), () -> {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
+                        vaultHook.depositMoney(offlinePlayer, transferAmount);
+                    });
                 });
             }
         }

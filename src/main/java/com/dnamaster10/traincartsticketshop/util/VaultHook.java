@@ -3,6 +3,7 @@ package com.dnamaster10.traincartsticketshop.util;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -50,7 +51,7 @@ public class VaultHook {
         return economy.format(amount);
     }
 
-    public EconomyResponse depositMoney(Player player, double amount) {
+    public EconomyResponse depositMoney(OfflinePlayer player, double amount) {
         return economy.depositPlayer(player, amount);
     }
 }

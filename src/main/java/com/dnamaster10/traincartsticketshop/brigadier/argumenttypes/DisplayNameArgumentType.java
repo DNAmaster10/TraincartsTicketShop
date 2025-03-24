@@ -18,6 +18,7 @@ public class DisplayNameArgumentType implements CustomArgumentType.Converted<Str
         Component colouredComponent = Utilities.parseColour(nativeType);
         String rawText = Utilities.stripColour(colouredComponent);
 
+        //TODO Check why only the first error gets thrown. i.e. try printing the raw display name to compare it.
         if (rawText.length() > 25) {
             Message message = MessageComponentSerializer.message().serialize(Component.text("Display names cannot contain more than 25 characters!"));
             throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);

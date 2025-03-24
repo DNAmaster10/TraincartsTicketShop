@@ -23,10 +23,12 @@ public class SetTicketPriceCommand implements TicketShopCommand {
     @Override
     public LiteralCommandNode<CommandSourceStack> getRootNode() {
         double minPrice = getPlugin().getConfig().getDouble("MinTicketPrice");
+        double maxPrice = getPlugin().getConfig().getDouble("MaxTicketPrice");
+
         return Commands.literal("setPrice")
                 .requires(ctx -> ctx.getExecutor() instanceof Player player &&
                         player.hasPermission("traincartsticketshop.ticket.setprice"))
-                .then(Commands.argument("price", DoubleArgumentType.doubleArg(minPrice))
+                .then(Commands.argument("price", DoubleArgumentType.doubleArg(minPrice, maxPrice))
                         .executes(this::execute)).build();
     }
 
