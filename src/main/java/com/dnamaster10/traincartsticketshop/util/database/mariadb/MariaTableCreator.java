@@ -26,8 +26,8 @@ public class MariaTableCreator extends MariaDatabaseAccessor implements Database
                         id int AUTO_INCREMENT PRIMARY KEY,
                         owner_uuid varchar(50),
                         name varchar(100) UNIQUE,
-                        display_name varchar(100),
-                        raw_display_name varchar(100),
+                        display_name varchar(300),
+                        raw_display_name varchar(200),
                         FOREIGN KEY (owner_uuid) REFERENCES players(uuid)
                             ON DELETE SET NULL
                     ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -41,8 +41,8 @@ public class MariaTableCreator extends MariaDatabaseAccessor implements Database
                         page int,
                         slot int,
                         tc_name varchar(100),
-                        display_name varchar(100),
-                        raw_display_name varchar(100),
+                        display_name varchar(300),
+                        raw_display_name varchar(200),
                         UNIQUE KEY gui_page_slot_unique (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE
@@ -58,8 +58,8 @@ public class MariaTableCreator extends MariaDatabaseAccessor implements Database
                         slot int,
                         linked_gui_id int,
                         linked_gui_page int DEFAULT 0,
-                        display_name varchar(100),
-                        raw_display_name varchar(100),
+                        display_name varchar(300),
+                        raw_display_name varchar(200),
                         UNIQUE KEY gui_page_slot (gui_id, page, slot),
                         FOREIGN KEY (gui_id) REFERENCES guis(id)
                             ON DELETE CASCADE

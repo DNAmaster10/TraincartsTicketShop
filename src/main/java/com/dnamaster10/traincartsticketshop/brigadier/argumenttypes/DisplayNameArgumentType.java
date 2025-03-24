@@ -19,10 +19,10 @@ public class DisplayNameArgumentType implements CustomArgumentType.Converted<Str
         String rawText = Utilities.stripColour(colouredComponent);
 
         //TODO Check why only the first error gets thrown. i.e. try printing the raw display name to compare it.
-        if (rawText.length() > 25) {
-            Message message = MessageComponentSerializer.message().serialize(Component.text("Display names cannot contain more than 25 characters!"));
+        if (rawText.length() > 50) {
+            Message message = MessageComponentSerializer.message().serialize(Component.text("Display names cannot contain more than 50 characters!"));
             throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
-        } else if (Utilities.componentToString(colouredComponent).length() > 100) {
+        } else if (Utilities.componentToString(colouredComponent).length() > 200) {
             Message message = MessageComponentSerializer.message().serialize(Component.text("Display names cannot contain that many colours!"));
             throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
         }
