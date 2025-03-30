@@ -30,7 +30,7 @@ public class AddEditorCommand implements TicketShopCommand {
         return Commands.literal("addEditor")
                 .requires(ctx -> {
                     if (ctx.getExecutor() instanceof Player player) {
-                        return player.hasPermission("traincartsitcketshop.gui.addeditor") ||
+                        return player.hasPermission("traincartsticketshop.gui.addeditor") ||
                                 player.hasPermission("traincartsticketshop.admin.gui.addeditor");
                     }
                     return true;
