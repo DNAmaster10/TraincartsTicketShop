@@ -1,43 +1,45 @@
 A plugin which allows players to create ticket shop guis for purchasing tickets from the Traincarts plugin.
 
 ## How to use
-- Run `/train ticket create <ticket name>` to create a Traincarts ticket.
-- Run `/tshop ticket create <ticket name> <display name of ticket to use>` to get a "gui ticket" item.
-- Run `/tshop gui create <name> <display name>` to create a shop GUI.
-- Run `/tshop gui edit <name>`
+- Run `/train ticket create <Traincarts ticket name>` to create a Traincarts ticket.
+- Run `/tshop ticket create <Traincarts ticket name>` to get a "gui ticket" item.
+- Run `/tshop gui create <Gui ID>` to create a shop Gui.
+- Run `/tshop gui rename <new display name>` to change the Gui title.
+- Run `/tshop gui edit <Gui ID>` to edit the Gui.
 - Drag the ticket you were given by the plugin into the inventory that opens.
  ![image](https://github.com/DNAmaster10/TraincartsTicketShop/assets/67452089/20acf26a-fb5d-461c-bbb6-c840e0ecd0b9)
-- Run `/tshop gui open <name>` to open the shop GUI. Click on a ticket to get it in your inventory.
+- Run `/tshop gui open <Gui ID>` to open the shop GUI. Click on a ticket to get it in your inventory.
 
 ## Other methods of opening the GUI
-### Citizens NPCs (coming soon)
 ### Entities (coming soon)
 ### Signs
 Create a sign with this format:
 ```
-
 [tshop]
-<gui name>
+<gui ID>
 
+Any other text
 ```
+
 ![image](https://github.com/DNAmaster10/TraincartsTicketShop/assets/67452089/8a287820-3aab-4e71-ae9a-40ebfc168b81)
 
-Right click on it to open the shop GUI.
-
+Right click on the sign to open the shop Gui.
 ## Links
 Links are a powerful tool which allows players to "link" multiple guis together.
 
 To get started, you must have at least two guis already created. For example, we may have run:
-- `/tshop gui create mainline Mainline Tickets`
-- `/tshop gui create subline Subline Tickets`
+- `/tshop gui create mainline`
+- `/tshop gui create subline`
 
 We may want to have it so that the gui `mainline` links to the second gui, `subline`.
 
 Firstly, we must create a new "link". To do this, we can run:
-- `/tshop link create <linked gui name> <display name>`
+- `/tshop link create <linked Gui ID>`
+- `/tshop link rename <new display name>`
 
 In our example, this would look something like:
-- `/tshop link create subline Subline Tickets`
+- `/tshop link create subline`
+- `/tshop link rename "<yellow>Subline Tickets"`
 
 This should give us a link item which looks something like this:
 
@@ -59,7 +61,7 @@ It's also possible to set the destination page that a link item will link to.
 For example:
 - `/tshop link setDestinationPage 10`
   
-will make it so that when the link is clicked, it will try to redirect the player to page 10 of the destination gui.
+will make it so that when the link is clicked, it will try to redirect the player to page 10 of the destination gui. If there aren't that many pages in the Gui, it will default to the highest page possible.
 
 
 

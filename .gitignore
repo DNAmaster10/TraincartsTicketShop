@@ -2,3 +2,6 @@
 /target/
 /.idea/
 traincartsticketshop.iml
+dependency-reduced-pom.xml
+.idea/jarRepositories.xml
+.idea/inspectionProfiles/Project_Default.xml

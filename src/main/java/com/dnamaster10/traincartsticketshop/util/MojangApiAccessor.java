@@ -7,15 +7,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class MojangApiAccessor {
-    public String[] getPlayerFromUsername(String username) throws IOException {
+    /**
+     * Queries the Mojang API for the specified username.
+     *
+     * @param username The username to search for
+     * @return A String[] containing the player's username at the first index, and their UUID at the second index
+     * @throws IOException Thrown if an error occurred creating or sending the HTTP request.
+     */
+    public String[] getPlayerFromUsername(String username) throws IOException, URISyntaxException {
         //Returns an array containing 2 strings, looks like:
         //["username", "uuid"]
         //Should be executed async or risk server performance loss
         StringBuilder result = new StringBuilder();
-        URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
+        URL url = new URI("https://api.mojang.com/users/profiles/minecraft/" + username).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {

@@ -1,15 +1,25 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.TraincartsTicketShop;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.databaseobjects.PlayerDatabaseObject;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.databaseobjects.PlayerDatabaseObject;
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Players {
     //Contains utility methods for players
+
+    /**
+     * Returns a player database object for the given username, and adds the player to the database if they were not already present.
+     * The method will first check online players for the specified username, then the player database cache, and finally the Mojang API.
+     *
+     * @param username The username of the player
+     * @return A PlayerDatabaseObject
+     * @throws ModificationException Thrown if there was an error adding the player to the database
+     */
     public static PlayerDatabaseObject getPlayerByUsername(String username) throws ModificationException {
         //Takes in a username, and returns either null if the player doesn't exist
         //Or returns the corrected player username.
@@ -20,8 +30,8 @@ public class Players {
 
         //Check online players
         for (Player p : TraincartsTicketShop.getPlugin().getServer().getOnlinePlayers()) {
-            if (p.getDisplayName().equalsIgnoreCase(username)) {
-                return new PlayerDatabaseObject(p.getDisplayName(), p.getUniqueId().toString());
+            if (p.getName().equalsIgnoreCase(username)) {
+                return new PlayerDatabaseObject(p.getName(), p.getUniqueId().toString());
             }
         }
 
@@ -40,7 +50,7 @@ public class Players {
             //Register the player in the database to save future API requests
             playerAccessor.updatePlayer(playerInfo[0], playerInfo[1]);
             return new PlayerDatabaseObject(playerInfo[0], playerInfo[1]);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             return null;
         }
     }

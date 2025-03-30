@@ -1,16 +1,25 @@
 package com.dnamaster10.traincartsticketshop.util;
 
 import com.dnamaster10.traincartsticketshop.objects.buttons.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.*;
 
 public class ButtonUtils {
     //A utility class for buttons
+
+    /**
+     * Extracts the button type of the input ItemStack
+     *
+     * @param button The ItemStack
+     * @return Returns the button type of the input ItemStack. Returns null if the item is not a button.
+     */
     public static String getButtonType(ItemStack button) {
         //Returns the button type from a given item
         //First check if item is a button
@@ -24,6 +33,14 @@ public class ButtonUtils {
 
         return dataContainer.get(BUTTON_TYPE, PersistentDataType.STRING);
     }
+
+    /**
+     * Creates a new Button object given a button type and an ItemStack. Used in the Edit Gui to convert an inventory into Buttons.
+     *
+     * @param buttonType The button type
+     * @param item The ItemStack
+     * @return A new Button Object. Returns null if the input ItemStack is not a valid button
+     */
     public static Button getNewButton(String buttonType, ItemStack item) {
         //Returns a new button object from a button type and an item
         //If any of the item keys are invalid, null will be returned
@@ -32,10 +49,10 @@ public class ButtonUtils {
         }
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        String displayName = meta.getDisplayName();
+        Component displayName = meta.displayName();
 
         switch (buttonType) {
-            //TODO maybe move each of these into their own method?
+            //TODO maybe move each of these into their own method when more buttons are added?
             case "ticket" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
                 if (!dataContainer.has(TC_TICKET_NAME, PersistentDataType.STRING)) {
@@ -45,10 +62,16 @@ public class ButtonUtils {
                 if (tcTicketName == null) {
                     return null;
                 }
+
                 String purchaseMessage = null;
                 if (dataContainer.has(PURCHASE_MESSAGE, PersistentDataType.STRING)) purchaseMessage = dataContainer.get(PURCHASE_MESSAGE, PersistentDataType.STRING);
                 if (purchaseMessage == null || purchaseMessage.isBlank()) purchaseMessage = "";
-                return new Ticket(tcTicketName, displayName, purchaseMessage);
+
+                Double price = null;
+                if (dataContainer.has(PRICE, PersistentDataType.DOUBLE)) price = dataContainer.get(PRICE, PersistentDataType.DOUBLE);
+                if (price == null) price = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+
+                return new Ticket(tcTicketName, displayName, purchaseMessage, price);
             }
             case "link" -> {
                 PersistentDataContainer dataContainer = meta.getPersistentDataContainer();

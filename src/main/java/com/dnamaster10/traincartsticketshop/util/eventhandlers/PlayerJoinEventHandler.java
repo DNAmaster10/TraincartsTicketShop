@@ -1,7 +1,7 @@
 package com.dnamaster10.traincartsticketshop.util.eventhandlers;
 
 import com.dnamaster10.traincartsticketshop.util.exceptions.ModificationException;
-import com.dnamaster10.traincartsticketshop.util.newdatabase.accessors.PlayerDataAccessor;
+import com.dnamaster10.traincartsticketshop.util.database.accessors.PlayerDataAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +18,7 @@ public class PlayerJoinEventHandler implements Listener {
             try {
                 PlayerDataAccessor accessor = new PlayerDataAccessor();
                 Player p = event.getPlayer();
-                accessor.updatePlayer(p.getDisplayName(), p.getUniqueId().toString());
+                accessor.updatePlayer(p.getName(), p.getUniqueId().toString());
             } catch (ModificationException e) {
                 getPlugin().handleSqlException(e);
             }

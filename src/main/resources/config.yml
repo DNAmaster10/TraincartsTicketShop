@@ -1,6 +1,5 @@
-#TODO May want to look into how to do this with multiple database types
 database:
-  type: mariadb
+  type: sqlite
   database: dbname
 
   # Ignore if using SQLite
@@ -9,11 +8,32 @@ database:
   user: admin
   password: password
 
+# The line of text which must be written on signs to recognise them as a ticket shop sign
 SignIdentifier: [tshop]
+
+# The line which the sign identifier should be written on. Ranges from 0 to 2.
+IdentifierLine: 0
+
+# The default purchase message for when tickets are purchased
+PurchaseMessage: You purchased a ticket!
+
+MaxPagesPerGui: 50
+
+# Economy
+UseEconomy: true
+EconomyMode: default
+
+AllowCustomTicketPrices: true
+
+DefaultTicketPrice: 1.0
+MinTicketPrice: 0.0
+MaxTicketPrice: 10.0
+
+# Advanced Configuration Options
 
 MaxStoredGuisPerPlayer: 50
 
-MaxPagesPerGui: 50
+DisableOnDatabaseModificationException: true
 
 # No touch please
 ConfigVersion: ${project.version}

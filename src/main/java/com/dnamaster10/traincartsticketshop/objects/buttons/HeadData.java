@@ -1,22 +1,31 @@
 package com.dnamaster10.traincartsticketshop.objects.buttons;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.UUID;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
 import static com.dnamaster10.traincartsticketshop.objects.buttons.DataKeys.HEAD_TYPE;
 
+/**
+ * Holds information and methods used for custom head items, such as the texture sources.
+ */
 public class HeadData {
+    /**
+     * Links head enums to their corresponding texture
+     */
     public enum HeadType {
         RED_CROSS("https://textures.minecraft.net/texture/beb588b21a6f98ad1ff4e085c552dcb050efc9cab427f46048f18fc803475f7"),
         GRAY_BACK_ARROW("https://textures.minecraft.net/texture/1b701c1f05e319d6b28f61b28b66a7e2a846a510de322bdc96e94a2388b78469"),
@@ -28,37 +37,62 @@ public class HeadData {
             this.url = url;
         }
     }
+
     private static final UUID RANDOM_UUID = UUID.fromString("68f92a5b-8980-4e0c-a479-89e41ce1ada6");
-    private static PlayerProfile getProfile(HeadType type) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(RANDOM_UUID);
-        PlayerTextures textures = profile.getTextures();
+
+    private static OfflinePlayer getOfflinePlayer(HeadType type) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(RANDOM_UUID);
+        PlayerTextures textures = offlinePlayer.getPlayerProfile().getTextures();
         URL urlObject;
         try {
-            urlObject = new URL(type.url);
-        } catch (MalformedURLException e) {
-            getPlugin().getLogger().warning("An error occurred creating a player head within a GUI: " + e);
+            urlObject = new URI(type.url).toURL();
+        } catch (MalformedURLException | URISyntaxException e) {
+            getPlugin().getLogger().warning("An error occurred creating a player head withing a GUI: " + e);
             return null;
         }
         textures.setSkin(urlObject);
-        profile.setTextures(textures);
-        return profile;
+        offlinePlayer.getPlayerProfile().setTextures(textures);
+        return offlinePlayer;
     }
+
+    /**
+     * Gets a new head ItemStack, and applies the corresponding textures to the head.
+     *
+     * @param type The head type to be made
+     * @return The head
+     */
     public static ItemStack getPlayerHeadItem(HeadType type) {
-        PlayerProfile headProfile = getProfile(type);
+        OfflinePlayer headProfile = getOfflinePlayer(type);
         if (headProfile == null) {
             //If head creation failed, just return a potato
             return new ItemStack(Material.POTATO, 1);
         }
 
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        assert meta != null;
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        try {
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URI(type.url).toURL());
+            profile.setTextures(textures);
+        } catch (URISyntaxException | MalformedURLException e) {
+            getPlugin().getLogger().warning("An error occurred created a player head within a GUI: " + e);
+            return new ItemStack(Material.POTATO, 1);
+        }
 
-        meta.setOwnerProfile(headProfile);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setPlayerProfile(profile);
         meta.getPersistentDataContainer().set(HEAD_TYPE, PersistentDataType.STRING, type.toString());
         head.setItemMeta(meta);
+
         return head;
     }
+
+    /**
+     * Gets the HeadType from a head ItemStack.
+     *
+     * @param item The item stack of the item to get the head type from
+     * @return The HeadType. Returns null if the ItemStack is not a valid HeadType
+     */
     public static HeadType getHeadTypeFromItem(ItemStack item) {
         if (!(item.getItemMeta() instanceof SkullMeta meta)) {
             return null;
