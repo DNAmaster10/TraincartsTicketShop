@@ -89,7 +89,6 @@ public class GuiUtils {
             player.sendMessage(Utilities.parseColour(purchaseMessage));
             player.sendMessage("");
         }
-
     }
 
     private static Optional<Double> calculateTicketCharge(ItemStack ticketItem) {
