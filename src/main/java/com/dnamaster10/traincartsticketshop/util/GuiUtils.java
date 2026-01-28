@@ -13,6 +13,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.dnamaster10.traincartsticketshop.TraincartsTicketShop.getPlugin;
@@ -49,66 +50,34 @@ public class GuiUtils {
             if (purchaseMessage != null && purchaseMessage.isBlank()) purchaseMessage = null;
         }
 
-        //TODO Revisit this code. Should negatives balances be allowed? How can we check that? Can this be made more readable?
-        //TODO Can we use EconomyResponse instead of checking negative balance?
-        //Handle economy checks
-        Double ticketPrice = 0.0;
-        boolean shouldTransact = false;
-        VaultHook vaultHook = getPlugin().getVaultHook();
-        if (getPlugin().getConfig().getBoolean("UseEconomy") && vaultHook.hasEconomy()) {
+        //TODO Revisit this code. What if an economy allows for negative balances?
 
-            double defaultTicketPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+        Optional<Double> ticketPrice = calculateTicketCharge(ticketItem);
 
-            //Check and correct ticket price
-            if (!getPlugin().getConfig().getBoolean("AllowCustomTicketPrices")) {
-                ticketPrice = defaultTicketPrice;
-            } else {
-                double minTicketPrice = getPlugin().getConfig().getDouble("MinTicketPrice");
-                double maxTicketPrice = getPlugin().getConfig().getDouble("MaxTicketPrice");
+        if (ticketPrice.isPresent()) {
+            VaultHook vaultHook = getPlugin().getVaultHook();
 
-                if (!dataContainer.has(PRICE, PersistentDataType.DOUBLE)) {
-                    ticketPrice = dataContainer.get(PRICE, PersistentDataType.DOUBLE);
-                    if (ticketPrice != null) {
-                        if (ticketPrice < minTicketPrice) ticketPrice = minTicketPrice;
-                        else if (ticketPrice > maxTicketPrice) ticketPrice = maxTicketPrice;
-                    } else {
-                        ticketPrice = defaultTicketPrice;
-                    }
-                } else {
-                    ticketPrice = defaultTicketPrice;
-                }
-            }
-
-            //Check if transaction is possible
             double playerBalance = vaultHook.getBalance(player);
-            if (playerBalance - ticketPrice < 0) {
+            if (playerBalance - ticketPrice.get() < 0) {
                 player.sendMessage(Utilities.parseColour("<red>You can't afford that ticket!"));
                 return;
             }
-            shouldTransact = true;
-        }
 
-        //Handle transaction
-        if (shouldTransact && ticketPrice > 0d) {
-            EconomyResponse response = vaultHook.withdrawMoney(player, ticketPrice);
+            //Handle transaction
+            EconomyResponse response = vaultHook.withdrawMoney(player, ticketPrice.get());
             if (response.type == EconomyResponse.ResponseType.FAILURE) {
                 player.sendMessage(Utilities.parseColour("<red>" + response.errorMessage));
                 return;
             }
+
             player.sendMessage(Utilities.parseColour("<yellow>" + vaultHook.format(response.amount) + " has been taken from your account for purchasing a ticket!"));
 
             if (Objects.equals(getPlugin().getConfig().getString("EconomyMode"), "guiOwners")) {
-                //Send money to gui owner as well.
-                //TODO does this need to be asynchronous?
-                final double transferAmount = ticketPrice;
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-                    GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
-                    String ownerUuid = guiDataAccessor.getOwnerUuid(guiId);
-                    Bukkit.getScheduler().runTask(getPlugin(), () -> {
-                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
-                        vaultHook.depositMoney(offlinePlayer, transferAmount);
-                    });
-                });
+                final double transferAmount = ticketPrice.get();
+                GuiDataAccessor guiDataAccessor = new GuiDataAccessor();
+                String ownerUuid = guiDataAccessor.getOwnerUuid(guiId);
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
+                vaultHook.depositMoney(offlinePlayer, transferAmount);
             }
         }
 
@@ -121,6 +90,34 @@ public class GuiUtils {
             player.sendMessage("");
         }
 
+    }
+
+    private static Optional<Double> calculateTicketCharge(ItemStack ticketItem) {
+        // Calculates the amount to charge for a ticket purchase.
+        // Returns nothing if no charge should be made.
+
+        ItemMeta meta = ticketItem.getItemMeta();
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        VaultHook vaultHook = getPlugin().getVaultHook();
+
+        if (!getPlugin().getConfig().getBoolean("UseEconomy") || !vaultHook.hasEconomy()) return Optional.empty();
+
+        double defaultTicketPrice = getPlugin().getConfig().getDouble("DefaultTicketPrice");
+
+        if (!getPlugin().getConfig().getBoolean("AllowCustomTicketPrices")) return Optional.of(defaultTicketPrice);
+
+        double minTicketPrice = getPlugin().getConfig().getDouble("MinTicketPrice");
+        double maxTicketPrice = getPlugin().getConfig().getDouble("MaxTicketPrice");
+
+        if (!dataContainer.has(PRICE, PersistentDataType.DOUBLE)) return Optional.of(defaultTicketPrice);
+
+        Double ticketPrice = dataContainer.get(PRICE, PersistentDataType.DOUBLE);
+        if (ticketPrice == null) return Optional.of(defaultTicketPrice);
+
+        if (ticketPrice < minTicketPrice) return Optional.of(minTicketPrice);
+        if (ticketPrice > maxTicketPrice) return Optional.of(maxTicketPrice);
+
+        return Optional.of(ticketPrice);
     }
 
     /**
