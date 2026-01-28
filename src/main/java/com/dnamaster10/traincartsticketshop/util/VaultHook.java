@@ -16,11 +16,11 @@ public class VaultHook {
     public void loadEconomy() {
         getPlugin().getLogger().info("Checking for Economy availability...");
         if (getPlugin().getServer().getPluginManager().getPlugin("Vault") == null) {
-            getPlugin().getLogger().info("Vault was not installed, so economy functionality has been disabled.");
+            getPlugin().getLogger().info("Vault was not installed, so economy functionality has been disabled. Please disable economy in the config if you do not wish to use economy features.");
         }
         RegisteredServiceProvider<Economy> rsp = getPlugin().getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            getPlugin().getLogger().info("No economy plugin was found, so economy functionality has been disabled.");
+            getPlugin().getLogger().info("No economy plugin was found, so economy functionality has been disabled. Please disable economy in the config if you do not wish to use economy features.");
         }
         assert rsp != null;
         economy = rsp.getProvider();
